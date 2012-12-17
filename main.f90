@@ -45,11 +45,11 @@
       !Module containing all the subroutines for I/O of the model
       USE MODULE_IO
 
-      !Module containing the models regionals/catchment subroutines
-      USE MODULE_TOPLATS
+      !Module containing the models topmodel routines
+      USE MODULE_TOPMODEL
 
-      !Module containing the point model
-      USE MODULE_POINT
+      !Module containing the cell model
+      USE MODULE_CELL
 
       implicit none
       type (OPTIONS_template) :: OPTIONS
