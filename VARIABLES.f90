@@ -1062,17 +1062,6 @@ type OPTIONS_template
         
 end type OPTIONS_template
 
-type ATMOS_FMT_template
-        
-        integer,dimension(MAX_PIX,MAX_SPP) :: iwppt,iwpet,iwta,iwhu,iwpa,iwws,&
-                iwsw,iwlw,iwrn,iwgb,nppt,npet,nta,nhu,npa,nws,nsw,nlw,nrn,ngb
-                
-        integer :: nsta_ppt,nsta_pet,nsta_ta,nsta_hu,nsta_pa,nsta_ws,nsta_sw,nsta_lw,&
-                nsta_rn,nsta_gb,nsp_ppt,nsp_pet,nsp_ta,nsp_hu,nsp_pa,nsp_ws,nsp_sw,&
-                nsp_lw,nsp_rn,nsp_gb
-
-end type ATMOS_FMT_template
-
 type STORM_PARAM_template
 
         integer,dimension(MAX_PIX) :: istorm,intstm,istmst,intstp

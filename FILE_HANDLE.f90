@@ -45,6 +45,10 @@ open(1004,file=trim(filename),status='old',access='direct',form='unformatted',re
 filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/OUTPUT.bin"
 open(1005,file=trim(filename),status='unknown',access='direct',form='unformatted',recl=ncol*nrow*noutvars*4)
 
+!Regional Actual Energy Fluxes (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/EF_fruit.txt"
+open(2091,file=trim(filename))
+
 end subroutine
 
 subroutine FILE_CLOSE()
@@ -66,6 +70,9 @@ close(1003)
 
 !Forcing Data Set
 close(1004)
+
+!Regional Actual Energy Fluxes (VALIDATION FILE)
+close(2091)
 
 !Output Data Set
 close(1005)

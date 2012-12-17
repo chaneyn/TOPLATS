@@ -20,11 +20,14 @@
        persxr,perixr,persac,peruac,perusc,iprn,wcsum,zbarrg,MODE,f_lake,&
        veg_pdf,nlcs,ivgtyp,veg,Swqsum,Swq_ussum,Sdepthsum,Sdepth_ussum,qb24sum)
 
+      use fruit
       implicit none
       include "SNOW.h"
       include "wgtpar.h"
       include "help/lswb.h"
       real*8 rest
+      real*8 :: tmp
+      real*8 :: rnsum_old,xlesum_old,hsum_old,gsum_old,tksum_old,tkmidsum_old,tkdeepsum_old
 
 ! ====================================================================
 ! Calculate the number of pixels covered by lakes.
@@ -414,11 +417,21 @@
 ! --------------------------------------------------------------------
 
       if (iprn(91).eq.1) then
-
          write(91,1000) i,rnsum,xlesum,hsum,gsum,&
                         rnsum-xlesum-hsum-gsum,gsum+(rnsum-xlesum-hsum-gsum),&
                         tksum,tkmidsum,tkdeepsum
-
+	 !Read the old values
+	 read(2091,1000) i,rnsum_old,xlesum_old,hsum_old,gsum_old,tmp,tmp,&
+			tksum_old,tkmidsum_old,tkdeepsum_old
+	 !Use unit testing to compare
+	 call assert_equals (nint(rnsum),nint(rnsum_old))
+	 call assert_equals (nint(xlesum),nint(xlesum_old))
+	 call assert_equals (nint(hsum),nint(hsum_old))
+	 call assert_equals (nint(gsum),nint(gsum_old))
+	 call assert_equals (nint(tksum),nint(tksum_old))
+	 call assert_equals (nint(tkmidsum),nint(tkmidsum_old))
+	 call assert_equals (nint(tkdeepsum),nint(tkdeepsum_old))
+	
       endif
 
 ! --------------------------------------------------------------------
@@ -550,8 +563,6 @@
 1200  format(i5,7f10.5)
 1300  format(i5,4f10.5,2f7.3)
 1400  format(i5,f7.3,2f10.5,f12.3,4f10.5)
-! NWC 06/13/11
-!1500  format(i5,12(g11.4,1x))
 1500  format(2(g11.4,1x))
 1600  format(i5,2f10.3,2f7.3,f10.3,4f7.3)
 1700  format(i5,f10.3,3f7.3,f13.3,2f7.3)

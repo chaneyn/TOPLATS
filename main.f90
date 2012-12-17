@@ -34,6 +34,8 @@
 !  Email : nchaney@princeton.edu
 !
 ! ====================================================================
+      !Module containing the unit tests
+      USE FRUIT
 
       USE VARIABLES
 
@@ -48,7 +50,7 @@
 
       implicit none
       type (OPTIONS_template) :: OPTIONS
-      type (ATMOS_FMT_template) :: ATMOS_FMT
+      !type (ATMOS_FMT_template) :: ATMOS_FMT
       type (STORM_PARAM_template) :: STORM_PARAM
       type (TOPMODEL_PARAM_template) :: TOPMODEL_PARAM
       type (MET_RANGE_template) :: MET_RANGE
@@ -87,7 +89,7 @@
 ! ####################################################################
 ! Loop through the simulation time.
 ! ####################################################################
-
+call init_fruit !Initialize fruit testing
       do i=1,OPTIONS%ndata
 
           print*, "Time Step: ",i," Year: ",iyear," Julian Day: ",&
@@ -391,6 +393,9 @@ etpix = GRID%VARS%etpix
        REG%Sdepth_ussum,qb24sum)
 
       enddo
+
+call fruit_summary !Summarize the fruit output for this time step
+call fruit_finalize !Finalize the fruit library
 
 ! ####################################################################
 ! Close all files
