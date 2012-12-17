@@ -38,6 +38,9 @@
       USE FRUIT
 
       USE VARIABLES
+       
+      !Module containing all the tests
+      USE MODULE_TESTS
 
       !Module containing all the subroutines for I/O of the model
       USE MODULE_IO

@@ -5,7 +5,8 @@ use strict;
 #INPUT VARIABLES
 my $OLD_DATA_ROOT = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD";
 my $NEW_DATA_ROOT = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/NEW";
-my @FLAG_VARS = ("EF","CWB","PRI","ET","STZB","WTB","SSR","RMEC","SWE");
+#my @FLAG_VARS = ("EF","CWB","PRI","ET","STZB","WTB","SSR","RMEC","SWE");
+my @FLAG_VARS = ("CWB","PRI","ET","STZB","WTB","SSR","RMEC","SWE");
 
 #LOCAL VARIABLES
 my $FLAG;

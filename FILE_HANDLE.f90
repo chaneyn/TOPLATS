@@ -49,6 +49,10 @@ open(1005,file=trim(filename),status='unknown',access='direct',form='unformatted
 filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/EF_fruit.txt"
 open(2091,file=trim(filename))
 
+!Regional Canopy water balance (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/CWB_fruit.txt"
+open(2092,file=trim(filename))
+
 end subroutine
 
 subroutine FILE_CLOSE()
@@ -71,10 +75,13 @@ close(1003)
 !Forcing Data Set
 close(1004)
 
+!Output Data Set
+close(1005)
+
 !Regional Actual Energy Fluxes (VALIDATION FILE)
 close(2091)
 
-!Output Data Set
-close(1005)
+!Regional Canopy water balance (VALIDATION FILE)
+close(2092)
 
 end subroutine
