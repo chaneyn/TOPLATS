@@ -2,24 +2,6 @@ MODULE MODULE_TOPLATS
 
 USE VARIABLES
 
-USE MODULE_IO
-
-type CAT_VARS_template
-
-        !Evaporation and condensation
-        real*8,dimension(MAX_CAT) :: ettot,etstsum,etwtsum,etbssum,&
-                etdcsum,etwcsum,etlakesum,contot
-        !Infiltration/runoff/precipitation
-        real*8,dimension(MAX_CAT) :: pptsum,pnetsum,sxrtot,xixtot,&
-                qsurf,ranrun,conrun
-        !Vertical soil moisture fluxes and water table updating
-        real*8,dimension(MAX_CAT) :: zbar,zbar1,capsum,gwtsum,&
-                rzpsum,tzpsum
-        !State variables
-        real*8,dimension(MAX_CAT) :: fwcat
-
-end type CAT_VARS_template
-
 contains
 
 ! ====================================================================

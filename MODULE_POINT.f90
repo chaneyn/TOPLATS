@@ -1,6 +1,6 @@
 MODULE MODULE_POINT
 
-USE MODULE_IO
+USE VARIABLES
 
 contains
 ! ====================================================================
