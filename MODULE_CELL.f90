@@ -1,7 +1,8 @@
 MODULE MODULE_CELL
 
 USE VARIABLES
-USE Atmosm
+
+USE MODULE_ATMOS
 
 contains
 ! ====================================================================
