@@ -17,7 +17,12 @@
 !
 ! ====================================================================
 
-      subroutine atmos(ipix,i,dt,inc_frozen,i_2l,&
+!module Atmosm
+!implicit none
+
+!contains
+
+  subroutine atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters
 
@@ -99,15 +104,16 @@
 
        iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
 
-      implicit none
-      include "help/atmos.h"
+    implicit none
+    include "help/atmos.h" !take this out when variables are fixed
 
 ! ====================================================================
 ! Define the albedo for the snow layer.
 ! ====================================================================
 
-      alb_snow=0.75d0
+    alb_snow = 0.75
 
+   ! call calctempds(amp,phase,shift,Tdeepstep,tdeep) 
 ! ====================================================================
 ! Calculate the temperature of the deep soil layer.
 ! ====================================================================
@@ -427,4 +433,10 @@
 
       return
 
-      end
+    end !subroutine atmos
+
+    !subroutine calctempds(amp,phase,shift,Tdeepstep,tdeep) 
+
+
+
+!end module
