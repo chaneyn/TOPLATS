@@ -1,6 +1,7 @@
 MODULE MODULE_CELL
 
 USE VARIABLES
+USE MODULE_LAND
 
 contains
 ! ====================================================================
