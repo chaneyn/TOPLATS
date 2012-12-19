@@ -4,6 +4,8 @@ USE VARIABLES
 
 USE MODULE_ATMOS
 
+USE MODULE_SHSUBR
+
 contains
 ! ====================================================================
 !
