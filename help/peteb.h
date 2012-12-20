@@ -37,6 +37,6 @@
       real*8 heatcap1,heatcap2,heatcapold,thermc,heatcap
       real*8 thermc_moss,heatcap_moss,thermc_us,heatcap_us
       real*8 ravw,ravw_us,rahw,rahw_us
-      real*8 clcf1par,clcf3vpd,clcf4temp
+      !real*8 clcf1par,clcf3vpd,clcf4temp
       data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
              3.d0,4.d0,5.d0,6.d0/
