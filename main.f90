@@ -92,6 +92,8 @@
 ! Loop through the simulation time.
 ! ####################################################################
 
+call init_fruit !Initialize fruit testing
+
       do i=1,GLOBAL%ndata
 
           print*, "Time Step: ",i," Year: ",iyear," Julian Day: ",&

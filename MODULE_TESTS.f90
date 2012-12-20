@@ -607,7 +607,7 @@ contains
   call set_unit_name ('lswb.f90: Sdepth_ussum')
   call assert_equals (Sdepth_ussum*1000,REG_OLD%Sdepth_ussum)
   call set_unit_name ('lswb.f90: Sdepthsum')
-  call assert_equals (Sdepthsum*1000.,REG_OLD%Sdepthsum)
+  call assert_equals (Sdepthsum*1000,REG_OLD%Sdepthsum)
 
       return
 
