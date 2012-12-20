@@ -88,20 +88,15 @@ contains
 ! in-variant data.
 ! ####################################################################
 
-      subroutine rddata(GLOBAL,STORM_PARAM,TOPMODEL_PARAM,&
-                SOIL_MOISTURE,&
-                INF_PARAM,SNOW_VARS,GRID,REG,CAT)
+      subroutine rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
 
       implicit none
       !include "SNOW.h"
       !include "wgtpar.h"
       include "help/rddata.h"
       type (GLOBAL_template) :: GLOBAL
-      type (STORM_PARAM_template) :: STORM_PARAM
-      type (TOPMODEL_PARAM_template) :: TOPMODEL_PARAM
       type (SOIL_PARAM_template) :: SOIL_PARAM
       type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
-      type (INF_PARAM_template) :: INF_PARAM
       type (SNOW_VARS_template) :: SNOW_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
@@ -129,8 +124,8 @@ contains
 ! ====================================================================
 
       read(1000,*) GLOBAL%ndata
-      read(1000,*) STORM_PARAM%dt
-      read(1000,*) STORM_PARAM%endstm
+      read(1000,*) GLOBAL%dt
+      read(1000,*) GLOBAL%endstm
       read(1000,*) iophd
 
       print*, 'rddata:  Done reading time parameters'
@@ -142,11 +137,11 @@ contains
 ! ====================================================================
 
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
-       GLOBAL%ncol,STORM_PARAM%pixsiz,GLOBAL%ipixnum,GLOBAL%iprn,GLOBAL%ixpix,GLOBAL%iypix,&
-       GLOBAL%npix,TOPMODEL_PARAM%q0,TOPMODEL_PARAM%ff,INF_PARAM%qb0,&
-       TOPMODEL_PARAM%dd,TOPMODEL_PARAM%xlength,TOPMODEL_PARAM%basink,TOPMODEL_PARAM%xlamda,GLOBAL%icatch,&
-       TOPMODEL_PARAM%area,TOPMODEL_PARAM%atanb,TOPMODEL_PARAM%dtil,TOPMODEL_PARAM%zbar1,&
-       TOPMODEL_PARAM%iwel,TOPMODEL_PARAM%wslp,&
+       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%iprn,GLOBAL%ixpix,GLOBAL%iypix,&
+       GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
+       GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,GLOBAL%icatch,&
+       GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
+       GLOBAL%iwel,GLOBAL%wslp,&
        GLOBAL%lat_deg,GLOBAL%lat_min,GLOBAL%lng_deg,&
        GLOBAL%lng_min,GLOBAL%lng_mer,GLOBAL%rlatitude,&
        GLOBAL%rlongitude,GLOBAL%rlng_merid,GRID,CAT)
@@ -172,7 +167,7 @@ contains
        GRID%VEG%rtact,GRID%VEG%rtdens,GRID%VEG%rtres,&
        GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
        GRID%VEG%wsc,GRID%VEG%wcip1,&
-       STORM_PARAM%pixsiz,TOPMODEL_PARAM%area,CAT%fbs,&
+       GLOBAL%pixsiz,GLOBAL%area,CAT%fbs,&
        REG%fbsrg,GLOBAL%ncatch)
 
       print*,'rddata:  Done reading vegetation parameters'
@@ -188,7 +183,7 @@ contains
        SOIL_PARAM%srespar1,SOIL_PARAM%srespar2,SOIL_PARAM%srespar3,SOIL_PARAM%a_ice,SOIL_PARAM%b_ice,&
        SOIL_PARAM%bulk_dens,SOIL_PARAM%amp,SOIL_PARAM%phase,SOIL_PARAM%shift,&
        GLOBAL%inc_frozen,SOIL_PARAM%bcgamm,SOIL_PARAM%par,SOIL_PARAM%corr,GLOBAL%idifind,&
-       GLOBAL%ncatch,GLOBAL%icatch,STORM_PARAM%pixsiz,TOPMODEL_PARAM%area,&
+       GLOBAL%ncatch,GLOBAL%icatch,GLOBAL%pixsiz,GLOBAL%area,&
        GLOBAL%npix,SOIL_PARAM%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
@@ -205,7 +200,7 @@ contains
       read(1000,*) GLOBAL%iopthermc
       read(1000,*) GLOBAL%iopthermc_v
       read(1000,*) GLOBAL%maxnri
-      read(1000,*) STORM_PARAM%toleb
+      read(1000,*) GLOBAL%toleb
 
       print*,'rddata:  Done reading energy balance parameters'
 
@@ -226,19 +221,19 @@ contains
 ! ====================================================================
 
       call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GLOBAL%ilandc,&
-       GLOBAL%npix,GLOBAL%inc_frozen,STORM_PARAM%istorm,&
-       STORM_PARAM%intstm,STORM_PARAM%istmst,intstp,STORM_PARAM%istorm_moss,&
-       STORM_PARAM%intstm_moss,STORM_PARAM%istmst_moss,STORM_PARAM%intstp_moss,&
-       GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,STORM_PARAM%endstm,&
+       GLOBAL%npix,GLOBAL%inc_frozen,GLOBAL%istorm,&
+       GLOBAL%intstm,GLOBAL%istmst,intstp,GLOBAL%istorm_moss,&
+       GLOBAL%intstm_moss,GLOBAL%istmst_moss,GLOBAL%intstp_moss,&
+       GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,GLOBAL%endstm,&
        SOIL_MOISTURE%rzsm1,SOIL_MOISTURE%tzsm1,SOIL_MOISTURE%r_mossm1,&
        SOIL_MOISTURE%r_mossm,SOIL_MOISTURE%rzsm1_u,SOIL_MOISTURE%tzsm1_u,&
        SOIL_MOISTURE%rzsm1_f,SOIL_MOISTURE%tzsm1_f,SOIL_MOISTURE%r_mossm1_u,&
        SOIL_MOISTURE%r_mossm_u,&
        SOIL_MOISTURE%r_mossm1_f,SOIL_MOISTURE%r_mossm_f,SOIL_MOISTURE%rzdthetaidt,&
        SOIL_MOISTURE%tzdthetaidt,SOIL_MOISTURE%zmoss,r_moss_depth,&
-       thetas_moss,INF_PARAM%xintst,INF_PARAM%xintst_moss,INF_PARAM%cuminf,SOIL_PARAM%xk0,SOIL_PARAM%psic,&
+       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,SOIL_PARAM%xk0,SOIL_PARAM%psic,&
        SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%bcgamm,&
-       bcbeta,INF_PARAM%sorp,INF_PARAM%cc,STORM_PARAM%dt,INF_PARAM%sesq,SOIL_PARAM%corr,SOIL_PARAM%par,PackWater_us,&
+       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,SOIL_PARAM%corr,SOIL_PARAM%par,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
        PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
 

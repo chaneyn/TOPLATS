@@ -37,15 +37,16 @@
       !Module containing the unit tests
       USE FRUIT
 
+      !Module containing all the variables used in the model
       USE VARIABLES
        
       !Module containing all the tests
       USE MODULE_TESTS
 
-      !Module containing all the subroutines for I/O of the model
+      !Module containing all the I/O for the interface
       USE MODULE_IO
 
-      !Module containing the models topmodel routines
+      !Module containing topmodel
       USE MODULE_TOPMODEL
 
       !Module containing the cell model
@@ -53,12 +54,8 @@
 
       implicit none
       type (GLOBAL_template) :: GLOBAL
-      !type (ATMOS_FMT_template) :: ATMOS_FMT
-      type (STORM_PARAM_template) :: STORM_PARAM
-      type (TOPMODEL_PARAM_template) :: TOPMODEL_PARAM
       type (MET_RANGE_template) :: MET_RANGE
       type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
-      type (INF_PARAM_template) :: INF_PARAM
       type (SNOW_VARS_template) :: SNOW_VARS
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
@@ -73,6 +70,12 @@
       nthreads = 1
 
 ! ####################################################################
+! Initialize unit testing
+! ####################################################################
+
+call init_fruit
+
+! ####################################################################
 ! Open all files
 ! ####################################################################
 
@@ -83,16 +86,12 @@
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(GLOBAL,STORM_PARAM,TOPMODEL_PARAM,&
-                SOIL_MOISTURE,&
-                INF_PARAM,SNOW_VARS,GRID,REG,CAT)
-      CAT_VARS%zbar1 = TOPMODEL_PARAM%zbar1
+      call rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
+      CAT_VARS%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
 ! Loop through the simulation time.
 ! ####################################################################
-
-call init_fruit !Initialize fruit testing
 
       do i=1,GLOBAL%ndata
 
@@ -113,7 +112,7 @@ call init_fruit !Initialize fruit testing
 ! Initialize water balance variables for the time step.
 ! ####################################################################
 
-        call instep(i,GLOBAL%ncatch,djday,STORM_PARAM%dt,&
+        call instep(i,GLOBAL%ncatch,djday,GLOBAL%dt,&
                 CAT_VARS,REG,CAT)
 
 ! ####################################################################
@@ -157,7 +156,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Run the point model
 ! ####################################################################
 
-               call land_lake(NEWSTORM(1,1),ipix,i,STORM_PARAM%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
+               call land_lake(NEWSTORM(1,1),ipix,i,GLOBAL%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
 
 ! Point data/variables
        
@@ -205,7 +204,7 @@ call OMP_SET_NUM_THREADS(8)
        GRID(GLOBAL%ilandc(ipix))%VEG,&
 
 ! Constants
-       STORM_PARAM%toleb,GLOBAL%maxnri,&
+       GLOBAL%toleb,GLOBAL%maxnri,&
 
 ! Energy balance variables
 
@@ -214,9 +213,9 @@ call OMP_SET_NUM_THREADS(8)
 ! Water balance variables
        
        GRID(ipix)%VARS,&
-       INF_PARAM%cuminf(ipix),&
-       INF_PARAM%sorp(ipix),INF_PARAM%cc(ipix),&
-       INF_PARAM%sesq(ipix),GRID(GLOBAL%isoil(ipix))%SOIL%corr,&
+       GLOBAL%cuminf(ipix),&
+       GLOBAL%sorp(ipix),GLOBAL%cc(ipix),&
+       GLOBAL%sesq(ipix),GRID(GLOBAL%isoil(ipix))%SOIL%corr,&
        GLOBAL%idifind(GLOBAL%isoil(ipix)),&
        GRID(ipix)%VEG%wcip1,GRID(GLOBAL%isoil(ipix))%SOIL%par,&
        GLOBAL%smpet0,&
@@ -224,18 +223,18 @@ call OMP_SET_NUM_THREADS(8)
 ! Storm parameters
 
        istmst(ipix),intstm(ipix),&
-       intstp(ipix),STORM_PARAM%endstm,istorm(ipix),&
-       INF_PARAM%xintst(ipix),&
+       intstp(ipix),GLOBAL%endstm,istorm(ipix),&
+       GLOBAL%xintst(ipix),&
 
 ! Topmodel parameters
 
-       TOPMODEL_PARAM%ff(GLOBAL%icatch(ipix)),TOPMODEL_PARAM%atanb(ipix),TOPMODEL_PARAM%xlamda(GLOBAL%icatch(ipix)),&
+       GLOBAL%ff(GLOBAL%icatch(ipix)),GLOBAL%atanb(ipix),GLOBAL%xlamda(GLOBAL%icatch(ipix)),&
 
 ! Regional saturation parameters
 
        REG,&
 
-! DiTOPMODEL_PARAM%fferent option parameters
+! DiGLOBAL%fferent option parameters
 
        GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopsmini,GLOBAL%ikopt,&
        GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
@@ -282,7 +281,7 @@ call OMP_SET_NUM_THREADS(8)
 
        GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
        i,GLOBAL%iprn,&
-       canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),STORM_PARAM%dt,&
+       canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
 
 ! Grid data
 
@@ -338,7 +337,7 @@ etpix = GRID%VARS%etpix
              s_nr_tzpsum(ic)=0.0
              s_nr_rzpsum(ic)=0.0
 
-            call catflx(i,ic,TOPMODEL_PARAM%area(ic),STORM_PARAM%pixsiz,&
+            call catflx(i,ic,GLOBAL%area(ic),GLOBAL%pixsiz,&
                 r_lakearea(ic),CAT_VARS%ettot(ic),&
        CAT_VARS%etstsum(ic),CAT_VARS%etwtsum(ic),CAT_VARS%etlakesum(ic),&
        CAT_VARS%etbssum(ic),CAT(ic)%fbs,CAT_VARS%etdcsum(ic),&
@@ -349,13 +348,13 @@ etpix = GRID%VARS%etpix
        s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
        s_nr_tzpsum(ic),s_nr_rzpsum(ic))
 
-               call upzbar(i,ic,GLOBAL%iopbf,TOPMODEL_PARAM%q0(ic),&
-       TOPMODEL_PARAM%ff(ic),CAT_VARS%zbar(ic),TOPMODEL_PARAM%dtil(ic),&
-       TOPMODEL_PARAM%basink(ic),dd(ic),TOPMODEL_PARAM%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),TOPMODEL_PARAM%area(ic),&
-       r_lakearea(ic),STORM_PARAM%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
+               call upzbar(i,ic,GLOBAL%iopbf,GLOBAL%q0(ic),&
+       GLOBAL%ff(ic),CAT_VARS%zbar(ic),GLOBAL%dtil(ic),&
+       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
+       r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
        GLOBAL%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
        GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,SOIL_MOISTURE%tzsm1,GRID%SOIL%thetas,&
-       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,STORM_PARAM%pixsiz)
+       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
 
          enddo
 
@@ -364,31 +363,9 @@ etpix = GRID%VARS%etpix
 ! and sum simulation totals.  Then goto next time step.
 ! --------------------------------------------------------------------
 
-         call lswb(i,GLOBAL%ncatch,r_lakearea,STORM_PARAM%pixsiz,GLOBAL%npix,&
-       REG%ettotrg,REG%etlakesumrg,&
-       REG%etstsumrg,REG%etwtsumrg,REG%fbsrg,REG%etbssumrg,&
-       REG%etdcsumrg,REG%etwcsumrg,REG%pptsumrg,&
-       REG%pnetsumrg,REG%qsurfrg,REG%sxrtotrg,REG%xixtotrg,&
-       REG%contotrg,REG%ranrunrg,REG%conrunrg,REG%qbreg,&
-       REG%gwtsumrg,REG%grzsumrg,REG%gtzsumrg,REG%capsumrg,&
-       REG%difrzsumrg,REG%dswcsum,REG%wcrhssum,&
-       REG%dsrzsum,REG%rzrhssum,REG%dstzsum,REG%tzrhssum,&
-       REG%dssum,REG%svarhssum,REG%rzsmav,REG%tzsmav,&
-       REG%rnpetsum,REG%xlepetsum,REG%hpetsum,REG%gpetsum,&
-       REG%dshpetsum,REG%tkpetsum,REG%tkmidpetsum,&
-       REG%rnsum,REG%xlesum,REG%hsum,REG%gsum,REG%dshsum,&
-       REG%tksum,REG%tkmidsum,REG%tkdeepsum,REG%fwreg,&
-       REG%wcip1sum,REG%zbar1rg,REG%pr3sat,REG%perrg2,&
-       REG%pr2sat,REG%pr2uns,REG%perrg1,REG%pr1sat,REG%pr1rzs,&
-       REG%pr1tzs,REG%pr1uns,REG%persxr,REG%perixr,&
-       REG%persac,REG%peruac,REG%perusc,GLOBAL%iprn,REG%wcsum,REG%zbarrg,&
-       GLOBAL%MODE,f_lake,veg_pdf,nlcs,GLOBAL%ivgtyp,veg,REG%Swqsum,REG%Swq_ussum,REG%Sdepthsum,&
-       REG%Sdepth_ussum,qb24sum)
+         call lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL)
 
       enddo
-
-call fruit_summary !Summarize the fruit output for this time step
-call fruit_finalize !Finalize the fruit library
 
 ! ####################################################################
 ! Close all files
@@ -400,6 +377,13 @@ call FILE_CLOSE()
       write (*,*)
       write (*,*) 'Simulation terminated'
       write (*,*)
+
+! ####################################################################
+! Finalize unit testing and print summary
+! ####################################################################
+
+call fruit_summary !Summarize the fruit output for this time step
+call fruit_finalize !Finalize the fruit library
 
       stop
 

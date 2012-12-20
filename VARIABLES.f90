@@ -1073,25 +1073,6 @@ type ATMOS_template
        real*8 :: tdry,rh,press,pptms,rld,rsd,uzw
 end type ATMOS_template
 
-type STORM_PARAM_template
-
-        integer,dimension(MAX_PIX) :: istorm,intstm,istmst,intstp
-        integer,dimension(1+MOS_FLG*(MAX_PIX-1)) :: istorm_moss,intstm_moss,&
-                istmst_moss,intstp_moss
-        real*8 :: endstm,toleb,pixsiz,dt
-
-end type STORM_PARAM_template
-
-type TOPMODEL_PARAM_template
-
-        real*8,dimension(MAX_CAT) :: q0,ff,dd,area,dtil,xlength,basink,zbar1,&
-                xlamda
-        real*8,dimension(MAX_PIX) :: atanb
-        real*8,dimension(MAX_PIX,2) :: wslp
-        integer,dimension(MAX_PIX) :: iwel
-
-end type TOPMODEL_PARAM_template
-
 type SOIL_PARAM_template
         
         real*8 :: smpet0
@@ -1118,13 +1099,6 @@ type SOIL_MOISTURE_template
                 r_mossm1_u,r_mossm_u,r_mossm1_f,r_mossm_f
 
 end type
-
-type INF_PARAM_template
-
-        real*8,dimension(MAX_PIX) :: xintst,cuminf,sorp,cc,sesq,qb0
-        real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
-
-end type 
 
 type SNOW_VARS_template
 

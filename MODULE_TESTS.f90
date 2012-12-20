@@ -17,22 +17,91 @@ contains
 !
 ! ====================================================================
 
-      subroutine lswb(i,ncatch,r_lakearea,pixsiz,npix,ettotrg,etlakesumrg,&
-       etstsumrg,etwtsumrg,fbsrg,etbssumrg,etdcsumrg,etwcsumrg,pptsumrg,&
-       pnetsumrg,qsurfrg,sxrtotrg,xixtotrg,contotrg,ranrunrg,conrunrg,qbreg,&
-       gwtsumrg,grzsumrg,gtzsumrg,capsumrg,difrzsumrg,dswcsum,wcrhssum,&
-       dsrzsum,rzrhssum,dstzsum,tzrhssum,dssum,svarhssum,rzsmav,tzsmav,&
-       rnpetsum,xlepetsum,hpetsum,gpetsum,dshpetsum,tkpetsum,tkmidpetsum,&
-       rnsum,xlesum,hsum,gsum,dshsum,tksum,tkmidsum,tkdeepsum,fwreg,wcip1sum,&
-       zbar1rg,pr3sat,perrg2,pr2sat,pr2uns,perrg1,pr1sat,pr1rzs,pr1tzs,pr1uns,&
-       persxr,perixr,persac,peruac,perusc,iprn,wcsum,zbarrg,MODE,f_lake,&
-       veg_pdf,nlcs,ivgtyp,veg,Swqsum,Swq_ussum,Sdepthsum,Sdepth_ussum,qb24sum)
+      subroutine lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL)
 
       implicit none
       include "help/lswb.h"
+      type (REGIONAL_template),intent(inout) :: REG
+      type (GLOBAL_template),intent(in) :: GLOBAL
       type (REGIONAL_template) :: REG_OLD
       real*8 rest
       real*8 :: tmp
+      ncatch = GLOBAL%ncatch
+      pixsiz = GLOBAL%pixsiz
+      npix = GLOBAL%npix
+      ettotrg = REG%ettotrg
+      etlakesumrg = REG%etlakesumrg
+      etstsumrg = REG%etstsumrg
+      etwtsumrg = REG%etwtsumrg
+      fbsrg = REG%fbsrg
+      etbssumrg = REG%etbssumrg
+      etdcsumrg = REG%etdcsumrg
+      etwcsumrg = REG%etwcsumrg
+      pptsumrg = REG%pptsumrg
+      pnetsumrg = REG%pnetsumrg
+      qsurfrg = REG%qsurfrg
+      sxrtotrg = REG%sxrtotrg
+      xixtotrg = REG%xixtotrg 
+      contotrg = REG%contotrg
+      ranrunrg = REG%ranrunrg
+      conrunrg = REG%conrunrg
+      qbreg = REG%qbreg
+      gwtsumrg = REG%gwtsumrg
+      grzsumrg = REG%grzsumrg
+      gtzsumrg = REG%gtzsumrg
+      capsumrg = REG%capsumrg
+      difrzsumrg = REG%difrzsumrg
+      dswcsum = REG%dswcsum
+      wcrhssum = REG%wcrhssum
+      dsrzsum = REG%dsrzsum
+      rzrhssum = REG%rzrhssum
+      dstzsum = REG%dstzsum
+      tzrhssum = REG%tzrhssum
+      dssum = REG%dssum
+      svarhssum = REG%svarhssum
+      rzsmav = REG%rzsmav
+      tzsmav = REG%tzsmav
+      rnpetsum = REG%rnpetsum
+      xlepetsum = REG%xlepetsum
+      hpetsum = REG%hpetsum
+      gpetsum = REG%gpetsum
+      dshpetsum = REG%dshpetsum
+      tkpetsum = REG%tkpetsum
+      tkmidpetsum = REG%tkmidpetsum
+      rnsum = REG%rnsum
+      xlesum = REG%xlesum
+      hsum = REG%hsum
+      gsum = REG%gsum
+      dshsum = REG%dshsum 
+      tksum = REG%tksum
+      tkmidsum = REG%tkmidsum
+      tkdeepsum = REG%tkdeepsum
+      fwreg = REG%fwreg
+      wcip1sum = REG%wcip1sum
+      zbar1rg = REG%zbar1rg
+      pr3sat = REG%pr3sat 
+      perrg2 = REG%perrg2
+      pr2sat = REG%pr2sat
+      pr2uns = REG%pr2uns
+      perrg1 = REG%perrg1
+      pr1sat = REG%pr1sat
+      pr1rzs = REG%pr1rzs
+      pr1tzs = REG%pr1tzs
+      pr1uns = REG%pr1uns
+      persxr = REG%persxr
+      perixr = REG%perixr
+      persac = REG%persac
+      peruac = REG%peruac
+      perusc = REG%perusc
+      iprn = GLOBAL%iprn
+      wcsum = REG%wcsum
+      zbarrg = REG%zbarrg
+      MODE = GLOBAL%MODE
+      ivgtyp = GLOBAL%ivgtyp
+      Swqsum = REG%Swqsum
+      Swq_ussum = REG%Swq_ussum
+      Sdepthsum = REG%Sdepthsum
+      Sdepth_ussum = REG%Sdepth_ussum
 
 ! ====================================================================
 ! Calculate the number of pixels covered by lakes.
@@ -608,6 +677,9 @@ contains
   call assert_equals (Sdepth_ussum*1000,REG_OLD%Sdepth_ussum)
   call set_unit_name ('lswb.f90: Sdepthsum')
   call assert_equals (Sdepthsum*1000,REG_OLD%Sdepthsum)
+
+      REG%wcip1sum = wcip1sum
+      REG%zbar1rg = zbar1rg
 
       return
 
