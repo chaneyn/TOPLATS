@@ -1298,5 +1298,101 @@ contains
       
       end function calcrib
 
+
+! ====================================================================
+!
+!                       subroutine calc_rs
+!
+! ====================================================================
+!
+! Calculate the incoming solar radiation for the under and over story
+! under the assumption of only one reflection.
+!
+! ====================================================================
+
+      subroutine calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
+                         albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+
+      implicit none
+      include "help/calc_rs.h"
+
+! ====================================================================
+! Calculate the incoming solar radiation for the under story and over
+! story layers.
+! ====================================================================
+
+      refus=0.d0
+      ccc=canclos
+      thr=extinct
+
+! --------------------------------------------------------------------
+! Determine what albedo of the understory is : moss, snow or normal
+! vegetation.
+! --------------------------------------------------------------------
+
+      if (i_und.gt.0) refus=albd_us
+      if (i_moss.gt.0) refus=alb_moss
+      if (Swq_us.gt.(0.d0)) refus=alb_snow
+
+! --------------------------------------------------------------------
+! Calculate the incoming radiation under the assumption of only
+! one reflection.
+! --------------------------------------------------------------------
+
+      if ( (i_und.gt.0).or.(i_moss.gt.0) ) then
+
+         rs_over=(1.d0+refus*thr)*rsd
+         rs_under=rsd*(thr*ccc+1.d0-ccc)
+
+      endif
+
+      if ( (i_und.eq.0).and.(i_moss.eq.0) ) then
+
+         rs_over=rsd
+         rs_under=rsd
+
+      endif
+
+      return
+
+      end subroutine calc_rs
+
+
+! ====================================================================
+!
+!            subroutine sm_cen_dif
+!
+! ====================================================================
+!
+! Initialize soil moisture for the calculation of the thermodynami!
+! parameters, as a centered difference.
+!
+! ====================================================================
+
+      subroutine sm_cen_dif(iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
+                            rzsmold,tzsmold)
+
+      implicit none
+      include "help/sm_cen_dif.h"
+
+      iffroz=0
+      if (tkmid.lt.273.15) iffroz=1
+
+      if (zmid.ge.zrzmax) then
+
+         smtmp=0.5*rzsm + 0.5*tzsm
+         smold=0.5*rzsmold + 0.5*tzsmold
+
+      else
+
+         smtmp=rzsm
+         smold=rzsmold
+
+      endif
+
+      return
+
+      end subroutine sm_cen_dif
+
 END MODULE MODULE_ATMOS
 

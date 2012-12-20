@@ -1,3 +1,4 @@
+
 ! ====================================================================
 !
 !            subroutine sm_cen_dif
@@ -32,4 +33,5 @@
 
       return
 
-      end
+      end subroutine sm_cen_dif
+      
