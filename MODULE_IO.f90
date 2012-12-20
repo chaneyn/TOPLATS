@@ -12,15 +12,15 @@ contains
 
       implicit none
       type (GRID_MET_template) :: ATMOS(nrow*ncol)
-      type (OPTIONS_template) :: OPTIONS
+      type (GLOBAL_template) :: GLOBAL
       integer :: nrow,ncol,ipixnum(nrow,ncol)
       integer :: iyear,iday,ihour
       integer :: forcingnvars,i
       real,dimension(:,:,:),allocatable :: TempArray
       forcingnvars = 7
-      OPTIONS%ncol = ncol
-      OPTIONS%nrow = nrow
-      allocate(TempArray(OPTIONS%ncol,OPTIONS%nrow,forcingnvars))
+      GLOBAL%ncol = ncol
+      GLOBAL%nrow = nrow
+      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,forcingnvars))
 
 ! ====================================================================
 ! Read year, day and hour
@@ -36,31 +36,31 @@ contains
 
 ! Longwave Radiation
 
-      call rdforc(ATMOS%rld,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,1))
+      call rdforc(ATMOS%rld,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,1))
 
 ! Air Pressure
 
-      call rdforc(ATMOS%press,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,2))
+      call rdforc(ATMOS%press,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,2))
 
 ! Relative Humidity
 
-      call rdforc(ATMOS%rh,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,3))
+      call rdforc(ATMOS%rh,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,3))
 
 ! Shortwave Radiation
 
-      call rdforc(ATMOS%rsd,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,4))
+      call rdforc(ATMOS%rsd,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,4))
 
 ! Air Temperature
 
-      call rdforc(ATMOS%tdry,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,5))
+      call rdforc(ATMOS%tdry,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,5))
 
 ! Wind Speed
 
-      call rdforc(ATMOS%uzw,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,6))
+      call rdforc(ATMOS%uzw,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,6))
 
 ! Precipitation
 
-      call rdforc(ATMOS%pptms,OPTIONS%nrow,OPTIONS%ncol,ipixnum,TempArray(:,:,7))
+      call rdforc(ATMOS%pptms,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,7))
        
       contains
 
@@ -88,15 +88,15 @@ contains
 ! in-variant data.
 ! ####################################################################
 
-      subroutine rddata(OPTIONS,STORM_PARAM,TOPMODEL_PARAM,&
+      subroutine rddata(GLOBAL,STORM_PARAM,TOPMODEL_PARAM,&
                 SOIL_MOISTURE,&
-                INF_PARAM,SNOW_VARS,GRID,REG,GLOBAL,CAT)
+                INF_PARAM,SNOW_VARS,GRID,REG,CAT)
 
       implicit none
       !include "SNOW.h"
       !include "wgtpar.h"
       include "help/rddata.h"
-      type (OPTIONS_template) :: OPTIONS
+      type (GLOBAL_template) :: GLOBAL
       type (STORM_PARAM_template) :: STORM_PARAM
       type (TOPMODEL_PARAM_template) :: TOPMODEL_PARAM
       type (SOIL_PARAM_template) :: SOIL_PARAM
@@ -105,7 +105,6 @@ contains
       type (SNOW_VARS_template) :: SNOW_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
-      type (GLOBAL_template) :: GLOBAL
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
       character(len=200) :: filename
 
@@ -129,28 +128,28 @@ contains
 ! Read in simulation time constants and control variables.
 ! ====================================================================
 
-      read(1000,*) OPTIONS%ndata
+      read(1000,*) GLOBAL%ndata
       read(1000,*) STORM_PARAM%dt
       read(1000,*) STORM_PARAM%endstm
       read(1000,*) iophd
 
       print*, 'rddata:  Done reading time parameters'
-      print*, 'rddata:  Total time steps = ',OPTIONS%ndata
+      print*, 'rddata:  Total time steps = ',GLOBAL%ndata
 
 ! ====================================================================
 ! Read and initialize topmodel parameters, atb distribution and
 ! initial water table depth.
 ! ====================================================================
 
-      call rdtpmd(OPTIONS%iopbf,OPTIONS%iopwt0,OPTIONS%ncatch,OPTIONS%nrow,&
-       OPTIONS%ncol,STORM_PARAM%pixsiz,OPTIONS%ipixnum,OPTIONS%iprn,OPTIONS%ixpix,OPTIONS%iypix,&
-       OPTIONS%npix,TOPMODEL_PARAM%q0,TOPMODEL_PARAM%ff,INF_PARAM%qb0,&
-       TOPMODEL_PARAM%dd,TOPMODEL_PARAM%xlength,TOPMODEL_PARAM%basink,TOPMODEL_PARAM%xlamda,OPTIONS%icatch,&
+      call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
+       GLOBAL%ncol,STORM_PARAM%pixsiz,GLOBAL%ipixnum,GLOBAL%iprn,GLOBAL%ixpix,GLOBAL%iypix,&
+       GLOBAL%npix,TOPMODEL_PARAM%q0,TOPMODEL_PARAM%ff,INF_PARAM%qb0,&
+       TOPMODEL_PARAM%dd,TOPMODEL_PARAM%xlength,TOPMODEL_PARAM%basink,TOPMODEL_PARAM%xlamda,GLOBAL%icatch,&
        TOPMODEL_PARAM%area,TOPMODEL_PARAM%atanb,TOPMODEL_PARAM%dtil,TOPMODEL_PARAM%zbar1,&
        TOPMODEL_PARAM%iwel,TOPMODEL_PARAM%wslp,&
-       OPTIONS%lat_deg,OPTIONS%lat_min,OPTIONS%lng_deg,&
-       OPTIONS%lng_min,OPTIONS%lng_mer,OPTIONS%rlatitude,&
-       OPTIONS%rlongitude,OPTIONS%rlng_merid,GRID,CAT)
+       GLOBAL%lat_deg,GLOBAL%lat_min,GLOBAL%lng_deg,&
+       GLOBAL%lng_min,GLOBAL%lng_mer,GLOBAL%rlatitude,&
+       GLOBAL%rlongitude,GLOBAL%rlng_merid,GRID,CAT)
 
       print*,'rddata:  Done reading TOPMODEL parameters'
 
@@ -158,8 +157,8 @@ contains
 ! Read in and initialize vegatation parameters.
 ! ====================================================================
 
-      call rdveg(OPTIONS%npix,OPTIONS%nrow,OPTIONS%ncol,OPTIONS%ilandc,&
-       OPTIONS%ipixnum,OPTIONS%nlandc,OPTIONS%iopveg,OPTIONS%ivgtyp,OPTIONS%iprn,&
+      call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ilandc,&
+       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GLOBAL%ivgtyp,GLOBAL%iprn,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
        GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
@@ -174,7 +173,7 @@ contains
        GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
        GRID%VEG%wsc,GRID%VEG%wcip1,&
        STORM_PARAM%pixsiz,TOPMODEL_PARAM%area,CAT%fbs,&
-       REG%fbsrg,OPTIONS%ncatch)
+       REG%fbsrg,GLOBAL%ncatch)
 
       print*,'rddata:  Done reading vegetation parameters'
 
@@ -182,30 +181,30 @@ contains
 ! Read in soil parameters and root and transmission zone information.
 ! ====================================================================
 
-      call rdsoil(OPTIONS%nsoil,OPTIONS%irestype,OPTIONS%ikopt,GLOBAL%zrzmax,OPTIONS%iopsmini,SOIL_PARAM%smpet0,&
-       OPTIONS%isoil,OPTIONS%nrow,OPTIONS%ncol,OPTIONS%ipixnum,SOIL_PARAM%bcbeta,&
+      call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,SOIL_PARAM%smpet0,&
+       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,SOIL_PARAM%bcbeta,&
        SOIL_PARAM%psic,SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%xk0,SOIL_PARAM%zdeep,SOIL_PARAM%tdeep,SOIL_PARAM%zmid,&
-       SOIL_PARAM%tmid0,SOIL_PARAM%rocpsoil,SOIL_PARAM%quartz,OPTIONS%ifcoarse,&
+       SOIL_PARAM%tmid0,SOIL_PARAM%rocpsoil,SOIL_PARAM%quartz,GLOBAL%ifcoarse,&
        SOIL_PARAM%srespar1,SOIL_PARAM%srespar2,SOIL_PARAM%srespar3,SOIL_PARAM%a_ice,SOIL_PARAM%b_ice,&
        SOIL_PARAM%bulk_dens,SOIL_PARAM%amp,SOIL_PARAM%phase,SOIL_PARAM%shift,&
-       OPTIONS%inc_frozen,SOIL_PARAM%bcgamm,SOIL_PARAM%par,SOIL_PARAM%corr,OPTIONS%idifind,&
-       OPTIONS%ncatch,OPTIONS%icatch,STORM_PARAM%pixsiz,TOPMODEL_PARAM%area,&
-       OPTIONS%npix,SOIL_PARAM%psicav,OPTIONS%iprn,GRID%VEG%tc,GRID%VEG%tw)
+       GLOBAL%inc_frozen,SOIL_PARAM%bcgamm,SOIL_PARAM%par,SOIL_PARAM%corr,GLOBAL%idifind,&
+       GLOBAL%ncatch,GLOBAL%icatch,STORM_PARAM%pixsiz,TOPMODEL_PARAM%area,&
+       GLOBAL%npix,SOIL_PARAM%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
 
 ! ====================================================================
-! Read in options for energy balance and calculate soil thermal
+! Read in GLOBAL for energy balance and calculate soil thermal
 ! conductivity. 
 ! ====================================================================
 
-      OPTIONS%ioppet = 0 !Always run in full water and energy balance
-      OPTIONS%iopwv = 1 !Always read in water vapor using relative humidity
-      OPTIONS%iopstab = 1 !Always perform stability correction on aero. resis.
-      read(1000,*) OPTIONS%iopgveg
-      read(1000,*) OPTIONS%iopthermc
-      read(1000,*) OPTIONS%iopthermc_v
-      read(1000,*) OPTIONS%maxnri
+      GLOBAL%ioppet = 0 !Always run in full water and energy balance
+      GLOBAL%iopwv = 1 !Always read in water vapor using relative humidity
+      GLOBAL%iopstab = 1 !Always perform stability correction on aero. resis.
+      read(1000,*) GLOBAL%iopgveg
+      read(1000,*) GLOBAL%iopthermc
+      read(1000,*) GLOBAL%iopthermc_v
+      read(1000,*) GLOBAL%maxnri
       read(1000,*) STORM_PARAM%toleb
 
       print*,'rddata:  Done reading energy balance parameters'
@@ -214,23 +213,23 @@ contains
 ! Read in the mode in which to run the program.
 ! ====================================================================
 
-      OPTIONS%MODE = 1
-      OPTIONS%FRCOV = 0
-      OPTIONS%frcbeta = 999
+      GLOBAL%MODE = 1
+      GLOBAL%FRCOV = 0
+      GLOBAL%frcbeta = 999
 
-      if (OPTIONS%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
-      if (OPTIONS%FRCOV.eq.0) print*,'rddata:  Frac. rain.l cover not included'
+      if (GLOBAL%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
+      if (GLOBAL%FRCOV.eq.0) print*,'rddata:  Frac. rain.l cover not included'
 
 ! ====================================================================
 ! Initialize the simulation sum variables and storm.and.&
 ! interstorm flags and times.
 ! ====================================================================
 
-      call inisim(OPTIONS%iopsmini,OPTIONS%nrow,OPTIONS%ncol,OPTIONS%ipixnum,OPTIONS%ilandc,&
-       OPTIONS%npix,OPTIONS%inc_frozen,STORM_PARAM%istorm,&
+      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GLOBAL%ilandc,&
+       GLOBAL%npix,GLOBAL%inc_frozen,STORM_PARAM%istorm,&
        STORM_PARAM%intstm,STORM_PARAM%istmst,intstp,STORM_PARAM%istorm_moss,&
        STORM_PARAM%intstm_moss,STORM_PARAM%istmst_moss,STORM_PARAM%intstp_moss,&
-       OPTIONS%isoil,OPTIONS%idifind,SOIL_PARAM%smpet0,r_mossmpet0,STORM_PARAM%endstm,&
+       GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,STORM_PARAM%endstm,&
        SOIL_MOISTURE%rzsm1,SOIL_MOISTURE%tzsm1,SOIL_MOISTURE%r_mossm1,&
        SOIL_MOISTURE%r_mossm,SOIL_MOISTURE%rzsm1_u,SOIL_MOISTURE%tzsm1_u,&
        SOIL_MOISTURE%rzsm1_f,SOIL_MOISTURE%tzsm1_f,SOIL_MOISTURE%r_mossm1_u,&
@@ -243,7 +242,7 @@ contains
        SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
        PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
 
-      read (1000,*) OPTIONS%dtveg
+      read (1000,*) GLOBAL%dtveg
 
       print*,'rddata:  Done initializing simulation'
 
@@ -299,7 +298,7 @@ contains
 ! ====================================================================
 
       subroutine rdveg_update (&
-       OPTIONS,ntdveg,GRID)
+       GLOBAL,ntdveg,GRID)
 
       implicit none
       !include "wgtpar.h"
@@ -312,7 +311,7 @@ contains
       integer :: dvegnvars,ipos,jpos
       integer :: ntdveg
       real,dimension(:,:,:),allocatable :: TempArray
-      type (OPTIONS_template) :: OPTIONS
+      type (GLOBAL_template) :: GLOBAL
       type (GRID_template),dimension(:),allocatable :: GRID
       dvegnvars = 2
 
@@ -324,9 +323,9 @@ contains
 ! ====================================================================
 
       ntdveg = ntdveg + 1
-      allocate(TempArray(OPTIONS%ncol,OPTIONS%nrow,dvegnvars))
-      allocate(VegData%xlai(OPTIONS%ncol,OPTIONS%nrow))
-      allocate(VegData%albd(OPTIONS%ncol,OPTIONS%nrow))
+      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
+      allocate(VegData%xlai(GLOBAL%ncol,GLOBAL%nrow))
+      allocate(VegData%albd(GLOBAL%ncol,GLOBAL%nrow))
       read(1003,rec=ntdveg)TempArray(:,:,:)
       VegData%xlai(:,:) = dble(TempArray(:,:,1))
       VegData%albd(:,:) = dble(TempArray(:,:,2))
@@ -335,15 +334,15 @@ contains
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
-        do kk=1,OPTIONS%nlandc
+        do kk=1,GLOBAL%nlandc
 
                 !Map the kk position to the i,j position
-                if(mod(kk,OPTIONS%nrow) .ne. 0)then
-                        ipos = kk/OPTIONS%nrow+1
-                        jpos = mod(kk,OPTIONS%nrow)
+                if(mod(kk,GLOBAL%nrow) .ne. 0)then
+                        ipos = kk/GLOBAL%nrow+1
+                        jpos = mod(kk,GLOBAL%nrow)
                 else
-                        ipos = kk/OPTIONS%nrow
-                        jpos = OPTIONS%nrow
+                        ipos = kk/GLOBAL%nrow
+                        jpos = GLOBAL%nrow
                 endif
 
                 GRID(kk)%VEG%xlai = VegData%xlai(ipos,jpos) !dveg
@@ -359,13 +358,13 @@ contains
 ! Calculate parameters for each land cover type.
 ! ====================================================================
 
-      do 300 kk=1,OPTIONS%nlandc
+      do 300 kk=1,GLOBAL%nlandc
 
 ! --------------------------------------------------------------------&
 ! If not bare soil then calculate the canopy resistance.
 ! --------------------------------------------------------------------&
 
-         if (OPTIONS%ivgtyp(kk).ne.0) then
+         if (GLOBAL%ivgtyp(kk).ne.0) then
 
             GRID(kk)%VEG%rescan = GRID(kk)%VEG%rsmin/GRID(kk)%VEG%xlai
 
@@ -1454,7 +1453,7 @@ end subroutine FILE_CLOSE
       allocate(TempArray(ncol,nrow,soilnvars))
 
 ! ====================================================================
-! Read spatially constant bare soil parameters and options.
+! Read spatially constant bare soil parameters and GLOBAL.
 ! Then read root and transmission zone data.
 ! ====================================================================
 

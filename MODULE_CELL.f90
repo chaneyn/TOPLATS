@@ -103,7 +103,6 @@ contains
       include 'wgtpar.h'
       include 'LAKE.h'
       include 'help/land_lake.h'
-      type (OPTIONS_template) :: OPTIONS
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GRID_MET_template) :: GRID_MET

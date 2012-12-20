@@ -1016,26 +1016,7 @@ type GLOBAL_template
         real*8 :: zrzmax
         !Soil
         real*8 :: smpet0
-end type GLOBAL_template
-
-!POINT DATA
-
-type POINT_template
-        !Water balance variables
-        real*8 :: zrz,ztz,smold,rzsmold,tzsmold,capflx,difrz,diftz,grz,&
-                gtz,satxr,xinfxr,dc,fw,dsrz,rzrhs,dstz,tzrhs,dswc,wcrhs = 0.0
-        !Energy fluxes
-        real*8 :: epwms
-        !Constants
-        real*8 :: row,cph2o,cp,roi
-end type 
-
-type ATMOS_template
-       real*8 :: tdry,rh,press,pptms,rld,rsd,uzw
-end type ATMOS_template
-
-type OPTIONS_template
-
+	!OPTIONS template
         integer,dimension(MAX_FIL) :: iprn,nseries,icurser
         integer,dimension(MAX_FIL,MAX_SER) :: ioutst,ioutsp,iouten
         integer,dimension(MAX_CAT) :: icount
@@ -1059,8 +1040,38 @@ type OPTIONS_template
         ! Geographic variables
         real*8 :: lat_deg,lat_min,lng_deg,lng_min,lng_mer,rlatitude,&
                 rlongitude,rlng_merid
-        
-end type OPTIONS_template
+	!STORM PARAM
+        integer,dimension(MAX_PIX) :: istorm,intstm,istmst,intstp
+        integer,dimension(1+MOS_FLG*(MAX_PIX-1)) :: istorm_moss,intstm_moss,&
+                istmst_moss,intstp_moss
+        real*8 :: endstm,toleb,pixsiz,dt
+	!TOPMODEL PARAM
+        real*8,dimension(MAX_CAT) :: q0,ff,dd,area,dtil,xlength,basink,zbar1,&
+                xlamda
+        real*8,dimension(MAX_PIX) :: atanb
+        real*8,dimension(MAX_PIX,2) :: wslp
+        integer,dimension(MAX_PIX) :: iwel
+	!INFILTRATION PARAM
+        real*8,dimension(MAX_PIX) :: xintst,cuminf,sorp,cc,sesq,qb0
+        real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
+
+end type GLOBAL_template
+
+!POINT DATA
+
+type POINT_template
+        !Water balance variables
+        real*8 :: zrz,ztz,smold,rzsmold,tzsmold,capflx,difrz,diftz,grz,&
+                gtz,satxr,xinfxr,dc,fw,dsrz,rzrhs,dstz,tzrhs,dswc,wcrhs = 0.0
+        !Energy fluxes
+        real*8 :: epwms
+        !Constants
+        real*8 :: row,cph2o,cp,roi
+end type 
+
+type ATMOS_template
+       real*8 :: tdry,rh,press,pptms,rld,rsd,uzw
+end type ATMOS_template
 
 type STORM_PARAM_template
 

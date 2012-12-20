@@ -52,7 +52,7 @@
       USE MODULE_CELL
 
       implicit none
-      type (OPTIONS_template) :: OPTIONS
+      type (GLOBAL_template) :: GLOBAL
       !type (ATMOS_FMT_template) :: ATMOS_FMT
       type (STORM_PARAM_template) :: STORM_PARAM
       type (TOPMODEL_PARAM_template) :: TOPMODEL_PARAM
@@ -63,7 +63,6 @@
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
-      type (GLOBAL_template) :: GLOBAL
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
       type (POINT_template) :: POINT_VARS
       integer :: nthreads,chunksize
@@ -84,16 +83,16 @@
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(OPTIONS,STORM_PARAM,TOPMODEL_PARAM,&
+      call rddata(GLOBAL,STORM_PARAM,TOPMODEL_PARAM,&
                 SOIL_MOISTURE,&
-                INF_PARAM,SNOW_VARS,GRID,REG,GLOBAL,CAT)
+                INF_PARAM,SNOW_VARS,GRID,REG,CAT)
       CAT_VARS%zbar1 = TOPMODEL_PARAM%zbar1
 
 ! ####################################################################
 ! Loop through the simulation time.
 ! ####################################################################
 
-      do i=1,OPTIONS%ndata
+      do i=1,GLOBAL%ndata
 
           print*, "Time Step: ",i," Year: ",iyear," Julian Day: ",&
                     iday," Hour: ",ihour
@@ -102,9 +101,9 @@
 ! Update the vegetation parameters if required.
 ! ####################################################################
 
-         if (mod(i,OPTIONS%dtveg).eq.0) then
+         if (mod(i,GLOBAL%dtveg).eq.0) then
 
-            call rdveg_update(OPTIONS,ntdveg,GRID)
+            call rdveg_update(GLOBAL,ntdveg,GRID)
 
          endif
 
@@ -112,14 +111,14 @@
 ! Initialize water balance variables for the time step.
 ! ####################################################################
 
-        call instep(i,OPTIONS%ncatch,djday,STORM_PARAM%dt,&
+        call instep(i,GLOBAL%ncatch,djday,STORM_PARAM%dt,&
                 CAT_VARS,REG,CAT)
 
 ! ####################################################################
 ! Read meteorological data.
 ! ####################################################################
 
-        call rdatmo(OPTIONS%nrow,OPTIONS%ncol,OPTIONS%ipixnum,iyear,&
+        call rdatmo(GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,iyear,&
                     iday,ihour,i,GRID%MET)
 
 ! ####################################################################
@@ -139,7 +138,7 @@ call OMP_SET_NUM_THREADS(8)
 !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px,POINT_VARS) 
 !$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
-            do ipix=1,OPTIONS%npix
+            do ipix=1,GLOBAL%npix
             POINT_VARS%row = 997.d0
             POINT_VARS%cph2o = 4186.d0
             POINT_VARS%cp = 1005.d0
@@ -150,13 +149,13 @@ call OMP_SET_NUM_THREADS(8)
 ! Calculate the matrix indices depending on the land cover geometry.
 ! ####################################################################
 
-               call clc_ind (OPTIONS%ilandc(ipix),ipix,SNOW_RUN,sw_lc,sw_px,SNW_FLG,s_lc,s_px)
+               call clc_ind (GLOBAL%ilandc(ipix),ipix,SNOW_RUN,sw_lc,sw_px,SNW_FLG,s_lc,s_px)
 
 ! ####################################################################
 ! Run the point model
 ! ####################################################################
 
-               call land_lake(NEWSTORM(1,1),ipix,i,STORM_PARAM%dt,OPTIONS%inc_frozen,OPTIONS%i_2l,l_px,&
+               call land_lake(NEWSTORM(1,1),ipix,i,STORM_PARAM%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
 
 ! Point data/variables
        
@@ -168,7 +167,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       OPTIONS%ivgtyp(OPTIONS%ilandc(ipix)),&
+       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
 
 ! Snow pack variables
 
@@ -191,20 +190,20 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Temperature variables
 
-       Tdeepstep(OPTIONS%isoil(ipix)),&
+       Tdeepstep(GLOBAL%isoil(ipix)),&
 
 ! Soil parameters
         
-       GRID(OPTIONS%isoil(ipix))%SOIL,&
-       OPTIONS%ifcoarse(OPTIONS%isoil(ipix)),&
+       GRID(GLOBAL%isoil(ipix))%SOIL,&
+       GLOBAL%ifcoarse(GLOBAL%isoil(ipix)),&
        GLOBAL%zrzmax,&
 
 ! Vegetation parameters
 
-       GRID(OPTIONS%ilandc(ipix))%VEG,&
+       GRID(GLOBAL%ilandc(ipix))%VEG,&
 
 ! Constants
-       STORM_PARAM%toleb,OPTIONS%maxnri,&
+       STORM_PARAM%toleb,GLOBAL%maxnri,&
 
 ! Energy balance variables
 
@@ -215,9 +214,9 @@ call OMP_SET_NUM_THREADS(8)
        GRID(ipix)%VARS,&
        INF_PARAM%cuminf(ipix),&
        INF_PARAM%sorp(ipix),INF_PARAM%cc(ipix),&
-       INF_PARAM%sesq(ipix),GRID(OPTIONS%isoil(ipix))%SOIL%corr,&
-       OPTIONS%idifind(OPTIONS%isoil(ipix)),&
-       GRID(ipix)%VEG%wcip1,GRID(OPTIONS%isoil(ipix))%SOIL%par,&
+       INF_PARAM%sesq(ipix),GRID(GLOBAL%isoil(ipix))%SOIL%corr,&
+       GLOBAL%idifind(GLOBAL%isoil(ipix)),&
+       GRID(ipix)%VEG%wcip1,GRID(GLOBAL%isoil(ipix))%SOIL%par,&
        GLOBAL%smpet0,&
 
 ! Storm parameters
@@ -228,7 +227,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Topmodel parameters
 
-       TOPMODEL_PARAM%ff(OPTIONS%icatch(ipix)),TOPMODEL_PARAM%atanb(ipix),TOPMODEL_PARAM%xlamda(OPTIONS%icatch(ipix)),&
+       TOPMODEL_PARAM%ff(GLOBAL%icatch(ipix)),TOPMODEL_PARAM%atanb(ipix),TOPMODEL_PARAM%xlamda(GLOBAL%icatch(ipix)),&
 
 ! Regional saturation parameters
 
@@ -236,11 +235,11 @@ call OMP_SET_NUM_THREADS(8)
 
 ! DiTOPMODEL_PARAM%fferent option parameters
 
-       OPTIONS%iopthermc,OPTIONS%iopgveg,OPTIONS%iopthermc_v,OPTIONS%iopsmini,OPTIONS%ikopt,&
-       OPTIONS%irestype,OPTIONS%ioppet,OPTIONS%iopveg,OPTIONS%iopstab,OPTIONS%iopwv,&
+       GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopsmini,GLOBAL%ikopt,&
+       GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
 
 ! Catchment data
-       CAT(OPTIONS%icatch(ipix)))
+       CAT(GLOBAL%icatch(ipix)))
 
 !TEMPORARY PASS BACK TO ORIGINAL VARIABLES
        !GRID
@@ -270,7 +269,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Sum the local water and energy balance fluxes.
 ! ....................................................................
 
-               call sumflx(REG,POINT_VARS,CAT(OPTIONS%icatch(ipix)),&
+               call sumflx(REG,POINT_VARS,CAT(GLOBAL%icatch(ipix)),&
        GRID(ipix)%VARS,&        
 
 ! Factor to rescale all the local fluxes with
@@ -279,9 +278,9 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       OPTIONS%ivgtyp(OPTIONS%ilandc(ipix)),&
-       i,OPTIONS%iprn,&
-       canclos(OPTIONS%ilandc(ipix)),OPTIONS%ilandc(ipix),STORM_PARAM%dt,&
+       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
+       i,GLOBAL%iprn,&
+       canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),STORM_PARAM%dt,&
 
 ! Grid data
 
@@ -289,14 +288,14 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Soil moisture variables
 
-       OPTIONS%inc_frozen,&
-       GRID(OPTIONS%isoil(ipix))%SOIL%thetas,&
+       GLOBAL%inc_frozen,&
+       GRID(GLOBAL%isoil(ipix))%SOIL%thetas,&
        Swq(sw_px),Swq_us(s_px),&
        Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! GRID Variables
 
-       Tdeepstep(OPTIONS%isoil(ipix)))
+       Tdeepstep(GLOBAL%isoil(ipix)))
 
             enddo
 
@@ -330,7 +329,7 @@ etpix = GRID%VARS%etpix
 ! (catflx) and update average water table depths (upzbar).
 ! --------------------------------------------------------------------
 
-         do ic=1,OPTIONS%ncatch
+         do ic=1,GLOBAL%ncatch
 
              s_nr_gwtsum(ic)=0.0
              s_nr_capsum(ic)=0.0
@@ -344,17 +343,17 @@ etpix = GRID%VARS%etpix
        CAT_VARS%etwcsum(ic),CAT_VARS%pptsum(ic),CAT_VARS%pnetsum(ic),CAT_VARS%contot(ic),&
        CAT_VARS%qsurf(ic),CAT_VARS%sxrtot(ic),CAT_VARS%xixtot(ic),CAT_VARS%ranrun(ic),&
        CAT_VARS%conrun(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),CAT_VARS%tzpsum(ic),&
-       CAT_VARS%rzpsum(ic),CAT_VARS%fwcat(ic),OPTIONS%iprn,&
+       CAT_VARS%rzpsum(ic),CAT_VARS%fwcat(ic),GLOBAL%iprn,&
        s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
        s_nr_tzpsum(ic),s_nr_rzpsum(ic))
 
-               call upzbar(i,ic,OPTIONS%iopbf,TOPMODEL_PARAM%q0(ic),&
+               call upzbar(i,ic,GLOBAL%iopbf,TOPMODEL_PARAM%q0(ic),&
        TOPMODEL_PARAM%ff(ic),CAT_VARS%zbar(ic),TOPMODEL_PARAM%dtil(ic),&
        TOPMODEL_PARAM%basink(ic),dd(ic),TOPMODEL_PARAM%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),TOPMODEL_PARAM%area(ic),&
        r_lakearea(ic),STORM_PARAM%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
-       OPTIONS%ivgtyp,OPTIONS%ilandc,OPTIONS%npix,OPTIONS%icatch,zw,&
-       GRID%SOIL%psic,OPTIONS%isoil,GLOBAL%zrzmax,SOIL_MOISTURE%tzsm1,GRID%SOIL%thetas,&
-       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,OPTIONS%iprn,STORM_PARAM%pixsiz)
+       GLOBAL%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
+       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,SOIL_MOISTURE%tzsm1,GRID%SOIL%thetas,&
+       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,STORM_PARAM%pixsiz)
 
          enddo
 
@@ -363,7 +362,7 @@ etpix = GRID%VARS%etpix
 ! and sum simulation totals.  Then goto next time step.
 ! --------------------------------------------------------------------
 
-         call lswb(i,OPTIONS%ncatch,r_lakearea,STORM_PARAM%pixsiz,OPTIONS%npix,&
+         call lswb(i,GLOBAL%ncatch,r_lakearea,STORM_PARAM%pixsiz,GLOBAL%npix,&
        REG%ettotrg,REG%etlakesumrg,&
        REG%etstsumrg,REG%etwtsumrg,REG%fbsrg,REG%etbssumrg,&
        REG%etdcsumrg,REG%etwcsumrg,REG%pptsumrg,&
@@ -380,8 +379,8 @@ etpix = GRID%VARS%etpix
        REG%wcip1sum,REG%zbar1rg,REG%pr3sat,REG%perrg2,&
        REG%pr2sat,REG%pr2uns,REG%perrg1,REG%pr1sat,REG%pr1rzs,&
        REG%pr1tzs,REG%pr1uns,REG%persxr,REG%perixr,&
-       REG%persac,REG%peruac,REG%perusc,OPTIONS%iprn,REG%wcsum,REG%zbarrg,&
-       OPTIONS%MODE,f_lake,veg_pdf,nlcs,OPTIONS%ivgtyp,veg,REG%Swqsum,REG%Swq_ussum,REG%Sdepthsum,&
+       REG%persac,REG%peruac,REG%perusc,GLOBAL%iprn,REG%wcsum,REG%zbarrg,&
+       GLOBAL%MODE,f_lake,veg_pdf,nlcs,GLOBAL%ivgtyp,veg,REG%Swqsum,REG%Swq_ussum,REG%Sdepthsum,&
        REG%Sdepth_ussum,qb24sum)
 
       enddo
