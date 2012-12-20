@@ -93,8 +93,8 @@ contains
                 INF_PARAM,SNOW_VARS,GRID,REG,GLOBAL,CAT)
 
       implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
+      !include "SNOW.h"
+      !include "wgtpar.h"
       include "help/rddata.h"
       type (OPTIONS_template) :: OPTIONS
       type (STORM_PARAM_template) :: STORM_PARAM
@@ -107,31 +107,23 @@ contains
       type (REGIONAL_template) :: REG
       type (GLOBAL_template) :: GLOBAL
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
+      character(len=200) :: filename
 
 ! ====================================================================
 ! Open input/output files and set variable to control output file
 ! printing.
 ! ====================================================================
 
-      call filopn(OPTIONS%iprn,OPTIONS%ioutst,OPTIONS%ioutsp,OPTIONS%iouten,OPTIONS%nseries,OPTIONS%icurser,OPTIONS%fnimg)
-
-! ====================================================================
-! Read in the way the input images are named.
-! ====================================================================
-
-      read(61,*) OPTIONS%img_opt
-
-      if (OPTIONS%img_opt.eq.0) then
-
-         print*, 'rddata : Images are listed aINF_PARAM%ccording to timestep'
-
-      endif
-
-      if (OPTIONS%img_opt.eq.1) then
-
-         print*, 'rddata : Images are listed aINF_PARAM%ccording to year_day_hour'
-
-      endif
+      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/TI'
+      open(unit=9,file=filename,form='unformatted',access='direct',recl=4)
+      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/subbasin'
+      open(unit=10,file=filename,form='unformatted',access='direct',recl=4)
+      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/K_0.img'
+      open(unit=8,file=filename,form='unformatted',access='direct',recl=4)
+      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/dat.61.input'
+      open(unit=61,file=filename)
+      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/CL_Table'
+      open(unit=71,file=filename)
 
 ! ====================================================================
 ! Read in simulation time constants and control variables.
@@ -144,14 +136,6 @@ contains
 
       print*, 'rddata:  Done reading time parameters'
       print*, 'rddata:  Total time steps = ',OPTIONS%ndata
-
-! ====================================================================
-! Write output file headers if requested.
-! ====================================================================
-
-      if (iophd.eq.0) call hdprnt(OPTIONS%iprn)
-
-      print*, 'rddata:  Done printing headers'
 
 ! ====================================================================
 ! Read and initialize topmodel parameters, atb distribution and
@@ -215,8 +199,14 @@ contains
 ! conductivity. 
 ! ====================================================================
 
-      call rdebal(OPTIONS%ioppet,OPTIONS%iopwv,OPTIONS%iopstab,OPTIONS%iopgveg,&
-                  OPTIONS%iopthermc,OPTIONS%iopthermc_v,OPTIONS%maxnri,STORM_PARAM%toleb)
+      OPTIONS%ioppet = 0 !Always run in full water and energy balance
+      OPTIONS%iopwv = 1 !Always read in water vapor using relative humidity
+      OPTIONS%iopstab = 1 !Always perform stability correction on aero. resis.
+      read(1000,*) OPTIONS%iopgveg
+      read(1000,*) OPTIONS%iopthermc
+      read(1000,*) OPTIONS%iopthermc_v
+      read(1000,*) OPTIONS%maxnri
+      read(1000,*) STORM_PARAM%toleb
 
       print*,'rddata:  Done reading energy balance parameters'
 
@@ -312,7 +302,7 @@ contains
        OPTIONS,ntdveg,GRID)
 
       implicit none
-      include "wgtpar.h"
+      !include "wgtpar.h"
       include "help/rdveg_update.h"
       type VegDataTemplate
         real*8,dimension(:,:),allocatable :: xlai
@@ -420,8 +410,8 @@ contains
        GRID,CAT)
 
       implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
+      !include "SNOW.h"
+      !include "wgtpar.h"
       include "help/rdtpmd.h"
       type (GRID_template),dimension(:),allocatable :: GRID
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -621,17 +611,6 @@ allocate(GRID(nrow*ncol))
 800   continue
 
 ! ====================================================================
-! Output the soils-topographi! index image.
-! ====================================================================
-
-      if (iprn(7).eq.1) then
-
-         call wrimgr(atanb,7,1.,nrow,ncol,ipixnum)
-         close(7)
-
-      endif
-
-! ====================================================================
 ! Print table of results for each catchment.
 ! ====================================================================
 
@@ -794,176 +773,6 @@ close(2098)
 close(2099)
 
 end subroutine FILE_CLOSE
-
-! ====================================================================
-! 
-!			subroutine imgctl
-!
-! ====================================================================
-!
-! Subroutine to control output of time varying images by deciding
-!   what images to print each time step, openning the output
-!   file and writing the image
-!
-! ====================================================================
-
-      subroutine imgctl(tkact,gact,hact,xleact,rnact,etpix,&
-       runtot,xinact,irntyp,zw,tzsm1,rzsm1,tkpet,wcip1,gpet,hpet,xlepet,rnpet,&
-       r_mossm,pptms,ievcon,ipixnum,icurser,nseries,ioutst,iouten,iprn,ioutsp,&
-       pptsumrg,i,ncol,nrow,fnimg,img_opt,iyear,iday,ihour,Swq,Swq_us)
-
-      implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
-      include "help/imgctl.h"
-
-! ====================================================================
-! Loop through each of the possible output image unit numbers.
-! ====================================================================
-
-      do 100 iu=35,55
-
-! ====================================================================
-! Set the default value of the flag to signify image output
-! for this time step to not print (zero).
-! ====================================================================
-
-         imgprn(iu) = 0
-
-! ====================================================================
-! Check if any images of this type are to be printed.
-! ====================================================================
-
-         if (iprn(iu).eq.1) then
-
-! ====================================================================
-! Check if this time step has image output.  If so, then 
-! open the image file and reset the flag to print the 
-! image.
-! ====================================================================
-
-            if ( (iouten(iu,icurser(iu)).lt.i).and. &
-                 (nseries(iu).gt.icurser(iu)) ) icurser(iu) = icurser(iu) + 1 
-
-            if ( (mod(i-ioutst(iu,icurser(iu)),ioutsp(iu,icurser(iu))).eq.0)&
-               .and.&
-                 (i.ge.ioutst(iu,icurser(iu)))&
-               .and.&
-                 (i.le.iouten(iu,icurser(iu))) ) then
-
-                   call imgopn(fnimg(iu),i,iu,img_opt,iyear,iday,ihour)
-                   imgprn(iu) = 1
-
-            endif
-
-         endif
-
-100   continue
-
-      do 200 iu=151,199
-
-! ====================================================================
-! Set the default value of the flag to signify image output
-! for this time step to not print (zero).
-! ====================================================================
-
-         imgprn(iu) = 0
-
-! ====================================================================
-! Check if any images of this type are to be printed.
-! ====================================================================
-
-         if (iprn(iu).eq.1) then
-
-! ====================================================================
-! Check if this time step has image output.  If so, then 
-! open the image file and reset the flag to print the 
-! image.
-! ====================================================================
-
-            if ( (iouten(iu,icurser(iu)).lt.i).and. &
-                 (nseries(iu).gt.icurser(iu)) ) icurser(iu) = icurser(iu) + 1 
-
-            if ( (mod(i-ioutst(iu,icurser(iu)),ioutsp(iu,icurser(iu))).eq.0)&
-               .and.&
-                 (i.ge.ioutst(iu,icurser(iu)))&
-               .and.&
-                 (i.le.iouten(iu,icurser(iu))) ) then
-
-                   call imgopn(fnimg(iu),i,iu,img_opt,iyear,iday,ihour)
-                   imgprn(iu) = 1
-
-            endif
-
-         endif
-
-200   continue
-
-! ====================================================================
-! Print the requested images.
-! ====================================================================
-
-      if (imgprn(35).eq.1) then
-
-         if (pptsumrg.gt.(0.d0))&
-             call wrimgr(pptms,35,3600000.,nrow,ncol,ipixnum)
-
-      endif
-
-      !if (imgprn(36).eq.1) call wrimgr(r_mossm,36,100.,nrow,ncol,ipixnum)
-      if (imgprn(37).eq.1) call wrimgr(rnpet,37,1.,nrow,ncol,ipixnum)
-      if (imgprn(38).eq.1) call wrimgr(xlepet,38,1.,nrow,ncol,ipixnum)
-      if (imgprn(39).eq.1) call wrimgr(hpet,39,1.,nrow,ncol,ipixnum)
-      if (imgprn(40).eq.1) call wrimgr(gpet,40,1.,nrow,ncol,ipixnum)
-      if (imgprn(41).eq.1) call wrimgr(tkpet,41,1.,nrow,ncol,ipixnum)
-      if (imgprn(42).eq.1) call wrimgr(wcip1,42,1000000.,nrow,ncol,ipixnum)
-      if (imgprn(43).eq.1) call wrimgr(rzsm1,43,100.,nrow,ncol,ipixnum)
-      if (imgprn(43).eq.1) call WRITE_BINARY(rzsm1,100.,nrow,ncol,ipixnum,i)
-      if (imgprn(44).eq.1) call wrimgr(tzsm1,44,100.,nrow,ncol,ipixnum)
-      if (imgprn(45).eq.1) call wrimgr(zw,45,100.,nrow,ncol,ipixnum)
-
-! ====================================================================
-! Close any open image files.
-! ====================================================================
-
-      do 203 iu=35,45
-
-         if (imgprn(iu).eq.1) close(iu)
-
-203   continue
-
-      if (imgprn(46).eq.1) call wrimgr(xinact,46,3600000.,nrow,ncol,ipixnum)
-      if (imgprn(47).eq.1) call wrimgr(runtot,47,3600000.,nrow,ncol,ipixnum)
-      if (imgprn(48).eq.1) call wrimgi(irntyp,48,1,nrow,ncol,ipixnum)
-      if (imgprn(49).eq.1) call wrimgr(etpix,49,3600000.,nrow,ncol,ipixnum)
-      if (imgprn(50).eq.1) call wrimgi(ievcon,50,1,nrow,ncol,ipixnum)
-      if (imgprn(51).eq.1) call wrimgr(rnact,51,1.,nrow,ncol,ipixnum)
-      if (imgprn(52).eq.1) call wrimgr(xleact,52,1.,nrow,ncol,ipixnum)
-      if (imgprn(53).eq.1) call wrimgr(hact,53,1.,nrow,ncol,ipixnum)
-      if (imgprn(54).eq.1) call wrimgr(gact,54,1.,nrow,ncol,ipixnum)
-      if (imgprn(55).eq.1) call wrimgr(tkact,55,1.,nrow,ncol,ipixnum)
-      if (imgprn(151).eq.1) call wrimgr(Swq,151,1.,nrow,ncol,ipixnum)
-      !if (imgprn(152).eq.1) call wrimgr(Swq_us,152,1.,nrow,ncol,ipixnum)
-
-! ====================================================================
-! Close any open image files.
-! ====================================================================
-
-      do 201 iu=46,55
-
-         if (imgprn(iu).eq.1) close(iu)
-
-201   continue
-
-      do 202 iu=151,199
-
-         if (imgprn(iu).eq.1) close(iu)
-
-202   continue
-
-      return
-
-      end subroutine imgctl
 
 ! ====================================================================
 !
@@ -1195,23 +1004,16 @@ end subroutine FILE_CLOSE
 ! as requested.
 ! ====================================================================
 
-      if (iopwc0.eq.0) then
+  read(1000,*) wc0
 
-         read(1000,*) wc0
+  do kk=1,npix
 
-         do kk=1,npix
+    wcip1(kk) = wc0
 
-            wcip1(kk) = wc0
+  enddo  
 
-         enddo  
+  print*,"rdveg:  Read initial wet canopy storages"
 
-         print*,"rdveg:  Read initial wet canopy storages"
-
-      else 
-		 
-         call rdimgr(wcip1,13,nrow,ncol,ipixnum)
-
-      endif
 
 ! ====================================================================
 ! Calculate the fraction of different cover types in each catchment
@@ -1264,313 +1066,11 @@ end subroutine FILE_CLOSE
 
 570   continue
 
-      print*,"rdveg:  Calculated fractional covers for bare soil"
-
-! ====================================================================
-! Print land cover table summary.
-! ====================================================================
-
-      if (iprn(76).eq.1) then
-
-         do 600 kk = 1,nlandc
-
-            write(76,1000) kk,xlai(kk),rescan(kk),wsc(kk)
-
-600      continue
-
-      endif
-
-! ====================================================================
-! Print land cover fractions in each catchment.
-! ====================================================================
-
-      if (iprn(77).eq.1) then
-
-         do 700 jj=1,ncatch
-
-            write (77,1100) jj,area(jj)/1000000.
-
-            do 650 kk=1,nlandc
-
-               write(77,1110) kk,frcov(kk,jj)*100
-
-650         continue
-
-            write (77,*)
-
-700      continue
-
-         write(77,1120)
-
-         do 800 kk=1,nlandc
-
-            write(77,1110) kk,frcov(kk,ncatch+1)*100
-
-800      continue
-
-      endif        
-
-! ====================================================================
-! Format statements.
-! ====================================================================
-
-1000  format (i5,2f10.3,f11.7)
-1100  format ('Catchment Number',i4,' (Area = ',f8.2,' km^2):')
-1110  format ('   Land Cover Type',i4,':',f7.2,'%')
-1120  format ('Total Area:')
+      print*,"rdveg:  Calculated fractional covers for bare soil"        
 
       return
 
       end subroutine rdveg
-
-! ====================================================================
-!
-!			subroutine hdrprnt
-!
-! ====================================================================
-!
-! Subroutine to print the output file headings.
-!
-! ====================================================================
-
-      subroutine hdprnt(iprn)
-
-      implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      integer iprn(MAX_FIL)
-
-! ====================================================================
-! Write output file headers.
-! ====================================================================
-
-      if (iprn(75).eq.1) then
-
-         write(75,*)'  Catchment Table'
-         write(75,*)
-         write(75,*)&
-       '                     Average              Initial            Qo'
-         write(75,*)'Basin              Topographic              W.T.'
-         write(75,*)' No.       Area       Index      ln Te     Depth'
-         write(75,*)&
-           '(km^2)                            (m)      (m-1) (m^3/s)'
-      endif
-
-
-      if (iprn(76).eq.1) then
-
-         write(76,*)'  Land Cover Table'
-         write(76,*)
-         write(76,*)'Land    Leaf               Canopy ' 
-         write(76,*)'Cover   Area     Canopy    Storage'
-         write(76,*)' No.    Index    Resist   Capacity.'
-         write(76,*)'                 (s/m)       (m)'
-
-      endif
-
-      if (iprn(77).eq.1) then
-
-         write(77,*)'  Land Cover Fractions by Catchment'
-         write(77,*)
-
-      endif
-
-      if (iprn(78).eq.1) then
-
-         write(78,*)'  Soil Type Table'
-         write(78,*)
-         write(78,*)&
-        'Soil Pore Size           Saturated  Residual Saturated' 
-         write(78,*)&
-        'Type   Dist.    Bubbling    Soil      Soil   Hydraulic'
-         write(78,*)&
-        ' No.   Index    Pressure  Moisture  Moisture    Cond'
-         write(78,*)'                  (cm)                         (mm/h)'
-
-      endif      
-
-      if (iprn(79).eq.1) then
-
-         write(79,*)'  Soil Type Fractions by Catchment'
-         write(79,*)
-
-      endif
-
-      if (iprn(80).eq.1) then
-
-         write(80,*)' Catchment Evaporation Results'
-         write(80,*)
-         write(80,*)&
-                '                       Bare       Dry       Wet    Frac   Frac'
-         write(80,*)&
-                'Time Catch   Total     Soil     Canopy    Canopy   Wet    Bare'
-         write(80,*)&
-                'Step  No.    Evap      Evap      Evap      Evap   Canopy  Soil'
-         write(80,*)'            (mm/h)    (mm/h)    (mm/h)    (mm/h)'
-
-      endif
-
-      if (iprn(81).eq.1) then
-
-         write(81,*)' Catchment Precipitation/Infiltration Results'
-         write(81,*)
-         write(81,*)'                                                                Sat       Inf'
-         write(81,*)'Time Catch   Total      Net                          Total    Excess    Excess'
-         write(81,*)'Step  No.   Precip    Precip    Condens   Runoff    Infilt    Infilt    Infilt'
-         write(81,*)'            (mm/h)    (mm/h)    (mm/h)    (mm/h)    (mm/h)    (mm/h)    (mm/h)'
-
-      endif
-
-      if (iprn(82).eq.1) then
-! NWC 13/06/11
-!         write(82,*)' Catchment Water Table Balance Results'
-!         write(82,*)
-!         write(82,*)'            New    Old                                            RZ     TZ'
-!         write(82,*)'Time Catch  Ave    Ave   Capillary Drainage    Evap              Avail  Avail'
-!         write(82,*)'Step  No.   W.T.   W.T.    Rise     to W.T.  from WT   Baseflow  Pore   Pore'
-!         write(82,*)
-!                '            (m)    (m)    (mm/h)    (mm/h)    (mm/h)    (mm/h)'
-
-      endif
-
-      if (iprn(90).eq.1) then
-
-         write(90,*)' Regional Energy Fluxes at PET'
-         write(90,*)
-         write(90,*)' Time    Net     Latent   Sensible   Ground     Energy   G + DS   Surface   Surface   Surface'
-         write(90,*)' Step Radiation   Heat      Heat      Heat     Balance              Temp     Temp      Temp'
-         write(90,*)'       (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)    (K)       (K)       (K)'
-
-      endif
-         
-      if (iprn(91).eq.1) then
-
-         write(91,*)' Regional Actual Energy Fluxes'
-         write(91,*)
-         write(91,*)' Time    Net     Latent   Sensible   Ground     Energy   G + DS   Surface   Surface   Surface'
-         write(91,*)' Step Radiation   Heat      Heat      Heat     Balance              Temp     Temp      Temp'
-         write(91,*)'       (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)    (K)       (K)       (K)'
-!cdp      write(91,*)' Time    Net     Latent   Sensible   Ground     Energy   Surface'
-!cdp      write(91,*)' Step Radiation   Heat      Heat      Heat     Balance    Temp'
-!cdp      write(91,*)'       (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)   (W/m^2)'
-
-      endif
-
-      if (iprn(92).eq.1) then
-
-         write(92,*)' Regional Canopy Water Balance'
-         write(92,*)
-         write(92,*)&
-              '         New       Old                           Wet    Fraction'
-         write(92,*)' Time   Canopy    Canopy   Total      Net      Canopy      Wet    Change in  Sum of     Water'
-         write(92,*)' Step  Storage   Storage  Rainfall  Rainfall    Evap     Canopy    Storage   Fluxes    Balance'
-         write(92,*)'         (mm)      (mm)    (mm/h)    (mm/h)    (mm/h)                (m)       (m)       (m)'
-
-      endif
-         
-      if (iprn(93).eq.1) then
-
-         write(93,*)' Regional Precipitation/Infiltration/Runoff'
-         write(93,*)
-         write(93,*)'                                                       Saturation  Infilt'
-         write(93,*)' Time   Total      Net               Surface    Total    Excess    Excess'
-         write(93,*)' Step Rainfall  Rainfall   Condens   Runoff    Infilt    Runoff    Runoff'
-         write(93,*)'       (mm/h)    (mm/h)     (mm/h)   (mm/h)    (mm/h)    (mm/h)    (mm/h)'
-
-      endif
-
-      if (iprn(94).eq.1) then
-
-         write(94,*)' Regional Evapotranspiration Rates'
-         write(94,*)
-         write(94,*)'                  Bare       Dry       Wet     Frac   Frac'
-         write(94,*)' Time   Total     Soil     Canopy    Canopy    Wet    Bare'
-         write(94,*)' Step   Evap      Evap      Trans     Evap    Canopy  Soil'
-         write(94,*)'       (mm/h)    (mm/h)    (mm/h)    (mm/h)'
-
-      endif
-     
-      if (iprn(95).eq.1) then
-
-         write(95,*)' Regional Root and Transmission Zone Water Balance'
-         write(95,*)
-         write(95,*)&
-              '            Root Zone                      Transmision Zone'
-         write(95,*)&
-               ' Time  Soil  Change in  Sum of         Soil  Change in   Sum of'
-         write(95,*)&
-               ' Step Moist   Storage   Fluxes        Moist   Storage    Fluxes'
-         write(95,*)&
-               '               (mm)      (mm)                   (mm)       (mm)'
-
-      endif
-         
-      if (iprn(96).eq.1) then
-
-! NWC 06/13/11
-!         write(96,*)' Regional Water Table Balance and Vertical Fluxes'
-!         write(96,*)
-!         write(96,*)'        New       Old'
-!         write(96,*)' Time   Avg       Avg     Capillary       Drainage       Evap
-!                       Drainage      Drainage      Diffusion  Diffusion  '
-!         write(96,*)' Step  Depth     Depth    Rise fr WT       to WT        from WT
-!              Baseflow  fr RZ        fr TZ          to RZ       to TZ   '
-!         write(96,*)'        (mm)      (mm)     (mm/h)         (mm/h)         (mm/h)   
-!             (mm/h)     (mm/h)      (mm/h)         (mm/h)      (mm/h)  '
-
-      endif
-
-      if (iprn(97).eq.1) then
-
-         write(97,*)' Regional Fractional Saturation States'
-         write(97,*)
-         write(97,*)&
-              ' Time  Region 3         Region 2                        Region 1 '
-         write(97,*)' Step                  Saturated   Unsat         Saturated  TZ Sat  RZ Sat   Unsat'
-
-      endif
-
-      if (iprn(98).eq.1) then
-
-         write(98,*)' Regional Evapotranspiration Controls and'
-         write(98,*)'    Infiltration Mechanisms'
-         write(98,*)
-         write(98,*)&
-               ' Time    Total  Atmos  Atmos   Land         Net    Sat   Infilt'
-         write(98,*)&
-                ' Step     Evap   Sat   Unsat  Unsat      Rainfall Exces  Exces'
-         write(98,*)&
-                              '         (mm/h)                           (mm/h)'
-
-      endif
-
-      if (iprn(110).eq.1) then
-
-         write (110,*) 'Results for the moss layer, actual fluxes '
-         write (110,*)& 
-       'Timestep Rnet      LE           H           G           ds        Tskin      Ttopsoil        Tmid   theta_mois'
-
-      endif
-
-      if (iprn(111).eq.1) then
-
-         write (111,*) 'Results for the understory layer, actual fluxes'
-         write (111,*)& 
-       'Timestep Rnet      LE           H           G           ds        Tskin        Tmid'
-
-      endif
-
-      if (iprn(112).eq.1) then
-
-         write (112,*) 'Results for the overstory layer, actual fluxes'
-          write (112,*)& 
-       'Timestep Rnet      LE           H           G           ds        Tskin        Tmid'
-
-      endif
-
-      return
-
-      end subroutine hdprnt
 
 ! ====================================================================
 !
@@ -1597,27 +1097,6 @@ end subroutine FILE_CLOSE
       !include "wgtpar.h"
       include "help/inisim.h"
 
-      if (iopsmini.eq.1) then
-
-! ====================================================================
-! If initial root and transmission zone soil moistures are    
-! input as images then read the images and assign to the
-! initial condition.
-! ====================================================================
-
-! --------------------------------------------------------------------
-! Alert the user.
-! --------------------------------------------------------------------
-
-	 print *, "Reading initial soil moisture images"
-
-         call rdimgr(rzsm1,14,nrow,ncol,ipixnum)
-         call rdimgr(tzsm1,15,nrow,ncol,ipixnum)
-
-	 close(14)
-	 close(15)
-
-      else
 
 ! ====================================================================
 ! If initial root zone is not entered, then set the root
@@ -1658,8 +1137,6 @@ end subroutine FILE_CLOSE
             tzdthetaidt(kk)=0.d0
 
 50       continue
-
-      endif
 
       do kk=1,npix
 
@@ -1767,15 +1244,6 @@ end subroutine FILE_CLOSE
       else
 
 ! --------------------------------------------------------------------
-! If spatially varying data is used read image data.
-! --------------------------------------------------------------------
-
-         call rdimgi(istorm,16,nrow,ncol,ipixnum)
-         call rdimgi(istep,17,nrow,ncol,ipixnum)
-         call rdimgr(cumdep,18,nrow,ncol,ipixnum)
-         call rdimgr(smbeg,19,nrow,ncol,ipixnum)
-
-! --------------------------------------------------------------------
 ! Set event flags, time of events, cumulative values.
 ! --------------------------------------------------------------------
 
@@ -1868,247 +1336,6 @@ end subroutine FILE_CLOSE
 
 ! ====================================================================
 !
-!			subroutine filopn
-!
-! ====================================================================
-!
-! Subroutine to open input/output files and set up variable to 
-! control the printing of output files.
-!
-! ====================================================================
-
-      subroutine filopn(iprn,ioutst,ioutsp,iouten,nseries,icurser,fnimg)
-
-      implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      !include "sun_sgi.h"
-      include "help/filopn.h"
-
-! ====================================================================
-! Initialize variable which controls output file printing.
-! ====================================================================
-     
-
-      do 40 jj = 1,MAX_FIL
-
-        iprn(jj) = 0
-
-40    continue 
-     
-! ====================================================================
-! Open the file which lists the input/output file names.  This
-! file should be given as the second word in the command line.
-! ====================================================================
-
-       call getarg(1,topfil)
-     
-       open(unit=4,file=topfil)
-
-! ====================================================================
-! Read the filenames from file containing i/o filenames.
-! ====================================================================
-
-50    read(4,1000) iu,fname
-    
-      if (iu.gt.MAX_FIL) then
-
-         write (*,*) 'filopn.f : File unit number is greater than '
-         write (*,*) 'MAX_FIL ',iu,MAX_FIL
-         stop
-
-      endif
-
-! ====================================================================
-! If unit number is between 35 and 55, then read the 
-! image output start time and spacing and the image
-! name prefix for each series of image output.
-! ====================================================================
-
-      if ( ((iu.ge.35).and.(iu.le.55)).or.&
-           ((iu.ge.151).and.(iu.le.199)) ) then
-
-         iseries = 0
-60       iseries = iseries + 1 
-
-         if (iseries.gt.MAX_SER) then
-
-            write (*,*) 'filopn.f : Number of input/output series'
-            write (*,*) 'is greater MAX_SER ',iseries,MAX_SER
-            stop
-
-         endif
- 
-! --------------------------------------------------------------------
-! As long as there are parts of the timeseries for which this variable
-! is to be printed out keep on reading these parts in.
-! --------------------------------------------------------------------
-
-         read(4,*) ioutst(iu,iseries),ioutsp(iu,iseries),&
-                   iouten(iu,iseries),icont
-
-         if (icont.eq.1) goto 60
-
-         nseries(iu) = iseries
-         icurser(iu) = 1
-         fnimg(iu) = fname
-
-! ====================================================================
-! If unit number is between 20 and 34, then set the
-! input image prefix.
-! ====================================================================
-
-      else if ((iu.ge.20).and.(iu.le.34)) then
-
-         fnimg(iu) = fname      
-
-! ====================================================================
-! If the unit number is between 7 and 19 then open file for
-! binary image.
-! ====================================================================
-
-      else if ((iu.ge.7).and.(iu.le.19)) then
-
-         open(unit=iu,file=fname,form='unformatted',&
-                 access='direct',recl=4)
-
-! ====================================================================
-! If the unit number is 55 or greater then
-! open that file for ASCII sequential input/output.
-! ====================================================================
-
-      else if ((iu.gt.55)) then
-
-         open(unit=iu,file=fname)
-
-! ====================================================================
-! If the unit number is negative then done reading and return
-! to calling routine.
-! ====================================================================
-
-      else
-
-         return
-
-      endif
-
-! ====================================================================
-! Set 'iprn' so that the output file will print.
-! ====================================================================
-
-      iprn(iu) = 1
-
-! ====================================================================
-! Read the next filename.
-! ====================================================================
-   
-      goto 50
-
-! ====================================================================
-! Format statement
-! ====================================================================
-
-1000  format(i5,a100)        
-
-      end subroutine filopn
-
-! ====================================================================
-!
-!			subroutine rdebal
-!
-! ====================================================================
-!
-! Subroutine to read in energy balance calculation specification.
-!
-! ====================================================================
-
-      subroutine rdebal(ioppet,iopwv,iopstab,iopgveg,iopthermc,&
-                        iopthermc_v,maxnri,toleb)
-
-      implicit none
-      include "help/rdebal.h"
-
-! ====================================================================
-! Read in options for energy balance and calculation specifications. 
-! ====================================================================
-
-      ioppet = 0 !Always run in full water and energy balance
-      iopwv = 1 !Always read in water vapor using relative humidity
-      iopstab = 1 !Always perform stability correction on aero. resis.
-      read(1000,*) iopgveg
-      read(1000,*) iopthermc
-      read(1000,*) iopthermc_v
-      read(1000,*) maxnri
-      read(1000,*) toleb
-
-      return
-
-      end subroutine rdebal
-
-! ====================================================================
-!
-!			subroutine imgopn
-!
-! ====================================================================
-!
-! Subroutine to set the name of and open a file time varying
-!   image input or output.
-!
-! ====================================================================
-
-      subroutine imgopn(prefix,i,iu,img_opt,iyear,iday,ihour)
-
-      implicit none
-      include "help/imgopn.h"
-
-! ====================================================================
-! Initialize the file name to null and the file name suffix to 
-! the time step, or if requested to the year_day_hour string.
-! ====================================================================
-
-      fname=''
-      write (suffix,1001) iyear,iday,ihour
-
-! ====================================================================
-! Find the length of the prefix.
-! ====================================================================
-
-      lgth = index(prefix,' ')
-
-! ====================================================================
-! Build the file name one character at a time until a blank space
-! in the prefix is encountered then add a period and the suffix.
-! ====================================================================
-
-      do 100 k=1,lgth-1
-
-        fname(k:k)=prefix(k:k)
-
-100   continue
-
-      fname(lgth:lgth)='_'
-      fname(lgth+1:lgth+13)=suffix
-
-! ====================================================================
-! Open the file for binary I/O.
-! ====================================================================
-
-         open(unit=iu,file=fname,form='unformatted',&
-              access='direct',recl=4)
-
-! ====================================================================
-! Format statment.
-! ====================================================================
-
-1000  format (I5.5)
-1001  format (I2.2,'_',I3.3,'_',I2.2,'.bin')
-
-      return
-
-      end subroutine imgopn
-
-! ====================================================================
-!
 !  Parameter definitions:
 !
 !    icol:      loop index for image column
@@ -2174,148 +1401,6 @@ end subroutine FILE_CLOSE
       return
 
       end subroutine WRITE_BINARY
-
-! ====================================================================
-!
-!			subroutine wrimgi
-!
-! ====================================================================
-!
-! Subroutine to write an image of 4 byte integers from an array
-!   of these values indexed by the soils-topographi! index
-!   pixel numbers.
-!
-! ====================================================================
-!
-!  Parameter definitions:
-!
-!    ia:        values to write to the image in an array indexed by 
-!                 pixel number
-!    icol:      loop index for image column
-!    idummy:    dummy value to be writen to row-column location
-!                 with no pixel number
-!    ipixnum:   pixel number of image row/column location
-!    irow:      loop index for image row
-!    itmpvl:    temporary value used to hold the output value
-!    iu:        unit number to read data
-!    mult:      all image output to be multiplied by this amount
-!    ncol:      number of columns in the image
-!    nrow:      number of rows in the image
-! ====================================================================
-
-      subroutine wrimgi(ia,iu,mult,nrow,ncol,ipixnum)
-
-      implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      !include "sun_sgi.h"
-      include "help/wrimgi.h"
-
-! ====================================================================
-! Loop through the image and write each value in proper location.
-! ====================================================================
-
-      do 200 irow = 1,nrow
-
-         do 100 icol = 1,ncol
-
-! --------------------------------------------------------------------&
-! If the location is within the area of interest then
-! write the correct value to the image, otherwise 
-! write the dummy value.
-! --------------------------------------------------------------------&
-
-            if (ipixnum(irow,icol).gt.0) then
-
-                  itmpvl = mult*ia(ipixnum(irow,icol))
-                  write(iu,rec=((irow-1)*ncol) + icol) itmpvl
-
-            else
-                  write(iu,rec=((irow-1)*ncol) + icol) idummy
-         
-            endif
-
-100      continue
-
-200   continue
-
-      return
-
-      end subroutine wrimgi
-
-! ====================================================================
-!
-!			subroutine wrimgr
-!
-! ====================================================================
-!
-! Subroutine to write an image of 4 byte reals from an array
-!   of these values indexed by the soils-topographi! index
-!   pixel numbers.
-!
-! ====================================================================
-!
-!  Parameter definitions:
-!
-!    a:         values to write to the image in an array indexed by 
-!                 pixel number
-!    icol:      loop index for image column
-!    dummy:     dummy value to be writen to row-column location
-!                 with no pixel number
-!    ipixnum:   pixel number of image row/column location
-!    irow:      loop index for image row
-!    iu:        unit number to read data
-!    ncol:      number of columns in the image
-!    nrow:      number of rows in the image
-!    rmult:     all image output to be multiplied by this amount
-!    tmpval:    temporary value used to write the real value
-!                 in four byte form when the input array
-!                 is eight byte
-! ====================================================================
-
-      subroutine wrimgr(a,iu,rmult,nrow,ncol,ipixnum)
-
-      implicit real*8 (a-h,o-z)
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      !include "sun_sgi.h"
-      include "help/wrimgr.h"
-
-! ====================================================================
-! Loop through the image and write each value in proper location.
-! ====================================================================
-
-      dummy = 0.0
-
-      do 200 irow = 1,nrow
-
-         do 100 icol = 1,ncol
-
-! --------------------------------------------------------------------&
-! If the location is within the area of interest then
-! write the correct value to the image, otherwise 
-! write the dummy value.
-! --------------------------------------------------------------------&
-
-            if (ipixnum(irow,icol).gt.0) then
-
-                  tmpval = rmult*a(ipixnum(irow,icol))
-!	          call swap_r(tmpval,1)
-                  write(iu,rec=((irow-1)*ncol) + icol) tmpval
-
-            else
-!	          call swap_r(dummy,1)	
-                  write(iu,rec=((irow-1)*ncol) + icol) dummy
-         
-            endif
-
-100      continue
-
-200   continue
-
-      return
-
-      end subroutine wrimgr
 
 ! ====================================================================
 !
@@ -2652,49 +1737,6 @@ end subroutine FILE_CLOSE
       return
 
       end subroutine rdsoil
-
-! ====================================================================
-!
-!			subroutine rdpet
-!
-! ====================================================================
-!
-! Subroutine to read in potential evapotranspiration (m/s) from a file.
-! It also sets evaporation from bare soil equal to evaporation
-! from wet canopy equal to unstressed transpiration .
-!
-! ====================================================================
-
-      subroutine rdpet(epetd,epetw,ebspot,xled,xlew,xlhv,row)
-
-      implicit none
-      include "help/rdpet.h"
-
-! ====================================================================
-! Set potential evapotranspiration for wet and dry canopy.and.&
-! bare soil to the input value.
-! ====================================================================
-      
-      epetd = ebspot/(3600*1000)
-      epetw = ebspot/(3600*1000)
-
-! ====================================================================
-! Calculate mass flux.
-! ====================================================================
-
-      epetdmf = epetd*row
-      epetwmf = epetw*row
-
-! ====================================================================
-! Calculate latent heat flux.
-! ====================================================================
-
-      xled = epetdmf*xlhv
-      xlew = epetwmf*xlhv
-
-      return
-
-      end subroutine rdpet
 
 ! ====================================================================
 !

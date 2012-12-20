@@ -92,7 +92,7 @@
 ! ####################################################################
 ! Loop through the simulation time.
 ! ####################################################################
-call init_fruit !Initialize fruit testing
+
       do i=1,OPTIONS%ndata
 
           print*, "Time Step: ",i," Year: ",iyear," Julian Day: ",&
@@ -357,17 +357,6 @@ etpix = GRID%VARS%etpix
        SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,OPTIONS%iprn,STORM_PARAM%pixsiz)
 
          enddo
-
-! --------------------------------------------------------------------
-! Call imgctl to close the output image files.
-! --------------------------------------------------------------------
-
-         call imgctl(tkact,gact,hact,xleact,rnact,etpix,runtot,xinact,irntyp,&
-       zw,SOIL_MOISTURE%tzsm1,SOIL_MOISTURE%rzsm1,tkpet,GRID%VEG%wcip1,&
-       gpet,hpet,xlepet,rnpet,SOIL_MOISTURE%r_mossm,GRID%MET%pptms,&
-       ievcon,OPTIONS%ipixnum,OPTIONS%icurser,OPTIONS%nseries,OPTIONS%ioutst,&
-       OPTIONS%iouten,OPTIONS%iprn,OPTIONS%ioutsp,REG%pptsumrg,i,&
-       OPTIONS%ncol,OPTIONS%nrow,OPTIONS%fnimg,OPTIONS%img_opt,iyear,iday,ihour,SNOW_VARS%Swq,Swq_us)
 
 ! --------------------------------------------------------------------
 ! Call lswb to ouput areal average flux rates for the time step
