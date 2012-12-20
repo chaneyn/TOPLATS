@@ -403,8 +403,8 @@ contains
 ! Actual energy fluxes.
 ! --------------------------------------------------------------------
 
-  read(2091,1000) i,REG_OLD%rnsum,REG_OLD%xlesum,REG_OLD%hsum,REG_OLD%gsum,tmp,tmp,&
-	 	  REG_OLD%tksum,REG_OLD%tkmidsum,REG_OLD%tkdeepsum
+  read(2091,*) i,REG_OLD%rnsum,REG_OLD%xlesum,REG_OLD%hsum,REG_OLD%gsum,tmp,tmp,&
+    REG_OLD%tksum,REG_OLD%tkmidsum,REG_OLD%tkdeepsum
 
   call set_unit_name ('lswb.f90: rnsum')
   call assert_equals (rnsum,REG_OLD%rnsum)
@@ -425,155 +425,189 @@ contains
 ! Canopy water balance.
 ! --------------------------------------------------------------------
 
-!  read(2092,1100) i,REG_OLD%wcip1sum,REG_OLD%wcsum,REG_OLD%pptsumrg,REG_OLD%pnetsumrg,&
-!	 	  REG_OLD%etwcsumrg,REG_OLD%fwreg,REG_OLD%dswcsum,REG_OLD%wcrhssum,tmp
+  read(2092,*) i,REG_OLD%wcip1sum,REG_OLD%wcsum,REG_OLD%pptsumrg,REG_OLD%pnetsumrg,&
+                  REG_OLD%etwcsumrg,REG_OLD%fwreg,REG_OLD%dswcsum,REG_OLD%wcrhssum,tmp
 
-!  call set_unit_name ('lswb.f90: wcip1sum')
-!  call assert_equals (wcip1sum,REG_OLD%wcip1sum)
-!  call set_unit_name ('lswb.f90: wcsum')
-!  call assert_equals (wcsum,REG_OLD%wcsum)
-!  call set_unit_name ('lswb.f90: pptsumrg')
-!  call assert_equals (pptsumrg*3600000,REG_OLD%pptsumrg)
-!  call set_unit_name ('lswb.f90: pnetsumrg')
-!  call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
-!  call set_unit_name ('lswb.f90: etwcsumrg')
-!  call assert_equals (etwcsumrg*3600000,REG_OLD%etwcsumrg)
-!  call set_unit_name ('lswb.f90: fwreg')
-!  call assert_equals (fwreg,REG_OLD%fwreg)
-!  call set_unit_name ('lswb.f90: dswcsum')
-!  call assert_equals (dswcsum,REG_OLD%dswcsum)
-!  call set_unit_name ('lswb.f90: wcrhssum')
-!  call assert_equals (wcrhssum,REG_OLD%wcrhssum)
-
-      if (iprn(92).eq.1)&
-
-         write(92,1100) i,wcip1sum,wcsum,pptsumrg*3600000.,&
-                        pnetsumrg*3600000.,etwcsumrg*3600000.,fwreg,&
-                        dswcsum,wcrhssum,dswcsum-wcrhssum
+  call set_unit_name ('lswb.f90: wcip1sum')
+  call assert_equals (wcip1sum,REG_OLD%wcip1sum)
+  call set_unit_name ('lswb.f90: wcsum')
+  call assert_equals (wcsum,REG_OLD%wcsum)
+  call set_unit_name ('lswb.f90: pptsumrg')
+  call assert_equals (pptsumrg*3600000,REG_OLD%pptsumrg)
+  call set_unit_name ('lswb.f90: pnetsumrg')
+  call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
+  call set_unit_name ('lswb.f90: etwcsumrg')
+  call assert_equals (etwcsumrg*3600000,REG_OLD%etwcsumrg)
+  call set_unit_name ('lswb.f90: fwreg')
+  call assert_equals (fwreg,REG_OLD%fwreg)
+  call set_unit_name ('lswb.f90: dswcsum')
+  call assert_equals (dswcsum,REG_OLD%dswcsum)
+  call set_unit_name ('lswb.f90: wcrhssum')
+  call assert_equals (wcrhssum,REG_OLD%wcrhssum)
 
 ! --------------------------------------------------------------------
 ! Precipitation/Runoff/Infiltration.
 ! --------------------------------------------------------------------
 
-      if (iprn(93).eq.1)&
+  read(2093,*) i,REG_OLD%pptsumrg,REG_OLD%pnetsumrg,REG_OLD%contotrg,REG_OLD%qsurfrg,&
+                  tmp,REG_OLD%sxrtotrg,REG_OLD%xixtotrg
 
-         write(93,1200) i,pptsumrg*3600000.,pnetsumrg*3600000.,&
-                        contotrg*3600000.,qsurfrg*3600000.,&
-                        (pnetsumrg-qsurfrg)*3600000.,&
-                        sxrtotrg*3600000.,xixtotrg*3600000.
+  call set_unit_name ('lswb.f90: pptsumrg')
+  call assert_equals (pptsumrg*3600000,REG_OLD%pptsumrg)
+  call set_unit_name ('lswb.f90: pnetsumrg')
+  call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
+  call set_unit_name ('lswb.f90: contotrg')
+  call assert_equals (contotrg*3600000,REG_OLD%contotrg)
+  call set_unit_name ('lswb.f90: qsurfrg')
+  call assert_equals (qsurfrg*3600000,REG_OLD%qsurfrg)
+  call set_unit_name ('lswb.f90: sxrtotrg')
+  call assert_equals (sxrtotrg*3600000,REG_OLD%sxrtotrg)
+  call set_unit_name ('lswb.f90: xixtotrg')
+  call assert_equals (xixtotrg*3600000,REG_OLD%xixtotrg)
 
 ! --------------------------------------------------------------------
 ! Evaporation.
 ! --------------------------------------------------------------------
 
-      if (iprn(94).eq.1) then
+  read(2094,*) i,REG_OLD%ettotrg,REG_OLD%etbssumrg,REG_OLD%etdcsumrg,REG_OLD%etwcsumrg,&
+               REG_OLD%fwreg,REG_OLD%fbsrg
 
-         rest=ettotrg-fbsrg*etbssumrg-etdcsumrg-etwcsumrg
-         etwcsumrg=etwcsumrg+rest
-
-         write(94,1300) i,ettotrg*3600000.,etbssumrg*3600000.,&
-                        etdcsumrg*3600000.,etwcsumrg*3600000.,fwreg,fbsrg
-
-      endif
+  rest=ettotrg-fbsrg*etbssumrg-etdcsumrg-etwcsumrg
+  etwcsumrg=etwcsumrg+rest
+  call set_unit_name ('lswb.f90: ettotrg')
+  call assert_equals (ettotrg*3600000,REG_OLD%ettotrg)
+  call set_unit_name ('lswb.f90: etbssumrg')
+  call assert_equals (etbssumrg*3600000,REG_OLD%etbssumrg)
+  call set_unit_name ('lswb.f90: etdcsumrg')
+  call assert_equals (etdcsumrg*3600000,REG_OLD%etdcsumrg)
+  call set_unit_name ('lswb.f90: etwcsumrg')
+  call assert_equals (etwcsumrg*3600000,REG_OLD%etwcsumrg)
+  call set_unit_name ('lswb.f90: fwreg')
+  call assert_equals (fwreg,REG_OLD%fwreg)
+  call set_unit_name ('lswb.f90: fbsrg')
+  call assert_equals (fbsrg,REG_OLD%fbsrg)
 
 ! --------------------------------------------------------------------
 ! Root and Transmission Zone Balance Checks.
 ! --------------------------------------------------------------------
 
-      if (iprn(95).eq.1)&
+  read(2095,*) i,REG_OLD%rzsmav,REG_OLD%dsrzsum,REG_OLD%rzrhssum,REG_OLD%tzsmav,REG_OLD%dstzsum,&
+               REG_OLD%tzrhssum
 
-         write(95,1400) i,rzsmav,dsrzsum*1000,rzrhssum*1000,tzsmav,dstzsum*1000,&
-                        tzrhssum*1000
+  call set_unit_name ('lswb.f90: rzsmav')
+  call assert_equals (rzsmav,REG_OLD%rzsmav)
+  call set_unit_name ('lswb.f90: dsrzsum')
+  call assert_equals (dsrzsum*1000,REG_OLD%dsrzsum)
+  call set_unit_name ('lswb.f90: rzrhssum')
+  call assert_equals (rzrhssum*1000,REG_OLD%rzrhssum)
+  call set_unit_name ('lswb.f90: tzsmav')
+  call assert_equals (tzsmav,REG_OLD%tzsmav)
+  call set_unit_name ('lswb.f90: dstzsum')
+  call assert_equals (dstzsum*1000,REG_OLD%dstzsum)
+  call set_unit_name ('lswb.f90: tzrhssum')
+  call assert_equals (tzrhssum*1000,REG_OLD%tzrhssum)
+
 
 ! --------------------------------------------------------------------
 ! Water table balance.
 ! --------------------------------------------------------------------
 
+  read(2096,*) i,REG_OLD%zbar1rg,REG_OLD%zbarrg,REG_OLD%gwtsumrg,&
+                 REG_OLD%etwtsumrg,REG_OLD%qbreg,&
+                 REG_OLD%grzsumrg,REG_OLD%gtzsumrg,REG_OLD%difrzsumrg,&
+                 REG_OLD%capsumrg,REG_OLD%pptsumrg,REG_OLD%pnetsumrg,&
+                 REG_OLD%ettotrg
 
-      if (iprn(96).eq.1) then
-! Output only after every 24 hour time steps  
-!         if (i .eq. 1) then
-!	         qb24sum = 0
-!			 write(*,*) qb24sum
-!			 write(*,*) 'hello'
-! 	     endif
-!		 if (mod(i,24) == 0) then
-!		     write(96,1500) qbreg*3600.	 	     
-! 			 qb24sum = qbreg
-!		     write(*,*) qb24sum,qbreg
-!		 else 
-!	     write(*,*) qb24sum
-!	     qb24sum = qb24sum + qbreg
-!	     write(*,*) qb24sum,qbreg
-!	     endif
-!		 write(*,*) mod(i,24)
-		 if (i .eq. 1) then
-			 qb24sum = 0
-		 endif
-		 if (mod(i,8) == 0) then
-!			qb24sum = qb24sum + (qbreg + qsurfrg*npix*pixsiz*pixsiz)*3600
-			qb24sum = qb24sum + qbreg*3600*3
-        		write(96,1500) qb24sum,zbar1rg 
-			qb24sum = 0
-			else
-			qb24sum = qb24sum + qbreg*3600*3
-!			qb24sum = qb24sum + (qbreg + qsurfrg*npix*pixsiz*pixsiz)*3600
-		 endif   
-!		 write(*,*) zbar1rg		
-!        write(96,1500) i,qb24sum,qbreg*3600,qsurfrg*npix*pixsiz*pixsiz*3600
-! 		 write(*,*) qb24sum,qbreg,qsurfrg*npix*pixsiz*pixsiz        
+  call set_unit_name ('lswb.f90: zbar1rg')
+  call assert_equals (zbar1rg*1000,REG_OLD%zbar1rg)
+  call set_unit_name ('lswb.f90: zbarrg')
+  call assert_equals (zbarrg*1000,REG_OLD%zbarrg)
+  call set_unit_name ('lswb.f90: gwtsumrg')
+  call assert_equals (gwtsumrg*3600000,REG_OLD%gwtsumrg)
+  call set_unit_name ('lswb.f90: etwtsumrg')
+  call assert_equals (etwtsumrg*3600000,REG_OLD%etwtsumrg)
+  call set_unit_name ('lswb.f90: qbreg')
+  call assert_equals (qbreg/npix/pixsiz/pixsiz*3600000,REG_OLD%qbreg)
+  call set_unit_name ('lswb.f90: grzsumrg')
+  call assert_equals (grzsumrg*3600000,REG_OLD%grzsumrg)
+  call set_unit_name ('lswb.f90: gtzsumrg')
+  call assert_equals (gtzsumrg*3600000,REG_OLD%gtzsumrg)
+  call set_unit_name ('lswb.f90: difrzsumrg')
+  call assert_equals (difrzsumrg*3600000,REG_OLD%difrzsumrg)
+  call set_unit_name ('lswb.f90: capsumrg')
+  call assert_equals (capsumrg*3600000,REG_OLD%capsumrg)
+  call set_unit_name ('lswb.f90: pptsumrg')
+  call assert_equals (pptsumrg*3600000,REG_OLD%pptsumrg)
+  call set_unit_name ('lswb.f90: pnetsumrg')
+  call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
+  call set_unit_name ('lswb.f90: ettotrg')
+  call assert_equals (ettotrg*3600000,REG_OLD%ettotrg)
 
-	  
-! NWC 06/13/11
-!         write(96,1500) i,zbar1rg*1000.,zbarrg*1000.,gwtsumrg*3600000.,        
-!                        etwtsumrg*3600000.,qbreg/npix/pixsiz/pixsiz*3600000.,&
-!                        grzsumrg*3600000.,gtzsumrg*3600000.,difrzsumrg*3600000.,&
-!                        capsumrg*3600000.,pptsumrg*3600000.,pnetsumrg*3600000.,&
-!                        ettotrg*3600000.
-!         write(91,1000) i,rnsum,xlesum,hsum,gsum,&
-!                        rnsum-xlesum-hsum-gsum,gsum+(rnsum-xlesum-hsum-gsum),&
-!                        tksum,tkmidsum,tkdeepsum
-	endif	
 ! --------------------------------------------------------------------
 ! Write the fractional areas in different regions.
 ! --------------------------------------------------------------------
 
-      if (iprn(97).eq.1)&
-         write(97,1600) i,pr3sat,perrg2,pr2sat,pr2uns,&
-                        perrg1,pr1sat,pr1tzs,pr1rzs,pr1uns
+  read(2097,*) i,REG_OLD%pr3sat,REG_OLD%perrg2,REG_OLD%pr2sat,&
+                 REG_OLD%pr2uns,REG_OLD%perrg1,REG_OLD%pr1sat,&
+                 REG_OLD%pr1tzs,REG_OLD%pr1rzs,REG_OLD%pr1uns
+
+  call set_unit_name ('lswb.f90: pr3sat')
+  call assert_equals (pr3sat,REG_OLD%pr3sat)
+  call set_unit_name ('lswb.f90: perrg2')
+  call assert_equals (perrg2,REG_OLD%perrg2)
+  call set_unit_name ('lswb.f90: pr2sat')
+  call assert_equals (pr2sat,REG_OLD%pr2sat)
+  call set_unit_name ('lswb.f90: pr2uns')
+  call assert_equals (pr2uns,REG_OLD%pr2uns)
+  call set_unit_name ('lswb.f90: perrg1')
+  call assert_equals (perrg1,REG_OLD%perrg1)
+  call set_unit_name ('lswb.f90: pr1sat')
+  call assert_equals (pr1sat,REG_OLD%pr1sat)
+  call set_unit_name ('lswb.f90: pr1tzs')
+  call assert_equals (pr1tzs,REG_OLD%pr1tzs)
+  call set_unit_name ('lswb.f90: pr1rzs')
+  call assert_equals (pr1rzs,REG_OLD%pr1rzs)
+  call set_unit_name ('lswb.f90: pr1uns')
+  call assert_equals (pr1uns,REG_OLD%pr1uns)
 
 ! --------------------------------------------------------------------
 ! Write fractional runoff mechanisms and evapotranspiration control.
 ! --------------------------------------------------------------------
 
-      if (iprn(98).eq.1)&
-         
-         write(98,1700) i,ettotrg*3600000.,persac,peruac,perusc,&
-                        pnetsumrg*3600000.,persxr,perixr
+  read(2098,*) i,REG_OLD%ettotrg,REG_OLD%persac,REG_OLD%peruac,&
+                 REG_OLD%perusc,REG_OLD%pnetsumrg,REG_OLD%persxr,&
+                 REG_OLD%perixr
+
+  call set_unit_name ('lswb.f90: ettotrg')
+  call assert_equals (ettotrg*3600000,REG_OLD%ettotrg)
+  call set_unit_name ('lswb.f90: persac')
+  call assert_equals (persac,REG_OLD%persac)
+  call set_unit_name ('lswb.f90: peruac')
+  call assert_equals (peruac,REG_OLD%peruac)
+  call set_unit_name ('lswb.f90: perusc')
+  call assert_equals (perusc,REG_OLD%perusc)
+  call set_unit_name ('lswb.f90: pnetsumrg')
+  call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
+  call set_unit_name ('lswb.f90: persxr')
+  call assert_equals (persxr,REG_OLD%persxr)
+  call set_unit_name ('lswb.f90: perixr')
+  call assert_equals (perixr,REG_OLD%perixr)
 
 ! --------------------------------------------------------------------
 ! Write snow cover resilts.
 ! --------------------------------------------------------------------
 
-      if (iprn(99).eq.1)&
+  read(2099,*) i,REG_OLD%Swq_ussum,REG_OLD%Swqsum,tmp,&
+                 REG_OLD%Sdepth_ussum,REG_OLD%Sdepthsum,tmp
 
-         write(99,1800) i,1000.*Swq_ussum,1000.*Swqsum,1000.*(Swq_ussum+Swqsum),&
-                          1000.*Sdepth_ussum,1000.*Sdepthsum,&
-                          1000.*(Sdepthsum+Sdepth_ussum)
-
-! ====================================================================
-! Format statements.
-! ====================================================================
-
-1000  format(i5,9f40.20)
-1100  format(i5,5f10.5,f7.3,3f10.5)
-1200  format(i5,7f10.5)
-1300  format(i5,4f10.5,2f7.3)
-1400  format(i5,f7.3,2f10.5,f12.3,4f10.5)
-1500  format(2(g11.4,1x))
-1600  format(i5,2f10.3,2f7.3,f10.3,4f7.3)
-1700  format(i5,f10.3,3f7.3,f13.3,2f7.3)
-1800  format(i5,5(f10.4,' '),f10.4)
+  call set_unit_name ('lswb.f90: Swq_ussum')
+  call assert_equals (Swq_ussum*1000,REG_OLD%Swq_ussum)
+  call set_unit_name ('lswb.f90: Swqsum')
+  call assert_equals (Swqsum*1000,REG_OLD%Swqsum)
+  call set_unit_name ('lswb.f90: Sdepth_ussum')
+  call assert_equals (Sdepth_ussum*1000,REG_OLD%Sdepth_ussum)
+  call set_unit_name ('lswb.f90: Sdepthsum')
+  call assert_equals (Sdepthsum*1000.,REG_OLD%Sdepthsum)
 
       return
 

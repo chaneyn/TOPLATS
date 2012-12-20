@@ -713,6 +713,34 @@ open(2091,file=trim(filename))
 filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/CWB_fruit.txt"
 open(2092,file=trim(filename))
 
+!Regional Precipitation/Infiltration/Runoff (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/PRI_fruit.txt"
+open(2093,file=trim(filename))
+
+!Regional Evapotranspiration Rates (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/ET_fruit.txt"
+open(2094,file=trim(filename))
+
+!Regional Root and Transmission Zone Water Balance (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/STZB_fruit.txt"
+open(2095,file=trim(filename))
+
+!Regional Water Table Balance (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/WTB_fruit.txt"
+open(2096,file=trim(filename))
+
+!Regional Fractional Saturation States (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SSR_fruit.txt"
+open(2097,file=trim(filename))
+
+!Regional Evapotranspiration Controls and Infiltration Mechanisms (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/RMEC_fruit.txt"
+open(2098,file=trim(filename))
+
+!Regional Snow Cover (VALIDATION FILE)
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SWE_fruit.txt"
+open(2099,file=trim(filename))
+
 end subroutine FILE_OPEN
 
 subroutine FILE_CLOSE()
@@ -743,6 +771,27 @@ close(2091)
 
 !Regional Canopy water balance (VALIDATION FILE)
 close(2092)
+
+!Regional Precipitation/Infiltration/Runoff (VALIDATION FILE)
+close(2093)
+
+!Regional Evapotranspiration Rates (VALIDATION FILE)
+close(2094)
+
+!Regional Root and Transmission Zone Water Balance (VALIDATION FILE)
+close(2095)
+
+!Regional Water Table Balance (VALIDATION FILE)
+close(2096)
+
+!Regional Fractional Saturation States (VALIDATION FILE)
+close(2097)
+
+!Regional Evapotranspiration Controls and Infiltration Mechanisms (VALIDATION FILE)
+close(2098)
+
+!Regional Snow Cover (VALIDATION FILE)
+close(2099)
 
 end subroutine FILE_CLOSE
 

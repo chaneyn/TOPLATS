@@ -2,6 +2,8 @@ MODULE MODULE_LAND
 
   USE VARIABLES
 
+  USE MODULE_SNOW
+
   implicit none
 
   contains
