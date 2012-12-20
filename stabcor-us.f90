@@ -31,7 +31,7 @@
       implicit none
       include "help/stabcor.h"
 
-      real*8 calcrib 
+     
 ! ====================================================================
 ! Calculate the air pressure in Pascals and the absolute
 ! humidity.
