@@ -1,0 +1,12 @@
+MODULE MODULE_SHSUBR
+
+USE VARIABLES
+
+implicit none
+
+contains
+
+
+
+END MODULE MODULE_SHSUBR
+

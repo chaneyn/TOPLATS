@@ -1,3 +1,4 @@
+
 ! ====================================================================
 !
 !		subroutine stabcor
@@ -87,4 +88,4 @@
 
       return
 
-      end
+      end subroutine stabcor
