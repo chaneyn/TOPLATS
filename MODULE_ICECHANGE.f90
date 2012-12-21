@@ -1,3 +1,9 @@
+MODULE MODULE_ICECHANGE
+
+USE VARIABLES
+
+contains
+
 ! ====================================================================
 !
 !                       subroutine ice_change
@@ -296,7 +302,7 @@
 
       return
 
-      end
+      end subroutine ice_change
 
 ! ====================================================================
 !
@@ -334,7 +340,7 @@
 
       return
 
-      end
+      end subroutine correct
 
 ! ====================================================================
 !
@@ -373,7 +379,7 @@
 
       return
 
-      end
+      end subroutine check_in_ice
 
 ! ====================================================================
 !
@@ -425,4 +431,5 @@
 
       return
 
-      end
+      end subroutine check_ice
+END MODULE MODULE_ICECHANGE

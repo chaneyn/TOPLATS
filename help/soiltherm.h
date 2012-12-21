@@ -4,5 +4,3 @@
       real*8 psic,bcbeta,tkmid,quartz,heatcap1,heatcap2,heatcapold
       real*8 rocpsoil,row,cph2o,roa,cp,roi,smold,thermc,heatcap
       real*8 rzdthetaudtemp
-
-      real*8 calctc_m,calctc_j,calchc

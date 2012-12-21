@@ -1,9 +1,8 @@
 MODULE MODULE_LAND
 
   USE VARIABLES
-
-  USE MODULE_SNOW
-
+  USE MODULE_SHARED
+  USE MODULE_ICECHANGE
   implicit none
 
   contains
@@ -481,255 +480,6 @@ MODULE MODULE_LAND
 
 ! ====================================================================
 !
-!                       subroutine calc_rs
-!
-! ====================================================================
-!
-! Calculate the incoming solar radiation for the under and over story
-! under the assumption of only one reflection.
-!
-! ====================================================================
-
-    subroutine calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
-                         albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
-
-      implicit none
-      include "help/calc_rs.h"
-
-! ====================================================================
-! Calculate the incoming solar radiation for the under story and over
-! story layers.
-! ====================================================================
-
-      refus=0.d0
-      ccc=canclos
-      thr=extinct
-
-! --------------------------------------------------------------------
-! Determine what albedo of the understory is : moss, snow or normal
-! vegetation.
-! --------------------------------------------------------------------
-
-      if (i_und.gt.0) refus=albd_us
-      if (i_moss.gt.0) refus=alb_moss
-      if (Swq_us.gt.(0.d0)) refus=alb_snow
-
-! --------------------------------------------------------------------
-! Calculate the incoming radiation under the assumption of only
-! one reflection.
-! --------------------------------------------------------------------
-
-      if ( (i_und.gt.0).or.(i_moss.gt.0) ) then
-
-         rs_over=(1.d0+refus*thr)*rsd
-         rs_under=rsd*(thr*ccc+1.d0-ccc)
-
-      endif
-
-      if ( (i_und.eq.0).and.(i_moss.eq.0) ) then
-
-         rs_over=rsd
-         rs_under=rsd
-
-      endif
-
-      return
-    end subroutine calc_rs
-
-! ====================================================================
-!
-!            subroutine sm_cen_dif
-!
-! ====================================================================
-!
-! Initialize soil moisture for the calculation of the thermodynami!
-! parameters, as a centered difference.
-!
-! ====================================================================
-
-    subroutine sm_cen_dif(iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
-                            rzsmold,tzsmold)
-
-      implicit none
-      include "help/sm_cen_dif.h"
-
-      iffroz=0
-      if (tkmid.lt.273.15) iffroz=1
-
-      if (zmid.ge.zrzmax) then
-
-         smtmp=0.5*rzsm + 0.5*tzsm
-         smold=0.5*rzsmold + 0.5*tzsmold
-
-      else
-
-         smtmp=rzsm
-         smold=rzsmold
-
-      endif
-
-      return
-
-    end subroutine sm_cen_dif
-
-! ====================================================================
-!
-!                     subroutine soiltherm
-!
-! ====================================================================
-!
-! Calculate the soil thermal parameters.
-!
-! ====================================================================
-
-    subroutine soiltherm(iopthermc,thermc1,thermc2,rzsm,smtmp,&
-       thetar,thetas,psic,bcbeta,tkmid,quartz,ifcoarse,&
-       heatcap1,heatcap2,heatcapold,rocpsoil,row,cph2o,roa,cp,roi,&
-       smold,thermc,heatcap,inc_frozen,rzdthetaudtemp)
-
-      implicit none
-      include "help/soiltherm.h"
-
-! ====================================================================
-! Calculate the termal conductivity.
-! ====================================================================
-
-      if (iopthermc.eq.1) then
-
-! --------------------------------------------------------------------&
-! McCumber-Pielke method
-! --------------------------------------------------------------------&
-
-         thermc1 = calctc_m(rzsm,thetar,thetas,psic,bcbeta)
-         thermc2 = calctc_m(smtmp,thetar,thetas,psic,bcbeta)
-
-      else
-
-! --------------------------------------------------------------------&
-! Johansen's method
-! --------------------------------------------------------------------&
-
-         iffroz=0
-         if (tkmid.lt.273.15) iffroz=1
-         thermc1 = calctc_j(rzsm,thetar,thetas,quartz,iffroz,ifcoarse)
-         thermc2 = calctc_j(smtmp,thetar,thetas,quartz,iffroz,ifcoarse)
-
-      endif
-
-! ====================================================================
-! Calculate the heat capacity.
-! ====================================================================
-
-      heatcap1 = calchc(rzsm,thetas,rocpsoil,row,cph2o,roa,cp,tkmid,roi,&
-                        inc_frozen,rzdthetaudtemp)
-
-! --------------------------------------------------------------------&
-! For the heat capacity of the transmission zone : tzsmpet will
-! lead to overestation of the heat capacity, use average
-! --------------------------------------------------------------------&
-
-      heatcap2 = calchc(smtmp,thetas,rocpsoil,row,cph2o,roa,cp,tkmid,roi,&
-                        inc_frozen,rzdthetaudtemp)
-      heatcapold = calchc(smold,thetas,rocpsoil,row,cph2o,roa,cp,tkmid,roi,&
-                          inc_frozen,rzdthetaudtemp)
-      thermc=thermc1
-      heatcap=heatcap1
-
-      return
-
-    end subroutine soiltherm
-
-! ====================================================================
-!
-!             subroutine soiladapt
-!
-! ====================================================================
-!
-! Adapt the thermal parameters for vegetated surfaces.
-!
-! ====================================================================
-
-    subroutine soiladapt(iopgveg,thermc,iopthermc_v,tcbeta,&
-                           xlai,thermc1,heatcap,heatcap1,zero)
-
-      implicit none
-      include "help/soiladapt.h"
-
-! ====================================================================
-! Check the thermal conductivity inputs.
-! ====================================================================
-
-      if ( (thermc.lt.100.d0).and.(thermc.ge.0.d0) )then
-
-         xlai=xlai
-
-      else
-
-         write (*,*) 'Input therm! unrealisti! in SOILADAPT ',thermc
-         write (*,*) iopgveg,thermc,iopthermc_v,tcbeta,&
-                     xlai,thermc1,heatcap,heatcap1,zero
-         stop
-
-      endif
-
-! ====================================================================
-! Modify the thermal parameters for soils under vegetation.
-! ====================================================================
-
-      if (iopgveg.eq.0) then
-
-! --------------------------------------------------------------------&
-! Option 1 : Assume no ground heat flux under vegetation.
-! --------------------------------------------------------------------&
-
-         thermc = zero
-
-      else
-
-! --------------------------------------------------------------------&
-! Option 2 : Assume ground heat flux under vegetation, and an
-!            exponential decay in thermal conducivity of the soil
-!            under vegetation (Choudhury et al., 1987) with LAI.
-! -------------------------------------------------------------------&
-
-         if (iopthermc_v.ne.1) then
-
-            tau = dexp(-tcbeta * xlai)
-            thermc = tau * thermc1
-            heatcap = heatcap1
-
-         else
-
-            thermc = dexp(-tcbeta*xlai)*7.0
-            heatcap = 0.d0
-
-         endif
-
-      endif
-
-! ====================================================================
-! Check the thermal conductivity outputs.
-! ====================================================================
-
-      if ( (thermc.lt.100.d0).and.(thermc.gt.0.d0) )then
-
-         thermc=thermc
-
-      else
-
-         write (*,*) 'Corrected therm! unrealisti! in SOILADAPT ',thermc
-         write (*,*) iopgveg,thermc,iopthermc_v,tcbeta,&
-                     xlai,thermc1,heatcap,heatcap1,zero
-         stop
-
-      endif
-
-      return
-
-    end subroutine soiladapt
-
-! ====================================================================
-!
 !                       subroutine states
 !
 ! ====================================================================
@@ -990,6 +740,223 @@ MODULE MODULE_LAND
 
 ! ====================================================================
 !
+!			subroutine initsm
+!
+! ====================================================================
+!
+! Subroutine to assign spatially variable initial conditions in
+! the root and transmission zones for the first time step in the
+! storm.
+!
+! ====================================================================
+
+      subroutine initsm(zw,psic,zrz,ztz,rzsm1,tzsm1,thetas,&
+       zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f,&
+       inc_frozen,tsoilold,bulk_dens,a_ice,b_ice,row)
+
+      implicit none
+      include "help/initsm.h"
+
+! ====================================================================
+! Update root and transmission zone depths and soil moisture.
+! ====================================================================
+
+      if ((zw-psic).le.zero) then
+
+! --------------------------------------------------------------------
+! If the root zone is saturated (Region 3).
+! --------------------------------------------------------------------
+
+         zrz = zero
+         ztz = zero
+         rzsm1 = thetas
+         tzsm1 = thetas
+
+      else if ((zw-psic).lt.zrzmax) then
+
+! --------------------------------------------------------------------
+! If the transmission zone is saturated and root zone is
+! unsaturated (Region 2).
+! --------------------------------------------------------------------
+
+         zrz = zw-psic
+
+         if (iopsmini.eq.0) then
+
+            rzsm1 = thetar+(thetas-thetar)*((psic/zw)**bcbeta)
+
+         endif
+
+         ztz = zero
+         tzsm1 = thetas
+
+      else
+
+! --------------------------------------------------------------------
+! If the transmission and root zone are both unsaturated (Region 1).
+! --------------------------------------------------------------------
+
+         zrz = zrzmax
+         ztz = zw-psic-zrz
+ 
+         if (iopsmini.eq.0) then
+
+            rzsm1 = thetar+(thetas-thetar)*((psic/(zw-0.5*zrz))**bcbeta)
+            tzsm1 = thetar+(thetas-thetar)*((psic/(0.5*ztz+psic))** bcbeta)
+
+         endif
+
+      endif
+
+! ====================================================================
+! Calculate the frozen water and liquid water fractions in the
+! soil if requested.
+! ====================================================================
+
+      rzsm1_u=0.d0
+      tzsm1_u=0.d0
+      rzsm1_f=0.d0
+      tzsm1_f=0.d0
+
+      if (inc_frozen.eq.1) then
+
+         if (tsoilold.gt.(273.15d0)) then
+
+! --------------------------------------------------------------------
+! If the soil is not frozen all soil water is liquid.
+! --------------------------------------------------------------------
+
+            rzsm1_u=rzsm1
+            tzsm1_u=tzsm1
+            rzsm1_f=0.d0
+            tzsm1_f=0.d0
+
+         else
+
+! --------------------------------------------------------------------
+! In case of frozen soil calculate the unfrozen soil water.
+! --------------------------------------------------------------------
+
+            ttt=273.15d0-tsoilold
+            rzsm1_u=1000.d0*bulk_dens*a_ice*ttt**b_ice/row
+            tzsm1_u=1000.d0*bulk_dens*a_ice*ttt**b_ice/row
+
+            if (rzsm1_u.gt.rzsm1) then
+
+! ....................................................................
+! Check whether the unfrozen soil water in the root zone
+! is not higher than the root zone soil moisture.  Adapt
+! if necessary.
+! ....................................................................
+
+               rzsm1_u=rzsm1
+               rzsm1_f=0.d0
+
+            else
+
+! ....................................................................
+! Frozen water content = total water content minus unfrozen water
+! content.
+! ....................................................................
+
+               rzsm1_f=rzsm1-rzsm1_u
+
+            endif
+
+! ....................................................................
+! Check whether the unfrozen soil water in the transmission zone
+! is not higher than the transmission zone soil moisture.  Adapt
+! if necessary.
+! ....................................................................
+
+            if (tzsm1_u.gt.tzsm1) then
+
+               tzsm1_u=tzsm1
+               tzsm1_f=0.d0
+
+            else
+
+! ....................................................................
+! Frozen water content = total water content minus unfrozen water
+! content.
+! ....................................................................
+
+               tzsm1_f=tzsm1-tzsm1_u
+
+            endif
+
+         endif
+
+! --------------------------------------------------------------------
+! Frozen water content = total water content minus unfrozen water
+! content.  (This, in some cases, has already been calculated
+! here above but doint this calculation again dos not affect the
+! results.
+! --------------------------------------------------------------------
+
+         rzsm1_u=rzsm1-rzsm1_f
+         tzsm1_u=tzsm1-tzsm1_f
+
+         if ( (thetas-rzsm1_f).le.(thetar+0.d0)) then
+
+! ....................................................................
+! Check whether the frozen water content in the root zone is not
+! higher than the saturated water content.
+! ....................................................................
+
+            rtdif=0.0d0+thetar-(thetas-rzsm1_f)
+            rzsm1_f=rzsm1_f-rtdif
+            rzsm1_u=rzsm1_u+rtdif
+
+         endif
+
+         if ( (thetas-tzsm1_f).le.(thetar)+0.d0) then
+
+! ....................................................................
+! Check whether the frozen water content in the transmission zone is not
+! higher than the saturated water content.
+! ....................................................................
+
+            rtdif=0.0d0+thetar-(thetas-tzsm1_f)
+            tzsm1_f=tzsm1_f-rtdif
+            tzsm1_u=tzsm1_u+rtdif
+
+         endif
+
+         if (rzsm1_u.le.(thetar+0.d0)) then
+
+! ....................................................................
+! Check whether the unfrozen water content in the root zone is not
+! lower than the residual water content.
+! ....................................................................
+
+            rtdif=thetar+0.01d0-rzsm1_u
+            rzsm1_u=rzsm1_u+rtdif
+            rzsm1_f=rzsm1_f-rtdif
+
+         endif
+
+         if (tzsm1_u.le.(thetar+0.d0)) then
+
+! ....................................................................
+! Check whether the unfrozen water content in the transmission zone is
+! not lower than the residual water content.
+! ....................................................................
+
+            rtdif=thetar+0.01d0-tzsm1_u
+            tzsm1_u=tzsm1_u+rtdif
+            tzsm1_f=tzsm1_f-rtdif
+
+         endif
+
+      endif
+
+      return
+
+      end subroutine initsm
+
+! ====================================================================
+!
 !                       subroutine infilt
 !
 ! ====================================================================
@@ -1169,6 +1136,55 @@ MODULE MODULE_LAND
       return
 
     end subroutine infilt
+
+! ====================================================================
+!
+!                       subroutine reset_inf_pars
+!
+! ====================================================================
+!
+! Reset cumulative infiltration, initial root zone soil moisture,&
+! sorptivity and dimensionless gravity parameter, cc.
+!
+! ====================================================================
+
+      subroutine reset_inf_pars(cuminf,zero,rzsmst,rzsm,thetas,tolinf,&
+       sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
+
+      implicit none
+      include "help/reset_inf_pars.h"
+
+! ====================================================================
+! Calculate the root zone soil moisture
+! ====================================================================
+
+      cuminf = zero
+
+      rzsmst = rzsm
+
+      if (rzsmst.ge.thetas)  then
+
+         rzsmst=thetas-tolinf
+
+      endif
+
+! ====================================================================
+! Calculate sorptivity and gravity parameters at the first step
+! of the storm event.
+! ====================================================================
+
+      sorp = (((two*xk0*((thetas-rzsmst)**two)*psic)&
+                   /(thetas-thetar))*((one/(bcgamm+0.5d0*bcbeta-one))+&
+                    ((thetas-thetar)/ (thetas-rzsmst))))**0.5d0
+
+      deltrz = rzsmst-thetar
+      if(deltrz.le.zero) deltrz=zero
+      cc = 0.5d0*(one+ ((deltrz/(thetas-thetar))**(bcgamm/bcbeta)))
+
+      return
+
+      end subroutine reset_inf_pars
+
 
 ! ====================================================================
 !
@@ -1608,7 +1624,7 @@ MODULE MODULE_LAND
 ! interpolation for the canopy resistance.
 ! ====================================================================
 
-         call calcvegcap(smcond,zero,vegcap,epetd,resist,ravd,smcond)
+         call calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
 
 ! ====================================================================
 ! Calculate vegetation capacity for the under story using linear
@@ -1618,7 +1634,7 @@ MODULE MODULE_LAND
          if (i_und.gt.0) then
 
             call calcvegcap(smcond_us,zero,vegcap_us,&
-                            epetd_us,resist_us,ravd_us,smcond_us)
+                            epetd_us,resist_us,ravd_us)
 
          endif
 
@@ -1637,7 +1653,7 @@ MODULE MODULE_LAND
 
             call maxplevap(zrz,0.d0,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap_us,psicri,respla,xkrz)
+       two,three,ressoi,rtact,rtdens,vegcap_us,psicri,respla)
 
          endif
 
@@ -1650,7 +1666,7 @@ MODULE MODULE_LAND
 
             call maxplevap(zrz,0.d0,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla,xkrz)
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
 
 ! ====================================================================
 ! Calculate the maximum plant evaporation for the over story for
@@ -1661,7 +1677,7 @@ MODULE MODULE_LAND
 
             call maxplevap(ztz,zrz,epetd,inc_frozen,stzrel,tzsm,thetas,&
        thetar,tzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xkstz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla,xktz)
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
 
          endif
 
@@ -1689,6 +1705,122 @@ MODULE MODULE_LAND
       return
 
     end subroutine transv
+
+! ====================================================================
+!
+!                   subroutine maxplevap
+!
+! ====================================================================
+!
+! Calculate the maximum plant evaporation.
+!
+! ====================================================================
+
+      subroutine maxplevap(zrz,ztz,epetd,inc_frozen,srzrel,rzsm,thetas,&
+       thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
+
+      implicit none
+      include "help/maxplevap.h"
+
+! --------------------------------------------------------------------
+! If the soil is saturated than the maximum flux of the water is not
+! bounded by the plant/soil system.
+! --------------------------------------------------------------------
+
+      if (zrz.le.zero) then
+
+         vegcap = epetd
+
+      else
+
+! --------------------------------------------------------------------
+! If the soil is not saturated calculate the soil saturation.
+! --------------------------------------------------------------------
+
+         if (inc_frozen.eq.0) then
+
+! ....................................................................
+! No difference between ice particles and frozen soil water.
+! ....................................................................
+
+            srzrel = (rzsm-thetar)/(thetas-thetar)
+
+         else
+
+! ....................................................................
+! Ice crystals are treated as mineral soil particles.
+! ....................................................................
+
+            srzrel = (rzsm_u-thetar)/(thetas-thetar)
+
+         endif
+
+! --------------------------------------------------------------------
+! Double check whether relative saturation is between 1 and 0.
+! --------------------------------------------------------------------
+
+         if (srzrel.le.zero) srzrel=zero
+         if (srzrel.ge.one) srzrel=one
+
+! --------------------------------------------------------------------
+! Calculate the soil water potential.
+! --------------------------------------------------------------------
+
+         psisoi=psic/(srzrel**(one/bcbeta))
+
+! --------------------------------------------------------------------
+! Calculate the saturated hydrauli! conductivity in the root zone.
+! --------------------------------------------------------------------
+
+         if (ikopt.eq.1) then
+
+! ....................................................................
+! Option 1 : No decline with depth.
+! ....................................................................
+
+            xksrz = xk0
+
+         else
+
+! ....................................................................
+! Option 2 : Exponential decline with depth.
+! ....................................................................
+
+            xksrz = xk0*dexp(-ff*((zrz+ztz)/two))
+
+         endif
+
+! --------------------------------------------------------------------
+! Calculate the unsaturated hydrauli! conductivity in the root zone.
+! --------------------------------------------------------------------
+
+         xkrz = xksrz*(srzrel**((two+three*bcbeta)/bcbeta))
+
+! --------------------------------------------------------------------
+! Calculate the soil resistance for evaporation.
+! --------------------------------------------------------------------
+
+         ressoi = one/(rtact*xkrz*rtdens)
+
+! --------------------------------------------------------------------
+! Calculate the maximum water vapor flux out of the plant.
+! --------------------------------------------------------------------
+
+         vegcap = (psisoi-psicri)/(ressoi+respla)
+
+! --------------------------------------------------------------------
+! Check whether the maximum water vapor flux out of the plant is
+! positive.
+! --------------------------------------------------------------------
+
+         if (vegcap.lt.zero) vegcap = zero
+
+      endif
+
+      return
+
+      end subroutine maxplevap
 
 ! ====================================================================
 !
@@ -2324,6 +2456,537 @@ MODULE MODULE_LAND
 
 ! ====================================================================
 !
+!			subroutine difflx
+!
+! ====================================================================
+!
+! Subroutine difflx calculates the diffusive fluxes out of the surface 
+! and transmission zones (positive down).
+!
+! ====================================================================
+
+      subroutine new_difflx(ikopt,xksrz,xkstz,ff,zrz,ztz,inc_frozen,rzsm,tzsm,&
+       thetas,thetar,bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz)
+
+      implicit none
+      include "help/new_difflx.h"
+
+      data tolsat / 0.001d0 /
+
+! ====================================================================
+! Calculate diffusive flux out of root and transmission zones using 
+! D(theta) relations of Brooks and Corey.
+! ====================================================================
+
+! ====================================================================
+! If root zone not saturated then calculate the drainage.
+! ====================================================================
+
+      if (inc_frozen.eq.0) then
+
+! --------------------------------------------------------------------
+! If frozen soil water is treated as if it were not frozen.
+! --------------------------------------------------------------------
+
+	 if (zrz.gt.zero) then
+
+! ....................................................................
+! The soil profile is not saturated.
+! ....................................................................
+
+	    difrz=diffuse(zrz,ztz,rzsm,(0.5*rzsm+0.5*tzsm),&
+                          thetas,thetar,bcbeta,psic,xksrz,xkstz)
+
+	 else
+
+! ....................................................................
+! The soil profile is saturated.
+! ....................................................................
+
+	    difrz=zero
+
+	 endif
+
+      else
+
+! --------------------------------------------------------------------
+! If frozen soil water is treated as solid soil particles.
+! --------------------------------------------------------------------
+
+         if (zrz.gt.zero) then
+
+! ....................................................................
+! The soil profile is not saturated.
+! ....................................................................
+
+	    difrz=diffuse(zrz,ztz,rzsm_u,(0.5*rzsm_u+0.5*tzsm_u),&
+                          thetas,thetar,bcbeta,psic,xksrz,xkstz)
+
+         else
+! ....................................................................
+! The soil profile is saturated.
+! ....................................................................
+
+	   difrz=zero
+
+	 endif
+
+      endif
+
+! ====================================================================
+! Now repeat calculation for transmission zone.
+! ====================================================================
+
+      if (inc_frozen.eq.0) then
+
+! --------------------------------------------------------------------
+! If frozen soil water is treated as if it were not frozen.
+! --------------------------------------------------------------------
+
+         if (ztz.gt.zero) then
+
+! ....................................................................
+! The soil profile is not saturated.
+!
+! Here we assume diffusion occurs over layer of thickness equal to
+! transmission zone and again account for any nonlinearity in soil
+! moisture profile by averaging gradients.
+! ....................................................................
+
+	    diftz=diffuse(ztz,ztz,tzsm,0.5*tzsm+0.5*thetas,&
+                          thetas,thetar,bcbeta,psic,xkstz,xkstz)
+
+         else
+
+! ....................................................................
+! The soil profile is saturated.
+! ....................................................................
+
+	    diftz=zero
+
+         endif
+
+      else
+
+! --------------------------------------------------------------------
+! If frozen soil water is treated as solid soil particles.
+! --------------------------------------------------------------------
+
+         if (ztz.gt.zero) then
+
+! ....................................................................
+! The soil profile is not saturated.
+! ....................................................................
+
+	    diftz=diffuse(ztz,ztz,tzsm_u,0.5*tzsm_u+0.5*(thetas),&
+                          thetas,thetar,bcbeta,psic,xkstz,xkstz)
+
+         else
+
+! ....................................................................
+! The soil profile is saturated.
+! ....................................................................
+
+            diftz=zero
+
+         endif
+
+      endif
+ 
+      return
+
+      end subroutine new_difflx
+
+! ====================================================================
+!
+!			subroutine diffuse
+!
+! ====================================================================
+!
+! Subroutine diffuse calculates the diffusive flux from layer 1 to layer 2
+! in Richards' Equation using approach of Mahrt and Pan (1984).
+!
+! ====================================================================
+
+      function diffuse(dz1,dz2,theta1,theta2,thetas,thetar,bcbeta,psic,&
+                       xksat1,xksat2)
+
+      implicit none
+      include "help/diffuse.noup.h"
+
+! ====================================================================
+! Calculate diffusivity  using centered approx.
+! ====================================================================
+
+      theta = 0.5d0*(theta1 + theta2)
+
+! ====================================================================
+! Use harmoni! average since flow is perp. to layers.
+! ====================================================================
+
+      xksat = 1/(0.5/xksat1 + 0.5/xksat2)
+
+      F1 = bcbeta * xksat * psic/(thetas-thetar) 
+
+      satrel=(theta-thetar)/(thetas-thetar)
+
+      if (satrel.lt.(0.d0)) satrel=0.d0
+
+      DF = F1 * (satrel) ** (bcbeta + 2.)
+
+! ====================================================================
+! Calculate moisture gradient.
+!
+! dz1 and dz2 are layer thicknesses (not depths) over which diffusion
+! is modeled.
+! ====================================================================
+
+      dz=0.5d0*(dz1+dz2)
+
+      if (dz.gt.1.d-9) then
+
+         grad= (theta1-theta2)/dz
+
+      else
+
+         grad=0.d0
+
+      endif
+
+! ====================================================================
+! Calculate diffusive flux.
+! ====================================================================
+
+      difflx = DF * grad
+
+      diffuse=difflx
+
+      return
+
+      end function diffuse
+
+! ====================================================================
+!
+!			subroutine dwnflx
+!
+! ====================================================================
+!
+! Subroutine dwnflx calculates the downward fluxes out of the root 
+! and transmission zones.
+!
+! ====================================================================
+
+      subroutine new_dwnflx(zrz,ikopt,xksrz,xkstz,rzsm,ff,&
+       inc_frozen,thetar,thetas,&
+       rzsm_u,grz,bcbeta,ztz,gtz,tzsm,tzsm_u)
+
+      implicit none
+      include "help/new_dwnflx.h"
+
+! ====================================================================
+! Calculate downward flux out of root and transmission zones using 
+! ksat(theta) relations of Brooks and Corey.
+! ====================================================================
+
+      if (zrz.eq.zero) then
+
+! ====================================================================
+! If root zone is saturated by the water table then set drainage
+! to zero.
+! ====================================================================
+
+         grz = zero
+
+! ====================================================================
+! If root zone not saturated then calculate the drainage.
+! ====================================================================
+
+      else
+
+! ====================================================================
+! If root zone not saturated then calculate the drainage.
+! ====================================================================
+
+
+! --------------------------------------------------------------------
+! Calcualate relative saturation in the root zone.
+! --------------------------------------------------------------------
+
+         if (inc_frozen.eq.0) then
+
+! ....................................................................
+! Option 1 : Treat frozen soil water as liquid water.
+! ....................................................................
+
+            relsrz = (rzsm-thetar)/(thetas-thetar)
+
+         else
+
+! ....................................................................
+! Option 2 : Treat frozen soil particles as solid soil.
+! ....................................................................
+
+            relsrz = (rzsm_u-thetar)/(thetas-thetar)
+
+         endif
+
+         if (relsrz.le.zero) relsrz=zero
+         if (relsrz.ge.one) relsrz=one
+
+! --------------------------------------------------------------------
+! Calculate downward flux out of root zone.
+! --------------------------------------------------------------------
+
+         grz = xksrz*(relsrz**((two+three*bcbeta)/bcbeta))
+
+      endif
+
+! ====================================================================
+! Now repeat calculation for transmission zone.
+! ====================================================================
+
+      if (ztz.eq.zero) then
+
+! ====================================================================
+! If transmission zone is saturated by the water table then set drainage
+! to zero.
+! ====================================================================
+
+         gtz = zero
+
+      else
+
+! ====================================================================
+! If transmission zone not saturated then calculate the drainage.
+! ====================================================================
+
+
+! --------------------------------------------------------------------
+! Calcualate relative saturation in the transmission zone.
+! --------------------------------------------------------------------
+
+         if (inc_frozen.eq.0) then
+
+! ....................................................................
+! Option 1 : Treat frozen soil water as liquid water.
+! ....................................................................
+
+            relstz=(tzsm-thetar)/(thetas-thetar)
+
+         else
+
+! ....................................................................
+! Option 2 : Treat frozen soil particles as solid soil.
+! ....................................................................
+
+            relstz=(tzsm_u-thetar)/(thetas-thetar)
+
+         endif
+
+         if (relstz.le.zero) relstz=zero
+         if (relstz.ge.one) relstz=one
+
+! --------------------------------------------------------------------
+! Calculate downward flux out of transmission zone.
+! --------------------------------------------------------------------
+
+         gtz = xkstz*(relstz**((two+three*bcbeta)/bcbeta))
+
+      endif
+
+      return
+
+      end subroutine new_dwnflx
+
+! ====================================================================
+!
+!                  subroutine clc_evrz
+!
+! ====================================================================
+!
+! Calculate the evaporation/condensation into the root zone.
+!
+! ====================================================================
+
+      subroutine clc_evrz(evrz,Swq,Swq_us,ivgtyp,evtact,dc,i_und,&
+       i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,dummy,f_und)
+
+      implicit none
+      include "help/clc_evrz.h"
+
+      evrz=zero
+
+      if ((Swq+Swq_us).le.(0.d0)) then
+
+! ....................................................................
+! If the vegetation is bare soil and there is no snow layer present
+! all the evaporative demand comes from the bare soil and under story
+! or moss is not represented.
+! ....................................................................
+
+         if (ivgtyp.eq.0) evrz=evtact*dc
+
+         if (ivgtyp.eq.1) then
+
+            if ( (i_und.eq.0).and.&
+                 (i_moss.eq.0) ) then
+
+! ....................................................................
+! In case of vegetation with lower roots all the evaporative demand
+! for the soil comes from the over story if there is no under story
+! represented and if there is no snow.
+! ....................................................................
+
+               evrz=evtact*dc*(1.d0-fw)
+               dummy=evrz
+
+            else
+
+               if (i_und.gt.0) then
+
+! ....................................................................
+! If there is under story and no snow part of the evporative demand
+! comes from the over story and part from the under story if under
+! story is represented.
+! ....................................................................
+
+                  evrz=(evtact*dc*(1.d0-fw))+ &
+                       f_und*(evtact_us*dc_us*(1.d0-fw_us))
+
+                  dummy=evrz
+
+               endif
+
+               if (i_moss.gt.0) then
+
+! ....................................................................
+! If there is a moss layer and no snow then all the evaporative demand
+! for the soil comes from the over story layer.  This is justified
+! by the fact that roots under a moss layer  re sufficiently
+! vertically distributed to make this assumption hold.
+! ....................................................................
+
+                  evrz=(evtact*dc*(1.d0-fw))
+                  dummy=evrz
+
+               endif
+
+            endif
+
+         endif
+
+         if (ivgtyp.eq.2) then
+
+            if ( (i_und.eq.0).and.&
+                 (i_moss.eq.0) ) then
+
+! ....................................................................
+! In case of lower layer roots and no under story
+! than there is no evaporative demand for the root zone.
+! ....................................................................
+
+               evrz=zero
+               dummy=evrz
+
+            else
+
+               if (i_und.gt.0) then
+
+! ....................................................................
+! In case of lower layer roots and an under story layer than
+! the evaporative demand for the root zone comes entirely from
+! the under story.
+! ....................................................................
+
+                  evrz=zero+&
+                       f_und*(evtact_us*dc_us*(1.d0-fw_us))
+                  dummy=evrz
+
+               endif
+
+               if (i_moss.gt.0) then
+
+! ....................................................................
+! In case of lower layer roots and a moss layer
+! than there is no evaporative demand for the root zone.
+! ....................................................................
+
+                  evrz=zero
+                  dummy=evrz
+
+               endif
+
+            endif
+
+         endif
+
+      else
+
+! ....................................................................
+! In case of snow on top of the under story all the evaporative demand
+! comes from the over story.
+! ....................................................................
+
+         evrz=zero
+
+         if (Swq.le.0.d0) then
+
+            if (ivgtyp.eq.1) then
+
+               evrz=evrz+evtact*dc*(1.d0-fw)*(1.-f_und)
+
+            endif
+
+            if (ivgtyp.eq.0) evrz=evtact*dc
+
+         endif
+! ....................................................................
+! In case of snow on top of the over story all the evaporative demand
+! comes from the under story.
+! ....................................................................
+
+         if (Swq_us.le.0.d0) then
+
+            if (i_und.gt.0) then
+
+               evrz=evrz+evtact_us*dc_us*(1.d0-fw_us)*f_und
+
+            endif
+
+            if (i_moss.gt.0) then
+
+               evrz=evrz+zero
+
+            endif
+
+         endif
+
+         dummy=evrz
+
+      endif
+
+! ....................................................................
+! Water for evaporation of the over story is for 50 % extracted
+! from soil water and 50 % from water in the moss layer.
+! ....................................................................
+
+      if (i_moss.eq.1) then
+
+         evrz_moss=0.5d0*evrz
+         evrz=0.5d0*evrz
+
+      else
+
+         evrz_moss=0.d0
+
+      endif
+
+      return
+
+      end subroutine clc_evrz
+
+! ====================================================================
+!
 !                       subroutine sursat
 !
 ! ====================================================================
@@ -2754,6 +3417,475 @@ MODULE MODULE_LAND
     end subroutine land_us
 
 
+! ====================================================================
+!
+!		subroutine engact
+!
+! ====================================================================
+!
+! Subroutine to calculate the actual surface energy fluxes.
+!
+! ====================================================================
 
+      subroutine engact(canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
+       bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
+       tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thermc2,thetar,&
+       thetas,psic,bcbeta,quartz,ifcoarse,heatcap1,heatcap2,&
+       heatcapold,rocpsoil,cph2o,roa,cp,roi,thermc,heatcap,rzdthetaudtemp,&
+       iopgveg,iopthermc_v,tcbeta,xlai,tkact,tkactd,&
+       tkmidactd,i_2l,f1,f2,f3,emiss,rescan,ravd,rahd,rnactd,&
+       hactd,gactd,dshactd,tcel,vppa,psychr,zdeep,Tdeepstep,&
+       rsd,r_lup,rld,toleb,maxnri,dt,i,albd,r_sdn,rnetpn,&
+       gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,rnact,xleact,hact,&
+       gact,dshact,rnetw,xlew,hw,gw,&
+       dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,ipix,initer)
+
+      implicit none
+      include "help/engact.h"
+
+      ccc=canclos
+
+! ====================================================================
+! If evaporation is land surface controled then recalculate
+! actual fluxes.
+! ====================================================================
+
+      if (ievcon.eq.1) then
+
+! --------------------------------------------------------------------
+! Calculate actual latent heat flux from dry canopy or bare soil.
+! --------------------------------------------------------------------
+
+         if (ivgtyp.eq.0) then
+
+            xleactd = xlhv * row * (evtact-bsdew)
+
+         else
+
+            xleactd = xlhv * row * evtact
+
+         endif
+
+! --------------------------------------------------------------------
+! Solve energy balance again if this option is specified.
+! --------------------------------------------------------------------
+
+         if (ioppet.eq.0) then
+
+            call sm_cen_dif(iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
+                            rzsmold,tzsmold)
+
+! ====================================================================
+! Calculate the soil thermal parameters.
+! ====================================================================
+
+            call soiltherm(iopthermc,thermc1,thermc2,rzsm,smtmp,&
+       thetar,thetas,psic,bcbeta,tkmid,quartz,ifcoarse,&
+       heatcap1,heatcap2,heatcapold,rocpsoil,row,cph2o,roa,cp,roi,&
+       smold,thermc,heatcap,inc_frozen,rzdthetaudtemp)
+
+! --------------------------------------------------------------------
+! Correct the thermal parameters for soils under vegetation.
+! --------------------------------------------------------------------
+
+            if (ivgtyp.ne.0) then
+
+               call soiladapt(iopgveg,thermc,iopthermc_v,tcbeta,&
+                              xlai,thermc1,heatcap,heatcap1,zero)
+
+            endif
+
+! ====================================================================
+! Initialize actual temperatures.
+! ====================================================================
+
+            tkactd = tkact
+            tkmidactd = tkmid
+
+! ====================================================================
+! Solve the energy balance for actual temperatures and fluxes.
+! ====================================================================
+
+            tdum1=tkactd
+            tdum2=tkmidactd
+
+            if (i_2l.eq.1) then
+
+! --------------------------------------------------------------------
+! Solve assuming that the radiation budgets for over story and under
+! story are related with each other through the long wave radiation
+! term.
+! --------------------------------------------------------------------
+
+               call nreb(0,f1+f2-f3,2.*emiss,thermc,thermc2,heatcap,heatcap2,&
+       heatcapold,rescan+ravd,rahd,tdum1,tdum2,rnactd,xleactd,evtact,hactd,&
+       gactd,dshactd,tcel,vppa,roa,psychr,xlhv,zdeep,Tdeepstep,zmid,rsd,&
+       r_lup+rld,toleb,maxnri,dt,i)
+
+            else
+
+! --------------------------------------------------------------------
+! Solve  assuming that the radiation budget for over and under story
+! are independent from each other, which means that the incoming long
+! wave radiation for both layers are equal.
+! --------------------------------------------------------------------
+
+               call nreb(0,albd,emiss,thermc,thermc2,heatcap,heatcap2,&
+       heatcapold,rescan+ravd,rahd,tdum1,tdum2,rnactd,xleactd,evtact,hactd,&
+       gactd,dshactd,tcel,vppa,roa,psychr,xlhv,zdeep,Tdeepstep,zmid,r_sdn,&
+       rld,toleb,maxnri,dt,i)
+
+            endif
+
+! ====================================================================
+! For penmen-montieth case just solve for sensible heat flux
+! since Rnet, G and latent heat are known.
+! ====================================================================
+
+         else if(ioppet.eq.1) then
+
+! --------------------------------------------------------------------
+! Solve for sensible heat.
+! --------------------------------------------------------------------
+
+            hactd = rnetpn - xleactd - gbspen
+
+! --------------------------------------------------------------------
+! Set values for Rnet and Ground Heat Flux.
+! --------------------------------------------------------------------
+
+            rnactd = rnetpn
+            gactd = gbspen
+
+         endif
+
+! ====================================================================
+! If the evapotranspiration is atmosphere controled then set
+! the fluxes equal to potential fluxes.
+! ====================================================================
+
+      else
+
+         rnactd = rnetd
+         xleactd = xled
+         hactd = hd
+         gactd = gd
+         dshactd = dshd
+         tdum1 = tkd
+         tdum2 = tkmidd
+
+      endif
+
+! ====================================================================
+! Compute average actual surface energy fluxes including any
+! wet canopy fluxes.
+! ====================================================================
+
+      if (initer.eq.2) then
+
+         tkactd=tdum1
+         tkmidactd=tdum2
+
+         rnact = rnactd*dc*(1-fw) + rnetw*(one-dc*(1-fw))
+         xleact = xleactd*dc*(1-fw) + xlew*(one-dc*(1-fw))
+         hact = hactd*dc*(1-fw) + hw*(one-dc*(1-fw))
+         gact = gactd*dc*(1-fw) + gw*(one-dc*(1-fw))
+         dshact = dshactd*dc*(1-fw) + dshw*(one-dc*(1-fw))
+         tkact = tkactd*dc*(1-fw) + tkw*(one-dc*(1-fw))
+         tkmid = tkmidactd*dc*(1-fw) + tkmidw*(one-dc*(1-fw))
+
+      endif
+
+      tdiff=tdum1*dc*(1-fw) + tkw*(one-dc*(1-fw))
+
+! ====================================================================
+! In case of unreasonable soil temperatures, which will lead to
+! unreasonable ground heat flux values, abort the program and
+! print the most important variables out.
+! ====================================================================
+
+      if(gactd.gt.15000) then
+
+         write (*,*) 'ENGACT error '
+         write (*,*) 'tkactd =',tkactd
+         write (*,*) 'tkw =',tkw
+         write (*,*) 'tkmidactd =',tkmidactd
+         write (*,*) 'tkmidw =',tkmidw
+         write (*,*) 'gactd =',gactd
+         write (*,*) 'gw =',gw
+         write (*,*) 'gact    =',gact
+         write (*,*) 'dc    =',dc
+         write (*,*) 'fw    =',fw 
+         write (*,*) 'gactd    =',gactd
+         write (*,*) 'gw    =',gw
+         write (*,*) 'dc    =',dc
+         write (*,*) 'fw    =',fw
+         write (*,*) 'gact = ',gact
+         write (*,*) 'therm! =',thermc
+         write (*,*) 'thermc1 =',thermc1
+         write (*,*) 'thermc2 =',thermc2
+         write (*,*) 'heatcap1 =',heatcap1
+         write (*,*) 'heatcap2 =',heatcap2
+         write (*,*) 'heatcapold =',heatcapold
+         write (*,*) 'smtmp = ',smtmp
+         write (*,*) 'smold = ',smold
+         write (*,*) 'ipix = ',ipix
+         write (*,*) 'rzsm = ',rzsm
+         write (*,*) 'tzsm = ',tzsm
+         write (*,*) 'thetar = ',thetar
+         write (*,*) 'thetas = ',thetas
+         write (*,*) 'quartz = ',quartz
+         write (*,*) 'iffroz = ',iffroz
+         write (*,*) 'ifcoarse = ',ifcoarse
+         write (*,*) 'rocpsoil = ',rocpsoil
+         write (*,*) 'row = ',row
+         write (*,*) 'cph2o = ',cph2o
+         write (*,*) 'roa = ',roa
+         write (*,*) 'cp = ',cp
+         write (*,*) 'zmid = ',zmid
+         write (*,*) 'zrzmax = ',zrzmax
+         write (*,*) 'rzsmold = ',rzsmold
+         write (*,*) 'tzsmold = ',tzsmold
+
+         stop
+
+      endif
+
+      return
+
+      end subroutine engact
+
+
+! ====================================================================
+!
+!            subroutine calcrsoil
+!
+! ====================================================================
+!
+! Calculate the bare soil resistance to evaporation.
+!
+! ====================================================================
+
+      subroutine calcrsoil(irestype,rsoil,&
+                           srespar1,srespar2,srespar3,&
+                           thetas,rzsm,tkact)
+
+      implicit none
+      include "help/calcrsoil.h"
+
+      if (irestype.eq.2) then
+
+! ....................................................................
+! Formulation of Sun (1982).
+! ....................................................................
+
+         rsoil = (srespar1*(((thetas)/(rzsm))**srespar2)) + srespar3
+
+      endif
+
+      if (irestype.eq.3) then
+
+! ....................................................................
+! Formulation of Kondo (1990).
+! ....................................................................
+
+         D0 = 0.229d-04
+         Datm = D0 * (tkact/273.16)**srespar3
+         rsoil = (srespar1* ((thetas - rzsm) **srespar2)) / Datm
+
+      endif
+
+      if (irestype.eq.4) then
+
+! ....................................................................
+! Formulation of Camillo and Gurney (1986).
+! ....................................................................
+
+         rsoil = srespar1*(thetas-rzsm) - srespar2
+
+         if (rsoil.lt.(0.d0)) rsoil=0.d0
+
+      endif
+
+      if (irestype.eq.5) then
+
+! ....................................................................
+! Formulation of Passerat (1986).
+! ....................................................................
+
+         rsoil = srespar1* dexp(srespar2*rzsm/ srespar3)
+
+      endif
+
+      return
+
+      end subroutine calcrsoil
+
+! ====================================================================
+!
+!                  subroutine calcsmcond
+!
+! ====================================================================
+!
+! Calculate the soil moisture conductance.
+!
+! ====================================================================
+
+      subroutine calcsmcond(rzsm,tc,smcond,one,tw,zero)
+
+      implicit none
+      include "help/calcsmcond.h"
+
+      if (rzsm.ge.tc) then
+
+         smcond = one
+
+      else if (rzsm.ge.tw) then
+
+         smcond = (rzsm-tw)/(tc-tw)
+
+      else
+
+         smcond = zero
+
+      endif
+
+      if ( (smcond.ge.0.d0).and.(smcond.le.1.d0) ) then
+
+         smcond=smcond
+
+      else
+
+         write (*,*) 'CALCSMCOND : smcond out of bounds ',smcond
+         if (smcond.le.0.d0) smcond=zero
+         if (smcond.ge.1.d0) smcond=one
+
+      endif
+
+      return
+
+      end subroutine calcsmcond
+
+! ====================================================================
+!
+!                   subroutine calcvegcap
+!
+! ====================================================================
+!
+! Calculate vegetation capacity for the over story using linear
+! interpolation for the canopy resistance.
+!
+! ====================================================================
+
+      subroutine calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
+
+      implicit none
+      include "help/calcvegcap.h"
+
+      if (smcond.gt.zero) then
+
+         vegcap = epetd*(resist+ravd)/(resist/smcond + ravd)
+
+      else
+
+         vegcap = zero
+
+      endif
+
+      return
+
+      end subroutine calcvegcap
+
+!====================================================================
+!
+!                   subroutine acttrans
+!
+! ====================================================================
+!
+! Set actual transpiration to the minimum of potential
+! transpiration or vegetation capacity.
+!
+! ====================================================================
+
+      subroutine acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
+
+      implicit none
+      include "help/acttrans.h"
+
+      if (Swq.le.(0.d0)) then
+
+! --------------------------------------------------------------------
+! If no snow present present on top of the over story the transpiration
+! is determined by the plant.
+! --------------------------------------------------------------------
+
+         if (vegcap.lt.epet) then
+
+            evtact = vegcap
+            ievcon = 1
+
+         else
+
+            evtact = epet
+
+            if (zrz.gt.(0.d0)) then
+
+               ievcon = 2
+
+            else
+
+               ievcon = 3
+
+            endif
+
+         endif
+
+      else
+
+! --------------------------------------------------------------------
+! If there is snow the evaporation is determined by the flux out
+! of the snow pack.
+! --------------------------------------------------------------------
+
+         evtact = epet
+         ievcon = 3
+
+      endif
+
+      return
+
+      end subroutine acttrans
+
+! ====================================================================
+!
+!            subroutine zero_snowvar
+!
+! ====================================================================
+!
+! If there is no snow all the snow pack variablesa are set to zero.
+!
+! ====================================================================
+
+      subroutine zero_snowvar(PackWater,SurfWater,Swq,VaporMassFlux,&
+       TPack,TSurf,r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens)
+
+      implicit none
+      include "help/zero_snowvar.h"
+
+      PackWater=0.d0
+      SurfWater=0.d0
+      Swq=0.d0
+      VaporMassFlux=0.d0
+      TPack=0.d0
+      TSurf=0.d0
+      r_MeltEnergy=0.d0
+      Outflow=0.d0
+      xleact_snow=0.d0
+      hact_snow=0.d0
+      dens=0.d0
+
+      return
+
+      end subroutine zero_snowvar
 
 END MODULE MODULE_LAND

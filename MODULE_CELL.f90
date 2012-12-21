@@ -6,10 +6,6 @@ USE MODULE_LAND
 
 USE MODULE_ATMOS
 
-USE MODULE_SNOW
-
-USE MODULE_SHSUBR
-
 contains
 ! ====================================================================
 !
@@ -103,7 +99,7 @@ contains
       implicit none
       include "SNOW.h"
       include 'wgtpar.h'
-      include 'LAKE.h'
+      !include 'LAKE.h'
       include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
