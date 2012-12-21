@@ -963,7 +963,7 @@ contains
 
       end subroutine peteb
 
-      real*8 function esat(Tsk)
+      function esat(Tsk)
 
 ! ====================================================================
 ! Compute saturation vapor pressure in Pa. given temperature
@@ -1008,7 +1008,7 @@ contains
 !
 ! ====================================================================
 
-      real*8 function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
+      function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
       include "help/clcf1par.h"
       data a1/0.19/,a2/1128/,a3/30.8/
@@ -1046,7 +1046,7 @@ contains
 !
 ! ====================================================================
 
-      real*8 function  clcf3vpd(Ts,ea,g)
+      function  clcf3vpd(Ts,ea,g)
       implicit none
       include "help/clcf3vpd.h"
 
@@ -1100,7 +1100,7 @@ contains
 !
 ! ====================================================================
 
-      real*8 function clcf4temp(tair,tref,f4par)
+      function clcf4temp(tair,tref,f4par)
 
       implicit none
       include "help/clcf4temp.h"
