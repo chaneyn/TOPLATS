@@ -2,6 +2,8 @@ MODULE MODULE_IO
 
 USE VARIABLES
 
+implicit none
+
 contains
 
 !####################################################################
@@ -1993,5 +1995,19 @@ end subroutine FILE_CLOSE
       return
 
       end subroutine clc_ind
+
+! ====================================================================
+!
+!                   subroutine bilinear_interpolation
+!
+! ====================================================================
+!
+! Subroutine to downscale data using bilinear interpolation
+!
+! ====================================================================
+
+subroutine bilinear_interpolation()
+
+end subroutine biliner_interpolation
 
 END MODULE MODULE_IO
