@@ -2,6 +2,8 @@ MODULE MODULE_IO
 
 USE MODULE_VARIABLES
 
+!Add the variables that are reused throughout the subroutines
+
 implicit none
 
 contains
@@ -93,9 +95,7 @@ contains
       subroutine rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      include "help/rddata.h"
+      integer iophd
       type (GLOBAL_template) :: GLOBAL
       type (SOIL_PARAM_template) :: SOIL_PARAM
       type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
