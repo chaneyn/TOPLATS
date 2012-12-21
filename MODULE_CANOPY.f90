@@ -1,3 +1,15 @@
+MODULE MODULE_CANOPY
+
+!USE MODULE_VARIABLES
+
+!USE MODULE_SHARED
+
+!USE MODULE_SNOW
+
+implicit none
+
+contains
+
 ! ====================================================================
 !
 ! 			subroutine canopy
@@ -9,84 +21,86 @@
 !
 ! ====================================================================
 
-      subroutine canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
-       pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
-       intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
-       rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
-       tkd,tkmidd,dshd,tkw,tkmidw,dshw)
+  subroutine canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
+pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
+intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
+rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
+tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 
-      implicit none
-      integer ipix
-      integer intstp,istmst,istorm,intstm,ioppet
-      real*8 wc,wcip1,Swq,fw
-      real*8 wsc,dc,epetw
-      real*8 epwms,pnet,pptms,precip_o
-      real*8 dswc,wcrhs
-      real*8 endstm
-      real*8 xintst,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet
-      real*8 gpet,rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet
-      real*8 dspet,tkd,tkmidd,dshd,tkw,tkmidw,dshw
-      real*8 zero,one,two,three,four,five,six,dt,dummy
-      data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
-             3.d0,4.d0,5.d0,6.d0/
+  implicit none
+  include "help/canopy.h"
+
+!integer ipix
+!integer intstp,istmst,istorm,intstm,ioppet
+!real*8 wc,wcip1,Swq,fw
+!real*8 wsc,dc,epetw
+!real*8 epwms,pnet,pptms,precip_o
+!real*8 dswc,wcrhs
+!real*8 endstm
+!real*8 xintst,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet
+!real*8 gpet,rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet
+!real*8 dspet,tkd,tkmidd,dshd,tkw,tkmidw,dshw
+!real*8 zero,one,two,three,four,five,six,dt,dummy
+!data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
+!3.d0,4.d0,5.d0,6.d0/
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
 ! step.
 ! ====================================================================
 
-      wc = wcip1
+  wc = wcip1
 
 ! ====================================================================
 ! Set fraction of wet canopy which is considered 100% if canopy
-! is wet and 0% if canopy is dry. 
+! is wet and 0% if canopy is dry.
 ! ====================================================================
 
-      call calcfw(Swq,wc,zero,fw,wsc)
+  call calcfw(Swq,wc,zero,fw,wsc)
 
 ! ====================================================================
-! If potential evaporation is negative, dew forms over the 
-! whole canopy.  Set dc to zero for this case.  
+! If potential evaporation is negative, dew forms over the
+! whole canopy.  Set dc to zero for this case.
 ! ====================================================================
 
-      call calcdc(dc,one,epetw,zero)
+  call calcdc(dc,one,epetw,zero)
 
 ! ====================================================================
 ! Calculate evaporation from the wet canopy
 ! ====================================================================
 
-      call calcepw(epwms,epetw,one,dc,fw,dt,wc)
+  call calcepw(epwms,epetw,one,dc,fw,dt,wc)
 
 ! ====================================================================
 ! Calculate through fall of rainfall.  This is the part of the
 ! rainfall that can get through the canopy to the underlying soil
 ! ====================================================================
 
-      pnet = zero               
+  pnet = zero
 
-      if ((pptms-epwms)*dt.gt.(wsc-wc)) then
+  if ((pptms-epwms)*dt.gt.(wsc-wc)) then
 
-         pnet = (pptms-epwms)-((wsc-wc)/dt)
+    pnet = (pptms-epwms)-((wsc-wc)/dt)
 
-      endif 
+  endif
 
 ! ====================================================================
 ! Perform water balance on canopy storage, calculate the new
 ! interception storage.
 ! ====================================================================
 
-      wcip1 = wc + dt*(pptms-epwms-pnet)
+  wcip1 = wc + dt*(pptms-epwms-pnet)
 
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
 
-      if (wcip1.lt.zero) then
+  if (wcip1.lt.zero) then
 
-         epwms = epwms + wcip1/dt 
-         wcip1 = zero
+    epwms = epwms + wcip1/dt
+    wcip1 = zero
 
-      endif  
+  endif
 
 ! ====================================================================
 ! Calculate the precipitation that will go to the overstory
@@ -95,61 +109,61 @@
 ! over story.
 ! ====================================================================
 
-      precip_o=pptms
+  precip_o=pptms
 
 ! ====================================================================
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
-      dswc = wcip1-wc
-      wcrhs=(pptms-epwms-pnet)*dt
+  dswc = wcip1-wc
+  wcrhs=(pptms-epwms-pnet)*dt
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
 ! under story.
 ! --------------------------------------------------------------------
 
-      if (pptms.eq.(0.d0)) pnet=0.d0
+  if (pptms.eq.(0.d0)) pnet=0.d0
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-      call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+Swq,&
-                         xintst,dt,intstp,endstm,istmst,istorm,intstm)
+  call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+Swq,&
+  xintst,dt,intstp,endstm,istmst,istorm,intstm)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-      rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
-      xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
-      hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
-      gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
+  rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
+  xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
+  hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
+  gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
 
 ! --------------------------------------------------------------------
-! Solve for temperature and heat storage only when energy balance 
+! Solve for temperature and heat storage only when energy balance
 ! method is used.
 ! --------------------------------------------------------------------
 
-      if (ioppet.eq.0) then
+  if (ioppet.eq.0) then
 
-         tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
-         tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
-         dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
+    tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
+    tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
+    dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
 
-      else
+  else
 
-         tkpet = zero
-         tkmidpet = zero
-         dspet = zero
+    tkpet = zero
+    tkmidpet = zero
+    dspet = zero
 
-      endif
+  endif
 
-      return
+  return
 
-      end subroutine canopy
+  end subroutine canopy
 
 !====================================================================
 !
@@ -162,48 +176,49 @@
 !
 ! ====================================================================
 
-      subroutine calcfw(Swq,wc,zero,fw,wsc)
+  subroutine calcfw(Swq,wc,zero,fw,wsc)
 
-      implicit none
-      real*8 Swq,wc,zero,fw,wsc
+  implicit none
+  include "help/calcfw.h"
+  !real*8 Swq,wc,zero,fw,wsc
 
-      if (Swq.le.zero) then
+  if (Swq.le.zero) then
 
-         if (wc.gt.zero) then
+  if (wc.gt.zero) then
 
-            fw = (wc/wsc)**(0.667d0)
+  fw = (wc/wsc)**(0.667d0)
 
-         else
+  else
 
-            fw = zero
+  fw = zero
 
-         endif
+  endif
 
-         if (wsc.eq.zero) fw=zero
+  if (wsc.eq.zero) fw=zero
 
-      else
+  else
 
-        fw=1.d0
+  fw=1.d0
 
-      endif
+  endif
 
-      if (fw.ge.1.d0) fw=1.d0
+  if (fw.ge.1.d0) fw=1.d0
 
-      if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
 
-         fw=fw
+  fw=fw
 
-      else
+  else
 
-         write (*,*) 'CALCFW : fw : ',fw
-         write (*,*) Swq,wc,zero,fw,wsc
-         stop
+  write (*,*) 'CALCFW : fw : ',fw
+  write (*,*) Swq,wc,zero,fw,wsc
+  stop
 
-      endif
+  endif
 
-      return
+  return
 
-      end subroutine calcfw
+  end subroutine calcfw
 
 ! ====================================================================
 !
@@ -216,29 +231,30 @@
 !
 ! ====================================================================
 
-      subroutine calcdc(dc,one,epetw,zero)
+  subroutine calcdc(dc,one,epetw,zero)
 
-      implicit none
-      real*8 dc,one,epetw,zero
+  implicit none
+  include "help/calcdc.h"
+  !real*8 dc,one,epetw,zero
 
-      dc = one
-      if (epetw.lt.zero) dc=zero
+  dc = one
+  if (epetw.lt.zero) dc=zero
 
-      if ( (dc.ge.0.d0).and.(dc.le.1.d0) ) then
+  if ( (dc.ge.0.d0).and.(dc.le.1.d0) ) then
 
-         dc=dc
+  dc=dc
 
-      else
+  else
 
-         write (*,*) 'CALCD! : d! out of bounds ',dc
-         if (dc.lt.0.d0) dc=zero
-         if (dc.gt.1.d0) dc=one
+  write (*,*) 'CALCD! : d! out of bounds ',dc
+  if (dc.lt.0.d0) dc=zero
+  if (dc.gt.1.d0) dc=one
 
-      endif
+  endif
 
-      return
+  return
 
-      end subroutine calcdc
+  end subroutine calcdc
 
 ! ====================================================================
 !
@@ -250,35 +266,36 @@
 !
 ! ====================================================================
 
-      subroutine calcepw(epwms,epetw,one,dc,fw,dt,wc)
+  subroutine calcepw(epwms,epetw,one,dc,fw,dt,wc)
 
-      implicit none
-      real*8 epwms,epetw,one,dc,fw,dt,wc
+  implicit none
+  include "help/calcepw.h"
+  !real*8 epwms,epetw,one,dc,fw,dt,wc
 
-      epwms = epetw * (one-dc*(one-fw))
+  epwms = epetw * (one-dc*(one-fw))
 
-      if ((epwms*dt).gt.wc) then
+  if ((epwms*dt).gt.wc) then
+ 
+  fw = fw*wc/(epwms*dt)
+  epwms=epetw*(one-dc*(one-fw))
 
-         fw = fw*wc/(epwms*dt)
-         epwms=epetw*(one-dc*(one-fw))
+  endif
 
-      endif
+  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
 
-      if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  fw=fw
 
-         fw=fw
+  else
 
-      else
+  write (*,*) 'CALEPW : fw : ',fw
+  write (*,*) epwms,epetw,one,dc,fw,dt,wc
+  stop
 
-         write (*,*) 'CALEPW : fw : ',fw
-         write (*,*) epwms,epetw,one,dc,fw,dt,wc
-         stop
+  endif
 
-      endif
+  return
 
-      return
-
-      end subroutine calcepw
+  end subroutine calcepw
 
 ! ====================================================================
 !
@@ -291,27 +308,29 @@
 !
 ! ====================================================================
 
-      subroutine interstorm(ipix,precipi,outf,snowp,xintst,&
-                            dt,intstp,endstm,istmst,istorm,intstm)
+  subroutine interstorm(ipix,precipi,outf,snowp,xintst,&
+dt,intstp,endstm,istmst,istorm,intstm)
 
-      implicit none      
-      integer :: ipix,intstp,istmst,istorm,intstm
-      real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+  implicit none
+  include "help/interstorm.h"
+
+!integer :: ipix,intstp,istmst,istorm,intstm
+!real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
 
 
 ! ====================================================================
 ! Calculate the water input to the ground.
 ! ====================================================================
 
-      if (snowp.gt.(0.001d0)) then
+  if (snowp.gt.(0.001d0)) then
 
-         r_input=outf
+  r_input=outf
 
-      else
+  else
 
-         r_input=precipi
+  r_input=precipi
 
-      endif
+  endif
 
 ! ====================================================================
 ! Define storm and interstorm events
@@ -324,9 +343,9 @@
 ! interstorm period.
 ! --------------------------------------------------------------------
 
-      if (r_input.le.(0.d0))then
+  if (r_input.le.(0.d0))then
 
-         xintst=xintst+dt
+  xintst=xintst+dt
 
 ! --------------------------------------------------------------------
 ! Now check if time since end of ppt is past threshold
@@ -334,9 +353,9 @@
 ! interstorm period.
 ! --------------------------------------------------------------------
 
-         if (xintst.gt.endstm)then
+  if (xintst.gt.endstm)then
 
-            intstp=intstp+1
+  intstp=intstp+1
 
 ! --------------------------------------------------------------------
 ! Now, if this is the first step in the interstorm period then
@@ -344,24 +363,24 @@
 ! steps into storm period to zero.
 ! --------------------------------------------------------------------
 
-            if (intstp.eq.1) then
+  if (intstp.eq.1) then
 
-               istmst=0
-               istorm=0
-               intstm=1
+  istmst=0
+  istorm=0
+  intstm=1
 
-            endif
+  endif
 
 ! --------------------------------------------------------------------
 ! If time since end of ppt is within threshold then continue
 ! to add step to the storm period.
 ! --------------------------------------------------------------------
 
-         else
+  else
 
-            istmst=istmst+1
+  istmst=istmst+1
 
-         endif
+  endif
 
 ! --------------------------------------------------------------------
 ! If there is precipitation then storm event is in progress --
@@ -369,10 +388,10 @@
 ! the time from the end of precipitation to zero.
 ! --------------------------------------------------------------------
 
-      else
+  else
 
-         istmst=istmst+1
-         xintst=0.d0
+  istmst=istmst+1
+  xintst=0.d0
 
 ! --------------------------------------------------------------------
 ! If this is the first time step in the storm period
@@ -380,17 +399,18 @@
 ! steps in the interstorm period.
 ! --------------------------------------------------------------------
 
-         if (istmst.eq.1)then
+  if (istmst.eq.1)then
 
-            intstp=0
-            intstm=0
-            istorm=1
+  intstp=0
+  intstm=0
+  istorm=1
 
-         endif
+  endif
 
-      endif
+  endif
 
-      return
+  return
 
-      end subroutine interstorm
+  end subroutine interstorm
 
+END MODULE MODULE_CANOPY
