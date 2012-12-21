@@ -2,6 +2,7 @@ MODULE MODULE_LAND
 
   USE VARIABLES
   USE MODULE_SHARED
+  USE MODULE_ICECHANGE
   implicit none
 
   contains
