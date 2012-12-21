@@ -1357,7 +1357,7 @@ MODULE MODULE_LAND
 ! interpolation for the canopy resistance.
 ! ====================================================================
 
-         call calcvegcap(smcond,zero,vegcap,epetd,resist,ravd,smcond)
+         call calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
 
 ! ====================================================================
 ! Calculate vegetation capacity for the under story using linear
@@ -1367,7 +1367,7 @@ MODULE MODULE_LAND
          if (i_und.gt.0) then
 
             call calcvegcap(smcond_us,zero,vegcap_us,&
-                            epetd_us,resist_us,ravd_us,smcond_us)
+                            epetd_us,resist_us,ravd_us)
 
          endif
 
@@ -2806,5 +2806,80 @@ MODULE MODULE_LAND
       return
 
       end subroutine calcrsoil
+
+! ====================================================================
+!
+!                  subroutine calcsmcond
+!
+! ====================================================================
+!
+! Calculate the soil moisture conductance.
+!
+! ====================================================================
+
+      subroutine calcsmcond(rzsm,tc,smcond,one,tw,zero)
+
+      implicit none
+      include "help/calcsmcond.h"
+
+      if (rzsm.ge.tc) then
+
+         smcond = one
+
+      else if (rzsm.ge.tw) then
+
+         smcond = (rzsm-tw)/(tc-tw)
+
+      else
+
+         smcond = zero
+
+      endif
+
+      if ( (smcond.ge.0.d0).and.(smcond.le.1.d0) ) then
+
+         smcond=smcond
+
+      else
+
+         write (*,*) 'CALCSMCOND : smcond out of bounds ',smcond
+         if (smcond.le.0.d0) smcond=zero
+         if (smcond.ge.1.d0) smcond=one
+
+      endif
+
+      return
+
+      end subroutine calcsmcond
+
+! ====================================================================
+!
+!                   subroutine calcvegcap
+!
+! ====================================================================
+!
+! Calculate vegetation capacity for the over story using linear
+! interpolation for the canopy resistance.
+!
+! ====================================================================
+
+      subroutine calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
+
+      implicit none
+      include "help/calcvegcap.h"
+
+      if (smcond.gt.zero) then
+
+         vegcap = epetd*(resist+ravd)/(resist/smcond + ravd)
+
+      else
+
+         vegcap = zero
+
+      endif
+
+      return
+
+      end subroutine calcvegcap
 
 END MODULE MODULE_LAND
