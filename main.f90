@@ -38,7 +38,7 @@
       USE FRUIT
 
       !Module containing all the variables used in the model
-      USE VARIABLES
+      USE MODULE_VARIABLES
        
       !Module containing all the tests
       USE MODULE_TESTS

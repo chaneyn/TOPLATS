@@ -1,6 +1,6 @@
 MODULE MODULE_SNOW
 
-  USE VARIABLES
+  USE MODULE_VARIABLES
 
   !implicit none
 
