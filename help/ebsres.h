@@ -15,6 +15,5 @@
       real*8 dumrn,tmidtemp,ttemp,dumds,dumtkmid,dumtk
       real*8 raveff,rsoil,tacttemp
 
-      real*8 calcra
       data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
              3.d0,4.d0,5.d0,6.d0/

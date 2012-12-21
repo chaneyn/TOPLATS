@@ -12,6 +12,5 @@
       real*8 dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8,dum9,dum10
       real*8 dum11,dum12,tsnow,dum,tktmp
 
-      real*8 calcra
       data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
              3.d0,4.d0,5.d0,6.d0/
