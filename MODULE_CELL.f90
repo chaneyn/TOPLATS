@@ -6,6 +6,8 @@ USE MODULE_LAND
 
 USE MODULE_ATMOS
 
+USE MODULE_SNOW
+
 contains
 ! ====================================================================
 !

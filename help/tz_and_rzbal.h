@@ -17,7 +17,7 @@
       real*8 grz_sum,difrz_sum,gtz_sum,diftz_sum
       real*8 dummy,d2rzsmdt2,d2tzsmdt2
       real*8 dtsrzflx,dtstzflx,case_flag,xksrz,xkstz
-      real*8 clcdg,dstz,dsrz,rzrhs,tzrhs
+      real*8 dstz,dsrz,rzrhs,tzrhs
       real*8 zero,one,two,three,four,five,six
       data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
              3.d0,4.d0,5.d0,6.d0/

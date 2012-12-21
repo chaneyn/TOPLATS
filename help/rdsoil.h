@@ -16,6 +16,6 @@
 
       integer icount(MAX_SOI,MAX_CAT+1),jj,kk,nn
 
-      real*8 frsoil(MAX_SOI,MAX_CAT+1),tempsum,factln,dtaken
+      real*8 frsoil(MAX_SOI,MAX_CAT+1),tempsum,dtaken
       data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
              3.d0,4.d0,5.d0,6.d0/
