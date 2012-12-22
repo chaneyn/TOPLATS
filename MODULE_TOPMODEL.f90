@@ -1,6 +1,8 @@
 MODULE MODULE_TOPMODEL
 
-USE MODULE_VARIABLES
+  USE MODULE_VARIABLES
+  
+!  implicit none
 
 contains
 
@@ -14,7 +16,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
+  subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
 
       implicit none
       include "help/instep.h"
@@ -151,7 +153,7 @@ contains
 ! Initialize variables for catchment average/total values
 ! ====================================================================
 
-      do 100 kk=1,ncatch
+      do kk=1,ncatch
 
 ! --------------------------------------------------------------------
 ! Evaporation and condensation.
@@ -194,7 +196,7 @@ contains
 
          CAT_VARS%fwcat(kk) = zero
 
-100   continue
+! 100   continue
 
 CAT%ettot = CAT_VARS%ettot
 CAT%etwtsum = CAT_VARS%etwtsum
@@ -216,9 +218,10 @@ CAT%gwtsum = CAT_VARS%gwtsum
 CAT%rzpsum = CAT_VARS%rzpsum
 CAT%tzpsum = CAT_VARS%tzpsum
 CAT%fwcat = CAT_VARS%fwcat
-
-      return
-
+        enddo
+        return
+      
       end subroutine instep
+      
 
 END MODULE MODULE_TOPMODEL
