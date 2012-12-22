@@ -101,8 +101,8 @@ contains
         CAT)
 
       implicit none
-      include "SNOW.h"
-      include 'wgtpar.h'
+!       include "SNOW.h"
+!       include 'wgtpar.h'
       !include 'LAKE.h'
       include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
