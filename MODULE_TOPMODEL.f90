@@ -1,6 +1,8 @@
 MODULE MODULE_TOPMODEL
 
 USE MODULE_VARIABLES
+  
+!  implicit none
 
 contains
 
@@ -14,7 +16,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
+  subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
 
       implicit none
       include "help/instep.h"
@@ -151,7 +153,7 @@ contains
 ! Initialize variables for catchment average/total values
 ! ====================================================================
 
-      do 100 kk=1,ncatch
+      do kk=1,ncatch
 
 ! --------------------------------------------------------------------
 ! Evaporation and condensation.
@@ -194,7 +196,7 @@ contains
 
          CAT_VARS%fwcat(kk) = zero
 
-100   continue
+! 100   continue
 
 CAT%ettot = CAT_VARS%ettot
 CAT%etwtsum = CAT_VARS%etwtsum
@@ -216,9 +218,297 @@ CAT%gwtsum = CAT_VARS%gwtsum
 CAT%rzpsum = CAT_VARS%rzpsum
 CAT%tzpsum = CAT_VARS%tzpsum
 CAT%fwcat = CAT_VARS%fwcat
+        enddo
+        return
+      
+      end subroutine instep
+      
+! ====================================================================
+!
+!                       subroutine catflx
+!
+! ====================================================================
+!
+!  Calculates the catchment time step totals of evapotranspiration, 
+!  runoff, surface energy fluxes and vertical soil-water fluxes.
+!
+! ====================================================================
+
+      subroutine catflx(i,ic,area,pixsiz,r_lakearea,ettot,&
+       etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
+       etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
+       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,iprn,&
+       s_nr_etwtsum,s_nr_gwtsum,s_nr_capsum,s_nr_tzpsum,s_nr_rzpsum)
+
+      implicit none
+      include "SNOW.h"
+      include "wgtpar.h"
+      include "help/catflx.h"
+
+! ====================================================================
+! Calculate the number of pixels in the current catchment.
+! ====================================================================
+
+      catpix = area/pixsiz/pixsiz
+      catlakpix = r_lakearea/pixsiz/pixsiz
+      catvegpix = (area-r_lakearea)/pixsiz/pixsiz
+
+! ====================================================================
+! Find catchment average evapotranspiration rates.
+! ====================================================================
+
+      ettot = ettot / catpix
+      etstsum = etstsum / catvegpix
+      etwtsum = etwtsum / catvegpix
+      s_nr_etwtsum = s_nr_etwtsum / catvegpix
+      etlakesum = etlakesum / catlakpix
+
+      if (fbs.gt.0.) then
+
+         etbssum = etbssum / fbs/catvegpix
+
+      else
+
+         etbssum = 0.
+
+      endif
+
+      if (fbs.lt.1.) then
+
+         etdcsum = etdcsum / (one-fbs)/catvegpix
+         etwcsum = etwcsum / (one-fbs)/catvegpix
+
+      else
+
+         etdcsum = 0.
+         etwcsum = 0.
+
+      endif
+
+! ====================================================================
+! Find catchment precipitation and condensation rate.
+! ====================================================================
+
+      pptsum = pptsum / catpix
+      pnetsum = pnetsum / catpix
+      contot = contot / catpix
+
+! ====================================================================
+! Compute total catchment runoff/infiltration rates.
+! ====================================================================
+
+      qsurf = qsurf / catvegpix
+      sxrtot = sxrtot / catvegpix
+      xixtot = xixtot / catvegpix
+
+! ====================================================================
+! Compute total runoff due to rainfall and due to condensation.
+! ====================================================================
+
+      ranrun = ranrun / catvegpix
+      conrun = conrun / catvegpix
+
+! ====================================================================
+! Compute water table fluxes.
+! ====================================================================
+
+      gwtsum = gwtsum / catvegpix
+      s_nr_gwtsum = s_nr_gwtsum / catvegpix
+      capsum = capsum / catvegpix
+      s_nr_capsum = s_nr_capsum / catvegpix
+
+! ====================================================================
+! Compute average available porosity above the water table.
+! ====================================================================
+
+      tzpsum = tzpsum / catvegpix 
+      s_nr_tzpsum = s_nr_tzpsum / catvegpix 
+      rzpsum = rzpsum / catvegpix 
+      s_nr_rzpsum = s_nr_rzpsum / catvegpix 
+
+! ====================================================================
+! Calculate catchment fractions of wet canopy.
+! ====================================================================
+
+      fwcat = fwcat / catvegpix / (one-fbs)
+
+! ====================================================================
+! Write evaporation and infiltration/runoff results if required.
+! ====================================================================
+
+      if (iprn(80).eq.1)then
+        write(80,1000) i,ic,ettot*3600000.,etbssum*3600000.,&
+                       etdcsum*3600000.,etwcsum*3600000.,&
+                       fwcat,fbs
+        endif
+      if (iprn(81).eq.1)then
+        write(81,1100) i,ic,pptsum*3600000.,pnetsum*3600000.,&
+                       contot*3600000.,&
+                       (ranrun+contot)*3600000.,&
+                       (pnetsum+contot-ranrun-contot)*3600000.,&
+                       sxrtot*3600000.,xixtot*3600000.
+        endif
+! ====================================================================
+! Format statements.
+! ====================================================================
+
+1000  format(2i5,4f10.5,2f7.3)
+1100  format(2i5,7f10.5)
 
       return
 
-      end subroutine instep
+      end subroutine catflx
+
+! ====================================================================
+!
+!                       subroutine upzbar
+!
+! ====================================================================
+!
+!  Updates the average water table depth.
+!
+! ====================================================================
+
+      subroutine upzbar(i,ic,iopbf,q0,ff,zbar,dtil,basink,dd,xlength,&
+       gwtsum,capsum,area,r_lakearea,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
+       ilandc,npix,icatch,zw,psic,isoil,zrzmax,&
+       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,iprn,pixsiz)
+
+      implicit none
+      include "SNOW.h"
+      include "wgtpar.h"
+      include "help/upzbar.h"
+
+! ====================================================================
+! Chose option for calculating baseflow.
+! ====================================================================
+
+      if (iopbf.eq.0) then
+
+! --------------------------------------------------------------------&
+! Calculate baseflow according to Sivapalan et al.(1987).
+! --------------------------------------------------------------------&
+
+         qb = q0 * dexp(-ff*zbar)
+
+      else
+! --------------------------------------------------------------------&
+! Calculate baseflow according to Troch et al.(1992).
+! --------------------------------------------------------------------&
+
+         hbar = dtil - zbar
+         qb = 5.772*basink*hbar*hbar*dd*xlength
+
+      endif
+
+! ====================================================================
+! Determine net recharge to water table and available soil 
+! water storage.
+! ====================================================================
+
+      zbrflx = (gwtsum - capsum - etwtsum - (qb/ (area-r_lakearea) )) * dt
+      zbrpor = (rzpsum+tzpsum) * (zbar-psicav)
+
+      if (zbrflx.gt.zbrpor) then
+
+! ====================================================================
+! If net recharge exceeds storage assign overflow to streamflow.
+! ====================================================================
+
+         qzbar = (zbrflx - zbrpor)/dt
+         zbrflx = zbrpor
+         qb = qb + qzbar*(area-r_lakearea)
+
+! --------------------------------------------------------------------&
+! If water table is falling but storage is full zbar1 will
+! blow up. use rzsm1 and tzsm1 (vs rzsm and tzsm) to
+! calculate storage so that it is > zero.
+! --------------------------------------------------------------------&
+
+      else if ((zbrflx.le.zero).and.(zbrpor.le.zero)) then
+
+! --------------------------------------------------------------------&
+! Recalculate rzpsum and tzpsum with new soil moistures.
+! --------------------------------------------------------------------&
+
+         rzpsum = zero
+         tzpsum = zero
+
+         do 100 mm=1,npix
+
+            if (ivgtyp(ilandc(mm)).ge.0) then
+
+               if ((icatch(mm)).eq.ic) then
+
+                  if ((zw(mm)-psic(isoil(mm))).gt.zrzmax) then
+
+                     tzpsum = tzpsum+(thetas(isoil(mm))-tzsm1(mm))
+
+                  else if ((zw(mm)-psic(isoil(mm)).gt.zero)) then
+
+                     rzpsum = rzpsum+(thetas(isoil(mm))-rzsm1(mm))
+
+                  endif
+
+               endif
+
+            endif
+
+100      continue
+
+      endif
+
+! ====================================================================
+! Update zbar by taking the total flux and dividing by
+! the average porosity just above the water table.
+! ====================================================================
+
+! --------------------------------------------------------------------&
+! If the available porosity is nonzero divide the flux by its value.
+! --------------------------------------------------------------------&
+
+      if ( (rzpsum+tzpsum).gt.(0.001d0)) then
+
+         zbar1 = zbar - zbrflx/(rzpsum+tzpsum)
+
+      endif
+
+      if ( (rzpsum+tzpsum).le.(0.001d0)) then
+
+         zbar1=zbar
+
+      endif
+
+! ====================================================================
+! Find change in water table.
+! ====================================================================
+
+      dzbar = zbar1-zbar
+
+! ====================================================================
+! Find new average water table depth and baseflow for entire region.
+! ====================================================================
+
+      qbreg = qbreg + qb
+      zbar1rg = zbar1rg + zbar1*area/(pixsiz*pixsiz)
+
+! ====================================================================
+! Write results.
+! ====================================================================
+
+      if(iprn(82).eq.1)&
+        write(82,1000) i,ic,zbar1,zbar,capsum*3600000.,&
+                       gwtsum*3600000.,etwtsum*3600000.,&
+                       qb/area*3600000.,rzpsum,tzpsum
+
+! ====================================================================
+! Format statements.
+! ====================================================================
+
+1000  format(2i5,2f7.3,4f10.5,2f7.3)
+
+      return
+
+      end subroutine upzbar
 
 END MODULE MODULE_TOPMODEL
