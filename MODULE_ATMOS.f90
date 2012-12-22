@@ -1161,7 +1161,7 @@ contains
        z0h,RaSnow,alb_snow,appa,vpsat,uzw,gact,row)
 
       implicit none
-      include "SNOW.h"
+!       include "SNOW.h"
       include "help/peteb_bs.h"
 
       if ( (Swq.le.(0.0002d0)).OR.(SNOW_RUN.eq.0) ) then
@@ -1273,7 +1273,7 @@ contains
        dens,za,zpd,z0h,RaSnow,appa,uzw,gact,alb_snow,row)
 
       implicit none
-      include "SNOW.h"
+!       include "SNOW.h"
       include "help/peteb_dv.h"
 
       if ( (Swq.le.(0.0002d0)).OR.(SNOW_RUN.eq.0) ) then
@@ -1375,7 +1375,7 @@ contains
        hact_snow,rn_snow,dens,RaSnow,alb_snow,appa,vpsat,gact,row,ipix)
 
       implicit none
-      include "SNOW.h"
+!       include "SNOW.h"
       include "help/peteb_wv.h"
       integer :: ipix
 
