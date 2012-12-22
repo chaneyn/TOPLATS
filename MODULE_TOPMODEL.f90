@@ -546,8 +546,8 @@ CAT%fwcat = CAT_VARS%fwcat
        Tdeepstep)
 
       implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
+      !include "SNOW.h"
+      !include "wgtpar.h"
       
     
       include "help/sumflx.dif.h"
