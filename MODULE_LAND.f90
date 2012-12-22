@@ -123,7 +123,7 @@ MODULE MODULE_LAND
        iopveg)
 
       implicit none
-      include "SNOW.h" !Switch to use snow module when it is finished
+!       include "SNOW.h" !Switch to use snow module when it is finished
       include "help/land.h"!Remove when variables are changed
       real*8 gold
 
@@ -3182,7 +3182,7 @@ MODULE MODULE_LAND
        zpd,z0h,RaSnow,appa,vpsat,uzw,rn_snow,alb_snow)
 
       implicit none
-      include "SNOW.h"
+!       include "SNOW.h"
       include "help/land_os.h"
 
       if (((Swq.gt.(0.0002d0)).or.&
@@ -3324,7 +3324,7 @@ MODULE MODULE_LAND
        rn_snow_us,dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,i_und,i_moss,i_2l)
 
       implicit none
-      include "SNOW.h"
+!       include "SNOW.h"
       integer ievcon_us,ipix,iffroz_us,iopthermc,ifcoarse,inc_frozen,i
       integer iopgveg,iopthermc_v,initer,ievcon_moss,i_und,i_moss,i_2l
       integer maxnri
