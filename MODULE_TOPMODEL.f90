@@ -241,8 +241,8 @@ CAT%fwcat = CAT_VARS%fwcat
        s_nr_etwtsum,s_nr_gwtsum,s_nr_capsum,s_nr_tzpsum,s_nr_rzpsum)
 
       implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
+!       include "SNOW.h"
+!       include "wgtpar.h"
       include "help/catflx.h"
 
 ! ====================================================================
@@ -375,8 +375,8 @@ CAT%fwcat = CAT_VARS%fwcat
        tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,iprn,pixsiz)
 
       implicit none
-      include "SNOW.h"
-      include "wgtpar.h"
+!       include "SNOW.h"
+!       include "wgtpar.h"
       include "help/upzbar.h"
 
 ! ====================================================================
