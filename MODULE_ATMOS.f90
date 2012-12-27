@@ -50,7 +50,7 @@ contains
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
@@ -113,6 +113,11 @@ contains
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
+    type (GRID_MET_template) :: GRID_MET
+
+
+
+
 
 ! ====================================================================
 ! Define the albedo for the snow layer.
