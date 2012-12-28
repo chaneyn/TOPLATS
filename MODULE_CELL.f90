@@ -114,6 +114,8 @@ contains
       type (CATCHMENT_template) :: CAT
       type (SNOW_VARS_template) :: SNOW_VARS
       type (SOIL_PARAM_template) :: SOIL_PARAM
+      type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
+      !type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
 
@@ -353,7 +355,7 @@ zbar = CAT%zbar
 
 ! Water balance variables
 
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
+       SOIL_MOISTURE,rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
 
 ! Different option paramters
 
