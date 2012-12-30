@@ -4,10 +4,10 @@ USE FRUIT
 
 IMPLICIT NONE
 
-type unit_tests
-  contains
-  procedure :: one_plus_one
-end type
+!type unit_tests
+  !contains
+  !procedure :: test1 => one_plus_one
+!end type
 
 contains
 
