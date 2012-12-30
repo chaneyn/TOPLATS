@@ -56,7 +56,7 @@
       type (GLOBAL_template) :: GLOBAL
       type (MET_RANGE_template) :: MET_RANGE
       type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
-      type (SNOW_VARS_template) :: SNOW_VARS
+      type (SNOW_VARS_template),allocatable,dimension(:) :: SNOW_VARS
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
@@ -68,6 +68,7 @@
                 !rdveg_update.f90
       chunksize = 1
       nthreads = 1
+      allocate(SNOW_VARS(1+SNOW_RUN*(MAX_PIX-1)))
 
 ! ####################################################################
 ! Initialize unit testing
@@ -86,7 +87,7 @@ call init_fruit
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
+      call rddata(GLOBAL,SOIL_MOISTURE,GRID,REG,CAT)
       CAT_VARS%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
@@ -172,12 +173,12 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Snow pack variables
 
-       SNOW_VARS%PackWater(sw_px),SNOW_VARS%SurfWater(sw_px),Swq(sw_px),SNOW_VARS%VaporMassFlux(sw_px),&
-       TPack(sw_px),TSurf(sw_px),SNOW_VARS%r_MeltEnergy(sw_px),SNOW_VARS%Outflow(sw_px),&
-       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS%PackWater_us(s_px),&
-       SNOW_VARS%SurfWater_us(s_px),Swq_us(s_px),SNOW_VARS%VaporMassFlux_us(s_px),TPack_us(s_px),&
-       TSurf_us(s_px),SNOW_VARS%r_MeltEnergy_us(s_px),&
-       SNOW_VARS%Outflow_us(s_px),xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
+       SNOW_VARS(sw_px)%PackWater,SNOW_VARS(sw_px)%SurfWater,Swq(sw_px),SNOW_VARS(sw_px)%VaporMassFlux,&
+       TPack(sw_px),TSurf(sw_px),SNOW_VARS(sw_px)%r_MeltEnergy,SNOW_VARS(sw_px)%Outflow,&
+       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS(s_px)%PackWater_us,&
+       SNOW_VARS(s_px)%SurfWater_us,Swq_us(s_px),SNOW_VARS(s_px)%VaporMassFlux_us,TPack_us(s_px),&
+       TSurf_us(s_px),SNOW_VARS(s_px)%r_MeltEnergy_us,&
+       SNOW_VARS(s_px)%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
        dsty(sw_px),dsty_us(s_px),Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! Albedos of the over story, under story,&

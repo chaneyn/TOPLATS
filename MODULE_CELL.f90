@@ -284,7 +284,9 @@ zbar = CAT%zbar
 ! Calculate the local energy fluxes and set
 ! up the storm/interstorm event times and flags.
 ! ....................................................................
-        
+
+       SNOW_VARS%PackWater = PackWater        
+
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters

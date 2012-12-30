@@ -115,7 +115,7 @@ contains
     include "help/atmos.h" !take this out when variables are fixed
     type (GRID_MET_template) :: GRID_MET
     type (GRID_VEG_template) :: GRID_VEG
-    type (SNOW_VARS_template) :: SNOW_VARS
+    type (SNOW_VARS_template),intent(inout) :: SNOW_VARS
     type (GRID_VARS_template) :: GRID_VARS
     type (GRID_SOIL_template) :: GRID_SOIL
     type (SOIL_PARAM_template) :: SOIL_PARAM
@@ -133,7 +133,7 @@ extinct = GRID_VEG%extinct
 !ivgtyp = GLOBAL%ivgtyp
 
 !Snow Pack variables
-!PackWater = SNOW_VARS%PackWater
+PackWater = SNOW_VARS%PackWater
 
 !Albedos of the over story, under story, and moss layer
 albd_us = GRID_VEG%albd_us

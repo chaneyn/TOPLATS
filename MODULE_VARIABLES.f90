@@ -1102,10 +1102,12 @@ end type
 
 type SNOW_VARS_template
 
-        real*8,dimension(1+SNW_FLG*(MAX_PIX-1)) :: PackWater_us,&
+        !real*8,dimension(1+SNW_FLG*(MAX_PIX-1)) :: PackWater_us,&
+        real*8 :: PackWater_us,&
                 SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
                 Outflow_us
-        real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
+        !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
+        real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
 
 end type

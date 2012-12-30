@@ -92,14 +92,13 @@ contains
 ! in-variant data.
 ! ####################################################################
 
-      subroutine rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
+      subroutine rddata(GLOBAL,SOIL_MOISTURE,GRID,REG,CAT)
 
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
       type (SOIL_PARAM_template) :: SOIL_PARAM
       type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
-      type (SNOW_VARS_template) :: SNOW_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
