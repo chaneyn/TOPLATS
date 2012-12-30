@@ -114,7 +114,6 @@ contains
       type (CATCHMENT_template) :: CAT
       type (SNOW_VARS_template) :: SNOW_VARS
       type (SOIL_PARAM_template) :: SOIL_PARAM
-      type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
       !type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
@@ -286,6 +285,7 @@ zbar = CAT%zbar
 ! ....................................................................
 
        SNOW_VARS%PackWater = PackWater        
+       GRID_VEG%i_und = i_und
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
 
@@ -357,7 +357,7 @@ zbar = CAT%zbar
 
 ! Water balance variables
 
-       SOIL_MOISTURE,rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
+       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
 
 ! Different option paramters
 

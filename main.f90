@@ -55,7 +55,6 @@
       implicit none
       type (GLOBAL_template) :: GLOBAL
       type (MET_RANGE_template) :: MET_RANGE
-      type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
       type (SNOW_VARS_template),allocatable,dimension(:) :: SNOW_VARS
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
@@ -87,7 +86,7 @@ call init_fruit
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(GLOBAL,SOIL_MOISTURE,GRID,REG,CAT)
+      call rddata(GLOBAL,GRID,REG,CAT)
       CAT_VARS%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
@@ -249,8 +248,6 @@ call OMP_SET_NUM_THREADS(8)
        tzsm(ipix) = GRID(ipix)%VARS%tzsm
        rzsm_f(ipix) = GRID(ipix)%VARS%rzsm_f
        tzsm_f(ipix) = GRID(ipix)%VARS%tzsm_f
-       SOIL_MOISTURE%rzsm1_f(ipix) = GRID(ipix)%VARS%rzsm1_f
-       SOIL_MOISTURE%tzsm1_f(ipix) = GRID(ipix)%VARS%tzsm1_f
        pnet(ipix) = GRID(ipix)%VARS%pnet
        xinact(ipix) = GRID(ipix)%VARS%xinact
        runtot(ipix) = GRID(ipix)%VARS%runtot
@@ -354,8 +351,8 @@ etpix = GRID%VARS%etpix
        GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
        r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
        GLOBAL%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
-       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,SOIL_MOISTURE%tzsm1,GRID%SOIL%thetas,&
-       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
+       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
+       GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
 
          enddo
 

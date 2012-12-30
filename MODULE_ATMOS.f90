@@ -104,7 +104,7 @@ contains
 
 ! Water balance variables
 
-       SOIL_MOISTURE,rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,&
+       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,&
        smold,rzdthetaudtemp,smpet0,&
 
 ! Different option paramters
@@ -121,14 +121,14 @@ contains
     type (SOIL_PARAM_template) :: SOIL_PARAM
     type (POINT_template) :: POINT_VARS
     type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
- !   type (GLOBAL_template) :: GLOBAL
+    type (GLOBAL_template) :: GLOBAL
 
 ! Temporarily changing over variables from old to new format
 
 !General Vegetation parameters
 canclos = GRID_VEG%canclos
 extinct = GRID_VEG%extinct
-!i_und = GLOBAL%i_und
+i_und = GRID_VEG%i_und
 !i_moss = GLOBAL%i_moss
 !ivgtyp = GLOBAL%ivgtyp
 
@@ -240,8 +240,8 @@ rzsm = GRID_VARS%rzsm
 tzsm = GRID_VARS%tzsm
 rzsm1 = GRID_VARS%rzsm1
 tzsm1 = GRID_VARS%tzsm1
-!r_mossm = SOIL_MOISTURE%r_mossm
-!r_mossm1 = SOIL_MOISTURE%r_mossm1
+r_mossm = GRID_VARS%r_mossm
+r_mossm1 = GRID_VARS%r_mossm1
 zrz = POINT_VARS%zrz
 smold = POINT_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp

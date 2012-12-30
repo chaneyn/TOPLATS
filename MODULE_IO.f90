@@ -92,13 +92,12 @@ contains
 ! in-variant data.
 ! ####################################################################
 
-      subroutine rddata(GLOBAL,SOIL_MOISTURE,GRID,REG,CAT)
+      subroutine rddata(GLOBAL,GRID,REG,CAT)
 
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
       type (SOIL_PARAM_template) :: SOIL_PARAM
-      type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -226,12 +225,12 @@ contains
        GLOBAL%intstm,GLOBAL%istmst,intstp,GLOBAL%istorm_moss,&
        GLOBAL%intstm_moss,GLOBAL%istmst_moss,GLOBAL%intstp_moss,&
        GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,GLOBAL%endstm,&
-       SOIL_MOISTURE%rzsm1,SOIL_MOISTURE%tzsm1,SOIL_MOISTURE%r_mossm1,&
-       SOIL_MOISTURE%r_mossm,SOIL_MOISTURE%rzsm1_u,SOIL_MOISTURE%tzsm1_u,&
-       SOIL_MOISTURE%rzsm1_f,SOIL_MOISTURE%tzsm1_f,SOIL_MOISTURE%r_mossm1_u,&
-       SOIL_MOISTURE%r_mossm_u,&
-       SOIL_MOISTURE%r_mossm1_f,SOIL_MOISTURE%r_mossm_f,SOIL_MOISTURE%rzdthetaidt,&
-       SOIL_MOISTURE%tzdthetaidt,SOIL_MOISTURE%zmoss,r_moss_depth,&
+       GRID%VARS%rzsm1,GRID%VARS%tzsm1,GRID%VARS%r_mossm1,&
+       GRID%VARS%r_mossm,GRID%VARS%rzsm1_u,GRID%VARS%tzsm1_u,&
+       GRID%VARS%rzsm1_f,GRID%VARS%tzsm1_f,GRID%VARS%r_mossm1_u,&
+       GRID%VARS%r_mossm_u,&
+       GRID%VARS%r_mossm1_f,GRID%VARS%r_mossm_f,GRID%VARS%rzdthetaidt,&
+       GRID%VARS%tzdthetaidt,GRID%VARS%zmoss,r_moss_depth,&
        thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,SOIL_PARAM%xk0,SOIL_PARAM%psic,&
        SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%bcgamm,&
        bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,SOIL_PARAM%corr,SOIL_PARAM%par,PackWater_us,&
@@ -270,14 +269,6 @@ contains
       CAT%psicav = SOIL_PARAM%psicav
       GLOBAL%smpet0 = SOIL_PARAM%smpet0
 
-      !Water Balance Variables
-      GRID%VARS%rzsm1 = SOIL_MOISTURE%rzsm1
-      GRID%VARS%tzsm1 = SOIL_MOISTURE%tzsm1
-      GRID%VARS%rzsm1_f = SOIL_MOISTURE%rzsm1_f
-      GRID%VARS%tzsm1_f = SOIL_MOISTURE%tzsm1_f
-      GRID%VARS%rzdthetaidt = SOIL_MOISTURE%rzdthetaidt
-      GRID%VARS%tzdthetaidt = SOIL_MOISTURE%tzdthetaidt
-      
       return
 
       end subroutine

@@ -929,6 +929,9 @@ type GRID_VEG_template
                 r_mossmpet0,a_ice_moss,b_ice_moss,bulk_dens_moss
         !Miscellanous
         real*8 :: wcip1
+        !Indices
+        integer :: i_und,i_moss
+
 end type GRID_VEG_template
 
 type GRID_VARS_template
@@ -937,6 +940,9 @@ type GRID_VARS_template
         real*8 :: rzsm,tzsm,rzsm1,tzsm1,rzsm_f,tzsm_f,rzsm1_f,tzsm1_f,&
                 rzdthetaudtemp,rzdthetaidt,tzdthetaidt,zw,pnet,xinact,&
                 runtot,irntyp
+        !Soil Moisture Variables
+        real*8 :: tzsm1_u,rzsm1_u,zmoss,r_mossm1,r_mossm,&
+                r_mossm1_u,r_mossm_u,r_mossm1_f,r_mossm_f
         !Meteorological Variables
         real*8 :: Tincan,rh_ic,precip_o,precip_u
         !Temperature Variables
