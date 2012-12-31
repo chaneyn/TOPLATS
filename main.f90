@@ -168,7 +168,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
+       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
 
 ! Snow pack variables
 
@@ -277,7 +277,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
+       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
        i,GLOBAL%iprn,&
        canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
 
@@ -350,7 +350,7 @@ etpix = GRID%VARS%etpix
        GLOBAL%ff(ic),CAT_VARS%zbar(ic),GLOBAL%dtil(ic),&
        GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
        r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
-       GLOBAL%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
+       GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
        GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
        GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
 
@@ -361,7 +361,7 @@ etpix = GRID%VARS%etpix
 ! and sum simulation totals.  Then goto next time step.
 ! --------------------------------------------------------------------
 
-         call lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL)
+         call lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL,GRID)
 
       enddo
 

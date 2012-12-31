@@ -930,7 +930,7 @@ type GRID_VEG_template
         !Miscellanous
         real*8 :: wcip1
         !Indices
-        integer :: i_und,i_moss
+        integer :: i_und,i_moss,ivgtyp
 
 end type GRID_VEG_template
 
@@ -1028,7 +1028,7 @@ type GLOBAL_template
         integer,dimension(MAX_CAT) :: icount
         integer,dimension(MAX_ROW,MAX_COL) :: ipixnum
         integer,dimension(MAX_PIX) :: ixpix,iypix,icatch,ilandc,isoil
-        integer,dimension(MAX_VEG) :: ivgtyp
+        !integer,dimension(MAX_VEG) :: ivgtyp
         integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt

@@ -285,6 +285,7 @@ zbar = CAT%zbar
 ! ....................................................................
 
        SNOW_VARS%PackWater = PackWater        
+       SNOW_VARS%SurfWater = SurfWater
        GRID_VEG%i_und = i_und
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&

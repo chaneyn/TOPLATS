@@ -134,7 +134,7 @@ i_moss = GRID_VEG%i_moss
 
 !Snow Pack variables
 PackWater = SNOW_VARS%PackWater
-!SurfWater = SNOW_VARS%SurfWater
+SurfWater = SNOW_VARS%SurfWater
 !Swq = SNOW_VARS%Swq
 VaporMassFlux = SNOW_VARS%VaporMassFlux
 r_MeltEnergy = SNOW_VARS%r_MeltEnergy
