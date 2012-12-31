@@ -130,7 +130,7 @@ canclos = GRID_VEG%canclos
 extinct = GRID_VEG%extinct
 i_und = GRID_VEG%i_und
 i_moss = GRID_VEG%i_moss
-!ivgtyp = GLOBAL%ivgtyp
+ivgtyp = GRID_VEG%ivgtyp
 
 !Snow Pack variables
 PackWater = SNOW_VARS%PackWater
