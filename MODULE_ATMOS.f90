@@ -385,7 +385,8 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 
       if (i.eq.1) then
 
-         call inittk(tdeep,tmid0,tmid0_moss,tkmid,tkmid_us,tkmid_moss,tkel,&
+         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
+       tkmid_us,tkmid_moss,tkel,&
        tk0moss,tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
@@ -603,14 +604,38 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 !
 ! ====================================================================
 
-  subroutine inittk(tdeep,tmid0,tmid0_moss,tkmid,&
+  subroutine inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,tk0moss,tkact,tkact_us,&
        tkact_moss,tskinact_moss,dshact,dshact_us,dshact_moss,tkpet,&
        tkmidpet,tkmidpet_us,tkmidpet_moss,dspet,dspet_us,dspet_moss,&
        Tsurf,Tpack,Tsurf_us,Tpack_us)
 
       implicit none
-      include "help/inittk.h"
+      include "help/inittk.h" 
+      
+      type (GRID_SOIL_template) :: GRID_SOIL
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+
+!Temporary storing of variables
+tdeep = GRID_SOIL%tdeep
+tmid0 = GRID_SOIL%tmid0
+tmid0_moss = GRID_VEG%tmid0_moss
+tkmid = GRID_VARS%tkmid
+
+!tkmid_us, tkel,tkact, tkact_us, tkact_moss, tskinact_moss, 
+!dshact_us (i), dshact_moss (i), tkmidpet_us (i), tkmidpet_moss (i)
+! dspet_us (i), dspet_moss (i), TSurf, TPack, TSurf_us, TPack_us
+! is not in struct
+
+tk0moss = GRID_VEG%tk0moss
+dshact = GRID_VARS%dshact
+tkpet = GRID_VARS%tkpet
+tkmidpet = GRID_VARS%tkmidpet
+dspet = GRID_VARS%dspet
+
+
+
 
 ! ====================================================================
 ! Initialize average intermediate soil temperatures.
