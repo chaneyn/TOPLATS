@@ -129,11 +129,22 @@ contains
 canclos = GRID_VEG%canclos
 extinct = GRID_VEG%extinct
 i_und = GRID_VEG%i_und
-!i_moss = GLOBAL%i_moss
+i_moss = GRID_VEG%i_moss
 !ivgtyp = GLOBAL%ivgtyp
 
 !Snow Pack variables
 PackWater = SNOW_VARS%PackWater
+!SurfWater = SNOW_VARS%SurfWater
+!Swq = SNOW_VARS%Swq
+VaporMassFlux = SNOW_VARS%VaporMassFlux
+r_MeltEnergy = SNOW_VARS%r_MeltEnergy
+!Outflow = SNOW_VARS%Outflow
+PackWater_us = SNOW_VARS%PackWater_us
+SurfWater_us = SNOW_VARS%SurfWater_us
+!Swq_us = SNOW_VARS%Swq_us
+VaporMassFlux_us = SNOW_VARS%VaporMassFlux_us
+r_MeltEnergy_us = SNOW_VARS%r_MeltEnergy_us
+Outflow_us = SNOW_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
 albd_us = GRID_VEG%albd_us
