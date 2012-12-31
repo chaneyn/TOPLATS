@@ -2,29 +2,44 @@ MODULE MODULE_UNIT_TESTS
 
 USE FRUIT
 
-IMPLICIT NONE
+USE MODULE_ATMOS
 
-!type unit_tests
-  !contains
-  !procedure :: test1 => one_plus_one
-!end type
+implicit none
 
 contains
 
-  subroutine one_plus_one()
-   print*,'hello'
+  subroutine clcf1par_test1()
+    implicit none
+    real*8 :: f1par_result,f1par_true
+    call set_unit_name ('clcf1par_test1')
+    f1par_result = clcf1par(0.3d0,5.0d0,500.0d0,100.0d0,5000.0d0,100.0d0)
+    f1par_true = 2.2405063029073640d0
+    call assert_equals (f1par_true,f1par_result)
+  end subroutine
+
+  subroutine clcf1par_test2()
+    implicit none
+    real*8 :: f1par_result,f1par_true
+    call set_unit_name ('clcf1par_test2')
+    f1par_result = clcf1par(0.1d0,1.0d0,100.0d0,200.0d0,3000.0d0,10.0d0)
+    f1par_true = 1.0936454829336983d0
+    call assert_equals (f1par_true,f1par_result)
   end subroutine
 
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
-    
-    call init_fruit !Initialize the fruit library
-    !
-    call set_unit_name ('test')
-    call assert_equals (1,1)
-    call fruit_summary !Summarize the fruit output for this time step
-    call fruit_finalize !Finalize the fruit library
+   
+    !Initialize the unit tests library 
+    call init_fruit
+
+    !Run each test
+    call clcf1par_test1()
+    call clcf1par_test2()
+
+    !Summarize and finalize the unit tests
+    call fruit_summary
+    call fruit_finalize
 
   end subroutine run_unit_tests
 
@@ -34,8 +49,7 @@ PROGRAM TESTS_DRIVER
 
 USE MODULE_UNIT_TESTS
 
-IMPLICIT NONE
-
+implicit none
 
 call run_unit_tests()
 
