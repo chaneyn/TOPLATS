@@ -286,7 +286,19 @@ zbar = CAT%zbar
 
        SNOW_VARS%PackWater = PackWater        
        SNOW_VARS%SurfWater = SurfWater
+       SNOW_VARS%Swq = Swq
+       SNOW_VARS%VaporMassFlux = VaporMassFlux
+       SNOW_VARS%r_MeltEnergy = r_MeltEnergy
+       SNOW_VARS%Outflow = Outflow
+       SNOW_VARS%PackWater_us = PackWater_us
+       SNOW_VARS%SurfWater_us = SurfWater_us
+       SNOW_VARS%Swq_us = Swq_us
+       SNOW_VARS%VaporMassFlux_us = VaporMassFlux_us
+       SNOW_VARS%r_MeltEnergy_us = r_MeltEnergy_us
+       SNOW_VARS%Outflow_us = Outflow_us
        GRID_VEG%i_und = i_und
+       
+
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
 

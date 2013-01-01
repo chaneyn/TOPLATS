@@ -29,6 +29,8 @@ contains
 !
 ! ====================================================================
 
+
+
   subroutine atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters
@@ -135,13 +137,13 @@ ivgtyp = GRID_VEG%ivgtyp
 !Snow Pack variables
 PackWater = SNOW_VARS%PackWater
 SurfWater = SNOW_VARS%SurfWater
-!Swq = SNOW_VARS%Swq
+Swq = SNOW_VARS%Swq
 VaporMassFlux = SNOW_VARS%VaporMassFlux
 r_MeltEnergy = SNOW_VARS%r_MeltEnergy
-!Outflow = SNOW_VARS%Outflow
+Outflow = SNOW_VARS%Outflow
 PackWater_us = SNOW_VARS%PackWater_us
 SurfWater_us = SNOW_VARS%SurfWater_us
-!Swq_us = SNOW_VARS%Swq_us
+Swq_us = SNOW_VARS%Swq_us
 VaporMassFlux_us = SNOW_VARS%VaporMassFlux_us
 r_MeltEnergy_us = SNOW_VARS%r_MeltEnergy_us
 Outflow_us = SNOW_VARS%Outflow_us
