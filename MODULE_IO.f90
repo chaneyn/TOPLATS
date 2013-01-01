@@ -153,7 +153,7 @@ contains
 ! ====================================================================
 
       call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ilandc,&
-       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GLOBAL%ivgtyp,GLOBAL%iprn,&
+       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,GLOBAL%iprn,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
        GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
@@ -351,7 +351,7 @@ contains
 ! If not bare soil then calculate the canopy resistance.
 ! --------------------------------------------------------------------&
 
-         if (GLOBAL%ivgtyp(kk).ne.0) then
+         if (GRID(kk)%VEG%ivgtyp.ne.0) then
 
             GRID(kk)%VEG%rescan = GRID(kk)%VEG%rsmin/GRID(kk)%VEG%xlai
 
