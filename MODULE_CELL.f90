@@ -114,7 +114,7 @@ contains
       type (CATCHMENT_template) :: CAT
       type (SNOW_VARS_template) :: SNOW_VARS
       type (SOIL_PARAM_template) :: SOIL_PARAM
-      !type (GLOBAL_template) :: GLOBAL
+      type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
 
@@ -297,7 +297,17 @@ zbar = CAT%zbar
        SNOW_VARS%r_MeltEnergy_us = r_MeltEnergy_us
        SNOW_VARS%Outflow_us = Outflow_us
        GRID_VEG%i_und = i_und
-       
+       GLOBAL%zrzmax = zrzmax
+       GLOBAL%toleb = toleb
+       GLOBAL%maxnri = maxnri
+       GLOBAL%smpet0 = smpet0
+       GLOBAL%iopthermc = iopthermc
+       GLOBAL%iopgveg = iopgveg
+       GLOBAL%iopthermc_v = iopthermc_v
+       GLOBAL%iopstab = iopstab
+       GLOBAL%ioppet = ioppet
+       GLOBAL%iopwv = iopwv
+       GLOBAL%iopsmini = iopsmini 
 
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
@@ -374,7 +384,7 @@ zbar = CAT%zbar
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
 
 ! ....................................................................
 ! Calculate local wet canopy water balance.

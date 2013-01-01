@@ -111,7 +111,7 @@ contains
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
@@ -209,6 +209,7 @@ tcbeta = GRID_VEG%tcbeta
 tcbeta_us = GRID_VEG%tcbeta_us
 zdeep = GRID_SOIL%zdeep
 zmid = GRID_SOIL%zmid
+zrzmax = GLOBAL%zrzmax
 
 !Moss Parameters
 r_moss_depth = GRID_VEG%r_moss_depth
@@ -245,6 +246,8 @@ row = POINT_VARS%row
 cph2o = POINT_VARS%cph2o
 cp = POINT_VARS%cp
 roi = POINT_VARS%roi
+toleb = GLOBAL%toleb
+maxnri = GLOBAL%maxnri
 
 !Energy balance variables
 
@@ -258,9 +261,16 @@ r_mossm1 = GRID_VARS%r_mossm1
 zrz = POINT_VARS%zrz
 smold = POINT_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+smpet0 = GLOBAL%smpet0
 
 !DIFF option parameters
-
+iopthermc = GLOBAL%iopthermc
+iopgveg = GLOBAL%iopgveg
+iopthermc_v = GLOBAL%iopthermc_v
+iopstab = GLOBAL%iopstab
+ioppet = GLOBAL%ioppet
+iopwv = GLOBAL%iopwv
+iopsmini = GLOBAL%iopsmini
 
 
 ! ====================================================================
