@@ -97,7 +97,7 @@ contains
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
-      type (SOIL_PARAM_template) :: SOIL_PARAM
+      !type (GRID%SOIL_template) :: GRID%SOIL
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -176,15 +176,15 @@ contains
 ! Read in soil parameters and root and transmission zone information.
 ! ====================================================================
 
-      call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,SOIL_PARAM%smpet0,&
-       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,SOIL_PARAM%bcbeta,&
-       SOIL_PARAM%psic,SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%xk0,SOIL_PARAM%zdeep,SOIL_PARAM%tdeep,SOIL_PARAM%zmid,&
-       SOIL_PARAM%tmid0,SOIL_PARAM%rocpsoil,SOIL_PARAM%quartz,GLOBAL%ifcoarse,&
-       SOIL_PARAM%srespar1,SOIL_PARAM%srespar2,SOIL_PARAM%srespar3,SOIL_PARAM%a_ice,SOIL_PARAM%b_ice,&
-       SOIL_PARAM%bulk_dens,SOIL_PARAM%amp,SOIL_PARAM%phase,SOIL_PARAM%shift,&
-       GLOBAL%inc_frozen,SOIL_PARAM%bcgamm,SOIL_PARAM%par,SOIL_PARAM%corr,GLOBAL%idifind,&
+      call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,GLOBAL%smpet0,&
+       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%SOIL%bcbeta,&
+       GRID%SOIL%psic,GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%xk0,GRID%SOIL%zdeep,GRID%SOIL%tdeep,GRID%SOIL%zmid,&
+       GRID%SOIL%tmid0,GRID%SOIL%rocpsoil,GRID%SOIL%quartz,GLOBAL%ifcoarse,&
+       GRID%SOIL%srespar1,GRID%SOIL%srespar2,GRID%SOIL%srespar3,GRID%SOIL%a_ice,GRID%SOIL%b_ice,&
+       GRID%SOIL%bulk_dens,GRID%SOIL%amp,GRID%SOIL%phase,GRID%SOIL%shift,&
+       GLOBAL%inc_frozen,GRID%SOIL%bcgamm,GRID%SOIL%par,GRID%SOIL%corr,GLOBAL%idifind,&
        GLOBAL%ncatch,GLOBAL%icatch,GLOBAL%pixsiz,GLOBAL%area,&
-       GLOBAL%npix,SOIL_PARAM%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
+       GLOBAL%npix,CAT%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
 
@@ -224,50 +224,22 @@ contains
        GLOBAL%npix,GLOBAL%inc_frozen,GLOBAL%istorm,&
        GLOBAL%intstm,GLOBAL%istmst,intstp,GLOBAL%istorm_moss,&
        GLOBAL%intstm_moss,GLOBAL%istmst_moss,GLOBAL%intstp_moss,&
-       GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,GLOBAL%endstm,&
+       GLOBAL%isoil,GLOBAL%idifind,GLOBAL%smpet0,r_mossmpet0,GLOBAL%endstm,&
        GRID%VARS%rzsm1,GRID%VARS%tzsm1,GRID%VARS%r_mossm1,&
        GRID%VARS%r_mossm,GRID%VARS%rzsm1_u,GRID%VARS%tzsm1_u,&
        GRID%VARS%rzsm1_f,GRID%VARS%tzsm1_f,GRID%VARS%r_mossm1_u,&
        GRID%VARS%r_mossm_u,&
        GRID%VARS%r_mossm1_f,GRID%VARS%r_mossm_f,GRID%VARS%rzdthetaidt,&
        GRID%VARS%tzdthetaidt,GRID%VARS%zmoss,r_moss_depth,&
-       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,SOIL_PARAM%xk0,SOIL_PARAM%psic,&
-       SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%bcgamm,&
-       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,SOIL_PARAM%corr,SOIL_PARAM%par,PackWater_us,&
+       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,GRID%SOIL%xk0,GRID%SOIL%psic,&
+       GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%bcgamm,&
+       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,GRID%SOIL%corr,GRID%SOIL%par,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
        PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
 
       read (1000,*) GLOBAL%dtveg
 
       print*,'rddata:  Done initializing simulation'
-
-      !TEMPORARY
-      !SOIL
-      GRID%SOIL%bcbeta = SOIL_PARAM%bcbeta
-      GRID%SOIL%psic = SOIL_PARAM%psic
-      GRID%SOIL%thetas = SOIL_PARAM%thetas
-      GRID%SOIL%thetar = SOIL_PARAM%thetar
-      GRID%SOIL%xk0 = SOIL_PARAM%xk0
-      GRID%SOIL%zdeep = SOIL_PARAM%zdeep
-      GRID%SOIL%tdeep = SOIL_PARAM%tdeep
-      GRID%SOIL%zmid = SOIL_PARAM%zmid
-      GRID%SOIL%tmid0 = SOIL_PARAM%tmid0
-      GRID%SOIL%rocpsoil = SOIL_PARAM%rocpsoil
-      GRID%SOIL%quartz = SOIL_PARAM%quartz
-      GRID%SOIL%srespar1 = SOIL_PARAM%srespar1
-      GRID%SOIL%srespar2 = SOIL_PARAM%srespar2
-      GRID%SOIL%srespar3 = SOIL_PARAM%srespar3
-      GRID%SOIL%a_ice = SOIL_PARAM%a_ice
-      GRID%SOIL%b_ice = SOIL_PARAM%b_ice
-      GRID%SOIL%bulk_dens = SOIL_PARAM%bulk_dens
-      GRID%SOIL%amp = SOIL_PARAM%amp
-      GRID%SOIL%phase = SOIL_PARAM%phase
-      GRID%SOIL%shift = SOIL_PARAM%shift
-      GRID%SOIL%bcgamm = SOIL_PARAM%bcgamm
-      GRID%SOIL%par = SOIL_PARAM%par
-      GRID%SOIL%corr = SOIL_PARAM%corr
-      CAT%psicav = SOIL_PARAM%psicav
-      GLOBAL%smpet0 = SOIL_PARAM%smpet0
 
       return
 

@@ -55,7 +55,6 @@
       implicit none
       type (GLOBAL_template) :: GLOBAL
       type (MET_RANGE_template) :: MET_RANGE
-      type (SNOW_VARS_template),allocatable,dimension(:) :: SNOW_VARS
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
@@ -67,7 +66,6 @@
                 !rdveg_update.f90
       chunksize = 1
       nthreads = 1
-      allocate(SNOW_VARS(1+SNOW_RUN*(MAX_PIX-1)))
 
 ! ####################################################################
 ! Initialize unit testing
@@ -172,12 +170,12 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Snow pack variables
 
-       SNOW_VARS(sw_px)%PackWater,SNOW_VARS(sw_px)%SurfWater,Swq(sw_px),SNOW_VARS(sw_px)%VaporMassFlux,&
-       TPack(sw_px),TSurf(sw_px),SNOW_VARS(sw_px)%r_MeltEnergy,SNOW_VARS(sw_px)%Outflow,&
-       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS(s_px)%PackWater_us,&
-       SNOW_VARS(s_px)%SurfWater_us,Swq_us(s_px),SNOW_VARS(s_px)%VaporMassFlux_us,TPack_us(s_px),&
-       TSurf_us(s_px),SNOW_VARS(s_px)%r_MeltEnergy_us,&
-       SNOW_VARS(s_px)%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
+       GRID(sw_px)%VARS%PackWater,GRID(sw_px)%VARS%SurfWater,Swq(sw_px),GRID(sw_px)%VARS%VaporMassFlux,&
+       TPack(sw_px),TSurf(sw_px),GRID(sw_px)%VARS%r_MeltEnergy,GRID(sw_px)%VARS%Outflow,&
+       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),GRID(s_px)%VARS%PackWater_us,&
+       GRID(s_px)%VARS%SurfWater_us,Swq_us(s_px),GRID(s_px)%VARS%VaporMassFlux_us,TPack_us(s_px),&
+       TSurf_us(s_px),GRID(s_px)%VARS%r_MeltEnergy_us,&
+       GRID(s_px)%VARS%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
        dsty(sw_px),dsty_us(s_px),Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! Albedos of the over story, under story,&

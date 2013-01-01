@@ -952,7 +952,13 @@ type GRID_VARS_template
                 hact,ebspot,dspet,rnpet,xlepet,hpet,gpet
         !Evapotranspiration
         real*8 :: etpix
-      
+        !Snow Variables
+        real*8 :: PackWater_us,&
+                SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
+                Outflow_us
+        !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
+        real*8 :: PackWater,&
+                SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
 
 end type GRID_VARS_template
 
@@ -1075,20 +1081,6 @@ type POINT_template
         real*8 :: row,cph2o,cp,roi
 end type 
 
-type ATMOS_template
-       real*8 :: tdry,rh,press,pptms,rld,rsd,uzw
-end type ATMOS_template
-
-type SOIL_PARAM_template
-        
-        real*8 :: smpet0
-        real*8,dimension(MAX_SOI) :: bcbeta,psic,thetas,thetar,xk0,zdeep,tdeep,&
-                zmid,tmid0,rocpsoil,quartz,srespar1,srespar2,srespar3,a_ice,&
-                b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr
-        real*8,dimension(MAX_CAT) :: psicav
-
-end type SOIL_PARAM_template
-
 type MET_RANGE_template
 
         real*8 :: ppt_min,pet_min,ta_min,hu_min,pa_min,ws_min,sw_min,rlw_min,&
@@ -1096,27 +1088,6 @@ type MET_RANGE_template
                 sw_max,rlw_max,rn_max,gb_max
 
 end type MET_RANGE_template
-
-type SOIL_MOISTURE_template
-
-        real*8,dimension(MAX_PIX) :: rzsm1,tzsm1,tzsm1_u,rzsm1_f,tzsm1_f,&
-                rzdthetaidt,tzdthetaidt,rzsm1_u
-        real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: zmoss,r_mossm1,r_mossm,&
-                r_mossm1_u,r_mossm_u,r_mossm1_f,r_mossm_f
-
-end type
-
-type SNOW_VARS_template
-
-        !real*8,dimension(1+SNW_FLG*(MAX_PIX-1)) :: PackWater_us,&
-        real*8 :: PackWater_us,&
-                SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
-                Outflow_us
-        !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
-        real*8 :: PackWater,&
-                SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
-
-end type
 
 type CAT_VARS_template
 

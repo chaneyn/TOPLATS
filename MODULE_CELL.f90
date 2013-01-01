@@ -112,8 +112,7 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (POINT_template) :: POINT_VARS
       type (CATCHMENT_template) :: CAT
-      type (SNOW_VARS_template) :: SNOW_VARS
-      type (SOIL_PARAM_template) :: SOIL_PARAM
+      !type (SNOW_VARS_template) :: SNOW_VARS
       !type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
@@ -284,8 +283,8 @@ zbar = CAT%zbar
 ! up the storm/interstorm event times and flags.
 ! ....................................................................
 
-       SNOW_VARS%PackWater = PackWater        
-       SNOW_VARS%SurfWater = SurfWater
+       GRID_VARS%PackWater = PackWater        
+       GRID_VARS%SurfWater = SurfWater
        GRID_VEG%i_und = i_und
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
@@ -296,7 +295,7 @@ zbar = CAT%zbar
 
 ! Snow pack variables
 
-       SNOW_VARS,PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
+       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
        Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
        VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
        Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
@@ -332,7 +331,7 @@ zbar = CAT%zbar
 
 ! Soil parameters
 
-       GRID_SOIL,SOIL_PARAM,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
        tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
