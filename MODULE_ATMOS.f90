@@ -95,7 +95,7 @@ contains
 
 ! Constants
 
-       POINT_VARS,row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
 
 ! Energy balance variables
 
@@ -117,7 +117,6 @@ contains
     type (GRID_VEG_template) :: GRID_VEG
     type (GRID_VARS_template) :: GRID_VARS
     type (GRID_SOIL_template) :: GRID_SOIL
-    type (POINT_template) :: POINT_VARS
     type (GLOBAL_template) :: GLOBAL
 
 ! Temporarily changing over variables from old to new format
@@ -236,10 +235,10 @@ trefk = GRID_VEG%trefk
 trefk_us = GRID_VEG%trefk_us
 
 !COnstants
-row = POINT_VARS%row
-cph2o = POINT_VARS%cph2o
-cp = POINT_VARS%cp
-roi = POINT_VARS%roi
+row = GRID_VARS%row
+cph2o = GRID_VARS%cph2o
+cp = GRID_VARS%cp
+roi = GRID_VARS%roi
 
 !Energy balance variables
 
@@ -250,8 +249,8 @@ rzsm1 = GRID_VARS%rzsm1
 tzsm1 = GRID_VARS%tzsm1
 r_mossm = GRID_VARS%r_mossm
 r_mossm1 = GRID_VARS%r_mossm1
-zrz = POINT_VARS%zrz
-smold = POINT_VARS%smold
+zrz = GRID_VARS%zrz
+smold = GRID_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 
 !DIFF option parameters

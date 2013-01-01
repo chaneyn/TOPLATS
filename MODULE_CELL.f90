@@ -24,10 +24,6 @@ contains
 
       subroutine land_lake(newstorm,ipix,i,dt,inc_frozen,i_2l,lakpix,&
 
-! Point Variables
-
-       POINT_VARS,&
-
 ! Factor to multiply the regional parameters with
 
        mul_fac,&
@@ -110,7 +106,6 @@ contains
       type (GRID_MET_template) :: GRID_MET
       type (REGIONAL_template),intent(inout) :: REG
       type (GRID_VARS_template) :: GRID_VARS
-      type (POINT_template) :: POINT_VARS
       type (CATCHMENT_template) :: CAT
       !type (SNOW_VARS_template) :: SNOW_VARS
       !type (GLOBAL_template) :: GLOBAL
@@ -237,33 +232,33 @@ gpet = GRID_VARS%gpet
 
 !Point Data
 !Water Balance
-zrz = 0.d0!POINT_VARS%zrz
-ztz = 0.d0!POINT_VARS%ztz
-smold = 0.d0!POINT_VARS%smold
-rzsmold = 0.d0!POINT_VARS%rzsmold
-tzsmold = 0.d0!POINT_VARS%tzsmold
-capflx = 0.d0!POINT_VARS%capflx
-difrz = 0.d0!POINT_VARS%difrz
-diftz = 0.d0!POINT_VARS%diftz
-grz = 0.d0!POINT_VARS%grz
-gtz = 0.d0!POINT_VARS%gtz
-satxr = 0.d0!POINT_VARS%satxr
-xinfxr = 0.d0!POINT_VARS%xinfxr
-dc = 0.d0!POINT_VARS%dc
-fw = 0.d0!POINT_VARS%fw
-dsrz = 0.d0!POINT_VARS%dsrz
-rzrhs = 0.d0!POINT_VARS%rzrhs
-dstz = 0.d0!POINT_VARS%dstz
-tzrhs = 0.d0!POINT_VARS%tzrhs
-dswc = 0.d0!POINT_VARS%dswc
-wcrhs = 0.d0!POINT_VARS%wcrhs
+zrz = 0.d0
+ztz = 0.d0
+smold = 0.d0
+rzsmold = 0.d0
+tzsmold = 0.d0
+capflx = 0.d0
+difrz = 0.d0
+diftz = 0.d0
+grz = 0.d0
+gtz = 0.d0
+satxr = 0.d0
+xinfxr = 0.d0
+dc = 0.d0!d
+fw = 0.d0!fw
+dsrz = 0.d0!dsrz
+rzrhs = 0.d0!rzrhs
+dstz = 0.d0!dstz
+tzrhs = 0.d0!tzrhs
+dswc = 0.d0!dswc
+wcrhs = 0.d0!wcrhs
 !Energy Fluxes
-epwms = 0.d0!POINT_VARS%epwms
+epwms = 0.d0!epwms
 !Constants
-row = POINT_VARS%row
-cph2o = POINT_VARS%cph2o
-cp = POINT_VARS%cp
-roi = POINT_VARS%roi
+row = GRID_VARS%row!row
+cph2o = GRID_VARS%cph2o!cph2o
+cp = GRID_VARS%cp!cp
+roi = GRID_VARS%roi!roi
 
 !Catchment
 !fwcat = CAT%fwcat
@@ -348,7 +343,7 @@ zbar = CAT%zbar
 
 ! Constants
 
-       POINT_VARS,row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
 
 ! Energy balance variables
 
@@ -572,6 +567,34 @@ GRID_VARS%rnpet = rnpet
 GRID_VARS%xlepet = xlepet
 GRID_VARS%hpet = hpet
 GRID_VARS%gpet = gpet
+!Point Data
+GRID_VARS%zrz = zrz
+GRID_VARS%ztz = ztz
+GRID_VARS%smold = smold
+GRID_VARS%rzsmold = rzsmold
+GRID_VARS%tzsmold = tzsmold
+GRID_VARS%capflx = capflx
+GRID_VARS%difrz = difrz
+GRID_VARS%diftz = diftz
+GRID_VARS%grz = grz
+GRID_VARS%gtz = gtz
+GRID_VARS%satxr = satxr
+GRID_VARS%xinfxr = xinfxr
+GRID_VARS%dc = dc
+GRID_VARS%fw = fw
+GRID_VARS%dsrz = dsrz
+GRID_VARS%rzrhs = rzrhs
+GRID_VARS%dstz = dstz
+GRID_VARS%tzrhs = tzrhs
+GRID_VARS%dswc = dswc
+GRID_VARS%wcrhs = wcrhs
+!Energy Fluxes
+GRID_VARS%epwms = epwms
+!Constants
+GRID_VARS%row = row
+GRID_VARS%cph2o = cph2o
+GRID_VARS%cp = cp
+GRID_VARS%roi = roi
 
 !$OMP ORDERED
 !$OMP CRITICAL
@@ -596,35 +619,6 @@ REG%perusc = REG%perusc + perusc
 CAT%fwcat = CAT%fwcat + fwcat
 !$OMP END CRITICAL
 !$OMP END ORDERED
-
-!Point Data
-POINT_VARS%zrz = zrz
-POINT_VARS%ztz = ztz
-POINT_VARS%smold = smold
-POINT_VARS%rzsmold = rzsmold
-POINT_VARS%tzsmold = tzsmold
-POINT_VARS%capflx = capflx
-POINT_VARS%difrz = difrz
-POINT_VARS%diftz = diftz
-POINT_VARS%grz = grz
-POINT_VARS%gtz = gtz
-POINT_VARS%satxr = satxr
-POINT_VARS%xinfxr = xinfxr
-POINT_VARS%dc = dc
-POINT_VARS%fw = fw
-POINT_VARS%dsrz = dsrz
-POINT_VARS%rzrhs = rzrhs
-POINT_VARS%dstz = dstz
-POINT_VARS%tzrhs = tzrhs 
-POINT_VARS%dswc = dswc
-POINT_VARS%wcrhs = wcrhs
-!Energy Fluxes
-POINT_VARS%epwms = epwms
-!Constants
-POINT_VARS%row = row
-POINT_VARS%cph2o = cph2o
-POINT_VARS%cp = cp
-POINT_VARS%roi = roi
 
       return
 

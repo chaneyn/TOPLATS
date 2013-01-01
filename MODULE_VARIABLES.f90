@@ -959,6 +959,15 @@ type GRID_VARS_template
         !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
         real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
+        !Old POINT_VARS!
+        !Water balance variables
+        real*8 :: zrz,ztz,smold,rzsmold,tzsmold,capflx,difrz,diftz,grz,&
+                gtz,satxr,xinfxr,dc,fw,dsrz,rzrhs,dstz,tzrhs,dswc,wcrhs
+        !Energy fluxes
+        real*8 :: epwms
+        !Constants
+        real*8 :: row,cph2o,cp,roi
+        !!!!!!!!!!!!!!!!!!!
 
 end type GRID_VARS_template
 
@@ -1068,18 +1077,6 @@ type GLOBAL_template
         real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
 
 end type GLOBAL_template
-
-!POINT DATA
-
-type POINT_template
-        !Water balance variables
-        real*8 :: zrz,ztz,smold,rzsmold,tzsmold,capflx,difrz,diftz,grz,&
-                gtz,satxr,xinfxr,dc,fw,dsrz,rzrhs,dstz,tzrhs,dswc,wcrhs = 0.0
-        !Energy fluxes
-        real*8 :: epwms
-        !Constants
-        real*8 :: row,cph2o,cp,roi
-end type 
 
 type CAT_VARS_template
 

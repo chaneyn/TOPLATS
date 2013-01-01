@@ -522,7 +522,7 @@ CAT%fwcat = CAT_VARS%fwcat
 !
 ! ====================================================================
 
-      subroutine sumflx(REG,POINT_VARS,CAT,GRID_VARS,&
+      subroutine sumflx(REG,CAT,GRID_VARS,&
 
 ! Factor to rescale all local fluxes
 
@@ -552,7 +552,6 @@ CAT%fwcat = CAT_VARS%fwcat
     
       include "help/sumflx.dif.h"
       type (REGIONAL_template) :: REG
-      type (POINT_template) :: POINT_VARS
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
 
@@ -582,29 +581,28 @@ evtact = GRID_VARS%evtact
 etpix = GRID_VARS%etpix
 
 !Point Data
-!Water Balance
-zrz = POINT_VARS%zrz
-ztz = POINT_VARS%ztz
-smold = POINT_VARS%smold
-rzsmold = POINT_VARS%rzsmold
-tzsmold = POINT_VARS%tzsmold
-capflx = POINT_VARS%capflx
-difrz = POINT_VARS%difrz
-diftz = POINT_VARS%diftz
-grz = POINT_VARS%grz
-gtz = POINT_VARS%gtz
-satxr = POINT_VARS%satxr
-xinfxr = POINT_VARS%xinfxr
-dc = POINT_VARS%dc
-fw = POINT_VARS%fw
-dsrz = POINT_VARS%dsrz
-rzrhs = POINT_VARS%rzrhs
-dstz = POINT_VARS%dstz
-tzrhs = POINT_VARS%tzrhs
-dswc = POINT_VARS%dswc
-wcrhs = POINT_VARS%wcrhs
+zrz = GRID_VARS%zrz
+ztz = GRID_VARS%ztz
+smold = GRID_VARS%smold
+rzsmold = GRID_VARS%rzsmold
+tzsmold = GRID_VARS%tzsmold
+capflx = GRID_VARS%capflx
+difrz = GRID_VARS%difrz
+diftz = GRID_VARS%diftz
+grz = GRID_VARS%grz
+gtz = GRID_VARS%gtz
+satxr = GRID_VARS%satxr
+xinfxr = GRID_VARS%xinfxr
+dc = GRID_VARS%dc
+fw = GRID_VARS%fw
+dsrz = GRID_VARS%dsrz
+rzrhs = GRID_VARS%rzrhs
+dstz = GRID_VARS%dstz
+tzrhs = GRID_VARS%tzrhs
+dswc = GRID_VARS%dswc
+wcrhs = GRID_VARS%wcrhs
 !Energy fluxes
-epwms = POINT_VARS%epwms
+epwms = GRID_VARS%epwms
 
 !Catchment Variables
 !etstsum = CAT%etstsum
@@ -1146,6 +1144,29 @@ GRID_VARS%runtot = runtot
 GRID_VARS%pnet = pnet
 GRID_VARS%evtact = evtact
 GRID_VARS%etpix = etpix
+!Water Balance
+GRID_VARS%zrz = zrz
+GRID_VARS%ztz = ztz
+GRID_VARS%smold = smold
+GRID_VARS%rzsmold = rzsmold
+GRID_VARS%tzsmold = tzsmold
+GRID_VARS%capflx = capflx
+GRID_VARS%difrz = difrz
+GRID_VARS%diftz = diftz
+GRID_VARS%grz = grz
+GRID_VARS%gtz = gtz
+GRID_VARS%satxr = satxr
+GRID_VARS%xinfxr = xinfxr
+GRID_VARS%dc = dc
+GRID_VARS%fw = fw
+GRID_VARS%dsrz = dsrz
+GRID_VARS%rzrhs = rzrhs
+GRID_VARS%dstz = dstz
+GRID_VARS%tzrhs = tzrhs
+GRID_VARS%dswc = dswc
+GRID_VARS%wcrhs = wcrhs
+!Energy Fluxes
+GRID_VARS%epwms = epwms
 
 !$OMP CRITICAL
 !Regional 
@@ -1218,31 +1239,6 @@ CAT%capsum = CAT%capsum + capsum
 CAT%tzpsum = CAT%tzpsum + tzpsum
 CAT%rzpsum = CAT%rzpsum + rzpsum
 !$OMP END CRITICAL 
-
-!Point Data
-!Water Balance
-POINT_VARS%zrz = zrz
-POINT_VARS%ztz = ztz
-POINT_VARS%smold = smold
-POINT_VARS%rzsmold = rzsmold
-POINT_VARS%tzsmold = tzsmold
-POINT_VARS%capflx = capflx
-POINT_VARS%difrz = difrz
-POINT_VARS%diftz = diftz
-POINT_VARS%grz = grz
-POINT_VARS%gtz = gtz
-POINT_VARS%satxr = satxr
-POINT_VARS%xinfxr = xinfxr
-POINT_VARS%dc = dc
-POINT_VARS%fw = fw
-POINT_VARS%dsrz = dsrz
-POINT_VARS%rzrhs = rzrhs
-POINT_VARS%dstz = dstz
-POINT_VARS%tzrhs = tzrhs
-POINT_VARS%dswc = dswc
-POINT_VARS%wcrhs = wcrhs
-!Energy Fluxes
-POINT_VARS%epwms = epwms
 
       return
 

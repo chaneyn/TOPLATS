@@ -58,7 +58,6 @@
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
-      type (POINT_template) :: POINT_VARS
       integer :: nthreads,chunksize
       integer :: ntdveg
       ntdveg = 1 !remember the dynamic vegetation parameter time step
@@ -131,17 +130,17 @@ call init_fruit
             l_lc = 1
             l_px = 1
 
+GRID%VARS%row = 997.d0
+GRID%VARS%cph2o = 4186.d0
+GRID%VARS%cp = 1005.d0
+GRID%VARS%roi = 850.d0
+GRID%VARS%rzsmold = 0.d0
 
 call OMP_SET_NUM_THREADS(8)
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px,POINT_VARS) 
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px) 
 !$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
             do ipix=1,GLOBAL%npix
-            POINT_VARS%row = 997.d0
-            POINT_VARS%cph2o = 4186.d0
-            POINT_VARS%cp = 1005.d0
-            POINT_VARS%roi = 850.d0
-            POINT_VARS%rzsmold = 0.d0
 
 ! ####################################################################
 ! Calculate the matrix indices depending on the land cover geometry.
@@ -154,10 +153,6 @@ call OMP_SET_NUM_THREADS(8)
 ! ####################################################################
 
                call land_lake(NEWSTORM(1,1),ipix,i,GLOBAL%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
-
-! Point data/variables
-       
-       POINT_VARS,&
 
 ! Factor to multiply the regional parameters with
 
@@ -265,7 +260,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Sum the local water and energy balance fluxes.
 ! ....................................................................
 
-               call sumflx(REG,POINT_VARS,CAT(GLOBAL%icatch(ipix)),&
+               call sumflx(REG,CAT(GLOBAL%icatch(ipix)),&
        GRID(ipix)%VARS,&        
 
 ! Factor to rescale all the local fluxes with
