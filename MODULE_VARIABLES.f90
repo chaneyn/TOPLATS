@@ -1081,14 +1081,6 @@ type POINT_template
         real*8 :: row,cph2o,cp,roi
 end type 
 
-type MET_RANGE_template
-
-        real*8 :: ppt_min,pet_min,ta_min,hu_min,pa_min,ws_min,sw_min,rlw_min,&
-                rn_min,gb_min,ppt_max,pet_max,ta_max,hu_max,pa_max,ws_max,&
-                sw_max,rlw_max,rn_max,gb_max
-
-end type MET_RANGE_template
-
 type CAT_VARS_template
 
         !Evaporation and condensation

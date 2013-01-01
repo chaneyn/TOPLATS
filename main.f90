@@ -54,7 +54,6 @@
 
       implicit none
       type (GLOBAL_template) :: GLOBAL
-      type (MET_RANGE_template) :: MET_RANGE
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
