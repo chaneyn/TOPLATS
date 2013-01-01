@@ -929,6 +929,9 @@ type GRID_VEG_template
                 r_mossmpet0,a_ice_moss,b_ice_moss,bulk_dens_moss
         !Miscellanous
         real*8 :: wcip1
+        !Indices
+        integer :: i_und,i_moss,ivgtyp
+
 end type GRID_VEG_template
 
 type GRID_VARS_template
@@ -937,6 +940,9 @@ type GRID_VARS_template
         real*8 :: rzsm,tzsm,rzsm1,tzsm1,rzsm_f,tzsm_f,rzsm1_f,tzsm1_f,&
                 rzdthetaudtemp,rzdthetaidt,tzdthetaidt,zw,pnet,xinact,&
                 runtot,irntyp
+        !Soil Moisture Variables
+        real*8 :: tzsm1_u,rzsm1_u,zmoss,r_mossm1,r_mossm,&
+                r_mossm1_u,r_mossm_u,r_mossm1_f,r_mossm_f
         !Meteorological Variables
         real*8 :: Tincan,rh_ic,precip_o,precip_u
         !Temperature Variables
@@ -1022,7 +1028,7 @@ type GLOBAL_template
         integer,dimension(MAX_CAT) :: icount
         integer,dimension(MAX_ROW,MAX_COL) :: ipixnum
         integer,dimension(MAX_PIX) :: ixpix,iypix,icatch,ilandc,isoil
-        integer,dimension(MAX_VEG) :: ivgtyp
+        !integer,dimension(MAX_VEG) :: ivgtyp
         integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
@@ -1102,10 +1108,12 @@ end type
 
 type SNOW_VARS_template
 
-        real*8,dimension(1+SNW_FLG*(MAX_PIX-1)) :: PackWater_us,&
+        !real*8,dimension(1+SNW_FLG*(MAX_PIX-1)) :: PackWater_us,&
+        real*8 :: PackWater_us,&
                 SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
                 Outflow_us
-        real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
+        !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
+        real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
 
 end type

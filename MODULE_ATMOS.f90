@@ -33,12 +33,12 @@ contains
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
+       SNOW_VARS,PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
+       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
        TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
        hact_snow_us,rn_snow_us,dens,dens_us,&
@@ -50,7 +50,7 @@ contains
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
@@ -58,7 +58,7 @@ contains
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,&
        tmid0,tmid0_moss,tk0moss,&
 
@@ -77,8 +77,8 @@ contains
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
-       tcbeta_us,zdeep,zmid,zrzmax,&
+       GRID_SOIL,SOIL_PARAM,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
+       tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
 
@@ -95,7 +95,7 @@ contains
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       POINT_VARS,row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
 
 ! Energy balance variables
 
@@ -113,6 +113,153 @@ contains
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
+    type (GRID_MET_template) :: GRID_MET
+    type (GRID_VEG_template) :: GRID_VEG
+    type (SNOW_VARS_template),intent(inout) :: SNOW_VARS
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_SOIL_template) :: GRID_SOIL
+    type (SOIL_PARAM_template) :: SOIL_PARAM
+    type (POINT_template) :: POINT_VARS
+    type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
+    type (GLOBAL_template) :: GLOBAL
+
+! Temporarily changing over variables from old to new format
+
+!General Vegetation parameters
+canclos = GRID_VEG%canclos
+extinct = GRID_VEG%extinct
+i_und = GRID_VEG%i_und
+i_moss = GRID_VEG%i_moss
+ivgtyp = GRID_VEG%ivgtyp
+
+!Snow Pack variables
+PackWater = SNOW_VARS%PackWater
+SurfWater = SNOW_VARS%SurfWater
+!Swq = SNOW_VARS%Swq
+VaporMassFlux = SNOW_VARS%VaporMassFlux
+r_MeltEnergy = SNOW_VARS%r_MeltEnergy
+!Outflow = SNOW_VARS%Outflow
+PackWater_us = SNOW_VARS%PackWater_us
+SurfWater_us = SNOW_VARS%SurfWater_us
+!Swq_us = SNOW_VARS%Swq_us
+VaporMassFlux_us = SNOW_VARS%VaporMassFlux_us
+r_MeltEnergy_us = SNOW_VARS%r_MeltEnergy_us
+Outflow_us = SNOW_VARS%Outflow_us
+
+!Albedos of the over story, under story, and moss layer
+albd_us = GRID_VEG%albd_us
+alb_moss = GRID_VEG%alb_moss
+albd = GRID_VEG%albd
+albw = GRID_VEG%albw
+albw_us = GRID_VEG%albw_us
+
+!Meteorological data
+rsd = GRID_MET%rsd
+rld = GRID_MET%rld
+zww = GRID_VEG%zww
+za = GRID_VEG%za
+uzw = GRID_MET%uzw
+press = GRID_MET%press
+Tslope1 = GRID_VEG%Tslope1
+Tint1 = GRID_VEG%Tint1
+Tslope2 = GRID_VEG%Tslope2
+Tint2 = GRID_VEG%Tint2
+Tsep = GRID_VEG%Tsep
+Tincan = GRID_VARS%Tincan
+tdry = GRID_MET%tdry
+Twslope1 = GRID_VEG%Twslope1
+Twslope2 = GRID_VEG%Twslope2
+Twint1 = GRID_VEG%Twint1
+Twint2 = GRID_VEG%Twint2
+Twsep = GRID_VEG%Twsep
+rh = GRID_MET%rh
+rh_ic = GRID_VARS%rh_ic
+
+!Temperature variables
+tkmid = GRID_VARS%tkmid
+tkact = GRID_VARS%tkact
+amp = GRID_SOIL%amp
+phase = GRID_SOIL%phase
+shift = GRID_SOIL%shift
+tdeep = GRID_SOIL%tdeep
+tmid0 = GRID_SOIL%tmid0
+tmid0_moss = GRID_VEG%tmid0_moss
+tk0moss = GRID_VEG%tk0moss
+
+!Energy fluxes and states
+dshact = GRID_VARS%dshact
+gact = GRID_VARS%gact
+ebspot = GRID_VARS%ebspot
+tkmidpet = GRID_VARS%tkmidpet
+tkpet = GRID_VARS%tkpet
+dspet = GRID_VARS%dspet
+rnetpn = GRID_VARS%rnetpn
+gbspen = GRID_VARS%gbspen
+
+!Soil Parameters
+thetar = GRID_SOIL%thetar
+thetas = GRID_SOIL%thetas
+psic = GRID_SOIL%psic
+bcbeta = GRID_SOIL%bcbeta
+quartz = GRID_SOIL%quartz
+rocpsoil = GRID_SOIL%rocpsoil
+tcbeta = GRID_VEG%tcbeta
+tcbeta_us = GRID_VEG%tcbeta_us
+zdeep = GRID_SOIL%zdeep
+zmid = GRID_SOIL%zmid
+
+!Moss Parameters
+r_moss_depth = GRID_VEG%r_moss_depth
+eps = GRID_VEG%eps
+emiss_moss = GRID_VEG%emiss_moss
+zpd_moss = GRID_VEG%zpd_moss
+z0m_moss = GRID_VEG%z0m_moss
+z0h_moss = GRID_VEG%z0h_moss
+
+!Vegetation parameters
+xlai = GRID_VEG%xlai
+xlai_us = GRID_VEG%xlai_us
+emiss = GRID_VEG%emiss
+zpd = GRID_VEG%zpd
+zpd_us = GRID_VEG%zpd_us
+z0m = GRID_VEG%z0m
+z0h = GRID_VEG%z0h
+z0m_us = GRID_VEG%z0m_us
+z0h_us = GRID_VEG%z0h_us
+rescan = GRID_VEG%rescan
+rescan_us = GRID_VEG%rescan_us
+emiss_us = GRID_VEG%emiss_us
+rsmin = GRID_VEG%rsmin
+rsmax = GRID_VEG%rsmax
+rsmin_us = GRID_VEG%rsmin_us
+rsmax_us = GRID_VEG%rsmax_us
+Rpl = GRID_VEG%Rpl
+Rpl_us = GRID_VEG%Rpl_us
+trefk = GRID_VEG%trefk
+trefk_us = GRID_VEG%trefk_us
+
+!COnstants
+row = POINT_VARS%row
+cph2o = POINT_VARS%cph2o
+cp = POINT_VARS%cp
+roi = POINT_VARS%roi
+
+!Energy balance variables
+
+!Water balance variables
+rzsm = GRID_VARS%rzsm
+tzsm = GRID_VARS%tzsm
+rzsm1 = GRID_VARS%rzsm1
+tzsm1 = GRID_VARS%tzsm1
+r_mossm = GRID_VARS%r_mossm
+r_mossm1 = GRID_VARS%r_mossm1
+zrz = POINT_VARS%zrz
+smold = POINT_VARS%smold
+rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+
+!DIFF option parameters
+
+
 
 ! ====================================================================
 ! Define the albedo for the snow layer.
@@ -238,7 +385,8 @@ contains
 
       if (i.eq.1) then
 
-         call inittk(tdeep,tmid0,tmid0_moss,tkmid,tkmid_us,tkmid_moss,tkel,&
+         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
+       tkmid_us,tkmid_moss,tkel,&
        tk0moss,tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
@@ -456,14 +604,38 @@ contains
 !
 ! ====================================================================
 
-  subroutine inittk(tdeep,tmid0,tmid0_moss,tkmid,&
+  subroutine inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,tk0moss,tkact,tkact_us,&
        tkact_moss,tskinact_moss,dshact,dshact_us,dshact_moss,tkpet,&
        tkmidpet,tkmidpet_us,tkmidpet_moss,dspet,dspet_us,dspet_moss,&
        Tsurf,Tpack,Tsurf_us,Tpack_us)
 
       implicit none
-      include "help/inittk.h"
+      include "help/inittk.h" 
+      
+      type (GRID_SOIL_template) :: GRID_SOIL
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+
+!Temporary storing of variables
+tdeep = GRID_SOIL%tdeep
+tmid0 = GRID_SOIL%tmid0
+tmid0_moss = GRID_VEG%tmid0_moss
+tkmid = GRID_VARS%tkmid
+
+!tkmid_us, tkel,tkact, tkact_us, tkact_moss, tskinact_moss, 
+!dshact_us (i), dshact_moss (i), tkmidpet_us (i), tkmidpet_moss (i)
+! dspet_us (i), dspet_moss (i), TSurf, TPack, TSurf_us, TPack_us
+! is not in struct
+
+tk0moss = GRID_VEG%tk0moss
+dshact = GRID_VARS%dshact
+tkpet = GRID_VARS%tkpet
+tkmidpet = GRID_VARS%tkmidpet
+dspet = GRID_VARS%dspet
+
+
+
 
 ! ====================================================================
 ! Initialize average intermediate soil temperatures.

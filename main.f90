@@ -55,8 +55,7 @@
       implicit none
       type (GLOBAL_template) :: GLOBAL
       type (MET_RANGE_template) :: MET_RANGE
-      type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
-      type (SNOW_VARS_template) :: SNOW_VARS
+      type (SNOW_VARS_template),allocatable,dimension(:) :: SNOW_VARS
       type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
@@ -68,6 +67,7 @@
                 !rdveg_update.f90
       chunksize = 1
       nthreads = 1
+      allocate(SNOW_VARS(1+SNOW_RUN*(MAX_PIX-1)))
 
 ! ####################################################################
 ! Initialize unit testing
@@ -86,7 +86,7 @@ call init_fruit
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(GLOBAL,SOIL_MOISTURE,SNOW_VARS,GRID,REG,CAT)
+      call rddata(GLOBAL,GRID,REG,CAT)
       CAT_VARS%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
@@ -168,16 +168,16 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
+       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
 
 ! Snow pack variables
 
-       SNOW_VARS%PackWater(sw_px),SNOW_VARS%SurfWater(sw_px),Swq(sw_px),SNOW_VARS%VaporMassFlux(sw_px),&
-       TPack(sw_px),TSurf(sw_px),SNOW_VARS%r_MeltEnergy(sw_px),SNOW_VARS%Outflow(sw_px),&
-       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS%PackWater_us(s_px),&
-       SNOW_VARS%SurfWater_us(s_px),Swq_us(s_px),SNOW_VARS%VaporMassFlux_us(s_px),TPack_us(s_px),&
-       TSurf_us(s_px),SNOW_VARS%r_MeltEnergy_us(s_px),&
-       SNOW_VARS%Outflow_us(s_px),xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
+       SNOW_VARS(sw_px)%PackWater,SNOW_VARS(sw_px)%SurfWater,Swq(sw_px),SNOW_VARS(sw_px)%VaporMassFlux,&
+       TPack(sw_px),TSurf(sw_px),SNOW_VARS(sw_px)%r_MeltEnergy,SNOW_VARS(sw_px)%Outflow,&
+       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS(s_px)%PackWater_us,&
+       SNOW_VARS(s_px)%SurfWater_us,Swq_us(s_px),SNOW_VARS(s_px)%VaporMassFlux_us,TPack_us(s_px),&
+       TSurf_us(s_px),SNOW_VARS(s_px)%r_MeltEnergy_us,&
+       SNOW_VARS(s_px)%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
        dsty(sw_px),dsty_us(s_px),Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! Albedos of the over story, under story,&
@@ -248,8 +248,6 @@ call OMP_SET_NUM_THREADS(8)
        tzsm(ipix) = GRID(ipix)%VARS%tzsm
        rzsm_f(ipix) = GRID(ipix)%VARS%rzsm_f
        tzsm_f(ipix) = GRID(ipix)%VARS%tzsm_f
-       SOIL_MOISTURE%rzsm1_f(ipix) = GRID(ipix)%VARS%rzsm1_f
-       SOIL_MOISTURE%tzsm1_f(ipix) = GRID(ipix)%VARS%tzsm1_f
        pnet(ipix) = GRID(ipix)%VARS%pnet
        xinact(ipix) = GRID(ipix)%VARS%xinact
        runtot(ipix) = GRID(ipix)%VARS%runtot
@@ -279,7 +277,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GLOBAL%ivgtyp(GLOBAL%ilandc(ipix)),&
+       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
        i,GLOBAL%iprn,&
        canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
 
@@ -352,9 +350,9 @@ etpix = GRID%VARS%etpix
        GLOBAL%ff(ic),CAT_VARS%zbar(ic),GLOBAL%dtil(ic),&
        GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
        r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
-       GLOBAL%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
-       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,SOIL_MOISTURE%tzsm1,GRID%SOIL%thetas,&
-       SOIL_MOISTURE%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
+       GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
+       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
+       GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
 
          enddo
 
@@ -363,7 +361,7 @@ etpix = GRID%VARS%etpix
 ! and sum simulation totals.  Then goto next time step.
 ! --------------------------------------------------------------------
 
-         call lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL)
+         call lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL,GRID)
 
       enddo
 

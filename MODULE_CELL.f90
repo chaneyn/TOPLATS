@@ -112,7 +112,10 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (POINT_template) :: POINT_VARS
       type (CATCHMENT_template) :: CAT
-      
+      type (SNOW_VARS_template) :: SNOW_VARS
+      type (SOIL_PARAM_template) :: SOIL_PARAM
+      !type (GLOBAL_template) :: GLOBAL
+
       !type (GENERAL_template) :: GENERAL
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
@@ -280,17 +283,21 @@ zbar = CAT%zbar
 ! Calculate the local energy fluxes and set
 ! up the storm/interstorm event times and flags.
 ! ....................................................................
-        
+
+       SNOW_VARS%PackWater = PackWater        
+       SNOW_VARS%SurfWater = SurfWater
+       GRID_VEG%i_und = i_und
+
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,Outflow,&
-       xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
+       SNOW_VARS,PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
+       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
        VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
        Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
@@ -300,15 +307,14 @@ zbar = CAT%zbar
        albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
-
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,Twint1,&
        Twslope2,Twint2,Twsep,twet_ic,twet,rh,rh_ic,qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,tmid0,tmid0_moss,tk0moss,&
 
 ! Energy fluxes and states
@@ -326,8 +332,8 @@ zbar = CAT%zbar
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
-       tcbeta_us,zdeep,zmid,zrzmax,&
+       GRID_SOIL,SOIL_PARAM,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
+       tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
 
@@ -343,7 +349,7 @@ zbar = CAT%zbar
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       POINT_VARS,row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
 
 ! Energy balance variables
 

@@ -17,13 +17,14 @@ contains
 !
 ! ====================================================================
 
-      subroutine lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL)
+      subroutine lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL,GRID)
 
       implicit none
       include "help/lswb.h"
       type (REGIONAL_template),intent(inout) :: REG
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (REGIONAL_template) :: REG_OLD
+      type (GRID_template),dimension(:),intent(in) :: GRID
       real*8 rest
       real*8 :: tmp
       ncatch = GLOBAL%ncatch
@@ -97,7 +98,7 @@ contains
       wcsum = REG%wcsum
       zbarrg = REG%zbarrg
       MODE = GLOBAL%MODE
-      ivgtyp = GLOBAL%ivgtyp
+      ivgtyp = GRID%VEG%ivgtyp
       Swqsum = REG%Swqsum
       Swq_ussum = REG%Swq_ussum
       Sdepthsum = REG%Sdepthsum
