@@ -714,6 +714,7 @@ type GRID_SOIL_template
         real*8 :: bcbeta,psic,thetas,thetar,xk0,zdeep,tdeep,&
                 zmid,tmid0,rocpsoil,quartz,srespar1,srespar2,srespar3,a_ice,&
                 b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr
+        integer :: isoil
 end type GRID_SOIL_template
 
 type GRID_VEG_template
@@ -735,7 +736,7 @@ type GRID_VEG_template
         !Miscellanous
         real*8 :: wcip1
         !Indices
-        integer :: i_und,i_moss,ivgtyp
+        integer :: i_und,i_moss,ivgtyp,ilandc
 
 end type GRID_VEG_template
 
@@ -773,6 +774,8 @@ type GRID_VARS_template
         !Constants
         real*8 :: row,cph2o,cp,roi
         !!!!!!!!!!!!!!!!!!!
+        !Catchment grid
+        integer :: icatch
 
 end type GRID_VARS_template
 
@@ -844,7 +847,7 @@ type GLOBAL_template
         real*8 :: smpet0
 	!OPTIONS template
         integer,dimension(MAX_ROW,MAX_COL) :: ipixnum !IO
-        integer,dimension(MAX_PIX) :: ixpix,iypix,icatch,ilandc,isoil
+        integer,dimension(MAX_PIX) :: ixpix,iypix
         integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
