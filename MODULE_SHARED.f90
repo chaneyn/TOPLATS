@@ -1,7 +1,12 @@
 MODULE MODULE_SHARED
 
+USE MODULE_VARIABLES
+
+implicit none
+
 contains
 
+!type (GRID_VEG_template) :: GRID_VEG
 
 ! ====================================================================
 !
@@ -208,11 +213,13 @@ contains
 !
 ! ====================================================================
 
-    subroutine calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
+    subroutine calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
                          albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
 
       implicit none
       include "help/calc_rs.h"
+
+      type (GRID_VEG_template) :: GRID_VEG
 
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
@@ -220,8 +227,8 @@ contains
 ! ====================================================================
 
       refus=0.d0
-      ccc=canclos
-      thr=extinct
+      ccc=GRID_VEG%canclos
+      thr=GRID_VEG%extinct
 
 ! --------------------------------------------------------------------
 ! Determine what albedo of the understory is : moss, snow or normal

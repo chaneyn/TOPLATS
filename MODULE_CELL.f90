@@ -310,7 +310,7 @@ zbar = CAT%zbar
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -411,7 +411,7 @@ zbar = CAT%zbar
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
 
 ! Snow pack variables
 

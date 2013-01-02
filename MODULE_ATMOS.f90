@@ -35,7 +35,7 @@ contains
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -124,8 +124,8 @@ contains
 ! Temporarily changing over variables from old to new format
 
 !General Vegetation parameters
-canclos = GRID_VEG%canclos
-extinct = GRID_VEG%extinct
+!canclos = GRID_VEG%canclos
+!extinct = GRID_VEG%extinct
 i_und = GRID_VEG%i_und
 i_moss = GRID_VEG%i_moss
 ivgtyp = GRID_VEG%ivgtyp
@@ -517,7 +517,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -880,7 +880,7 @@ dspet = GRID_VARS%dspet
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -964,7 +964,7 @@ dspet = GRID_VARS%dspet
 ! story layers.
 ! ====================================================================
 
-      call calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
+      call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
                    albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
