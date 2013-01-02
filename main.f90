@@ -54,20 +54,15 @@
 
       implicit none
       type (GLOBAL_template) :: GLOBAL
-      type (MET_RANGE_template) :: MET_RANGE
-      type (SNOW_VARS_template),allocatable,dimension(:) :: SNOW_VARS
-      type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
-      type (POINT_template) :: POINT_VARS
       integer :: nthreads,chunksize
       integer :: ntdveg
       ntdveg = 1 !remember the dynamic vegetation parameter time step
                 !rdveg_update.f90
       chunksize = 1
       nthreads = 1
-      allocate(SNOW_VARS(1+SNOW_RUN*(MAX_PIX-1)))
 
 ! ####################################################################
 ! Initialize unit testing
@@ -87,7 +82,7 @@ call init_fruit
 ! ####################################################################
 
       call rddata(GLOBAL,GRID,REG,CAT)
-      CAT_VARS%zbar1 = GLOBAL%zbar1
+      CAT%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
 ! Loop through the simulation time.
@@ -113,7 +108,7 @@ call init_fruit
 ! ####################################################################
 
         call instep(i,GLOBAL%ncatch,djday,GLOBAL%dt,&
-                CAT_VARS,REG,CAT)
+                REG,CAT)
 
 ! ####################################################################
 ! Read meteorological data.
@@ -134,17 +129,17 @@ call init_fruit
             l_lc = 1
             l_px = 1
 
+GRID%VARS%row = 997.d0
+GRID%VARS%cph2o = 4186.d0
+GRID%VARS%cp = 1005.d0
+GRID%VARS%roi = 850.d0
+GRID%VARS%rzsmold = 0.d0
 
 call OMP_SET_NUM_THREADS(8)
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px,POINT_VARS) 
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px) 
 !$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
             do ipix=1,GLOBAL%npix
-            POINT_VARS%row = 997.d0
-            POINT_VARS%cph2o = 4186.d0
-            POINT_VARS%cp = 1005.d0
-            POINT_VARS%roi = 850.d0
-            POINT_VARS%rzsmold = 0.d0
 
 ! ####################################################################
 ! Calculate the matrix indices depending on the land cover geometry.
@@ -158,10 +153,6 @@ call OMP_SET_NUM_THREADS(8)
 
                call land_lake(NEWSTORM(1,1),ipix,i,GLOBAL%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
 
-! Point data/variables
-       
-       POINT_VARS,&
-
 ! Factor to multiply the regional parameters with
 
        1.d0,&
@@ -172,12 +163,12 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Snow pack variables
 
-       SNOW_VARS(sw_px)%PackWater,SNOW_VARS(sw_px)%SurfWater,Swq(sw_px),SNOW_VARS(sw_px)%VaporMassFlux,&
-       TPack(sw_px),TSurf(sw_px),SNOW_VARS(sw_px)%r_MeltEnergy,SNOW_VARS(sw_px)%Outflow,&
-       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),SNOW_VARS(s_px)%PackWater_us,&
-       SNOW_VARS(s_px)%SurfWater_us,Swq_us(s_px),SNOW_VARS(s_px)%VaporMassFlux_us,TPack_us(s_px),&
-       TSurf_us(s_px),SNOW_VARS(s_px)%r_MeltEnergy_us,&
-       SNOW_VARS(s_px)%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
+       GRID(sw_px)%VARS%PackWater,GRID(sw_px)%VARS%SurfWater,Swq(sw_px),GRID(sw_px)%VARS%VaporMassFlux,&
+       TPack(sw_px),TSurf(sw_px),GRID(sw_px)%VARS%r_MeltEnergy,GRID(sw_px)%VARS%Outflow,&
+       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),GRID(s_px)%VARS%PackWater_us,&
+       GRID(s_px)%VARS%SurfWater_us,Swq_us(s_px),GRID(s_px)%VARS%VaporMassFlux_us,TPack_us(s_px),&
+       TSurf_us(s_px),GRID(s_px)%VARS%r_MeltEnergy_us,&
+       GRID(s_px)%VARS%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
        dsty(sw_px),dsty_us(s_px),Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! Albedos of the over story, under story,&
@@ -234,7 +225,7 @@ call OMP_SET_NUM_THREADS(8)
 
        REG,&
 
-! DiGLOBAL%fferent option parameters
+! Different option parameters
 
        GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopsmini,GLOBAL%ikopt,&
        GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
@@ -268,7 +259,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Sum the local water and energy balance fluxes.
 ! ....................................................................
 
-               call sumflx(REG,POINT_VARS,CAT(GLOBAL%icatch(ipix)),&
+               call sumflx(REG,CAT(GLOBAL%icatch(ipix)),&
        GRID(ipix)%VARS,&        
 
 ! Factor to rescale all the local fluxes with
@@ -278,7 +269,7 @@ call OMP_SET_NUM_THREADS(8)
 ! General vegetation parameters
 
        GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
-       i,GLOBAL%iprn,&
+       i,&
        canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
 
 ! Grid data
@@ -301,25 +292,6 @@ call OMP_SET_NUM_THREADS(8)
 !$OMP END DO
 !$OMP END PARALLEL
 
-!Catchment Variables
-CAT_VARS%etstsum = CAT%etstsum
-CAT_VARS%etwtsum = CAT%etwtsum
-CAT_VARS%etbssum = CAT%etbssum
-CAT_VARS%etdcsum = CAT%etdcsum
-CAT_VARS%etwcsum = CAT%etwcsum
-CAT_VARS%contot = CAT%contot
-CAT_VARS%pptsum = CAT%pptsum
-CAT_VARS%pnetsum = CAT%pnetsum
-CAT_VARS%qsurf = CAT%qsurf
-CAT_VARS%sxrtot = CAT%sxrtot
-CAT_VARS%xixtot = CAT%xixtot
-CAT_VARS%ranrun = CAT%ranrun
-CAT_VARS%conrun = CAT%conrun
-CAT_VARS%gwtsum = CAT%gwtsum
-CAT_VARS%capsum = CAT%capsum
-CAT_VARS%tzpsum = CAT%tzpsum
-CAT_VARS%rzpsum = CAT%rzpsum
-
 !GRID variables
 etpix = GRID%VARS%etpix
 
@@ -330,29 +302,22 @@ etpix = GRID%VARS%etpix
 
          do ic=1,GLOBAL%ncatch
 
-             s_nr_gwtsum(ic)=0.0
-             s_nr_capsum(ic)=0.0
-             s_nr_tzpsum(ic)=0.0
-             s_nr_rzpsum(ic)=0.0
-
             call catflx(i,ic,GLOBAL%area(ic),GLOBAL%pixsiz,&
-                r_lakearea(ic),CAT_VARS%ettot(ic),&
-       CAT_VARS%etstsum(ic),CAT_VARS%etwtsum(ic),CAT_VARS%etlakesum(ic),&
-       CAT_VARS%etbssum(ic),CAT(ic)%fbs,CAT_VARS%etdcsum(ic),&
-       CAT_VARS%etwcsum(ic),CAT_VARS%pptsum(ic),CAT_VARS%pnetsum(ic),CAT_VARS%contot(ic),&
-       CAT_VARS%qsurf(ic),CAT_VARS%sxrtot(ic),CAT_VARS%xixtot(ic),CAT_VARS%ranrun(ic),&
-       CAT_VARS%conrun(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),CAT_VARS%tzpsum(ic),&
-       CAT_VARS%rzpsum(ic),CAT_VARS%fwcat(ic),GLOBAL%iprn,&
-       s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
-       s_nr_tzpsum(ic),s_nr_rzpsum(ic))
+                r_lakearea(ic),CAT(ic)%ettot,&
+       CAT(ic)%etstsum,CAT(ic)%etwtsum,CAT(ic)%etlakesum,&
+       CAT(ic)%etbssum,CAT(ic)%fbs,CAT(ic)%etdcsum,&
+       CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
+       CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
+       CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
+       CAT(ic)%rzpsum,CAT(ic)%fwcat)
 
                call upzbar(i,ic,GLOBAL%iopbf,GLOBAL%q0(ic),&
-       GLOBAL%ff(ic),CAT_VARS%zbar(ic),GLOBAL%dtil(ic),&
-       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
-       r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
+       GLOBAL%ff(ic),CAT(ic)%zbar,GLOBAL%dtil(ic),&
+       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT(ic)%gwtsum,CAT(ic)%capsum,GLOBAL%area(ic),&
+       r_lakearea(ic),GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
        GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
        GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
-       GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
+       GRID%VARS%rzsm1,CAT(ic)%zbar1,REG%qbreg,REG%zbar1rg,GLOBAL%pixsiz)
 
          enddo
 
@@ -381,8 +346,7 @@ call FILE_CLOSE()
 ! ####################################################################
 
 call fruit_summary !Summarize the fruit output for this time step
-call fruit_finalize !Finalize the fruit library
-
+call fruit_finalize !Finalize the fruit l
       stop
 
       end

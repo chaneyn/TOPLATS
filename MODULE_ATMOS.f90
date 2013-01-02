@@ -39,7 +39,7 @@ contains
 
 ! Snow pack variables
 
-       SNOW_VARS,PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
+       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
        Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
        TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
@@ -79,7 +79,7 @@ contains
 
 ! Soil parameters
 
-       GRID_SOIL,SOIL_PARAM,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
        tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -97,7 +97,7 @@ contains
 
 ! Constants
 
-       POINT_VARS,row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
 
 ! Energy balance variables
 
@@ -117,12 +117,8 @@ contains
     include "help/atmos.h" !take this out when variables are fixed
     type (GRID_MET_template) :: GRID_MET
     type (GRID_VEG_template) :: GRID_VEG
-    type (SNOW_VARS_template),intent(inout) :: SNOW_VARS
     type (GRID_VARS_template) :: GRID_VARS
     type (GRID_SOIL_template) :: GRID_SOIL
-    type (SOIL_PARAM_template) :: SOIL_PARAM
-    type (POINT_template) :: POINT_VARS
-    type (SOIL_MOISTURE_template) :: SOIL_MOISTURE
     type (GLOBAL_template) :: GLOBAL
 
 ! Temporarily changing over variables from old to new format
@@ -135,18 +131,18 @@ i_moss = GRID_VEG%i_moss
 ivgtyp = GRID_VEG%ivgtyp
 
 !Snow Pack variables
-PackWater = SNOW_VARS%PackWater
-SurfWater = SNOW_VARS%SurfWater
-Swq = SNOW_VARS%Swq
-VaporMassFlux = SNOW_VARS%VaporMassFlux
-r_MeltEnergy = SNOW_VARS%r_MeltEnergy
-Outflow = SNOW_VARS%Outflow
-PackWater_us = SNOW_VARS%PackWater_us
-SurfWater_us = SNOW_VARS%SurfWater_us
-Swq_us = SNOW_VARS%Swq_us
-VaporMassFlux_us = SNOW_VARS%VaporMassFlux_us
-r_MeltEnergy_us = SNOW_VARS%r_MeltEnergy_us
-Outflow_us = SNOW_VARS%Outflow_us
+PackWater = GRID_VARS%PackWater
+SurfWater = GRID_VARS%SurfWater
+Swq = GRID_VARS%Swq
+VaporMassFlux = GRID_VARS%VaporMassFlux
+r_MeltEnergy = GRID_VARS%r_MeltEnergy
+Outflow = GRID_VARS%Outflow
+PackWater_us = GRID_VARS%PackWater_us
+SurfWater_us = GRID_VARS%SurfWater_us
+Swq_us = GRID_VARS%Swq_us
+VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
 albd_us = GRID_VEG%albd_us
@@ -242,12 +238,14 @@ trefk = GRID_VEG%trefk
 trefk_us = GRID_VEG%trefk_us
 
 !COnstants
-row = POINT_VARS%row
-cph2o = POINT_VARS%cph2o
-cp = POINT_VARS%cp
-roi = POINT_VARS%roi
+
 toleb = GLOBAL%toleb
 maxnri = GLOBAL%maxnri
+row = GRID_VARS%row
+cph2o = GRID_VARS%cph2o
+cp = GRID_VARS%cp
+roi = GRID_VARS%roi
+
 
 !Energy balance variables
 
@@ -258,8 +256,8 @@ rzsm1 = GRID_VARS%rzsm1
 tzsm1 = GRID_VARS%tzsm1
 r_mossm = GRID_VARS%r_mossm
 r_mossm1 = GRID_VARS%r_mossm1
-zrz = POINT_VARS%zrz
-smold = POINT_VARS%smold
+zrz = GRID_VARS%zrz
+smold = GRID_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 smpet0 = GLOBAL%smpet0
 

@@ -16,11 +16,10 @@ contains
 !
 ! ====================================================================
 
-  subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
+  subroutine instep(i,ncatch,djday,dt,REG,CAT)
 
       implicit none
       include "help/instep.h"
-      type (CAT_VARS_template) :: CAT_VARS
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
 
@@ -159,65 +158,43 @@ contains
 ! Evaporation and condensation.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%ettot(kk) = zero
-         CAT_VARS%etstsum(kk) = zero
-         CAT_VARS%etwtsum(kk) = zero
-         CAT_VARS%etbssum(kk) = zero
-         CAT_VARS%etdcsum(kk) = zero
-         CAT_VARS%etwcsum(kk) = zero
-         CAT_VARS%etlakesum(kk) = zero
-         CAT_VARS%contot(kk) = zero
+         CAT(kk)%ettot = zero
+         CAT(kk)%etstsum = zero
+         CAT(kk)%etwtsum = zero
+         CAT(kk)%etbssum = zero
+         CAT(kk)%etdcsum = zero
+         CAT(kk)%etwcsum = zero
+         CAT(kk)%etlakesum = zero
+         CAT(kk)%contot = zero
 
 ! --------------------------------------------------------------------
 ! Infiltration/runoff/precipitation.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%pptsum(kk) = zero
-         CAT_VARS%pnetsum(kk) = zero
-         CAT_VARS%sxrtot(kk) = zero
-         CAT_VARS%xixtot(kk) = zero
-         CAT_VARS%qsurf(kk) = zero
-         CAT_VARS%ranrun(kk) = zero
-         CAT_VARS%conrun(kk) = zero
+         CAT(kk)%pptsum = zero
+         CAT(kk)%pnetsum = zero
+         CAT(kk)%sxrtot = zero
+         CAT(kk)%xixtot = zero
+         CAT(kk)%qsurf = zero
+         CAT(kk)%ranrun = zero
+         CAT(kk)%conrun = zero
 
 ! --------------------------------------------------------------------
 ! Vertical soil moisture fluxes and water table updating.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%zbar(kk) = CAT_VARS%zbar1(kk)
-         CAT_VARS%capsum(kk) = zero
-         CAT_VARS%gwtsum(kk) = zero
-         CAT_VARS%rzpsum(kk) = zero
-         CAT_VARS%tzpsum(kk) = zero
+         CAT(kk)%zbar = CAT(kk)%zbar1
+         CAT(kk)%capsum = zero
+         CAT(kk)%gwtsum = zero
+         CAT(kk)%rzpsum = zero
+         CAT(kk)%tzpsum = zero
 
 ! --------------------------------------------------------------------
 ! State variables.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%fwcat(kk) = zero
+         CAT(kk)%fwcat = zero
 
-! 100   continue
-
-CAT%ettot = CAT_VARS%ettot
-CAT%etwtsum = CAT_VARS%etwtsum
-CAT%etbssum = CAT_VARS%etbssum
-CAT%etdcsum = CAT_VARS%etdcsum
-CAT%etwcsum = CAT_VARS%etwcsum
-CAT%etlakesum = CAT_VARS%etlakesum
-CAT%pptsum = CAT_VARS%pptsum
-CAT%pnetsum = CAT_VARS%pnetsum
-CAT%sxrtot = CAT_VARS%sxrtot
-CAT%xixtot = CAT_VARS%xixtot
-CAT%qsurf = CAT_VARS%qsurf
-CAT%ranrun = CAT_VARS%ranrun
-CAT%conrun = CAT_VARS%conrun
-CAT%zbar = CAT_VARS%zbar
-CAT%zbar1 = CAT_VARS%zbar1
-CAT%capsum = CAT_VARS%capsum
-CAT%gwtsum = CAT_VARS%gwtsum
-CAT%rzpsum = CAT_VARS%rzpsum
-CAT%tzpsum = CAT_VARS%tzpsum
-CAT%fwcat = CAT_VARS%fwcat
         enddo
         return
       
@@ -237,8 +214,7 @@ CAT%fwcat = CAT_VARS%fwcat
       subroutine catflx(i,ic,area,pixsiz,r_lakearea,ettot,&
        etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
        etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
-       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,iprn,&
-       s_nr_etwtsum,s_nr_gwtsum,s_nr_capsum,s_nr_tzpsum,s_nr_rzpsum)
+       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat)
 
       implicit none
 !       include "SNOW.h"
@@ -260,7 +236,6 @@ CAT%fwcat = CAT_VARS%fwcat
       ettot = ettot / catpix
       etstsum = etstsum / catvegpix
       etwtsum = etwtsum / catvegpix
-      s_nr_etwtsum = s_nr_etwtsum / catvegpix
       etlakesum = etlakesum / catlakpix
 
       if (fbs.gt.0.) then
@@ -313,18 +288,14 @@ CAT%fwcat = CAT_VARS%fwcat
 ! ====================================================================
 
       gwtsum = gwtsum / catvegpix
-      s_nr_gwtsum = s_nr_gwtsum / catvegpix
       capsum = capsum / catvegpix
-      s_nr_capsum = s_nr_capsum / catvegpix
 
 ! ====================================================================
 ! Compute average available porosity above the water table.
 ! ====================================================================
 
       tzpsum = tzpsum / catvegpix 
-      s_nr_tzpsum = s_nr_tzpsum / catvegpix 
       rzpsum = rzpsum / catvegpix 
-      s_nr_rzpsum = s_nr_rzpsum / catvegpix 
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.
@@ -332,22 +303,6 @@ CAT%fwcat = CAT_VARS%fwcat
 
       fwcat = fwcat / catvegpix / (one-fbs)
 
-! ====================================================================
-! Write evaporation and infiltration/runoff results if required.
-! ====================================================================
-
-      if (iprn(80).eq.1)then
-        write(80,1000) i,ic,ettot*3600000.,etbssum*3600000.,&
-                       etdcsum*3600000.,etwcsum*3600000.,&
-                       fwcat,fbs
-        endif
-      if (iprn(81).eq.1)then
-        write(81,1100) i,ic,pptsum*3600000.,pnetsum*3600000.,&
-                       contot*3600000.,&
-                       (ranrun+contot)*3600000.,&
-                       (pnetsum+contot-ranrun-contot)*3600000.,&
-                       sxrtot*3600000.,xixtot*3600000.
-        endif
 ! ====================================================================
 ! Format statements.
 ! ====================================================================
@@ -372,7 +327,7 @@ CAT%fwcat = CAT_VARS%fwcat
       subroutine upzbar(i,ic,iopbf,q0,ff,zbar,dtil,basink,dd,xlength,&
        gwtsum,capsum,area,r_lakearea,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
        ilandc,npix,icatch,zw,psic,isoil,zrzmax,&
-       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,iprn,pixsiz)
+       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,pixsiz)
 
       implicit none
 !       include "SNOW.h"
@@ -493,19 +448,8 @@ CAT%fwcat = CAT_VARS%fwcat
       zbar1rg = zbar1rg + zbar1*area/(pixsiz*pixsiz)
 
 ! ====================================================================
-! Write results.
-! ====================================================================
-
-      if(iprn(82).eq.1)&
-        write(82,1000) i,ic,zbar1,zbar,capsum*3600000.,&
-                       gwtsum*3600000.,etwtsum*3600000.,&
-                       qb/area*3600000.,rzpsum,tzpsum
-
-! ====================================================================
 ! Format statements.
 ! ====================================================================
-
-1000  format(2i5,2f7.3,4f10.5,2f7.3)
 
       return
 
@@ -522,7 +466,7 @@ CAT%fwcat = CAT_VARS%fwcat
 !
 ! ====================================================================
 
-      subroutine sumflx(REG,POINT_VARS,CAT,GRID_VARS,&
+      subroutine sumflx(REG,CAT,GRID_VARS,&
 
 ! Factor to rescale all local fluxes
 
@@ -530,7 +474,7 @@ CAT%fwcat = CAT_VARS%fwcat
 
 ! General vegetation parameters
 
-       ivgtyp,i,iprn,canclos,ilandc,dt,&
+       ivgtyp,i,canclos,ilandc,dt,&
 
 ! Condensation variables
 
@@ -552,7 +496,6 @@ CAT%fwcat = CAT_VARS%fwcat
     
       include "help/sumflx.dif.h"
       type (REGIONAL_template) :: REG
-      type (POINT_template) :: POINT_VARS
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
 
@@ -582,29 +525,28 @@ evtact = GRID_VARS%evtact
 etpix = GRID_VARS%etpix
 
 !Point Data
-!Water Balance
-zrz = POINT_VARS%zrz
-ztz = POINT_VARS%ztz
-smold = POINT_VARS%smold
-rzsmold = POINT_VARS%rzsmold
-tzsmold = POINT_VARS%tzsmold
-capflx = POINT_VARS%capflx
-difrz = POINT_VARS%difrz
-diftz = POINT_VARS%diftz
-grz = POINT_VARS%grz
-gtz = POINT_VARS%gtz
-satxr = POINT_VARS%satxr
-xinfxr = POINT_VARS%xinfxr
-dc = POINT_VARS%dc
-fw = POINT_VARS%fw
-dsrz = POINT_VARS%dsrz
-rzrhs = POINT_VARS%rzrhs
-dstz = POINT_VARS%dstz
-tzrhs = POINT_VARS%tzrhs
-dswc = POINT_VARS%dswc
-wcrhs = POINT_VARS%wcrhs
+zrz = GRID_VARS%zrz
+ztz = GRID_VARS%ztz
+smold = GRID_VARS%smold
+rzsmold = GRID_VARS%rzsmold
+tzsmold = GRID_VARS%tzsmold
+capflx = GRID_VARS%capflx
+difrz = GRID_VARS%difrz
+diftz = GRID_VARS%diftz
+grz = GRID_VARS%grz
+gtz = GRID_VARS%gtz
+satxr = GRID_VARS%satxr
+xinfxr = GRID_VARS%xinfxr
+dc = GRID_VARS%dc
+fw = GRID_VARS%fw
+dsrz = GRID_VARS%dsrz
+rzrhs = GRID_VARS%rzrhs
+dstz = GRID_VARS%dstz
+tzrhs = GRID_VARS%tzrhs
+dswc = GRID_VARS%dswc
+wcrhs = GRID_VARS%wcrhs
 !Energy fluxes
-epwms = POINT_VARS%epwms
+epwms = GRID_VARS%epwms
 
 !Catchment Variables
 !etstsum = CAT%etstsum
@@ -1027,30 +969,6 @@ epwms = POINT_VARS%epwms
 
       endif
 
-      if (iprn(110).eq.1) then
-
-         write (110,125) i,rnact_moss,xleact_moss,hact_moss,&
-                         gact_moss,dshact_moss,tskinact_moss,&
-                         tkact_moss,tkmid_moss,r_mossm
-
-      endif
-
-      if (iprn(111).eq.1) then
-
-         write (111,126) i,rnact_us,xleact_us,hact_us,&
-                         gact_us,dshact_us,&
-                         tkact_us,tkmid_us
-
-      endif
-
-      if (iprn(112).eq.1) then
-
-         write (112,126) i,rnact,xleact,hact,gact,&
-                         dshact,&
-                         tkact,tkmid
-
-      endif
-
 ! ====================================================================
 ! Compute pixel total energy fluxes at PET.
 ! ====================================================================
@@ -1146,6 +1064,29 @@ GRID_VARS%runtot = runtot
 GRID_VARS%pnet = pnet
 GRID_VARS%evtact = evtact
 GRID_VARS%etpix = etpix
+!Water Balance
+GRID_VARS%zrz = zrz
+GRID_VARS%ztz = ztz
+GRID_VARS%smold = smold
+GRID_VARS%rzsmold = rzsmold
+GRID_VARS%tzsmold = tzsmold
+GRID_VARS%capflx = capflx
+GRID_VARS%difrz = difrz
+GRID_VARS%diftz = diftz
+GRID_VARS%grz = grz
+GRID_VARS%gtz = gtz
+GRID_VARS%satxr = satxr
+GRID_VARS%xinfxr = xinfxr
+GRID_VARS%dc = dc
+GRID_VARS%fw = fw
+GRID_VARS%dsrz = dsrz
+GRID_VARS%rzrhs = rzrhs
+GRID_VARS%dstz = dstz
+GRID_VARS%tzrhs = tzrhs
+GRID_VARS%dswc = dswc
+GRID_VARS%wcrhs = wcrhs
+!Energy Fluxes
+GRID_VARS%epwms = epwms
 
 !$OMP CRITICAL
 !Regional 
@@ -1218,31 +1159,6 @@ CAT%capsum = CAT%capsum + capsum
 CAT%tzpsum = CAT%tzpsum + tzpsum
 CAT%rzpsum = CAT%rzpsum + rzpsum
 !$OMP END CRITICAL 
-
-!Point Data
-!Water Balance
-POINT_VARS%zrz = zrz
-POINT_VARS%ztz = ztz
-POINT_VARS%smold = smold
-POINT_VARS%rzsmold = rzsmold
-POINT_VARS%tzsmold = tzsmold
-POINT_VARS%capflx = capflx
-POINT_VARS%difrz = difrz
-POINT_VARS%diftz = diftz
-POINT_VARS%grz = grz
-POINT_VARS%gtz = gtz
-POINT_VARS%satxr = satxr
-POINT_VARS%xinfxr = xinfxr
-POINT_VARS%dc = dc
-POINT_VARS%fw = fw
-POINT_VARS%dsrz = dsrz
-POINT_VARS%rzrhs = rzrhs
-POINT_VARS%dstz = dstz
-POINT_VARS%tzrhs = tzrhs
-POINT_VARS%dswc = dswc
-POINT_VARS%wcrhs = wcrhs
-!Energy Fluxes
-POINT_VARS%epwms = epwms
 
       return
 

@@ -97,7 +97,7 @@ contains
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
-      type (SOIL_PARAM_template) :: SOIL_PARAM
+      !type (GRID%SOIL_template) :: GRID%SOIL
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -137,14 +137,12 @@ contains
 ! ====================================================================
 
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
-       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%iprn,GLOBAL%ixpix,GLOBAL%iypix,&
+       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%ixpix,GLOBAL%iypix,&
        GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
        GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,GLOBAL%icatch,&
        GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
        GLOBAL%iwel,GLOBAL%wslp,&
-       GLOBAL%lat_deg,GLOBAL%lat_min,GLOBAL%lng_deg,&
-       GLOBAL%lng_min,GLOBAL%lng_mer,GLOBAL%rlatitude,&
-       GLOBAL%rlongitude,GLOBAL%rlng_merid,GRID,CAT)
+       GRID,CAT)
 
       print*,'rddata:  Done reading TOPMODEL parameters'
 
@@ -153,7 +151,7 @@ contains
 ! ====================================================================
 
       call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ilandc,&
-       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,GLOBAL%iprn,&
+       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
        GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
@@ -176,15 +174,15 @@ contains
 ! Read in soil parameters and root and transmission zone information.
 ! ====================================================================
 
-      call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,SOIL_PARAM%smpet0,&
-       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,SOIL_PARAM%bcbeta,&
-       SOIL_PARAM%psic,SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%xk0,SOIL_PARAM%zdeep,SOIL_PARAM%tdeep,SOIL_PARAM%zmid,&
-       SOIL_PARAM%tmid0,SOIL_PARAM%rocpsoil,SOIL_PARAM%quartz,GLOBAL%ifcoarse,&
-       SOIL_PARAM%srespar1,SOIL_PARAM%srespar2,SOIL_PARAM%srespar3,SOIL_PARAM%a_ice,SOIL_PARAM%b_ice,&
-       SOIL_PARAM%bulk_dens,SOIL_PARAM%amp,SOIL_PARAM%phase,SOIL_PARAM%shift,&
-       GLOBAL%inc_frozen,SOIL_PARAM%bcgamm,SOIL_PARAM%par,SOIL_PARAM%corr,GLOBAL%idifind,&
+      call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,GLOBAL%smpet0,&
+       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%SOIL%bcbeta,&
+       GRID%SOIL%psic,GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%xk0,GRID%SOIL%zdeep,GRID%SOIL%tdeep,GRID%SOIL%zmid,&
+       GRID%SOIL%tmid0,GRID%SOIL%rocpsoil,GRID%SOIL%quartz,GLOBAL%ifcoarse,&
+       GRID%SOIL%srespar1,GRID%SOIL%srespar2,GRID%SOIL%srespar3,GRID%SOIL%a_ice,GRID%SOIL%b_ice,&
+       GRID%SOIL%bulk_dens,GRID%SOIL%amp,GRID%SOIL%phase,GRID%SOIL%shift,&
+       GLOBAL%inc_frozen,GRID%SOIL%bcgamm,GRID%SOIL%par,GRID%SOIL%corr,GLOBAL%idifind,&
        GLOBAL%ncatch,GLOBAL%icatch,GLOBAL%pixsiz,GLOBAL%area,&
-       GLOBAL%npix,SOIL_PARAM%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
+       GLOBAL%npix,CAT%psicav,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
 
@@ -208,12 +206,7 @@ contains
 ! Read in the mode in which to run the program.
 ! ====================================================================
 
-      GLOBAL%MODE = 1
-      GLOBAL%FRCOV = 0
       GLOBAL%frcbeta = 999
-
-      if (GLOBAL%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
-      if (GLOBAL%FRCOV.eq.0) print*,'rddata:  Frac. rain.l cover not included'
 
 ! ====================================================================
 ! Initialize the simulation sum variables and storm.and.&
@@ -224,50 +217,22 @@ contains
        GLOBAL%npix,GLOBAL%inc_frozen,GLOBAL%istorm,&
        GLOBAL%intstm,GLOBAL%istmst,intstp,GLOBAL%istorm_moss,&
        GLOBAL%intstm_moss,GLOBAL%istmst_moss,GLOBAL%intstp_moss,&
-       GLOBAL%isoil,GLOBAL%idifind,SOIL_PARAM%smpet0,r_mossmpet0,GLOBAL%endstm,&
+       GLOBAL%isoil,GLOBAL%idifind,GLOBAL%smpet0,r_mossmpet0,GLOBAL%endstm,&
        GRID%VARS%rzsm1,GRID%VARS%tzsm1,GRID%VARS%r_mossm1,&
        GRID%VARS%r_mossm,GRID%VARS%rzsm1_u,GRID%VARS%tzsm1_u,&
        GRID%VARS%rzsm1_f,GRID%VARS%tzsm1_f,GRID%VARS%r_mossm1_u,&
        GRID%VARS%r_mossm_u,&
        GRID%VARS%r_mossm1_f,GRID%VARS%r_mossm_f,GRID%VARS%rzdthetaidt,&
        GRID%VARS%tzdthetaidt,GRID%VARS%zmoss,r_moss_depth,&
-       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,SOIL_PARAM%xk0,SOIL_PARAM%psic,&
-       SOIL_PARAM%thetas,SOIL_PARAM%thetar,SOIL_PARAM%bcgamm,&
-       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,SOIL_PARAM%corr,SOIL_PARAM%par,PackWater_us,&
+       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,GRID%SOIL%xk0,GRID%SOIL%psic,&
+       GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%bcgamm,&
+       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,GRID%SOIL%corr,GRID%SOIL%par,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
        PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
 
       read (1000,*) GLOBAL%dtveg
 
       print*,'rddata:  Done initializing simulation'
-
-      !TEMPORARY
-      !SOIL
-      GRID%SOIL%bcbeta = SOIL_PARAM%bcbeta
-      GRID%SOIL%psic = SOIL_PARAM%psic
-      GRID%SOIL%thetas = SOIL_PARAM%thetas
-      GRID%SOIL%thetar = SOIL_PARAM%thetar
-      GRID%SOIL%xk0 = SOIL_PARAM%xk0
-      GRID%SOIL%zdeep = SOIL_PARAM%zdeep
-      GRID%SOIL%tdeep = SOIL_PARAM%tdeep
-      GRID%SOIL%zmid = SOIL_PARAM%zmid
-      GRID%SOIL%tmid0 = SOIL_PARAM%tmid0
-      GRID%SOIL%rocpsoil = SOIL_PARAM%rocpsoil
-      GRID%SOIL%quartz = SOIL_PARAM%quartz
-      GRID%SOIL%srespar1 = SOIL_PARAM%srespar1
-      GRID%SOIL%srespar2 = SOIL_PARAM%srespar2
-      GRID%SOIL%srespar3 = SOIL_PARAM%srespar3
-      GRID%SOIL%a_ice = SOIL_PARAM%a_ice
-      GRID%SOIL%b_ice = SOIL_PARAM%b_ice
-      GRID%SOIL%bulk_dens = SOIL_PARAM%bulk_dens
-      GRID%SOIL%amp = SOIL_PARAM%amp
-      GRID%SOIL%phase = SOIL_PARAM%phase
-      GRID%SOIL%shift = SOIL_PARAM%shift
-      GRID%SOIL%bcgamm = SOIL_PARAM%bcgamm
-      GRID%SOIL%par = SOIL_PARAM%par
-      GRID%SOIL%corr = SOIL_PARAM%corr
-      CAT%psicav = SOIL_PARAM%psicav
-      GLOBAL%smpet0 = SOIL_PARAM%smpet0
 
       return
 
@@ -388,11 +353,10 @@ contains
 !
 ! ====================================================================
 
-      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,iprn,&
+      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,&
        ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,icatch,area,&
        atanb,dtil,zbar1,&
        iwel,wslp,&
-       lat_deg,lat_min,lng_deg,lng_min,lng_mer,rlatitude,rlongitude,rlng_merid,&
        GRID,CAT)
 
       implicit none
@@ -596,29 +560,6 @@ allocate(GRID(nrow*ncol))
 
 800   continue
 
-! ====================================================================
-! Print table of results for each catchment.
-! ====================================================================
-
-      if (iprn(75).eq.1) then
-
-         do 900 kk=1,ncatch
-
-            write(75,1000) kk,area(kk)/1000000.,xlamda(kk),lte(kk),zbar0(kk),&
-            ff(kk),q0(kk)
-
-900      continue
-
-         close(75)
-
-      endif
-
-! ====================================================================
-! Format statement.
-! ====================================================================
-
-1000  format(i5,f15.3,5f10.3)
-
       return
 
       end subroutine rdtpmd
@@ -771,7 +712,7 @@ end subroutine FILE_CLOSE
 !
 ! ====================================================================
 
-      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,iprn,&
+      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,&
        xlai,xlai_wsc,albd,albw,emiss,za,zww,z0m,z0h,zpd,rsmin,rsmax,Rpl,&
        f3vpdpar,f4temppar,trefk,tcbeta,extinct,canclos,Tslope1,Tint1,&
        Tslope2,Tint2,Twslope1,Twint1,Twslope2,Twint2,Tsep,Twsep,&
@@ -1402,7 +1343,7 @@ end subroutine FILE_CLOSE
        smpet0,isoil,nrow,ncol,ipixnum,bcbeta,psic,thetas,thetar,xk0,zdeep,&
        tdeep,zmid,tmid0,rocpsoil,quartz,ifcoarse,srespar1,srespar2,srespar3,&
        a_ice,b_ice,bulk_dens,amp,phase,shift,inc_frozen,bcgamm,par,corr,&
-       idifind,ncatch,icatch,pixsiz,area,npix,psicav,iprn,tc,tw)
+       idifind,ncatch,icatch,pixsiz,area,npix,psicav,tc,tw)
 
       implicit none
       !include "SNOW.h"
@@ -1665,60 +1606,10 @@ end subroutine FILE_CLOSE
       print*,"rdsoil:  Calculated average psi! for each catchment"
 
 ! ====================================================================
-! Print summary table.
-! ====================================================================
-
-      if (iprn(78).eq.1) then
-
-         do 580 kk=1,nsoil
-
-            write(78,1000) kk,bcbeta(kk),psic(kk)*100,thetas(kk),&
-                           thetar(kk),xk0(kk)*3600000.
-
-580      continue
-
-      endif
-
-! ====================================================================
-! Print fractional coverage of soils types in each catchment.
-! ====================================================================
-
-      if (iprn(79).eq.1) then
-
-         do 700 jj=1,ncatch
-
-            write (79,1100) jj,area(jj)/1000000.
-
-            do 650 kk=1,nsoil
-
-               write(79,1110) kk,frsoil(kk,jj)*100
-
-650         continue
-
-            write(79,*)
-
-700      continue
-
-         write(79,1120)
-
-         do 800 kk=1,nsoil
-
-            write(79,1110) kk,frsoil(kk,ncatch+1)*100
-
-800      continue
-
-      endif        
-
-      print*,"rdsoil:  Printed summary tables"
-
-! ====================================================================
 ! Format statement.
 ! ====================================================================
 
 1000  format (i5,5f10.3)
-1100  format ('Catchment Number',i4,' (Area = ',f8.2,' km^2):')
-1110  format ('   Soil Type',i4,':',f7.2,'%')
-1120  format ('Total Area:')
 
       return
 
