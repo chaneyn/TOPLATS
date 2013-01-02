@@ -589,7 +589,7 @@ iopsmini = GLOBAL%iopsmini
 
       else if(ioppet.eq.1)then
 
-        call petpen(tcel,vpsat,vpdef,f1par,albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,albd,&
        xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
@@ -727,13 +727,32 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
-  subroutine petpen(tcel,vpsat,vpdef,f1par,albd,xlai,rsd,rsmin,&
-       rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
+  subroutine petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,&
+       albd,xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
 
       implicit none
       include "help/petpen.h"
+
+      type (GRID_MET_template) :: GRID_MET
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+
+      albd = GRID_VEG%albd
+      xlai = GRID_VEG%xlai
+      rsd = GRID_MET%rsd
+      rsmin = GRID_VEG%rsmin
+      rsmax = GRID_VEG%rsmax
+      Rpl = GRID_VEG%Rpl
+      trefk = GRID_VEG%trefk
+      rnetpn = GRID_VARS%rnetpn
+      gbspen = GRID_VARS%gbspen
+      rescan = GRID_VEG%rescan
+      row = GRID_VARS%row
+      cp = GRID_VARS%cp
+
+
 
 ! ====================================================================
 ! Calculate the atmospheri! vapor pressure deficit and slope of
