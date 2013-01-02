@@ -159,65 +159,45 @@ contains
 ! Evaporation and condensation.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%ettot(kk) = zero
-         CAT_VARS%etstsum(kk) = zero
-         CAT_VARS%etwtsum(kk) = zero
-         CAT_VARS%etbssum(kk) = zero
-         CAT_VARS%etdcsum(kk) = zero
-         CAT_VARS%etwcsum(kk) = zero
-         CAT_VARS%etlakesum(kk) = zero
-         CAT_VARS%contot(kk) = zero
+         CAT(kk)%ettot = zero
+         CAT(kk)%etstsum = zero
+         CAT(kk)%etwtsum = zero
+         CAT(kk)%etbssum = zero
+         CAT(kk)%etdcsum = zero
+         CAT(kk)%etwcsum = zero
+         CAT(kk)%etlakesum = zero
+         CAT(kk)%contot = zero
 
 ! --------------------------------------------------------------------
 ! Infiltration/runoff/precipitation.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%pptsum(kk) = zero
-         CAT_VARS%pnetsum(kk) = zero
-         CAT_VARS%sxrtot(kk) = zero
-         CAT_VARS%xixtot(kk) = zero
-         CAT_VARS%qsurf(kk) = zero
-         CAT_VARS%ranrun(kk) = zero
-         CAT_VARS%conrun(kk) = zero
+         CAT(kk)%pptsum = zero
+         CAT(kk)%pnetsum = zero
+         CAT(kk)%sxrtot = zero
+         CAT(kk)%xixtot = zero
+         CAT(kk)%qsurf = zero
+         CAT(kk)%ranrun = zero
+         CAT(kk)%conrun = zero
 
 ! --------------------------------------------------------------------
 ! Vertical soil moisture fluxes and water table updating.
 ! --------------------------------------------------------------------
 
          CAT_VARS%zbar(kk) = CAT_VARS%zbar1(kk)
-         CAT_VARS%capsum(kk) = zero
-         CAT_VARS%gwtsum(kk) = zero
-         CAT_VARS%rzpsum(kk) = zero
-         CAT_VARS%tzpsum(kk) = zero
+         CAT(kk)%capsum = zero
+         CAT(kk)%gwtsum = zero
+         CAT(kk)%rzpsum = zero
+         CAT(kk)%tzpsum = zero
 
 ! --------------------------------------------------------------------
 ! State variables.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%fwcat(kk) = zero
+         CAT(kk)%fwcat = zero
 
-! 100   continue
-
-CAT%ettot = CAT_VARS%ettot
-CAT%etwtsum = CAT_VARS%etwtsum
-CAT%etbssum = CAT_VARS%etbssum
-CAT%etdcsum = CAT_VARS%etdcsum
-CAT%etwcsum = CAT_VARS%etwcsum
-CAT%etlakesum = CAT_VARS%etlakesum
-CAT%pptsum = CAT_VARS%pptsum
-CAT%pnetsum = CAT_VARS%pnetsum
-CAT%sxrtot = CAT_VARS%sxrtot
-CAT%xixtot = CAT_VARS%xixtot
-CAT%qsurf = CAT_VARS%qsurf
-CAT%ranrun = CAT_VARS%ranrun
-CAT%conrun = CAT_VARS%conrun
 CAT%zbar = CAT_VARS%zbar
 CAT%zbar1 = CAT_VARS%zbar1
-CAT%capsum = CAT_VARS%capsum
-CAT%gwtsum = CAT_VARS%gwtsum
-CAT%rzpsum = CAT_VARS%rzpsum
-CAT%tzpsum = CAT_VARS%tzpsum
-CAT%fwcat = CAT_VARS%fwcat
         enddo
         return
       

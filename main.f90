@@ -226,7 +226,7 @@ call OMP_SET_NUM_THREADS(8)
 
        REG,&
 
-! DiGLOBAL%fferent option parameters
+! Different option parameters
 
        GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopsmini,GLOBAL%ikopt,&
        GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
@@ -293,25 +293,6 @@ call OMP_SET_NUM_THREADS(8)
 !$OMP END DO
 !$OMP END PARALLEL
 
-!Catchment Variables
-CAT_VARS%etstsum = CAT%etstsum
-CAT_VARS%etwtsum = CAT%etwtsum
-CAT_VARS%etbssum = CAT%etbssum
-CAT_VARS%etdcsum = CAT%etdcsum
-CAT_VARS%etwcsum = CAT%etwcsum
-CAT_VARS%contot = CAT%contot
-CAT_VARS%pptsum = CAT%pptsum
-CAT_VARS%pnetsum = CAT%pnetsum
-CAT_VARS%qsurf = CAT%qsurf
-CAT_VARS%sxrtot = CAT%sxrtot
-CAT_VARS%xixtot = CAT%xixtot
-CAT_VARS%ranrun = CAT%ranrun
-CAT_VARS%conrun = CAT%conrun
-CAT_VARS%gwtsum = CAT%gwtsum
-CAT_VARS%capsum = CAT%capsum
-CAT_VARS%tzpsum = CAT%tzpsum
-CAT_VARS%rzpsum = CAT%rzpsum
-
 !GRID variables
 etpix = GRID%VARS%etpix
 
@@ -328,20 +309,20 @@ etpix = GRID%VARS%etpix
              s_nr_rzpsum(ic)=0.0
 
             call catflx(i,ic,GLOBAL%area(ic),GLOBAL%pixsiz,&
-                r_lakearea(ic),CAT_VARS%ettot(ic),&
-       CAT_VARS%etstsum(ic),CAT_VARS%etwtsum(ic),CAT_VARS%etlakesum(ic),&
-       CAT_VARS%etbssum(ic),CAT(ic)%fbs,CAT_VARS%etdcsum(ic),&
-       CAT_VARS%etwcsum(ic),CAT_VARS%pptsum(ic),CAT_VARS%pnetsum(ic),CAT_VARS%contot(ic),&
-       CAT_VARS%qsurf(ic),CAT_VARS%sxrtot(ic),CAT_VARS%xixtot(ic),CAT_VARS%ranrun(ic),&
-       CAT_VARS%conrun(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),CAT_VARS%tzpsum(ic),&
-       CAT_VARS%rzpsum(ic),CAT_VARS%fwcat(ic),GLOBAL%iprn,&
+                r_lakearea(ic),CAT(ic)%ettot,&
+       CAT(ic)%etstsum,CAT(ic)%etwtsum,CAT(ic)%etlakesum,&
+       CAT(ic)%etbssum,CAT(ic)%fbs,CAT(ic)%etdcsum,&
+       CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
+       CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
+       CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
+       CAT(ic)%rzpsum,CAT(ic)%fwcat,GLOBAL%iprn,&
        s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
        s_nr_tzpsum(ic),s_nr_rzpsum(ic))
 
                call upzbar(i,ic,GLOBAL%iopbf,GLOBAL%q0(ic),&
-       GLOBAL%ff(ic),CAT_VARS%zbar(ic),GLOBAL%dtil(ic),&
-       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT_VARS%gwtsum(ic),CAT_VARS%capsum(ic),GLOBAL%area(ic),&
-       r_lakearea(ic),GLOBAL%dt,CAT_VARS%etwtsum(ic),CAT_VARS%rzpsum(ic),CAT_VARS%tzpsum(ic),CAT(ic)%psicav,&
+       GLOBAL%ff(ic),CAT(ic)%zbar,GLOBAL%dtil(ic),&
+       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT(ic)%gwtsum,CAT(ic)%capsum,GLOBAL%area(ic),&
+       r_lakearea(ic),GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
        GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
        GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
        GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
@@ -373,8 +354,7 @@ call FILE_CLOSE()
 ! ####################################################################
 
 call fruit_summary !Summarize the fruit output for this time step
-call fruit_finalize !Finalize the fruit library
-
+call fruit_finalize !Finalize the fruit l
       stop
 
       end
