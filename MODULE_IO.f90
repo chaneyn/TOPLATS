@@ -137,7 +137,7 @@ contains
 ! ====================================================================
 
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
-       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%iprn,GLOBAL%ixpix,GLOBAL%iypix,&
+       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%ixpix,GLOBAL%iypix,&
        GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
        GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,GLOBAL%icatch,&
        GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
@@ -153,7 +153,7 @@ contains
 ! ====================================================================
 
       call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ilandc,&
-       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,GLOBAL%iprn,&
+       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
        GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
@@ -184,7 +184,7 @@ contains
        GRID%SOIL%bulk_dens,GRID%SOIL%amp,GRID%SOIL%phase,GRID%SOIL%shift,&
        GLOBAL%inc_frozen,GRID%SOIL%bcgamm,GRID%SOIL%par,GRID%SOIL%corr,GLOBAL%idifind,&
        GLOBAL%ncatch,GLOBAL%icatch,GLOBAL%pixsiz,GLOBAL%area,&
-       GLOBAL%npix,CAT%psicav,GLOBAL%iprn,GRID%VEG%tc,GRID%VEG%tw)
+       GLOBAL%npix,CAT%psicav,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
 
@@ -212,7 +212,7 @@ contains
       GLOBAL%FRCOV = 0
       GLOBAL%frcbeta = 999
 
-      if (GLOBAL%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
+      !if (GLOBAL%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
       if (GLOBAL%FRCOV.eq.0) print*,'rddata:  Frac. rain.l cover not included'
 
 ! ====================================================================
@@ -360,7 +360,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,iprn,&
+      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,&
        ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,icatch,area,&
        atanb,dtil,zbar1,&
        iwel,wslp,&
@@ -568,29 +568,6 @@ allocate(GRID(nrow*ncol))
 
 800   continue
 
-! ====================================================================
-! Print table of results for each catchment.
-! ====================================================================
-
-      if (iprn(75).eq.1) then
-
-         do 900 kk=1,ncatch
-
-            write(75,1000) kk,area(kk)/1000000.,xlamda(kk),lte(kk),zbar0(kk),&
-            ff(kk),q0(kk)
-
-900      continue
-
-         close(75)
-
-      endif
-
-! ====================================================================
-! Format statement.
-! ====================================================================
-
-1000  format(i5,f15.3,5f10.3)
-
       return
 
       end subroutine rdtpmd
@@ -743,7 +720,7 @@ end subroutine FILE_CLOSE
 !
 ! ====================================================================
 
-      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,iprn,&
+      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,&
        xlai,xlai_wsc,albd,albw,emiss,za,zww,z0m,z0h,zpd,rsmin,rsmax,Rpl,&
        f3vpdpar,f4temppar,trefk,tcbeta,extinct,canclos,Tslope1,Tint1,&
        Tslope2,Tint2,Twslope1,Twint1,Twslope2,Twint2,Tsep,Twsep,&
@@ -1374,7 +1351,7 @@ end subroutine FILE_CLOSE
        smpet0,isoil,nrow,ncol,ipixnum,bcbeta,psic,thetas,thetar,xk0,zdeep,&
        tdeep,zmid,tmid0,rocpsoil,quartz,ifcoarse,srespar1,srespar2,srespar3,&
        a_ice,b_ice,bulk_dens,amp,phase,shift,inc_frozen,bcgamm,par,corr,&
-       idifind,ncatch,icatch,pixsiz,area,npix,psicav,iprn,tc,tw)
+       idifind,ncatch,icatch,pixsiz,area,npix,psicav,tc,tw)
 
       implicit none
       !include "SNOW.h"
@@ -1637,60 +1614,10 @@ end subroutine FILE_CLOSE
       print*,"rdsoil:  Calculated average psi! for each catchment"
 
 ! ====================================================================
-! Print summary table.
-! ====================================================================
-
-      if (iprn(78).eq.1) then
-
-         do 580 kk=1,nsoil
-
-            write(78,1000) kk,bcbeta(kk),psic(kk)*100,thetas(kk),&
-                           thetar(kk),xk0(kk)*3600000.
-
-580      continue
-
-      endif
-
-! ====================================================================
-! Print fractional coverage of soils types in each catchment.
-! ====================================================================
-
-      if (iprn(79).eq.1) then
-
-         do 700 jj=1,ncatch
-
-            write (79,1100) jj,area(jj)/1000000.
-
-            do 650 kk=1,nsoil
-
-               write(79,1110) kk,frsoil(kk,jj)*100
-
-650         continue
-
-            write(79,*)
-
-700      continue
-
-         write(79,1120)
-
-         do 800 kk=1,nsoil
-
-            write(79,1110) kk,frsoil(kk,ncatch+1)*100
-
-800      continue
-
-      endif        
-
-      print*,"rdsoil:  Printed summary tables"
-
-! ====================================================================
 ! Format statement.
 ! ====================================================================
 
 1000  format (i5,5f10.3)
-1100  format ('Catchment Number',i4,' (Area = ',f8.2,' km^2):')
-1110  format ('   Soil Type',i4,':',f7.2,'%')
-1120  format ('Total Area:')
 
       return
 

@@ -94,7 +94,6 @@ contains
       persac = REG%persac
       peruac = REG%peruac
       perusc = REG%perusc
-      iprn = GLOBAL%iprn
       wcsum = REG%wcsum
       zbarrg = REG%zbarrg
       MODE = GLOBAL%MODE

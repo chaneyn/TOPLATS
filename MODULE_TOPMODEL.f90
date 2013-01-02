@@ -16,11 +16,10 @@ contains
 !
 ! ====================================================================
 
-  subroutine instep(i,ncatch,djday,dt,CAT_VARS,REG,CAT)
+  subroutine instep(i,ncatch,djday,dt,REG,CAT)
 
       implicit none
       include "help/instep.h"
-      type (CAT_VARS_template) :: CAT_VARS
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
 
@@ -184,7 +183,7 @@ contains
 ! Vertical soil moisture fluxes and water table updating.
 ! --------------------------------------------------------------------
 
-         CAT_VARS%zbar(kk) = CAT_VARS%zbar1(kk)
+         CAT(kk)%zbar = CAT(kk)%zbar1
          CAT(kk)%capsum = zero
          CAT(kk)%gwtsum = zero
          CAT(kk)%rzpsum = zero
@@ -196,8 +195,6 @@ contains
 
          CAT(kk)%fwcat = zero
 
-CAT%zbar = CAT_VARS%zbar
-CAT%zbar1 = CAT_VARS%zbar1
         enddo
         return
       
@@ -217,7 +214,7 @@ CAT%zbar1 = CAT_VARS%zbar1
       subroutine catflx(i,ic,area,pixsiz,r_lakearea,ettot,&
        etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
        etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
-       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,iprn,&
+       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,&
        s_nr_etwtsum,s_nr_gwtsum,s_nr_capsum,s_nr_tzpsum,s_nr_rzpsum)
 
       implicit none
@@ -313,22 +310,6 @@ CAT%zbar1 = CAT_VARS%zbar1
       fwcat = fwcat / catvegpix / (one-fbs)
 
 ! ====================================================================
-! Write evaporation and infiltration/runoff results if required.
-! ====================================================================
-
-      if (iprn(80).eq.1)then
-        write(80,1000) i,ic,ettot*3600000.,etbssum*3600000.,&
-                       etdcsum*3600000.,etwcsum*3600000.,&
-                       fwcat,fbs
-        endif
-      if (iprn(81).eq.1)then
-        write(81,1100) i,ic,pptsum*3600000.,pnetsum*3600000.,&
-                       contot*3600000.,&
-                       (ranrun+contot)*3600000.,&
-                       (pnetsum+contot-ranrun-contot)*3600000.,&
-                       sxrtot*3600000.,xixtot*3600000.
-        endif
-! ====================================================================
 ! Format statements.
 ! ====================================================================
 
@@ -352,7 +333,7 @@ CAT%zbar1 = CAT_VARS%zbar1
       subroutine upzbar(i,ic,iopbf,q0,ff,zbar,dtil,basink,dd,xlength,&
        gwtsum,capsum,area,r_lakearea,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
        ilandc,npix,icatch,zw,psic,isoil,zrzmax,&
-       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,iprn,pixsiz)
+       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,pixsiz)
 
       implicit none
 !       include "SNOW.h"
@@ -473,19 +454,8 @@ CAT%zbar1 = CAT_VARS%zbar1
       zbar1rg = zbar1rg + zbar1*area/(pixsiz*pixsiz)
 
 ! ====================================================================
-! Write results.
-! ====================================================================
-
-      if(iprn(82).eq.1)&
-        write(82,1000) i,ic,zbar1,zbar,capsum*3600000.,&
-                       gwtsum*3600000.,etwtsum*3600000.,&
-                       qb/area*3600000.,rzpsum,tzpsum
-
-! ====================================================================
 ! Format statements.
 ! ====================================================================
-
-1000  format(2i5,2f7.3,4f10.5,2f7.3)
 
       return
 
@@ -510,7 +480,7 @@ CAT%zbar1 = CAT_VARS%zbar1
 
 ! General vegetation parameters
 
-       ivgtyp,i,iprn,canclos,ilandc,dt,&
+       ivgtyp,i,canclos,ilandc,dt,&
 
 ! Condensation variables
 
@@ -1002,30 +972,6 @@ epwms = GRID_VARS%epwms
          tkmid=0.d0
          tkmidpet=0.d0
          tskinact_moss=0.d0
-
-      endif
-
-      if (iprn(110).eq.1) then
-
-         write (110,125) i,rnact_moss,xleact_moss,hact_moss,&
-                         gact_moss,dshact_moss,tskinact_moss,&
-                         tkact_moss,tkmid_moss,r_mossm
-
-      endif
-
-      if (iprn(111).eq.1) then
-
-         write (111,126) i,rnact_us,xleact_us,hact_us,&
-                         gact_us,dshact_us,&
-                         tkact_us,tkmid_us
-
-      endif
-
-      if (iprn(112).eq.1) then
-
-         write (112,126) i,rnact,xleact,hact,gact,&
-                         dshact,&
-                         tkact,tkmid
 
       endif
 

@@ -1038,19 +1038,13 @@ type GLOBAL_template
         !Soil
         real*8 :: smpet0
 	!OPTIONS template
-        integer,dimension(MAX_FIL) :: iprn,nseries,icurser
-        integer,dimension(MAX_FIL,MAX_SER) :: ioutst,ioutsp,iouten
-        integer,dimension(MAX_CAT) :: icount
         integer,dimension(MAX_ROW,MAX_COL) :: ipixnum
         integer,dimension(MAX_PIX) :: ixpix,iypix,icatch,ilandc,isoil
-        !integer,dimension(MAX_VEG) :: ivgtyp
         integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
         integer :: iopsmini
-        integer :: i_und(1+UST_FLG*(MAX_VEG-1))
-        integer :: i_moss(1+MOS_FLG*(MAX_VEG-1))
         ! Mode in which to run the program
         integer :: MODE,FRCOV,img_opt,dtveg
         real*8 :: frcbeta
@@ -1077,21 +1071,5 @@ type GLOBAL_template
         real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
 
 end type GLOBAL_template
-
-type CAT_VARS_template
-
-        !Evaporation and condensation
-        real*8,dimension(MAX_CAT) :: ettot,etstsum,etwtsum,etbssum,&
-                etdcsum,etwcsum,etlakesum,contot
-        !Infiltration/runoff/precipitation
-        real*8,dimension(MAX_CAT) :: pptsum,pnetsum,sxrtot,xixtot,&
-                qsurf,ranrun,conrun
-        !Vertical soil moisture fluxes and water table updating
-        real*8,dimension(MAX_CAT) :: zbar,zbar1,capsum,gwtsum,&
-                rzpsum,tzpsum
-        !State variables
-        real*8,dimension(MAX_CAT) :: fwcat
-
-end type CAT_VARS_template
 
 END MODULE MODULE_VARIABLES

@@ -54,7 +54,6 @@
 
       implicit none
       type (GLOBAL_template) :: GLOBAL
-      type (CAT_VARS_template) :: CAT_VARS
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -83,7 +82,7 @@ call init_fruit
 ! ####################################################################
 
       call rddata(GLOBAL,GRID,REG,CAT)
-      CAT_VARS%zbar1 = GLOBAL%zbar1
+      CAT%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
 ! Loop through the simulation time.
@@ -109,7 +108,7 @@ call init_fruit
 ! ####################################################################
 
         call instep(i,GLOBAL%ncatch,djday,GLOBAL%dt,&
-                CAT_VARS,REG,CAT)
+                REG,CAT)
 
 ! ####################################################################
 ! Read meteorological data.
@@ -270,7 +269,7 @@ call OMP_SET_NUM_THREADS(8)
 ! General vegetation parameters
 
        GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
-       i,GLOBAL%iprn,&
+       i,&
        canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
 
 ! Grid data
@@ -315,7 +314,7 @@ etpix = GRID%VARS%etpix
        CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
        CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
        CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
-       CAT(ic)%rzpsum,CAT(ic)%fwcat,GLOBAL%iprn,&
+       CAT(ic)%rzpsum,CAT(ic)%fwcat,&
        s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
        s_nr_tzpsum(ic),s_nr_rzpsum(ic))
 
@@ -325,7 +324,7 @@ etpix = GRID%VARS%etpix
        r_lakearea(ic),GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
        GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
        GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
-       GRID%VARS%rzsm1,CAT_VARS%zbar1(ic),REG%qbreg,REG%zbar1rg,GLOBAL%iprn,GLOBAL%pixsiz)
+       GRID%VARS%rzsm1,CAT(ic)%zbar1,REG%qbreg,REG%zbar1rg,GLOBAL%pixsiz)
 
          enddo
 
