@@ -187,7 +187,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Soil parameters
         
        GRID(GRID(ipix)%SOIL%isoil)%SOIL,&
-       GLOBAL%ifcoarse(GRID(ipix)%SOIL%isoil),&
+       GRID(GRID(ipix)%SOIL%isoil)%SOIL%ifcoarse,&
        GLOBAL%zrzmax,&
 
 ! Vegetation parameters
@@ -207,7 +207,7 @@ call OMP_SET_NUM_THREADS(8)
        GLOBAL%cuminf(ipix),&
        GLOBAL%sorp(ipix),GLOBAL%cc(ipix),&
        GLOBAL%sesq(ipix),GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
-       GLOBAL%idifind(GRID(ipix)%SOIL%isoil),&
+       GRID(GRID(ipix)%SOIL%isoil)%SOIL%idifind,&
        GRID(ipix)%VEG%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
        GLOBAL%smpet0,&
 
