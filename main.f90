@@ -145,7 +145,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Calculate the matrix indices depending on the land cover geometry.
 ! ####################################################################
 
-               call clc_ind (GLOBAL%ilandc(ipix),ipix,SNOW_RUN,sw_lc,sw_px,SNW_FLG,s_lc,s_px)
+               call clc_ind (GRID(ipix)%VEG%ilandc,ipix,SNOW_RUN,sw_lc,sw_px,SNW_FLG,s_lc,s_px)
 
 ! ####################################################################
 ! Run the point model
@@ -159,7 +159,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
+       GRID(GRID(ipix)%VEG%ilandc)%VEG%ivgtyp,&
 
 ! Snow pack variables
 
@@ -182,17 +182,17 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Temperature variables
 
-       Tdeepstep(GLOBAL%isoil(ipix)),&
+       Tdeepstep(GRID(ipix)%SOIL%isoil),&
 
 ! Soil parameters
         
-       GRID(GLOBAL%isoil(ipix))%SOIL,&
-       GLOBAL%ifcoarse(GLOBAL%isoil(ipix)),&
+       GRID(GRID(ipix)%SOIL%isoil)%SOIL,&
+       GLOBAL%ifcoarse(GRID(ipix)%SOIL%isoil),&
        GLOBAL%zrzmax,&
 
 ! Vegetation parameters
 
-       GRID(GLOBAL%ilandc(ipix))%VEG,&
+       GRID(GRID(ipix)%VEG%ilandc)%VEG,&
 
 ! Constants
        GLOBAL%toleb,GLOBAL%maxnri,&
@@ -206,9 +206,9 @@ call OMP_SET_NUM_THREADS(8)
        GRID(ipix)%VARS,&
        GLOBAL%cuminf(ipix),&
        GLOBAL%sorp(ipix),GLOBAL%cc(ipix),&
-       GLOBAL%sesq(ipix),GRID(GLOBAL%isoil(ipix))%SOIL%corr,&
-       GLOBAL%idifind(GLOBAL%isoil(ipix)),&
-       GRID(ipix)%VEG%wcip1,GRID(GLOBAL%isoil(ipix))%SOIL%par,&
+       GLOBAL%sesq(ipix),GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
+       GLOBAL%idifind(GRID(ipix)%SOIL%isoil),&
+       GRID(ipix)%VEG%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
        GLOBAL%smpet0,&
 
 ! Storm parameters
@@ -219,7 +219,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Topmodel parameters
 
-       GLOBAL%ff(GLOBAL%icatch(ipix)),GLOBAL%atanb(ipix),GLOBAL%xlamda(GLOBAL%icatch(ipix)),&
+       GLOBAL%ff(GRID(ipix)%VARS%icatch),GLOBAL%atanb(ipix),GLOBAL%xlamda(GRID(ipix)%VARS%icatch),&
 
 ! Regional saturation parameters
 
@@ -231,7 +231,7 @@ call OMP_SET_NUM_THREADS(8)
        GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
 
 ! Catchment data
-       CAT(GLOBAL%icatch(ipix)))
+       CAT(GRID(ipix)%VARS%icatch))
 
 !TEMPORARY PASS BACK TO ORIGINAL VARIABLES
        !GRID
@@ -259,7 +259,7 @@ call OMP_SET_NUM_THREADS(8)
 ! Sum the local water and energy balance fluxes.
 ! ....................................................................
 
-               call sumflx(REG,CAT(GLOBAL%icatch(ipix)),&
+               call sumflx(REG,CAT(GRID(ipix)%VARS%icatch),&
        GRID(ipix)%VARS,&        
 
 ! Factor to rescale all the local fluxes with
@@ -268,9 +268,9 @@ call OMP_SET_NUM_THREADS(8)
 
 ! General vegetation parameters
 
-       GRID(GLOBAL%ilandc(ipix))%VEG%ivgtyp,&
+       GRID(GRID(ipix)%VEG%ilandc)%VEG%ivgtyp,&
        i,&
-       canclos(GLOBAL%ilandc(ipix)),GLOBAL%ilandc(ipix),GLOBAL%dt,&
+       canclos(GRID(ipix)%VEG%ilandc),GRID(ipix)%VEG%ilandc,GLOBAL%dt,&
 
 ! Grid data
 
@@ -279,13 +279,13 @@ call OMP_SET_NUM_THREADS(8)
 ! Soil moisture variables
 
        GLOBAL%inc_frozen,&
-       GRID(GLOBAL%isoil(ipix))%SOIL%thetas,&
+       GRID(GRID(ipix)%SOIL%isoil)%SOIL%thetas,&
        Swq(sw_px),Swq_us(s_px),&
        Sdepth(sw_px),Sdepth_us(s_px),&
 
 ! GRID Variables
 
-       Tdeepstep(GLOBAL%isoil(ipix)))
+       Tdeepstep(GRID(ipix)%SOIL%isoil))
 
             enddo
 
@@ -315,8 +315,8 @@ etpix = GRID%VARS%etpix
        GLOBAL%ff(ic),CAT(ic)%zbar,GLOBAL%dtil(ic),&
        GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT(ic)%gwtsum,CAT(ic)%capsum,GLOBAL%area(ic),&
        r_lakearea(ic),GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
-       GRID%VEG%ivgtyp,GLOBAL%ilandc,GLOBAL%npix,GLOBAL%icatch,zw,&
-       GRID%SOIL%psic,GLOBAL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
+       GRID%VEG%ivgtyp,GRID%VEG%ilandc,GLOBAL%npix,GRID%VARS%icatch,zw,&
+       GRID%SOIL%psic,GRID%SOIL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
        GRID%VARS%rzsm1,CAT(ic)%zbar1,REG%qbreg,REG%zbar1rg,GLOBAL%pixsiz)
 
          enddo

@@ -139,7 +139,7 @@ contains
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
        GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%ixpix,GLOBAL%iypix,&
        GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
-       GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,GLOBAL%icatch,&
+       GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,&
        GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
        GLOBAL%iwel,GLOBAL%wslp,&
        GRID,CAT)
@@ -150,7 +150,7 @@ contains
 ! Read in and initialize vegatation parameters.
 ! ====================================================================
 
-      call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ilandc,&
+      call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GRID%VEG%ilandc,&
        GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
@@ -175,13 +175,13 @@ contains
 ! ====================================================================
 
       call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,GLOBAL%smpet0,&
-       GLOBAL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%SOIL%bcbeta,&
+       GRID%SOIL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%SOIL%bcbeta,&
        GRID%SOIL%psic,GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%xk0,GRID%SOIL%zdeep,GRID%SOIL%tdeep,GRID%SOIL%zmid,&
        GRID%SOIL%tmid0,GRID%SOIL%rocpsoil,GRID%SOIL%quartz,GLOBAL%ifcoarse,&
        GRID%SOIL%srespar1,GRID%SOIL%srespar2,GRID%SOIL%srespar3,GRID%SOIL%a_ice,GRID%SOIL%b_ice,&
        GRID%SOIL%bulk_dens,GRID%SOIL%amp,GRID%SOIL%phase,GRID%SOIL%shift,&
        GLOBAL%inc_frozen,GRID%SOIL%bcgamm,GRID%SOIL%par,GRID%SOIL%corr,GLOBAL%idifind,&
-       GLOBAL%ncatch,GLOBAL%icatch,GLOBAL%pixsiz,GLOBAL%area,&
+       GLOBAL%ncatch,GRID%VARS%icatch,GLOBAL%pixsiz,GLOBAL%area,&
        GLOBAL%npix,CAT%psicav,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
@@ -213,11 +213,11 @@ contains
 ! interstorm flags and times.
 ! ====================================================================
 
-      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GLOBAL%ilandc,&
+      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%VEG%ilandc,&
        GLOBAL%npix,GLOBAL%inc_frozen,GLOBAL%istorm,&
        GLOBAL%intstm,GLOBAL%istmst,intstp,GLOBAL%istorm_moss,&
        GLOBAL%intstm_moss,GLOBAL%istmst_moss,GLOBAL%intstp_moss,&
-       GLOBAL%isoil,GLOBAL%idifind,GLOBAL%smpet0,r_mossmpet0,GLOBAL%endstm,&
+       GRID%SOIL%isoil,GLOBAL%idifind,GLOBAL%smpet0,r_mossmpet0,GLOBAL%endstm,&
        GRID%VARS%rzsm1,GRID%VARS%tzsm1,GRID%VARS%r_mossm1,&
        GRID%VARS%r_mossm,GRID%VARS%rzsm1_u,GRID%VARS%tzsm1_u,&
        GRID%VARS%rzsm1_f,GRID%VARS%tzsm1_f,GRID%VARS%r_mossm1_u,&
@@ -354,7 +354,7 @@ contains
 ! ====================================================================
 
       subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,&
-       ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,icatch,area,&
+       ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,area,&
        atanb,dtil,zbar1,&
        iwel,wslp,&
        GRID,CAT)
@@ -393,6 +393,7 @@ contains
 
 allocate(CAT(ncatch))
 allocate(GRID(nrow*ncol))
+icatch = GRID%VARS%icatch
 
 ! ====================================================================
 ! Read in the soils-topographi! index map and set up the 
@@ -457,6 +458,7 @@ allocate(GRID(nrow*ncol))
       call rdimgi(icatch,10,nrow,ncol,ipixnum)
 
       print*,'rdtpmd:  Read catchment image'
+      GRID%VARS%icatch = icatch
 
 ! --------------------------------------------------------------------&
 ! Check the dimensioning of the number of catchments.
