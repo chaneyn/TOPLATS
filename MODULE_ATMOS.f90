@@ -517,7 +517,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -533,12 +533,12 @@ iopsmini = GLOBAL%iopsmini
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -554,7 +554,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
        tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -880,7 +880,7 @@ dspet = GRID_VARS%dspet
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -896,12 +896,12 @@ dspet = GRID_VARS%dspet
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -917,7 +917,7 @@ dspet = GRID_VARS%dspet
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,&
        rocpsoil,tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -951,6 +951,13 @@ dspet = GRID_VARS%dspet
 
       implicit none
       include "help/peteb.h"
+
+
+      type (GRID_MET_template) :: GRID_MET
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+      type (GRID_SOIL_template) :: GRID_SOIL
+      type (GLOBAL_template) :: GLOBAL
 
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
