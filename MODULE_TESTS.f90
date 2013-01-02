@@ -96,7 +96,6 @@ contains
       perusc = REG%perusc
       wcsum = REG%wcsum
       zbarrg = REG%zbarrg
-      MODE = GLOBAL%MODE
       ivgtyp = GRID%VEG%ivgtyp
       Swqsum = REG%Swqsum
       Swq_ussum = REG%Swq_ussum
@@ -111,8 +110,6 @@ contains
 
       tot=0.d0
 
-      if (MODE.eq.1) then
-
          do ic=1,ncatch
 
             tot=tot+r_lakearea(ic)/pixsiz/pixsiz
@@ -121,43 +118,9 @@ contains
 
          nlakpix=tot
 
-      endif
-
-      if (MODE.eq.2) then
-
-         do ipix=1,npix
-
-            tot=tot+f_lake(ipix)
-
-         enddo
-
-         nlakpix=tot
-
-      endif
-
       nvegpix=npix-nlakpix
 
-      vegd=0.d0
-
-      if (MODE.eq.1) vegd=1.d0
-
-      if (MODE.eq.2) then
-
-         do ipix=1,npix
-
-            do landc=1,nlcs
-
-               if (ivgtyp(veg(ipix,landc)).ge.0) then
-
-                  vegd=vegd+veg_pdf(ipix,landc)/real(npix)
-
-               endif
-
-            enddo
-
-         enddo
-
-      endif
+      vegd=1.d0
 
 ! ====================================================================
 ! Compute regional water balance fluxes.
@@ -395,17 +358,7 @@ contains
 
       endif
 
-      if (MODE.eq.1) then
-
          zbar1rg = zbar1rg / npix
-
-      endif
-
-      if (MODE.eq.2) then
-
-         zbar1rg = ( zbar1rg / npix )
-
-      endif
 
 ! --------------------------------------------------------------------
 ! Find percentage of land cover saturation states.

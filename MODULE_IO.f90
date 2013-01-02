@@ -142,9 +142,7 @@ contains
        GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,GLOBAL%icatch,&
        GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
        GLOBAL%iwel,GLOBAL%wslp,&
-       GLOBAL%lat_deg,GLOBAL%lat_min,GLOBAL%lng_deg,&
-       GLOBAL%lng_min,GLOBAL%lng_mer,GLOBAL%rlatitude,&
-       GLOBAL%rlongitude,GLOBAL%rlng_merid,GRID,CAT)
+       GRID,CAT)
 
       print*,'rddata:  Done reading TOPMODEL parameters'
 
@@ -208,12 +206,7 @@ contains
 ! Read in the mode in which to run the program.
 ! ====================================================================
 
-      GLOBAL%MODE = 1
-      GLOBAL%FRCOV = 0
       GLOBAL%frcbeta = 999
-
-      !if (GLOBAL%MODE.eq.1) print*,'rddata:  Running the model in dist. mode'
-      if (GLOBAL%FRCOV.eq.0) print*,'rddata:  Frac. rain.l cover not included'
 
 ! ====================================================================
 ! Initialize the simulation sum variables and storm.and.&
@@ -364,7 +357,6 @@ contains
        ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,icatch,area,&
        atanb,dtil,zbar1,&
        iwel,wslp,&
-       lat_deg,lat_min,lng_deg,lng_min,lng_mer,rlatitude,rlongitude,rlng_merid,&
        GRID,CAT)
 
       implicit none

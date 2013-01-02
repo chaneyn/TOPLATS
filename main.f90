@@ -302,11 +302,6 @@ etpix = GRID%VARS%etpix
 
          do ic=1,GLOBAL%ncatch
 
-             s_nr_gwtsum(ic)=0.0
-             s_nr_capsum(ic)=0.0
-             s_nr_tzpsum(ic)=0.0
-             s_nr_rzpsum(ic)=0.0
-
             call catflx(i,ic,GLOBAL%area(ic),GLOBAL%pixsiz,&
                 r_lakearea(ic),CAT(ic)%ettot,&
        CAT(ic)%etstsum,CAT(ic)%etwtsum,CAT(ic)%etlakesum,&
@@ -314,9 +309,7 @@ etpix = GRID%VARS%etpix
        CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
        CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
        CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
-       CAT(ic)%rzpsum,CAT(ic)%fwcat,&
-       s_nr_etwtsum(ic),s_nr_gwtsum(ic),s_nr_capsum(ic),&
-       s_nr_tzpsum(ic),s_nr_rzpsum(ic))
+       CAT(ic)%rzpsum,CAT(ic)%fwcat)
 
                call upzbar(i,ic,GLOBAL%iopbf,GLOBAL%q0(ic),&
        GLOBAL%ff(ic),CAT(ic)%zbar,GLOBAL%dtil(ic),&

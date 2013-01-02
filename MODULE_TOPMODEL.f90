@@ -214,8 +214,7 @@ contains
       subroutine catflx(i,ic,area,pixsiz,r_lakearea,ettot,&
        etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
        etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
-       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,&
-       s_nr_etwtsum,s_nr_gwtsum,s_nr_capsum,s_nr_tzpsum,s_nr_rzpsum)
+       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat)
 
       implicit none
 !       include "SNOW.h"
@@ -237,7 +236,6 @@ contains
       ettot = ettot / catpix
       etstsum = etstsum / catvegpix
       etwtsum = etwtsum / catvegpix
-      s_nr_etwtsum = s_nr_etwtsum / catvegpix
       etlakesum = etlakesum / catlakpix
 
       if (fbs.gt.0.) then
@@ -290,18 +288,14 @@ contains
 ! ====================================================================
 
       gwtsum = gwtsum / catvegpix
-      s_nr_gwtsum = s_nr_gwtsum / catvegpix
       capsum = capsum / catvegpix
-      s_nr_capsum = s_nr_capsum / catvegpix
 
 ! ====================================================================
 ! Compute average available porosity above the water table.
 ! ====================================================================
 
       tzpsum = tzpsum / catvegpix 
-      s_nr_tzpsum = s_nr_tzpsum / catvegpix 
       rzpsum = rzpsum / catvegpix 
-      s_nr_rzpsum = s_nr_rzpsum / catvegpix 
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.

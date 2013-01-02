@@ -700,201 +700,6 @@ MODULE MODULE_VARIABLES
       integer s_numnod(MAX_ATB,1+LAK_FLG*(MAX_VST-1),1+LAK_FLG*(MAX_PP1-1))
       integer s_mixmax(MAX_ATB,1+LAK_FLG*(MAX_VST-1),1+LAK_FLG*(MAX_PP1-1))
 
-! ====================================================================
-! STAT_NR.h
-! ====================================================================
-
-! Variables describing the storm/interstorm situation
-
-      integer s_nr_istmst(MAX_TOP,MAX_LAN,MAX_PP2)
-      integer s_nr_intstm(MAX_TOP,MAX_LAN,MAX_PP2)
-      integer s_nr_istmst_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      integer s_nr_intstm_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      integer s_nr_intstp(MAX_TOP,MAX_LAN,MAX_PP2)
-      integer s_nr_istorm(MAX_TOP,MAX_LAN,MAX_PP2)
-      integer s_nr_intstp_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      integer s_nr_istorm_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-
-      real*8 s_nr_xintst_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_xintst(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Snow pack variables
-
-      real*8 s_nr_PackWater(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_SurfWater(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_Swq(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_VaporMassFlux(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_TPack(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_TSurf(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_r_MeltEnergy(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_Outflow(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_xleact_snow(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_hact_snow(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_rn_snow(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_PackWater_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_SurfWater_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_Swq_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_VaporMassFlux_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_TPack_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_TSurf_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_MeltEnergy_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_Outflow_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_xleact_snow_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_hact_snow_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_rn_snow_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_alb_snow(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_precip_o(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_precip_u(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_dens(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_dens_us(MAX_TOP,1+SNW_FLG*(MAX_LAN-1),1+SNW_FLG*(MAX_PP2-1))
-      real*8 s_nr_dsty(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_dsty_us(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))      
-      real*8 s_nr_Sdepth(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-      real*8 s_nr_Sdepth_us(MAX_TOP,1+SNOW_RUN*(MAX_LAN-1),1+SNOW_RUN*(MAX_PP2-1))
-
-! Exfiltration parameters
-
-      integer s_nr_ievcon_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      integer s_nr_ievcon_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      integer s_nr_ievcon(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_sesq(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Infiltration parameters
-
-      integer s_nr_irntyp(MAX_TOP,MAX_LAN,MAX_PP2)
-
-      real*8 s_nr_cuminf(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_sorp(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_cc(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_xinact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_runtot(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Actual energy fluxes
-
-      real*8 s_nr_rnact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_xleact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_hact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_gact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tkact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tkmid(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_dshact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tkact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkmid_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_dshact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_rnact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_xleact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_hact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_gact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkmid_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_dshact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_rnact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_xleact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_hact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_gact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tskinact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_evtact(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_evtact_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_evtact_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-
-! Potential energy fluxes
-
-      real*8 s_nr_rnpet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_xlepet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_hpet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_gpet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tkpet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tkmidpet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_dspet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rnpet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_xlepet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_hpet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_gpet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkpet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkmidpet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_dspet_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_rnpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_xlepet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_hpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_gpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tkmidpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tskinpet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_dspet_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-
-! Potential evapotranspiration variables
-
-      real*8 s_nr_ebspot(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Canopy water balance variables
-
-      real*8 s_nr_wcip1(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_wsc(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_pnet(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_wcip1_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_wsc_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-
-! Soil moisture variables
-
-      real*8 s_nr_rzsm(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzsm1(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzsm_u(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzsm1_u(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzsm_f(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzsm1_f(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzdthetaidt(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rzdthetaudtemp(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzdthetaidt(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_zmoss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm1(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm_u(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm1_u(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm_f(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_r_mossm1_f(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-      real*8 s_nr_tzsm(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzsm1(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzsm_u(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzsm1_u(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzsm_f(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_tzsm1_f(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Energy balance variables
-
-      real*8 s_nr_rib(MAX_TOP,MAX_LAN,MAX_PP2)
-      real*8 s_nr_rib_us(MAX_TOP,1+UST_FLG*(MAX_LAN-1),1+UST_FLG*(MAX_PP2-1))
-      real*8 s_nr_rib_moss(MAX_TOP,1+MOS_FLG*(MAX_LAN-1),1+MOS_FLG*(MAX_PP2-1))
-
-! Topmodel variables
-
-      real*8 s_nr_zw(MAX_TOP,MAX_LAN,MAX_PP2)
-
-! Lake variables
-
-      real*8 s_nr_preca_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_tp_in(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_hice_in(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_hsnw_in(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_temp_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1),1+LAK_FLG*(MAX_NOD-1))
-      real*8 s_nr_tempi_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_hice_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_hsnow_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_xlat_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_xlong_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_eta_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_surface(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1),1+LAK_FLG*(MAX_NOD-1))
-      real*8 s_nr_fraci_a(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      real*8 s_nr_precacc(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-
-      integer s_nr_mixmax(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-      integer s_nr_numnod(MAX_TOP,1+LAK_FLG*(MAX_LAN-1),1+LAK_FLG*(MAX_PP2-1))
-
-! Water table updating variables
-
-      real*8 s_nr_zbar(MAX_CAT),s_nr_gwtsum(MAX_CAT)
-      real*8 s_nr_capsum(MAX_CAT),s_nr_etwtsum(MAX_CAT)
-      real*8 s_nr_rzpsum(MAX_CAT),s_nr_tzpsum(MAX_CAT)
-      real*8 s_nr_zbar1(MAX_CAT),FRT
       integer numc
 
 !All the data are converted to derived data types
@@ -1038,23 +843,15 @@ type GLOBAL_template
         !Soil
         real*8 :: smpet0
 	!OPTIONS template
-        integer,dimension(MAX_ROW,MAX_COL) :: ipixnum
+        integer,dimension(MAX_ROW,MAX_COL) :: ipixnum !IO
         integer,dimension(MAX_PIX) :: ixpix,iypix,icatch,ilandc,isoil
         integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
         integer :: iopsmini
-        ! Mode in which to run the program
-        integer :: MODE,FRCOV,img_opt,dtveg
+        integer :: dtveg
         real*8 :: frcbeta
-        ! File name prefix
-        character(len=200) :: fnimg(MAX_FIL)
-        ! Timing variables
-        integer :: ibeginhour,ibeginday,ibeginmonth,ibeginyear
-        ! Geographic variables
-        real*8 :: lat_deg,lat_min,lng_deg,lng_min,lng_mer,rlatitude,&
-                rlongitude,rlng_merid
 	!STORM PARAM
         integer,dimension(MAX_PIX) :: istorm,intstm,istmst,intstp
         integer,dimension(1+MOS_FLG*(MAX_PIX-1)) :: istorm_moss,intstm_moss,&
