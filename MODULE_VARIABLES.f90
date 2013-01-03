@@ -714,7 +714,7 @@ type GRID_SOIL_template
         real*8 :: bcbeta,psic,thetas,thetar,xk0,zdeep,tdeep,&
                 zmid,tmid0,rocpsoil,quartz,srespar1,srespar2,srespar3,a_ice,&
                 b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr
-        integer :: isoil
+        integer :: isoil,ifcoarse,idifind
 end type GRID_SOIL_template
 
 type GRID_VEG_template
@@ -776,6 +776,13 @@ type GRID_VARS_template
         !!!!!!!!!!!!!!!!!!!
         !Catchment grid
         integer :: icatch
+        !STORM PARAM
+        integer :: istorm,intstm,istmst,intstp
+        integer :: istorm_moss,intstm_moss,istmst_moss,intstp_moss
+        !TOPMODEL PARAM
+        real*8 :: atanb
+        !INFILTRATION PARAM
+        real*8 :: xintst,cuminf,sorp,cc,sesq,qb0,xintst_moss
 
 end type GRID_VARS_template
 
@@ -804,6 +811,8 @@ type CATCHMENT_template
                 rzpsum,tzpsum
         !State variables
         real*8 :: fwcat
+        !TOPMODEL PARAM
+        real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
 end type
 
 !REGIONAL DATA
@@ -846,9 +855,6 @@ type GLOBAL_template
         !Soil
         real*8 :: smpet0
 	!OPTIONS template
-        integer,dimension(MAX_ROW,MAX_COL) :: ipixnum !IO
-        integer,dimension(MAX_PIX) :: ixpix,iypix
-        integer,dimension(MAX_SOI) :: ifcoarse,idifind
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
@@ -856,19 +862,7 @@ type GLOBAL_template
         integer :: dtveg
         real*8 :: frcbeta
 	!STORM PARAM
-        integer,dimension(MAX_PIX) :: istorm,intstm,istmst,intstp
-        integer,dimension(1+MOS_FLG*(MAX_PIX-1)) :: istorm_moss,intstm_moss,&
-                istmst_moss,intstp_moss
         real*8 :: endstm,toleb,pixsiz,dt
-	!TOPMODEL PARAM
-        real*8,dimension(MAX_CAT) :: q0,ff,dd,area,dtil,xlength,basink,zbar1,&
-                xlamda
-        real*8,dimension(MAX_PIX) :: atanb
-        real*8,dimension(MAX_PIX,2) :: wslp
-        integer,dimension(MAX_PIX) :: iwel
-	!INFILTRATION PARAM
-        real*8,dimension(MAX_PIX) :: xintst,cuminf,sorp,cc,sesq,qb0
-        real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
 
 end type GLOBAL_template
 
