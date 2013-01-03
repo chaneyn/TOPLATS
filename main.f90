@@ -57,6 +57,7 @@
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
+      type (IO_template) :: IO
       integer :: nthreads,chunksize
       integer :: ntdveg
       ntdveg = 1 !remember the dynamic vegetation parameter time step
@@ -81,7 +82,7 @@ call init_fruit
 ! and initialize simulation sums.
 ! ####################################################################
 
-      call rddata(GLOBAL,GRID,REG,CAT)
+      call rddata(GLOBAL,GRID,REG,CAT,IO)
       CAT%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
@@ -114,7 +115,7 @@ call init_fruit
 ! Read meteorological data.
 ! ####################################################################
 
-        call rdatmo(GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,iyear,&
+        call rdatmo(GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,iyear,&
                     iday,ihour,i,GRID%MET)
 
 ! ####################################################################

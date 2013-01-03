@@ -853,8 +853,6 @@ type GLOBAL_template
         !Soil
         real*8 :: smpet0
 	!OPTIONS template
-        integer,dimension(MAX_ROW,MAX_COL) :: ipixnum !IO
-        integer,dimension(MAX_PIX) :: ixpix,iypix
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v

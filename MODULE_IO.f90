@@ -6,6 +6,11 @@ USE MODULE_VARIABLES
 
 implicit none
 
+type IO_template
+  integer,allocatable,dimension(:,:) :: ipixnum
+  integer,allocatable,dimension(:) :: ixpix,iypix
+end type IO_template
+
 contains
 
 !####################################################################
@@ -92,7 +97,7 @@ contains
 ! in-variant data.
 ! ####################################################################
 
-      subroutine rddata(GLOBAL,GRID,REG,CAT)
+      subroutine rddata(GLOBAL,GRID,REG,CAT,IO)
 
       implicit none
       integer iophd
@@ -101,6 +106,7 @@ contains
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
+      type (IO_template),intent(inout) :: IO
       character(len=200) :: filename
 
 ! ====================================================================
@@ -137,11 +143,12 @@ contains
 ! ====================================================================
 
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
-       GLOBAL%ncol,GLOBAL%pixsiz,GLOBAL%ipixnum,GLOBAL%ixpix,GLOBAL%iypix,&
+       GLOBAL%ncol,GLOBAL%pixsiz,&
        GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
        GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,&
        GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
-       GRID,CAT)
+       GRID,CAT,IO)
+       ipixnum = IO%ipixnum
 
       print*,'rddata:  Done reading TOPMODEL parameters'
 
@@ -150,7 +157,7 @@ contains
 ! ====================================================================
 
       call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GRID%VEG%ilandc,&
-       GLOBAL%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
+       IO%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
        GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
        GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
        GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
@@ -174,7 +181,7 @@ contains
 ! ====================================================================
 
       call rdsoil(GLOBAL%nsoil,GLOBAL%irestype,GLOBAL%ikopt,GLOBAL%zrzmax,GLOBAL%iopsmini,GLOBAL%smpet0,&
-       GRID%SOIL%isoil,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%SOIL%bcbeta,&
+       GRID%SOIL%isoil,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,GRID%SOIL%bcbeta,&
        GRID%SOIL%psic,GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%xk0,GRID%SOIL%zdeep,GRID%SOIL%tdeep,GRID%SOIL%zmid,&
        GRID%SOIL%tmid0,GRID%SOIL%rocpsoil,GRID%SOIL%quartz,GRID%SOIL%ifcoarse,&
        GRID%SOIL%srespar1,GRID%SOIL%srespar2,GRID%SOIL%srespar3,GRID%SOIL%a_ice,GRID%SOIL%b_ice,&
@@ -212,7 +219,7 @@ contains
 ! interstorm flags and times.
 ! ====================================================================
 
-      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%ipixnum,GRID%VEG%ilandc,&
+      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,GRID%VEG%ilandc,&
        GLOBAL%npix,GLOBAL%inc_frozen,GRID%VARS%istorm,&
        GRID%VARS%intstm,GRID%VARS%istmst,intstp,GRID%VARS%istorm_moss,&
        GRID%VARS%intstm_moss,GRID%VARS%istmst_moss,GRID%VARS%intstp_moss,&
@@ -352,10 +359,10 @@ contains
 !
 ! ====================================================================
 
-      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,ipixnum,&
-       ixpix,iypix,npix,q0,ff,qb0,dd,xlength,basink,xlamda,area,&
+      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,&
+       npix,q0,ff,qb0,dd,xlength,basink,xlamda,area,&
        atanb,dtil,zbar1,&
-       GRID,CAT)
+       GRID,CAT,IO)
 
       implicit none
       !include "SNOW.h"
@@ -363,6 +370,7 @@ contains
       include "help/rdtpmd.h"
       type (GRID_template),dimension(:),allocatable :: GRID
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
+      type (IO_template),intent(inout) :: IO
 
 ! ====================================================================
 ! Read the option for baseflow calculation, the option .or.&
@@ -391,6 +399,9 @@ contains
 
 allocate(CAT(ncatch))
 allocate(GRID(nrow*ncol))
+allocate(IO%ipixnum(nrow,ncol))
+allocate(IO%ixpix(nrow*ncol))
+allocate(IO%iypix(nrow*ncol))
 icatch = GRID%VARS%icatch
 
 ! ====================================================================
@@ -399,6 +410,7 @@ icatch = GRID%VARS%icatch
 ! ====================================================================
 
       call rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix)
+      IO%ipixnum = ipixnum
 
       print*,'rdtpmd:  Read topographi! index image '
 
