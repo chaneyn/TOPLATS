@@ -120,15 +120,297 @@ MODULE MODULE_LAND
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,irestype,ioppet,&
-       iopveg)
+       iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,GLOBAL)
 
       implicit none
-!       include "SNOW.h" !Switch to use snow module when it is finished
       include "help/land.h"!Remove when variables are changed
+      type (GRID_MET_template) :: GRID_MET
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+      type (GRID_SOIL_template) :: GRID_SOIL
+      type (GLOBAL_template) :: GLOBAL
       real*8 gold
 
       data tolinf/1.0d-09/
       initer=2
+! ====================================================================
+! Temporarily reassgin variables from old to new format
+    !General Vegetation parameters
+      canclos = GRID_VEG%canclos
+      extinct = GRID_VEG%extinct
+      i_und = GRID_VEG%i_und
+      i_moss = GRID_VEG%i_moss
+      ivgtyp = GRID_VEG%ivgtyp
+      f_moss = GRID_VEG%f_moss
+      f_und = GRID_VEG%f_und
+
+    !Snow Pack variables
+      PackWater = GRID_VARS%PackWater
+      SurfWater = GRID_VARS%SurfWater
+      Swq = GRID_VARS%Swq
+      VaporMassFlux = GRID_VARS%VaporMassFlux
+      !TPack = GRID_VARS%TPack
+      !TSurf = GRID_VARS%TSurf
+      r_MeltEnergy = GRID_VARS%r_MeltEnergy
+      Outflow = GRID_VARS%Outflow
+      !xleact_snow = GRID_VARS%xleact_snow
+      !hact_snow = GRID_VARS%hact_snow
+      !rn_snow = GRID_VARS%rn_snow
+      PackWater_us = GRID_VARS%PackWater_us
+      SurfWater_us = GRID_VARS%SurfWater_us
+      Swq_us = GRID_VARS%Swq_us
+      VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+      !TPack_us = GRID_VARS%TPack_us
+      !TSurf_us = GRID_VARS%TSurf_us
+      r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+      Outflow_us = GRID_VARS%Outflow_us
+      !xleact_snow_us = GRID_VARS%xleact_snow_us
+      !hact_snow_us = GRID_VARS%hact_snow_us
+      !rn_snow_us = GRID_VARS%rn_snow_us
+      !dens = GRID_VARS%dens
+      !dens_us = GRID_VARS%dens_us
+      
+    !Albedos of the over story, under story, and moss layer
+      albd_us = GRID_VEG%albd_us
+      alb_moss = GRID_VEG%alb_moss
+      !alb_snow = GRID_VEG%alb_snow
+      albd = GRID_VEG%albd
+
+    !Meteorological data
+      rsd = GRID_MET%rsd
+      rld = GRID_MET%rld
+      !tcel
+      !vppa
+      !psychr
+      !xlhv
+      !tkel
+      zww = GRID_VEG%zww
+      za = GRID_VEG%za
+      uzw = GRID_MET%uzw
+      press = GRID_MET%press
+      pptms = GRID_MET%pptms
+      !appa
+      !vpsat
+      !tcel_ic
+      !vppa_ic
+      !psychr_ic
+      !xlhv_ic
+      !tkel_ic
+      !vpsat_ic
+      precip_o = GRID_VARS%precip_o
+      precip_u = GRID_VARS%precip_u
+
+    !Temperature variables
+      tkmid = GRID_VARS%tkmid
+      tkact = GRID_VARS%tkact
+      !tkmid_us
+      !tkact_us
+      !tskinact_moss
+      !tkact_moss
+      !tkmid_moss
+      tkmidpet = GRID_VARS%tkmidpet
+      !tkmidpet_us
+      !tkmidpet_moss
+      !tsoilold
+      !Tdeepstep
+
+    !Energy fluxes and states
+      dshact = GRID_VARS%dshact
+      rnetpn = GRID_VARS%rnetpn
+      gbspen = GRID_VARS%gbspen
+      !epetd
+      evtact = GRID_VARS%evtact
+      ievcon  = GRID_VARS%ievcon
+      !bsdew
+      gact = GRID_VARS%gact
+      rnact = GRID_VARS%rnact
+      xleact = GRID_VARS%xleact
+      hact = GRID_VARS%hact
+      !rnetd
+      !xled
+      !hd
+      !gd
+      !dshd
+      !tkd
+      !tkmidd
+      !rnetw
+      !xlew
+      !hw
+      !gw
+      !dshw
+      !tkw
+      !tkmidw
+      
+    !Soil Parameters
+      thetar = GRID_SOIL%thetar
+      thetas = GRID_SOIL%thetas
+      psic = GRID_SOIL%psic
+      bcbeta = GRID_SOIL%bcbeta
+      quartz = GRID_SOIL%quartz
+      ifcoarse = GRID_SOIL%ifcoarse
+      rocpsoil = GRID_SOIL%rocpsoil
+      tcbeta = GRID_VEG%tcbeta
+      tcbeta_us = GRID_VEG%tcbeta_us
+      bulk_dens = GRID_SOIL%bulk_dens
+      a_ice = GRID_SOIL%a_ice
+      b_ice = GRID_SOIL%b_ice
+      xk0 = GRID_SOIL%xk0
+      bcgamm = GRID_SOIL%bcgamm
+      srespar1 = GRID_SOIL%srespar1
+      srespar2 = GRID_SOIL%srespar2
+      srespar3 = GRID_SOIL%srespar3
+      zdeep = GRID_SOIL%zdeep
+      zmid = GRID_SOIL%zmid
+      !zrzmax = GLOBAL%zrzmax
+      
+    !Vegetation parameters
+      xlai = GRID_VEG%xlai
+      xlai_us = GRID_VEG%xlai_us
+      emiss = GRID_VEG%emiss
+      zpd = GRID_VEG%zpd
+      zpd_us = GRID_VEG%zpd_us
+      z0m = GRID_VEG%z0m
+      z0h = GRID_VEG%z0h
+      !f1par
+      !f3vpd
+      !f4temp
+      !f1par_us
+      !f3vpd_us
+      !f4temp_us
+      rescan = GRID_VEG%rescan
+      tc = GRID_VEG%tc
+      tw = GRID_VEG%tw
+      !tc_us = GRID_VEG%tc_us
+      !tw_us = GRID_VEG%tw_us       
+      rescan_us = GRID_VEG%rescan_us
+      rtact = GRID_VEG%rtact
+      rtdens = GRID_VEG%rtdens
+      psicri = GRID_VEG%psicri
+      respla = GRID_VEG%respla
+      !f1
+      !f2
+      !f3
+      emiss_us = GRID_VEG%emiss_us
+
+    !Constants
+      row = GRID_VARS%row
+      cph2o = GRID_VARS%cph2o
+      cp = GRID_VARS%cp
+      roi = GRID_VARS%roi
+      !toleb = GLOBAL%toleb
+      !maxnri = GLOBAL%maxnri
+      !roa_ic
+
+    !Energy balance variables
+      !ravd
+      !rahd
+      !ravd_us
+      !rahd_us
+      !rav_moss
+      !rah_moss
+      !rib
+      !RaSnow
+      
+    !Water balance variables
+      rzsm = GRID_VARS%rzsm
+      tzsm = GRID_VARS%tzsm
+      rzsm1 = GRID_VARS%rzsm1
+      tzsm1 = GRID_VARS%tzsm1
+      !rzsm_u
+      !tzsm_u
+      rzsm1_u = GRID_VARS%rzsm1_u
+      tzsm1_u = GRID_VARS%tzsm1_u
+      rzsm_f = GRID_VARS%rzsm_f
+      tzsm_f = GRID_VARS%tzsm_f
+      rzsm1_f = GRID_VARS%rzsm1_f
+      tzsm1_f = GRID_VARS%tzsm1_f
+      r_mossm = GRID_VARS%r_mossm
+      r_mossm1 = GRID_VARS%r_mossm1
+      r_mossm_f = GRID_VARS%r_mossm_f
+      r_mossm1_f = GRID_VARS%r_mossm1_f
+      r_mossm_u = GRID_VARS%r_mossm_u
+      r_mossm1_u = GRID_VARS%r_mossm1_u
+      zrz = GRID_VARS%zrz
+      ztz = GRID_VARS%ztz
+      !r_mossold
+      smold = GRID_VARS%smold
+      rzsmold = GRID_VARS%rzsmold
+      tzsmold = GRID_VARS%tzsmold
+      rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+      rzdthetaidt = GRID_VARS%rzdthetaidt
+      tzdthetaidt = GRID_VARS%tzdthetaidt
+      zw = GRID_VARS%zw
+      !zbar    !!Needs Catchment Structure
+      zmoss = GRID_VARS%zmoss
+      capflx = GRID_VARS%capflx
+      difrz = GRID_VARS%difrz
+      diftz = GRID_VARS%diftz
+      grz = GRID_VARS%grz
+      gtz = GRID_VARS%gtz
+      cuminf =  GRID_VARS%cuminf
+      sorp = GRID_VARS%sorp
+      cc = GRID_VARS%cc
+      !deltrz 
+      xinact = GRID_VARS%xinact
+      satxr = GRID_VARS%satxr
+      xinfxr = GRID_VARS%xinfxr
+      runtot = GRID_VARS%runtot
+      irntyp = GRID_VARS%irntyp
+      sesq = GRID_VARS%sesq
+      corr = GRID_SOIL%corr
+      idifind = GRID_SOIL%idifind
+      dc = GRID_VARS%dc
+      fw = GRID_VARS%fw
+      !dc_us
+      !fw_us
+      wcip1 = GRID_VEG%wcip1
+      par = GRID_SOIL%par
+      !dewrun
+      dsrz = GRID_VARS%dsrz
+      rzrhs = GRID_VARS%rzrhs
+      dstz = GRID_VARS%dstz
+      tzrhs = GRID_VARS%tzrhs
+
+    !Storm Parameters
+      istmst = GRID_VARS%istmst
+      intstm = GRID_VARS%intstm
+      istmst_moss = GRID_VARS%istmst_moss
+      intstm_moss = GRID_VARS%intstm_moss
+      intstp = GRID_VARS%intstp
+      istorm = GRID_VARS%istorm
+      
+    !TOPMODEL Parameters
+      !ff  !!Needs Catchment Structure
+      atanb = GRID_VARS%atanb
+      !xlamda !!Needs Catchment Structure
+      
+    !Regional Saturation Parameters
+      !fwcat  !!Needs Catchment Structure
+      !fwreg  !!Needs Regional Structure
+      !pr3sat
+      !perrg2
+      !pr2sat
+      !pr2uns
+      !perrg1
+      !pr1sat
+      !pr1rzs
+      !pr1tzs
+      !pr1uns
+      !persxr
+      !perixr
+      !persac
+      !peruac
+      !perusc   
+
+    !Different option parameters
+      !iopthermc = GLOBAL%iopthermc
+      !iopthermc_v = GLOBAL%iopthermc_v
+      !iopgveg = GLOBAL%iopgveg
+      !iopsmini = GLOBAL%iopsmini
+      !ikopt = GLOBAL%ikopt
+      !irestype = GLOBAL%irestype
+      !ioppet = GLOBAL%ioppet
+      !iopveg = GLOBAL%iopveg
 
 ! ====================================================================
 ! Initialize the rain and snowfall.
