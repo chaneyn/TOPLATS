@@ -781,6 +781,8 @@ type GRID_VARS_template
         integer :: istorm_moss,intstm_moss,istmst_moss,intstp_moss
         !TOPMODEL PARAM
         real*8 :: atanb
+        !INFILTRATION PARAM
+        real*8 :: xintst,cuminf,sorp,cc,sesq,qb0,xintst_moss
 
 end type GRID_VARS_template
 
@@ -810,7 +812,7 @@ type CATCHMENT_template
         !State variables
         real*8 :: fwcat
         !TOPMODEL PARAM
-        real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda
+        real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
 end type
 
 !REGIONAL DATA
@@ -861,13 +863,6 @@ type GLOBAL_template
         real*8 :: frcbeta
 	!STORM PARAM
         real*8 :: endstm,toleb,pixsiz,dt
-	!TOPMODEL PARAM
-        real*8,dimension(MAX_CAT) :: q0,ff,dd,area,dtil,xlength,basink,zbar1,&
-                xlamda
-        real*8,dimension(MAX_PIX) :: atanb
-	!INFILTRATION PARAM
-        real*8,dimension(MAX_PIX) :: xintst,cuminf,sorp,cc,sesq,qb0
-        real*8,dimension(1+MOS_FLG*(MAX_PIX-1)) :: xintst_moss
 
 end type GLOBAL_template
 

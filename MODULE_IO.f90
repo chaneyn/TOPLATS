@@ -144,9 +144,7 @@ contains
 
       call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
        GLOBAL%ncol,GLOBAL%pixsiz,&
-       GLOBAL%npix,GLOBAL%q0,GLOBAL%ff,GLOBAL%qb0,&
-       GLOBAL%dd,GLOBAL%xlength,GLOBAL%basink,GLOBAL%xlamda,&
-       GLOBAL%area,GLOBAL%atanb,GLOBAL%dtil,GLOBAL%zbar1,&
+       GLOBAL%npix,&
        GRID,CAT,IO)
        ipixnum = IO%ipixnum
 
@@ -171,7 +169,7 @@ contains
        GRID%VEG%rtact,GRID%VEG%rtdens,GRID%VEG%rtres,&
        GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
        GRID%VEG%wsc,GRID%VEG%wcip1,&
-       GLOBAL%pixsiz,GLOBAL%area,CAT%fbs,&
+       GLOBAL%pixsiz,CAT%area,CAT%fbs,&
        REG%fbsrg,GLOBAL%ncatch)
 
       print*,'rddata:  Done reading vegetation parameters'
@@ -187,7 +185,7 @@ contains
        GRID%SOIL%srespar1,GRID%SOIL%srespar2,GRID%SOIL%srespar3,GRID%SOIL%a_ice,GRID%SOIL%b_ice,&
        GRID%SOIL%bulk_dens,GRID%SOIL%amp,GRID%SOIL%phase,GRID%SOIL%shift,&
        GLOBAL%inc_frozen,GRID%SOIL%bcgamm,GRID%SOIL%par,GRID%SOIL%corr,GRID%SOIL%idifind,&
-       GLOBAL%ncatch,GRID%VARS%icatch,GLOBAL%pixsiz,GLOBAL%area,&
+       GLOBAL%ncatch,GRID%VARS%icatch,GLOBAL%pixsiz,CAT%area,&
        GLOBAL%npix,CAT%psicav,GRID%VEG%tc,GRID%VEG%tw)
 
       print*,'rddata:  Done reading soil parameters'
@@ -230,9 +228,9 @@ contains
        GRID%VARS%r_mossm_u,&
        GRID%VARS%r_mossm1_f,GRID%VARS%r_mossm_f,GRID%VARS%rzdthetaidt,&
        GRID%VARS%tzdthetaidt,GRID%VARS%zmoss,r_moss_depth,&
-       thetas_moss,GLOBAL%xintst,GLOBAL%xintst_moss,GLOBAL%cuminf,GRID%SOIL%xk0,GRID%SOIL%psic,&
+       thetas_moss,GRID%VARS%xintst,GRID%VARS%xintst_moss,GRID%VARS%cuminf,GRID%SOIL%xk0,GRID%SOIL%psic,&
        GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%bcgamm,&
-       bcbeta,GLOBAL%sorp,GLOBAL%cc,GLOBAL%dt,GLOBAL%sesq,GRID%SOIL%corr,GRID%SOIL%par,PackWater_us,&
+       bcbeta,GRID%VARS%sorp,GRID%VARS%cc,GLOBAL%dt,GRID%VARS%sesq,GRID%SOIL%corr,GRID%SOIL%par,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
        PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
 
@@ -360,8 +358,7 @@ contains
 ! ====================================================================
 
       subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,&
-       npix,q0,ff,qb0,dd,xlength,basink,xlamda,area,&
-       atanb,dtil,zbar1,&
+       npix,&
        GRID,CAT,IO)
 
       implicit none
@@ -571,6 +568,18 @@ icatch = GRID%VARS%icatch
          zbar1(kk) = zbar0(kk)
 
 800   continue
+
+      CAT%q0 = q0
+      CAT%ff = ff
+      CAT%dd = dd
+      CAT%area = area
+      CAT%dtil = dtil
+      CAT%xlength = xlength
+      CAT%basink = basink 
+      CAT%xlamda = xlamda
+      CAT%zbar1 = zbar1
+      GRID%VARS%atanb = atanb
+      CAT%qb0 = qb0
 
       return
 

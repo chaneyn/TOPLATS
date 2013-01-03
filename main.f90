@@ -83,7 +83,6 @@ call init_fruit
 ! ####################################################################
 
       call rddata(GLOBAL,GRID,REG,CAT,IO)
-      CAT%zbar1 = GLOBAL%zbar1
 
 ! ####################################################################
 ! Loop through the simulation time.
@@ -205,9 +204,9 @@ call OMP_SET_NUM_THREADS(8)
 ! Water balance variables
        
        GRID(ipix)%VARS,&
-       GLOBAL%cuminf(ipix),&
-       GLOBAL%sorp(ipix),GLOBAL%cc(ipix),&
-       GLOBAL%sesq(ipix),GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
+       GRID(ipix)%VARS%cuminf,&
+       GRID(ipix)%VARS%sorp,GRID(ipix)%VARS%cc,&
+       GRID(ipix)%VARS%sesq,GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
        GRID(GRID(ipix)%SOIL%isoil)%SOIL%idifind,&
        GRID(ipix)%VEG%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
        GLOBAL%smpet0,&
@@ -216,11 +215,11 @@ call OMP_SET_NUM_THREADS(8)
 
        istmst(ipix),intstm(ipix),&
        intstp(ipix),GLOBAL%endstm,istorm(ipix),&
-       GLOBAL%xintst(ipix),&
+       GRID(ipix)%VARS%xintst,&
 
 ! Topmodel parameters
 
-       GLOBAL%ff(GRID(ipix)%VARS%icatch),GLOBAL%atanb(ipix),GLOBAL%xlamda(GRID(ipix)%VARS%icatch),&
+       CAT(GRID(ipix)%VARS%icatch)%ff,GRID(ipix)%VARS%atanb,CAT(GRID(ipix)%VARS%icatch)%xlamda,&
 
 ! Regional saturation parameters
 
@@ -303,7 +302,7 @@ etpix = GRID%VARS%etpix
 
          do ic=1,GLOBAL%ncatch
 
-            call catflx(i,ic,GLOBAL%area(ic),GLOBAL%pixsiz,&
+            call catflx(i,ic,CAT(ic)%area,GLOBAL%pixsiz,&
                 r_lakearea(ic),CAT(ic)%ettot,&
        CAT(ic)%etstsum,CAT(ic)%etwtsum,CAT(ic)%etlakesum,&
        CAT(ic)%etbssum,CAT(ic)%fbs,CAT(ic)%etdcsum,&
@@ -312,9 +311,9 @@ etpix = GRID%VARS%etpix
        CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
        CAT(ic)%rzpsum,CAT(ic)%fwcat)
 
-               call upzbar(i,ic,GLOBAL%iopbf,GLOBAL%q0(ic),&
-       GLOBAL%ff(ic),CAT(ic)%zbar,GLOBAL%dtil(ic),&
-       GLOBAL%basink(ic),dd(ic),GLOBAL%xlength(ic),CAT(ic)%gwtsum,CAT(ic)%capsum,GLOBAL%area(ic),&
+               call upzbar(i,ic,GLOBAL%iopbf,CAT(ic)%q0,&
+       CAT(ic)%ff,CAT(ic)%zbar,CAT(ic)%dtil,&
+       CAT(ic)%basink,CAT(ic)%dd,CAT(ic)%xlength,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%area,&
        r_lakearea(ic),GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
        GRID%VEG%ivgtyp,GRID%VEG%ilandc,GLOBAL%npix,GRID%VARS%icatch,zw,&
        GRID%SOIL%psic,GRID%SOIL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
