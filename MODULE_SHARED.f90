@@ -214,7 +214,7 @@ contains
 ! ====================================================================
 
     subroutine calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
-                         albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+                         alb_moss,alb_snow,rsd,rs_over,rs_under)
 
       implicit none
       include "help/calc_rs.h"
@@ -235,7 +235,7 @@ contains
 ! vegetation.
 ! --------------------------------------------------------------------
 
-      if (i_und.gt.0) refus=albd_us
+      if (i_und.gt.0) refus=GRID_VEG%albd_us
       if (i_moss.gt.0) refus=alb_moss
       if (Swq_us.gt.(0.d0)) refus=alb_snow
 

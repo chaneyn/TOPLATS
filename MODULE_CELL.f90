@@ -322,7 +322,7 @@ zbar = CAT%zbar
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
        GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&

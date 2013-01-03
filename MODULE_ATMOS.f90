@@ -48,7 +48,7 @@ contains
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -145,7 +145,7 @@ r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
 Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-albd_us = GRID_VEG%albd_us
+!albd_us = GRID_VEG%albd_us
 alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
@@ -529,7 +529,7 @@ iopsmini = GLOBAL%iopsmini
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -892,7 +892,7 @@ dspet = GRID_VARS%dspet
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -965,7 +965,7 @@ dspet = GRID_VARS%dspet
 ! ====================================================================
 
       call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
-                   albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+                   alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize the liquid rain and snowfall.
@@ -1197,6 +1197,7 @@ dspet = GRID_VARS%dspet
       function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
       include "help/clcf1par.h"
+      !type (GRID_VEG_template) :: GRID_VEG
       data a1/0.19/,a2/1128/,a3/30.8/
 
       par = 0.55 * (1.d0 - alb)*Rg

@@ -152,7 +152,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
-                   albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+                   alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize soil moisture for the calculation of the thermodynami!
