@@ -863,6 +863,10 @@ type GLOBAL_template
         real*8 :: frcbeta
 	!STORM PARAM
         real*8 :: endstm,toleb,pixsiz,dt
+        !Vegetation
+        integer :: ntdveg 
+        !Time
+        integer :: iyear,iday,ihour
 
 end type GLOBAL_template
 

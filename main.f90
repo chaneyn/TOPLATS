@@ -59,9 +59,7 @@
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
       type (IO_template) :: IO
       integer :: nthreads,chunksize
-      integer :: ntdveg
-      ntdveg = 1 !remember the dynamic vegetation parameter time step
-                !rdveg_update.f90
+      !Set OpenMP parameters
       chunksize = 1
       nthreads = 1
 
@@ -90,8 +88,8 @@ call init_fruit
 
       do i=1,GLOBAL%ndata
 
-          print*, "Time Step: ",i," Year: ",iyear," Julian Day: ",&
-                    iday," Hour: ",ihour
+          print*, "Time Step: ",i," Year: ",GLOBAL%iyear," Julian Day: ",&
+                    GLOBAL%iday," Hour: ",GLOBAL%ihour
 
 ! ####################################################################
 ! Update the vegetation parameters if required.
@@ -99,7 +97,7 @@ call init_fruit
 
          if (mod(i,GLOBAL%dtveg).eq.0) then
 
-            call rdveg_update(GLOBAL,ntdveg,GRID)
+            call rdveg_update(GLOBAL,GRID)
 
          endif
 
@@ -114,8 +112,7 @@ call init_fruit
 ! Read meteorological data.
 ! ####################################################################
 
-        call rdatmo(GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,iyear,&
-                    iday,ihour,i,GRID%MET)
+        call rdatmo(i,GRID%MET,GLOBAL,IO)
 
 ! ####################################################################
 ! Loop through each pixel in atanb map.

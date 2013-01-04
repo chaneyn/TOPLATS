@@ -17,25 +17,24 @@ contains
 ! Subroutine to read in and pass meteorological data (e.g. rainfall).
 !####################################################################
 
-      subroutine rdatmo(nrow,ncol,ipixnum,iyear,iday,ihour,i,ATMOS)
+      subroutine rdatmo(i,MET,GLOBAL,IO)
 
       implicit none
-      type (GRID_MET_template) :: ATMOS(nrow*ncol)
-      type (GLOBAL_template) :: GLOBAL
-      integer :: nrow,ncol,ipixnum(nrow,ncol)
-      integer :: iyear,iday,ihour
+      type (GLOBAL_template),intent(inout) :: GLOBAL
+      type (GRID_MET_template),intent(inout) :: MET(GLOBAL%nrow*GLOBAL%ncol)
+      type (IO_template),intent(in) :: IO
+      integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
       integer :: forcingnvars,i
       real,dimension(:,:,:),allocatable :: TempArray
+      ipixnum = IO%ipixnum
       forcingnvars = 7
-      GLOBAL%ncol = ncol
-      GLOBAL%nrow = nrow
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,forcingnvars))
 
 ! ====================================================================
 ! Read year, day and hour
 ! ====================================================================
 
-      read(61,*) iyear,iday,ihour
+      read(61,*) GLOBAL%iyear,GLOBAL%iday,GLOBAL%ihour
 
 ! ####################################################################
 ! Read all variables in at once for each time step
@@ -45,52 +44,54 @@ contains
 
 ! Longwave Radiation
 
-      call rdforc(ATMOS%rld,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,1))
+      call rdforc(MET%rld,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,1))
 
 ! Air Pressure
 
-      call rdforc(ATMOS%press,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,2))
+      call rdforc(MET%press,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,2))
 
 ! Relative Humidity
 
-      call rdforc(ATMOS%rh,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,3))
+      call rdforc(MET%rh,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,3))
 
 ! Shortwave Radiation
 
-      call rdforc(ATMOS%rsd,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,4))
+      call rdforc(MET%rsd,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,4))
 
 ! Air Temperature
 
-      call rdforc(ATMOS%tdry,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,5))
+      call rdforc(MET%tdry,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,5))
 
 ! Wind Speed
 
-      call rdforc(ATMOS%uzw,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,6))
+      call rdforc(MET%uzw,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,6))
 
 ! Precipitation
 
-      call rdforc(ATMOS%pptms,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,7))
+      call rdforc(MET%pptms,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,7))
        
-      contains
-
-              subroutine rdforc(pixdat,nrow,ncol,ipixnum,data_in)
-
-              implicit none
-              integer,intent(in) :: nrow,ncol
-              integer :: l,m
-              real,dimension(:,:),intent(in) :: data_in(:,:)
-              integer,dimension(:,:),intent(in) :: ipixnum
-              real*8,dimension(:),intent(inout) :: pixdat
-
-                do l=1,ncol
-                        do m=1,nrow
-                                if (ipixnum(m,l) .gt. 0)pixdat(ipixnum(m,l)) = data_in(l,m)
-                        enddo
-                enddo
-
-              end subroutine
-
       end subroutine
+
+! ####################################################################
+! Subroutine to convert data to original setup
+! ####################################################################
+
+      subroutine rdforc(pixdat,nrow,ncol,ipixnum,data_in)
+
+      implicit none
+      integer,intent(in) :: nrow,ncol
+      integer :: l,m
+      real,dimension(:,:),intent(in) :: data_in(ncol,nrow)
+      integer,dimension(:,:),intent(in) :: ipixnum
+      real*8,dimension(:),intent(inout) :: pixdat
+
+      do l=1,ncol
+        do m=1,nrow
+          if (ipixnum(m,l) .gt. 0)pixdat(ipixnum(m,l)) = data_in(l,m)
+        enddo
+      enddo
+
+      end subroutine rdforc
 
 ! ####################################################################
 ! Subroutine to open input/output files, read and initialize time 
@@ -142,10 +143,7 @@ contains
 ! initial water table depth.
 ! ====================================================================
 
-      call rdtpmd(GLOBAL%iopbf,GLOBAL%iopwt0,GLOBAL%ncatch,GLOBAL%nrow,&
-       GLOBAL%ncol,GLOBAL%pixsiz,&
-       GLOBAL%npix,&
-       GRID,CAT,IO)
+      call rdtpmd(GRID,CAT,IO,GLOBAL)
        ipixnum = IO%ipixnum
 
       print*,'rddata:  Done reading TOPMODEL parameters'
@@ -238,6 +236,11 @@ contains
 
       print*,'rddata:  Done initializing simulation'
 
+! Initialize the vegetation time step
+
+      GLOBAL%ntdveg = 1
+
+
       return
 
       end subroutine
@@ -253,8 +256,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine rdveg_update (&
-       GLOBAL,ntdveg,GRID)
+      subroutine rdveg_update (GLOBAL,GRID)
 
       implicit none
       !include "wgtpar.h"
@@ -265,7 +267,6 @@ contains
       end type VegDataTemplate
       type (VegDataTemplate) VegData
       integer :: dvegnvars,ipos,jpos
-      integer :: ntdveg
       real,dimension(:,:,:),allocatable :: TempArray
       type (GLOBAL_template) :: GLOBAL
       type (GRID_template),dimension(:),allocatable :: GRID
@@ -278,11 +279,11 @@ contains
 ! transpiration option.
 ! ====================================================================
 
-      ntdveg = ntdveg + 1
+      GLOBAL%ntdveg = GLOBAL%ntdveg + 1
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
       allocate(VegData%xlai(GLOBAL%ncol,GLOBAL%nrow))
       allocate(VegData%albd(GLOBAL%ncol,GLOBAL%nrow))
-      read(1003,rec=ntdveg)TempArray(:,:,:)
+      read(1003,rec=GLOBAL%ntdveg)TempArray(:,:,:)
       VegData%xlai(:,:) = dble(TempArray(:,:,1))
       VegData%albd(:,:) = dble(TempArray(:,:,2))
 
@@ -346,88 +347,83 @@ contains
 
       end subroutine rdveg_update
 
-! ====================================================================
-!
+!#####################################################################
 !			subroutine rdtpmd
-!
-! ====================================================================
-!
+!#####################################################################
 ! Subroutine to read in and initialize topmodel parameters and the
-!  soils-topographi! index map.
-!
-! ====================================================================
-
-      subroutine rdtpmd(iopbf,iopwt0,ncatch,nrow,ncol,pixsiz,&
-       npix,&
-       GRID,CAT,IO)
-
-      implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      include "help/rdtpmd.h"
-      type (GRID_template),dimension(:),allocatable :: GRID
-      type (CATCHMENT_template),dimension(:),allocatable :: CAT
-      type (IO_template),intent(inout) :: IO
-
-! ====================================================================
-! Read the option for baseflow calculation, the option .or.&
-! initial water table entry, the number of basin in the area
-! of interest, and the dimensions of the soils-topographi!
-! index map.
-! ====================================================================
-
-      read(1000,*) iopbf
-      read(1000,*) iopwt0
-      read(1000,*) ncatch
-
-      print*,'rdtpmd:  Number of Catchments:  ',ncatch
-
-      read(1000,*) nrow
-      read(1000,*) ncol
-      read(1000,*) pixsiz
-
-      print*,'Rows: ',nrow
-      print*,'Columns: ',ncol
-      print*,'Pixel Size: ',pixsiz
-
-!#####################################################################
-! Allocate memory
+! soils-topographic index map.
 !#####################################################################
 
-allocate(CAT(ncatch))
-allocate(GRID(nrow*ncol))
-allocate(IO%ipixnum(nrow,ncol))
-allocate(IO%ixpix(nrow*ncol))
-allocate(IO%iypix(nrow*ncol))
-icatch = GRID%VARS%icatch
+subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
-! ====================================================================
-! Read in the soils-topographi! index map and set up the 
-! transformation from pixel number to row/column.
-! ====================================================================
+  implicit none
+  type (GLOBAL_template) :: GLOBAL
+  type (GRID_template),dimension(:),allocatable :: GRID
+  type (CATCHMENT_template),dimension(:),allocatable :: CAT
+  type (IO_template),intent(inout) :: IO
+  integer kk,jj
+  real*8 hbar0
+  integer,dimension(:),allocatable :: icount
+  real*8,dimension(:),allocatable :: atb,ti,zbar0,sumatb,sumlti,qb0,lte
+  real*8,dimension(:),allocatable :: ki
 
-      call rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix)
-      IO%ipixnum = ipixnum
+  !###################################################################
+  ! Read the option for baseflow calculation, the option .or.&
+  ! initial water table entry, the number of basin in the area
+  ! of interest, and the dimensions of the soils-topographi!
+  ! index map.
+  !###################################################################
 
-      print*,'rdtpmd:  Read topographi! index image '
+  read(1000,*) GLOBAL%iopbf
+  read(1000,*) GLOBAL%iopwt0
+  read(1000,*) GLOBAL%ncatch
+  read(1000,*) GLOBAL%nrow
+  read(1000,*) GLOBAL%ncol
+  read(1000,*) GLOBAL%pixsiz
+
+  !#####################################################################
+  ! Allocate memory
+  !#####################################################################
+
+  allocate(CAT(GLOBAL%ncatch))
+  allocate(GRID(GLOBAL%nrow*GLOBAL%ncol))
+  allocate(IO%ipixnum(GLOBAL%nrow,GLOBAL%ncol))
+  allocate(IO%ixpix(GLOBAL%nrow*GLOBAL%ncol))
+  allocate(IO%iypix(GLOBAL%nrow*GLOBAL%ncol))
+  allocate(icount(GLOBAL%ncatch))
+  allocate(atb(GLOBAL%nrow*GLOBAL%ncol))
+  allocate(ti(GLOBAL%nrow*GLOBAL%ncol))
+  allocate(zbar0(GLOBAL%ncatch))
+  allocate(sumatb(GLOBAL%ncatch))
+  allocate(sumlti(GLOBAL%ncatch))
+  allocate(qb0(GLOBAL%ncatch))
+  allocate(lte(GLOBAL%ncatch))
+  allocate(ki(GLOBAL%nrow*GLOBAL%ncol))
+
+  !####################################################################
+  ! Read in the soils-topographic index map and set up the 
+  ! transformation from pixel number to row/column.
+  !####################################################################
+
+  call rdatb(atb,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,IO%ixpix,IO%iypix,GLOBAL%npix)
 
 ! ====================================================================
 ! Read in the catchment look-up table - read different values based
 ! on what is necessary for baseflow and initial condition calculations.
 ! ====================================================================
 
-      if (iopwt0.eq.1) then
+      if (GLOBAL%iopwt0.eq.1) then
 
-         do 100 kk=1,ncatch
+         do 100 kk=1,GLOBAL%ncatch
 
             read(71,*) jj,q0(kk),ff(kk),qb0(kk),dd(kk),&
                        xlength(kk),basink(kk) 
 
 100      continue
 
-      else if (iopbf.eq.1) then
+      else if (GLOBAL%iopbf.eq.1) then
 
-         do 200 kk=1,ncatch
+         do 200 kk=1,GLOBAL%ncatch
 
             read(71,*) jj,q0(kk),ff(kk),zbar0(kk),dd(kk),&
                        xlength(kk),basink(kk) 
@@ -436,7 +432,7 @@ icatch = GRID%VARS%icatch
 
       else 
 
-         do 300 kk=1,ncatch
+         do 300 kk=1,GLOBAL%ncatch
 
             read(71,*) jj,q0(kk),ff(kk),zbar0(kk)
 
@@ -444,43 +440,24 @@ icatch = GRID%VARS%icatch
 
       endif
 
-      print*,'rdtpmd:  Read catchment lookup table'
+! ====================================================================
+! Read the catchment image.
+! ====================================================================
+
+      call rdimgi(GRID%VARS%icatch,10,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
 
 ! ====================================================================
 ! Read image of transmissivities for use in calculating the 
 ! soils-topographi! index.
 ! ====================================================================
 
-      call rdimgr(ti,8,nrow,ncol,ipixnum)
-! NWC 11/06/11 Read in K0 instead of T0, then divide by ff (exponential decay parameter) to obtain ti (Only valid for 1 catchment)
-		do kk=1,nrow*ncol
-			ti(kk) = ti(kk)/ff(1);
-		enddo
-      print*,'rdtpmd:  Read transmissivity image '
-
-! ====================================================================
-! Read the catchment image.
-! ====================================================================
-
-      call rdimgi(icatch,10,nrow,ncol,ipixnum)
-
-      print*,'rdtpmd:  Read catchment image'
-      GRID%VARS%icatch = icatch
-
-! --------------------------------------------------------------------&
-! Check the dimensioning of the number of catchments.
-! --------------------------------------------------------------------&
-
-      do kk=1,npix
-
-         if (icatch(kk).gt.MAX_CAT) then
-
-            write (*,*) 'rdtpmd : highest catchment number '
-            write (*,*) 'higher than MAX_CAT ',icatch(kk),MAX_CAT
-            stop
-
-         endif
-
+      call rdimgr(ki,8,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+      do kk=1,GLOBAL%nrow*GLOBAL%ncol
+        if (GRID(kk)%VARS%icatch .gt. 0)then
+          ti(kk) = ki(kk)/ff(GRID(kk)%VARS%icatch)
+        else
+          ti(kk) = 0.0
+        endif
       enddo
 
 ! ====================================================================
@@ -488,7 +465,7 @@ icatch = GRID%VARS%icatch
 ! the natural log of transmissivity and area for each basin.
 ! ====================================================================
 
-      do 400 kk=1,ncatch
+      do 400 kk=1,GLOBAL%ncatch
 
          sumatb(kk) = 0.0
          sumlti(kk) = 0.0
@@ -496,15 +473,15 @@ icatch = GRID%VARS%icatch
 
 400   continue
 
-      do 500 kk=1,npix
+      do 500 kk=1,GLOBAL%npix
 
-         sumatb(icatch(kk)) = sumatb(icatch(kk)) + atb(kk)
-         sumlti(icatch(kk)) = sumlti(icatch(kk)) + dlog(ti(kk))
-         icount(icatch(kk)) = icount(icatch(kk)) + 1
+         sumatb(GRID(kk)%VARS%icatch) = sumatb(GRID(kk)%VARS%icatch) + atb(kk)
+         sumlti(GRID(kk)%VARS%icatch) = sumlti(GRID(kk)%VARS%icatch) + dlog(ti(kk))
+         icount(GRID(kk)%VARS%icatch) = icount(GRID(kk)%VARS%icatch) + 1
 
 500   continue
 
-      do 600 kk=1,ncatch
+      do 600 kk=1,GLOBAL%ncatch
 
          if (icount(kk).eq.0) then
 
@@ -518,7 +495,7 @@ icatch = GRID%VARS%icatch
 
          endif
 
-         area(kk) = icount(kk)*pixsiz*pixsiz
+         area(kk) = icount(kk)*GLOBAL%pixsiz*GLOBAL%pixsiz
 
 600   continue
 
@@ -530,9 +507,9 @@ icatch = GRID%VARS%icatch
 ! Calculate soils-topographi! index for each pixel.
 ! ====================================================================
 
-      do 50 kk=1,npix
+      do 50 kk=1,GLOBAL%npix
 
-         atanb(kk) = atb(kk) + lte(icatch(kk)) - dlog(ti(kk))
+         atanb(kk) = atb(kk) + lte(GRID(kk)%VARS%icatch) - dlog(ti(kk))
 
 50    continue
 
@@ -540,13 +517,13 @@ icatch = GRID%VARS%icatch
 ! Calculate the initial water table depth for each catchment.
 ! ====================================================================
 
-      if ((iopwt0.eq.1).or.(iopbf.eq.1)) then
+      if ((GLOBAL%iopwt0.eq.1).or.(GLOBAL%iopbf.eq.1)) then
 
-         do 700 kk=1,ncatch
+         do 700 kk=1,GLOBAL%ncatch
 
             dtil(kk) = sqrt(q0(kk)/(3.45*basink(kk)*dd(kk)*xlength(kk)))
 
-            if (iopwt0.eq.1) then
+            if (GLOBAL%iopwt0.eq.1) then
 
                hbar0 = sqrt(qb0(kk)/(5.772*basink(kk)*dd(kk)*xlength(kk)))
                zbar0(kk) = dtil(kk) - hbar0
@@ -563,7 +540,7 @@ icatch = GRID%VARS%icatch
 ! this depth.
 ! ====================================================================
 
-      do 800 kk=1,ncatch
+      do 800 kk=1,GLOBAL%ncatch
 
          zbar1(kk) = zbar0(kk)
 
