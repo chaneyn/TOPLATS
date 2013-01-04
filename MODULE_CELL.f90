@@ -108,7 +108,7 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       !type (SNOW_VARS_template) :: SNOW_VARS
-      !type (GLOBAL_template) :: GLOBAL
+      type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
 
@@ -276,17 +276,41 @@ zbar = CAT%zbar
 ! ....................................................................
 ! Calculate the local energy fluxes and set
 ! up the storm/interstorm event times and flags.
-! ....................................................................
+! ..................................................................
 
        GRID_VARS%PackWater = PackWater        
        GRID_VARS%SurfWater = SurfWater
+       GRID_VARS%Swq = Swq
+       GRID_VARS%VaporMassFlux = VaporMassFlux
+       GRID_VARS%r_MeltEnergy = r_MeltEnergy
+       GRID_VARS%Outflow = Outflow
+       GRID_VARS%PackWater_us = PackWater_us
+       GRID_VARS%SurfWater_us = SurfWater_us
+       GRID_VARS%Swq_us = Swq_us
+       GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
+       GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
+       GRID_VARS%Outflow_us = Outflow_us
+       GRID_VARS%PackWater = PackWater        
+       GRID_VARS%SurfWater = SurfWater
        GRID_VEG%i_und = i_und
+       GLOBAL%zrzmax = zrzmax
+       GLOBAL%toleb = toleb
+       GLOBAL%maxnri = maxnri
+       GLOBAL%smpet0 = smpet0
+       GLOBAL%iopthermc = iopthermc
+       GLOBAL%iopgveg = iopgveg
+       GLOBAL%iopthermc_v = iopthermc_v
+       GLOBAL%iopstab = iopstab
+       GLOBAL%ioppet = ioppet
+       GLOBAL%iopwv = iopwv
+       GLOBAL%iopsmini = iopsmini 
+
 
          call atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -298,7 +322,7 @@ zbar = CAT%zbar
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
        GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
@@ -356,7 +380,7 @@ zbar = CAT%zbar
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
 
 ! ....................................................................
 ! Calculate local wet canopy water balance.
@@ -387,7 +411,7 @@ zbar = CAT%zbar
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
 
 ! Snow pack variables
 

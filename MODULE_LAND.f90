@@ -29,7 +29,7 @@ MODULE MODULE_LAND
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
+       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
 
 ! Snow pack variables
 
@@ -125,6 +125,10 @@ MODULE MODULE_LAND
       implicit none
 !       include "SNOW.h" !Switch to use snow module when it is finished
       include "help/land.h"!Remove when variables are changed
+
+      type (GRID_VEG_template) :: GRID_VEG
+
+
       real*8 gold
 
       data tolinf/1.0d-09/
@@ -147,8 +151,8 @@ MODULE MODULE_LAND
 ! story layers.
 ! ====================================================================
 
-      call calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
-                   albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+      call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
+                   alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize soil moisture for the calculation of the thermodynami!

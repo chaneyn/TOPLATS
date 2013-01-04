@@ -29,11 +29,13 @@ contains
 !
 ! ====================================================================
 
+
+
   subroutine atmos(ipix,i,dt,inc_frozen,i_2l,&
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -46,7 +48,7 @@ contains
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -109,7 +111,7 @@ contains
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
@@ -122,8 +124,8 @@ contains
 ! Temporarily changing over variables from old to new format
 
 !General Vegetation parameters
-canclos = GRID_VEG%canclos
-extinct = GRID_VEG%extinct
+!canclos = GRID_VEG%canclos
+!extinct = GRID_VEG%extinct
 i_und = GRID_VEG%i_und
 i_moss = GRID_VEG%i_moss
 ivgtyp = GRID_VEG%ivgtyp
@@ -131,19 +133,19 @@ ivgtyp = GRID_VEG%ivgtyp
 !Snow Pack variables
 PackWater = GRID_VARS%PackWater
 SurfWater = GRID_VARS%SurfWater
-!Swq = GRID_VARS%Swq
+Swq = GRID_VARS%Swq
 VaporMassFlux = GRID_VARS%VaporMassFlux
 r_MeltEnergy = GRID_VARS%r_MeltEnergy
-!Outflow = GRID_VARS%Outflow
+Outflow = GRID_VARS%Outflow
 PackWater_us = GRID_VARS%PackWater_us
 SurfWater_us = GRID_VARS%SurfWater_us
-!Swq_us = GRID_VARS%Swq_us
+Swq_us = GRID_VARS%Swq_us
 VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
 r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
 Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-albd_us = GRID_VEG%albd_us
+!albd_us = GRID_VEG%albd_us
 alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
@@ -203,6 +205,7 @@ tcbeta = GRID_VEG%tcbeta
 tcbeta_us = GRID_VEG%tcbeta_us
 zdeep = GRID_SOIL%zdeep
 zmid = GRID_SOIL%zmid
+zrzmax = GLOBAL%zrzmax
 
 !Moss Parameters
 r_moss_depth = GRID_VEG%r_moss_depth
@@ -235,10 +238,14 @@ trefk = GRID_VEG%trefk
 trefk_us = GRID_VEG%trefk_us
 
 !COnstants
+
+toleb = GLOBAL%toleb
+maxnri = GLOBAL%maxnri
 row = GRID_VARS%row
 cph2o = GRID_VARS%cph2o
 cp = GRID_VARS%cp
 roi = GRID_VARS%roi
+
 
 !Energy balance variables
 
@@ -252,9 +259,16 @@ r_mossm1 = GRID_VARS%r_mossm1
 zrz = GRID_VARS%zrz
 smold = GRID_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+smpet0 = GLOBAL%smpet0
 
 !DIFF option parameters
-
+iopthermc = GLOBAL%iopthermc
+iopgveg = GLOBAL%iopgveg
+iopthermc_v = GLOBAL%iopthermc_v
+iopstab = GLOBAL%iopstab
+ioppet = GLOBAL%ioppet
+iopwv = GLOBAL%iopwv
+iopsmini = GLOBAL%iopsmini
 
 
 ! ====================================================================
@@ -503,7 +517,7 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -515,16 +529,16 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -540,7 +554,7 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
        tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -575,7 +589,7 @@ rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 
       else if(ioppet.eq.1)then
 
-        call petpen(tcel,vpsat,vpdef,f1par,albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,albd,&
        xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
@@ -713,13 +727,32 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
-  subroutine petpen(tcel,vpsat,vpdef,f1par,albd,xlai,rsd,rsmin,&
-       rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
+  subroutine petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,&
+       albd,xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
 
       implicit none
       include "help/petpen.h"
+
+      type (GRID_MET_template) :: GRID_MET
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+
+      albd = GRID_VEG%albd
+      xlai = GRID_VEG%xlai
+      rsd = GRID_MET%rsd
+      rsmin = GRID_VEG%rsmin
+      rsmax = GRID_VEG%rsmax
+      Rpl = GRID_VEG%Rpl
+      trefk = GRID_VEG%trefk
+      rnetpn = GRID_VARS%rnetpn
+      gbspen = GRID_VARS%gbspen
+      rescan = GRID_VEG%rescan
+      row = GRID_VARS%row
+      cp = GRID_VARS%cp
+
+
 
 ! ====================================================================
 ! Calculate the atmospheri! vapor pressure deficit and slope of
@@ -847,7 +880,7 @@ dspet = GRID_VARS%dspet
 
 ! General vegetation parameters
 
-       canclos,extinct,i_und,i_moss,ivgtyp,&
+       GRID_VEG,i_und,i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -859,16 +892,16 @@ dspet = GRID_VARS%dspet
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,albw,albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -884,7 +917,7 @@ dspet = GRID_VARS%dspet
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,&
+       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,&
        rocpsoil,tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -919,13 +952,20 @@ dspet = GRID_VARS%dspet
       implicit none
       include "help/peteb.h"
 
+
+      type (GRID_MET_template) :: GRID_MET
+      type (GRID_VEG_template) :: GRID_VEG
+      type (GRID_VARS_template) :: GRID_VARS
+      type (GRID_SOIL_template) :: GRID_SOIL
+      type (GLOBAL_template) :: GLOBAL
+
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
 ! story layers.
 ! ====================================================================
 
-      call calc_rs(canclos,extinct,i_und,i_moss,Swq_us,&
-                   albd_us,alb_moss,alb_snow,rsd,rs_over,rs_under)
+      call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
+                   alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize the liquid rain and snowfall.
@@ -1157,6 +1197,7 @@ dspet = GRID_VARS%dspet
       function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
       include "help/clcf1par.h"
+      !type (GRID_VEG_template) :: GRID_VEG
       data a1/0.19/,a2/1128/,a3/30.8/
 
       par = 0.55 * (1.d0 - alb)*Rg
