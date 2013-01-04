@@ -112,8 +112,9 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 
   call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
-  !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix) 
-  !$OMP DO SCHEDULE(DYNAMIC) ORDERED
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix) 
+!$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
   do ipix=1,GLOBAL%npix
 
