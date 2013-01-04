@@ -108,7 +108,7 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       !type (SNOW_VARS_template) :: SNOW_VARS
-      !type (GLOBAL_template) :: GLOBAL
+      type (GLOBAL_template) :: GLOBAL
 
       !type (GENERAL_template) :: GENERAL
 
@@ -477,7 +477,7 @@ zbar = CAT%zbar
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg)
+       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.

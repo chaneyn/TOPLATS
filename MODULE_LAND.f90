@@ -120,7 +120,7 @@ MODULE MODULE_LAND
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,irestype,ioppet,&
-       iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,GLOBAL)
+       iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
 
       implicit none
       include "help/land.h"!Remove when variables are changed
@@ -128,6 +128,8 @@ MODULE MODULE_LAND
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
       type (GRID_SOIL_template) :: GRID_SOIL
+      type (REGIONAL_template) :: REG
+      type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
       real*8 gold
 
@@ -340,7 +342,7 @@ MODULE MODULE_LAND
       rzdthetaidt = GRID_VARS%rzdthetaidt
       tzdthetaidt = GRID_VARS%tzdthetaidt
       zw = GRID_VARS%zw
-      !zbar    !!Needs Catchment Structure
+      zbar = CAT%zbar
       zmoss = GRID_VARS%zmoss
       capflx = GRID_VARS%capflx
       difrz = GRID_VARS%difrz
@@ -380,27 +382,27 @@ MODULE MODULE_LAND
       istorm = GRID_VARS%istorm
       
     !TOPMODEL Parameters
-      !ff  !!Needs Catchment Structure
+      ff = CAT%ff
       atanb = GRID_VARS%atanb
-      !xlamda !!Needs Catchment Structure
+      xlamda = CAT%xlamda
       
     !Regional Saturation Parameters
-      !fwcat  !!Needs Catchment Structure
-      !fwreg  !!Needs Regional Structure
-      !pr3sat
-      !perrg2
-      !pr2sat
-      !pr2uns
-      !perrg1
-      !pr1sat
-      !pr1rzs
-      !pr1tzs
-      !pr1uns
-      !persxr
-      !perixr
-      !persac
-      !peruac
-      !perusc   
+      fwcat = CAT%fwcat
+      fwreg = REG%fwreg
+      pr3sat = REG%pr3sat
+      perrg2 = REG%perrg2
+      pr2sat = REG%pr2sat
+      pr2uns = REG%pr2uns
+      perrg1 = REG%perrg1
+      pr1sat = REG%pr1sat
+      pr1rzs = REG%pr1rzs
+      pr1tzs = REG%pr1tzs
+      pr1uns = REG%pr1uns
+      persxr = REG%persxr
+      perixr = REG%perixr
+      persac = REG%persac
+      peruac = REG%peruac
+      perusc = REG%perusc  
 
     !Different option parameters
       !iopthermc = GLOBAL%iopthermc
