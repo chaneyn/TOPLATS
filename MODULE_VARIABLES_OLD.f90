@@ -1,4 +1,4 @@
-MODULE MODULE_VARIABLES
+MODULE MODULE_VARIABLES_OLD
 
 ! ====================================================================
 ! SNOW.h
@@ -702,4 +702,4 @@ MODULE MODULE_VARIABLES
 
       integer numc
 
-END MODULE MODULE_VARIABLES
+END MODULE MODULE_VARIABLES_OLD

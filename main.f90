@@ -41,6 +41,8 @@ USE FRUIT
 !Module containing all the variables used in the model
 USE MODULE_VARIABLES
 
+USE MODULE_VARIABLES_OLD
+
 !Module containing all the tests
 USE MODULE_TESTS
 

@@ -1,5 +1,7 @@
 MODULE MODULE_IO
 
+USE MODULE_VARIABLES_OLD
+
 USE MODULE_VARIABLES
 
 !Add the variables that are reused throughout the subroutines
