@@ -34,229 +34,102 @@
 !  Email : nchaney@princeton.edu
 !
 ! ====================================================================
-      !Module containing the unit tests
-      USE FRUIT
 
-      !Module containing all the variables used in the model
-      USE MODULE_VARIABLES
-       
-      !Module containing all the tests
-      USE MODULE_TESTS
+!Module containing the unit tests
+USE FRUIT
 
-      !Module containing all the I/O for the interface
-      USE MODULE_IO
+!Module containing all the variables used in the model
+USE MODULE_VARIABLES
 
-      !Module containing topmodel
-      USE MODULE_TOPMODEL
+!Module containing all the tests
+USE MODULE_TESTS
 
-      !Module containing the cell model
-      USE MODULE_CELL
+!Module containing all the I/O for the interface
+USE MODULE_IO
 
-      implicit none
-      type (GLOBAL_template) :: GLOBAL
-      type (GRID_template),dimension(:),allocatable :: GRID
-      type (REGIONAL_template) :: REG
-      type (CATCHMENT_template),dimension(:),allocatable :: CAT
-      type (IO_template) :: IO
-      integer :: nthreads,chunksize
-      !Set OpenMP parameters
-      chunksize = 1
-      nthreads = 1
+!Module containing topmodel
+USE MODULE_TOPMODEL
 
-! ####################################################################
+!Module containing the cell model
+USE MODULE_CELL
+
+implicit none
+type (GLOBAL_template) :: GLOBAL
+type (GRID_template),dimension(:),allocatable :: GRID
+type (REGIONAL_template) :: REG
+type (CATCHMENT_template),dimension(:),allocatable :: CAT
+type (IO_template) :: IO
+GLOBAL%nthreads = 8
+
+!####################################################################
 ! Initialize unit testing
-! ####################################################################
+!####################################################################
 
 call init_fruit
 
-! ####################################################################
+!####################################################################
 ! Open all files
-! ####################################################################
+!####################################################################
 
-      call FILE_OPEN()
+call FILE_OPEN()
 
-! ####################################################################
+!####################################################################
 ! Call rddata to open files, read in time in-variant parameters,&
 ! and initialize simulation sums.
-! ####################################################################
+!####################################################################
 
-      call rddata(GLOBAL,GRID,REG,CAT,IO)
+call rddata(GLOBAL,GRID,REG,CAT,IO)
 
-! ####################################################################
+!####################################################################
 ! Loop through the simulation time.
-! ####################################################################
+!####################################################################
 
-      do i=1,GLOBAL%ndata
+do i=1,GLOBAL%ndata
 
-          print*, "Time Step: ",i," Year: ",GLOBAL%iyear," Julian Day: ",&
-                    GLOBAL%iday," Hour: ",GLOBAL%ihour
+  print*, "Time Step: ",i," Year: ",GLOBAL%iyear," Julian Day: ",&
+             GLOBAL%iday," Hour: ",GLOBAL%ihour
 
-! ####################################################################
+!#####################################################################
 ! Update the vegetation parameters if required.
-! ####################################################################
+!#####################################################################
 
-         if (mod(i,GLOBAL%dtveg).eq.0) then
+  if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID)
 
-            call rdveg_update(GLOBAL,GRID)
-
-         endif
-
-! ####################################################################
+!#####################################################################
 ! Initialize water balance variables for the time step.
-! ####################################################################
+!#####################################################################
 
-        call instep(i,GLOBAL%ncatch,djday,GLOBAL%dt,&
-                REG,CAT)
+  call instep(i,GLOBAL%ncatch,djday,GLOBAL%dt,REG,CAT)
 
-! ####################################################################
+!#####################################################################
 ! Read meteorological data.
-! ####################################################################
+!#####################################################################
 
-        call rdatmo(i,GRID%MET,GLOBAL,IO)
+  call rdatmo(i,GRID%MET,GLOBAL,IO)
 
-! ####################################################################
+!#####################################################################
 ! Loop through each pixel in atanb map.
-! ####################################################################
+!#####################################################################
 
-            lakpix=0
-            m_lc = 1
-            m_px = 1
-            u_lc = 1
-            u_px = 1
-            l_lc = 1
-            l_px = 1
+  call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+  !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix) 
+  !$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
-GRID%VARS%row = 997.d0
-GRID%VARS%cph2o = 4186.d0
-GRID%VARS%cp = 1005.d0
-GRID%VARS%roi = 850.d0
-GRID%VARS%rzsmold = 0.d0
+  do ipix=1,GLOBAL%npix
 
-call OMP_SET_NUM_THREADS(8)
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(sw_lc,sw_px,s_lc,s_px) 
-!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+!#####################################################################
+! Update the current grid cell
+!#####################################################################
 
-            do ipix=1,GLOBAL%npix
+    call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(GRID(ipix)%SOIL%isoil)%SOIL,&
+       GRID(GRID(ipix)%VEG%ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
+       REG,CAT(GRID(ipix)%VARS%icatch),GLOBAL)
 
-! ####################################################################
-! Calculate the matrix indices depending on the land cover geometry.
-! ####################################################################
-
-               call clc_ind (GRID(ipix)%VEG%ilandc,ipix,SNOW_RUN,sw_lc,sw_px,SNW_FLG,s_lc,s_px)
-
-! ####################################################################
-! Run the point model
-! ####################################################################
-
-               call land_lake(NEWSTORM(1,1),ipix,i,GLOBAL%dt,GLOBAL%inc_frozen,GLOBAL%i_2l,l_px,&
-
-! Factor to multiply the regional parameters with
-
-       1.d0,&
-
-! General vegetation parameters
-
-       GRID(GRID(ipix)%VEG%ilandc)%VEG%ivgtyp,&
-
-! Snow pack variables
-
-       GRID(sw_px)%VARS%PackWater,GRID(sw_px)%VARS%SurfWater,Swq(sw_px),GRID(sw_px)%VARS%VaporMassFlux,&
-       TPack(sw_px),TSurf(sw_px),GRID(sw_px)%VARS%r_MeltEnergy,GRID(sw_px)%VARS%Outflow,&
-       xleact_snow(sw_px),hact_snow(sw_px),rn_snow(sw_px),GRID(s_px)%VARS%PackWater_us,&
-       GRID(s_px)%VARS%SurfWater_us,Swq_us(s_px),GRID(s_px)%VARS%VaporMassFlux_us,TPack_us(s_px),&
-       TSurf_us(s_px),GRID(s_px)%VARS%r_MeltEnergy_us,&
-       GRID(s_px)%VARS%Outflow_us,xleact_snow_us(s_px),hact_snow_us(s_px),rn_snow_us(s_px),dens(sw_px),dens_us(s_px),&
-       dsty(sw_px),dsty_us(s_px),Sdepth(sw_px),Sdepth_us(s_px),&
-
-! Albedos of the over story, under story,&
-! and moss layer
-
-       alb_snow(ipix),&
-
-! Meteorological data
-
-       GRID(ipix)%MET,&
-
-! Temperature variables
-
-       Tdeepstep(GRID(ipix)%SOIL%isoil),&
-
-! Soil parameters
-        
-       GRID(GRID(ipix)%SOIL%isoil)%SOIL,&
-       GRID(GRID(ipix)%SOIL%isoil)%SOIL%ifcoarse,&
-       GLOBAL%zrzmax,&
-
-! Vegetation parameters
-
-       GRID(GRID(ipix)%VEG%ilandc)%VEG,&
-
-! Constants
-       GLOBAL%toleb,GLOBAL%maxnri,&
-
-! Energy balance variables
-
-       rib(ipix),&
-
-! Water balance variables
-       
-       GRID(ipix)%VARS,&
-       GRID(ipix)%VARS%cuminf,&
-       GRID(ipix)%VARS%sorp,GRID(ipix)%VARS%cc,&
-       GRID(ipix)%VARS%sesq,GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
-       GRID(GRID(ipix)%SOIL%isoil)%SOIL%idifind,&
-       GRID(ipix)%VARS%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
-       GLOBAL%smpet0,&
-
-! Storm parameters
-
-       istmst(ipix),intstm(ipix),&
-       intstp(ipix),GLOBAL%endstm,istorm(ipix),&
-       GRID(ipix)%VARS%xintst,&
-
-! Topmodel parameters
-
-       CAT(GRID(ipix)%VARS%icatch)%ff,GRID(ipix)%VARS%atanb,CAT(GRID(ipix)%VARS%icatch)%xlamda,&
-
-! Regional saturation parameters
-
-       REG,&
-
-! Different option parameters
-
-       GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopsmini,GLOBAL%ikopt,&
-       GLOBAL%irestype,GLOBAL%ioppet,GLOBAL%iopveg,GLOBAL%iopstab,GLOBAL%iopwv,&
-
-! Catchment data
-       CAT(GRID(ipix)%VARS%icatch))
-
-!TEMPORARY PASS BACK TO ORIGINAL VARIABLES
-       !GRID
-       rzsm(ipix) = GRID(ipix)%VARS%rzsm
-       tzsm(ipix) = GRID(ipix)%VARS%tzsm
-       rzsm_f(ipix) = GRID(ipix)%VARS%rzsm_f
-       tzsm_f(ipix) = GRID(ipix)%VARS%tzsm_f
-       pnet(ipix) = GRID(ipix)%VARS%pnet
-       xinact(ipix) = GRID(ipix)%VARS%xinact
-       runtot(ipix) = GRID(ipix)%VARS%runtot
-       irntyp(ipix) = GRID(ipix)%VARS%irntyp
-       !Meteorological Variables
-       Tincan(ipix) = GRID(ipix)%VARS%Tincan
-       rh_ic(ipix) = GRID(ipix)%VARS%rh_ic
-       precip_o(ipix) = GRID(ipix)%VARS%precip_o
-       precip_u(ipix) = GRID(ipix)%VARS%precip_u
-       !Energy Fluxes
-       rnetpn(ipix) = GRID(ipix)%VARS%rnetpn
-       gbspen(ipix) = GRID(ipix)%VARS%gbspen
-       evtact(ipix) = GRID(ipix)%VARS%evtact
-       ievcon(ipix) = GRID(ipix)%VARS%ievcon
-       ebspot(ipix) = GRID(ipix)%VARS%ebspot
-
-! ....................................................................
+!#####################################################################
 ! Sum the local water and energy balance fluxes.
-! ....................................................................
+!#####################################################################
 
-               call sumflx(REG,CAT(GRID(ipix)%VARS%icatch),&
+    call sumflx(REG,CAT(GRID(ipix)%VARS%icatch),&
        GRID(ipix)%VARS,&        
 
 ! Factor to rescale all the local fluxes with
@@ -277,12 +150,12 @@ call OMP_SET_NUM_THREADS(8)
 
        GLOBAL%inc_frozen,&
        GRID(GRID(ipix)%SOIL%isoil)%SOIL%thetas,&
-       Swq(sw_px),Swq_us(s_px),&
-       Sdepth(sw_px),Sdepth_us(s_px),&
+       GRID(ipix)%VARS%Swq,GRID(ipix)%VARS%Swq_us,&
+       GRID(ipix)%VARS%Sdepth,GRID(ipix)%VARS%Sdepth_us,&
 
 ! GRID Variables
 
-       Tdeepstep(GRID(ipix)%SOIL%isoil))
+       GRID(GRID(ipix)%SOIL%isoil)%SOIL%Tdeepstep)
 
             enddo
 

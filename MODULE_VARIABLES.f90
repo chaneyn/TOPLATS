@@ -713,7 +713,7 @@ end type GRID_MET_template
 type GRID_SOIL_template
         real*8 :: bcbeta,psic,thetas,thetar,xk0,zdeep,tdeep,&
                 zmid,tmid0,rocpsoil,quartz,srespar1,srespar2,srespar3,a_ice,&
-                b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr
+                b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr,Tdeepstep
         integer :: isoil,ifcoarse,idifind
 end type GRID_SOIL_template
 
@@ -756,12 +756,17 @@ type GRID_VARS_template
         !Energy Fluxes
         real*8 :: dshact,rnetpn,gbspen,evtact,ievcon,gact,rnact,xleact,&
                 hact,ebspot,dspet,rnpet,xlepet,hpet,gpet
+        !Energy Balance
+	real*8 :: rib
         !Evapotranspiration
         real*8 :: etpix
         !Snow Variables
         real*8 :: PackWater_us,&
                 SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
-                Outflow_us
+                Outflow_us,alb_snow
+	real*8 :: TPack,TSurf,xleact_snow,hact_snow,rn_snow,&
+		TPack_us,TSurf_us,xleact_snow_us,hact_snow_us,&
+                rn_snow_us,dens,dens_us,dsty,dsty_us,Sdepth,Sdepth_us
         !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
         real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
@@ -865,10 +870,15 @@ type GLOBAL_template
         real*8 :: frcbeta
 	!STORM PARAM
         real*8 :: endstm,toleb,pixsiz,dt
+        integer :: newstorm
         !Vegetation
         integer :: ntdveg 
         !Time
         integer :: iyear,iday,ihour
+	!Misc
+	real*8 :: mul_fac
+	!OpenMP parameters
+	integer :: nthreads
 
 end type GLOBAL_template
 

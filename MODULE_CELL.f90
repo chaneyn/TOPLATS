@@ -22,84 +22,10 @@ contains
 ! ====================================================================
 
 
-      subroutine land_lake(newstorm,ipix,i,dt,inc_frozen,i_2l,lakpix,&
-
-! Factor to multiply the regional parameters with
-
-       mul_fac,&
-
-! General vegetation parameters
-
-       ivgtyp,&
-
-! Snow pack variables
-
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,&
-       Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,Outflow_us,&
-       xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,dsty,dsty_us,Sdepth,Sdepth_us,&
-
-! Albedos of the over story, under story,&
-! and moss layer
-
-       alb_snow,&
-
-! Meteorological data
-
-       GRID_MET,&
-
-! Temperature variables
-
-       Tdeepstep,&
-
-! Soil parameters
-
-       GRID_SOIL,&
-       ifcoarse,&
-       zrzmax,&
-
-! Vegetation parameters
-
-       GRID_VEG,&
-
-! Constants
-       toleb,maxnri,&
-
-! Energy balance variables
-
-       rib,&
-
-! Water balance variables
-       
-       GRID_VARS,&
-       cuminf,sorp,cc,sesq,&
-       corr,idifind,wcip1,par,smpet0,&
-
-! Storm parameters
-
-       istmst,intstm,intstp,endstm,istorm,&
-       xintst,&
-
-! Topmodel parameters
-
-       ff,atanb,xlamda,&
-
-! Regional saturation parameters
-
-       REG,&
-
-! Different option parameters
-
-       iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg,iopstab,iopwv,&
-
-! Catchment Data
-        CAT)
+      subroutine Update_Cell(ipix,i,GRID_MET,GRID_SOIL,GRID_VEG,&
+               GRID_VARS,wcip1,REG,CAT,GLOBAL)
 
       implicit none
-!       include "SNOW.h"
-!       include 'wgtpar.h'
-      !include 'LAKE.h'
       include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
@@ -107,10 +33,8 @@ contains
       type (REGIONAL_template),intent(inout) :: REG
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
-      !type (SNOW_VARS_template) :: SNOW_VARS
       type (GLOBAL_template) :: GLOBAL
-
-      !type (GENERAL_template) :: GENERAL
+      GLOBAL%mul_fac = 1.0d0
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
 
@@ -151,6 +75,7 @@ Twint2 = GRID_VEG%Twint2
 Twsep = GRID_VEG%Twsep
 wsc = GRID_VEG%wsc
 tcbeta = GRID_VEG%tcbeta
+ivgtyp = GRID_VEG%ivgtyp
 
 !SOIL PROPERTIES
 bcbeta = GRID_SOIL%bcbeta
@@ -176,6 +101,10 @@ shift = GRID_SOIL%shift
 bcgamm = GRID_SOIL%bcgamm
 par = GRID_SOIL%par
 corr = GRID_SOIL%corr
+idifind = GRID_SOIL%idifind
+par = GRID_SOIL%par
+Tdeepstep = GRID_SOIL%Tdeepstep
+ifcoarse = GRID_SOIL%ifcoarse
 
 !METEOROLOGY
 rsd = GRID_MET%rsd
@@ -229,7 +158,67 @@ rnpet = GRID_VARS%rnpet
 xlepet = GRID_VARS%xlepet
 hpet = GRID_VARS%hpet
 gpet = GRID_VARS%gpet
+rib = GRID_VARS%rib
+!Snow
+PackWater = GRID_VARS%Packwater
+SurfWater = GRID_VARS%SurfWater
+VaporMassFlux = GRID_VARS%VaporMassFlux
+r_MeltEnergy = GRID_VARS%r_MeltEnergy
+Outflow = GRID_VARS%Outflow
+PackWater_us = GRID_VARS%PackWater_us
+Swq = GRID_VARS%Swq
+TPack = GRID_VARS%Tpack
+TSurf = GRID_VARS%TSurf
+xleact_snow = GRID_VARS%xleact_snow
+hact_snow = GRID_VARS%hact_snow
+rn_snow = GRID_VARS%rn_snow
+Swq_us = GRID_VARS%Swq_us
+TPack_us = GRID_VARS%TPack_us
+TSurf_us = GRID_VARS%TSurf_us
+xleact_snow_us = GRID_VARS%xleact_snow_us
+hact_snow_us = GRID_VARS%hact_snow_us
+rn_snow_us = GRID_VARS%rn_snow_us
+dens = GRID_VARS%dens
+dens_us = GRID_VARS%dens_us
+dsty = GRID_VARS%dsty
+dsty_us = GRID_VARS%dsty_us
+Sdepth = GRID_VARS%Sdepth
+Sdepth_us = GRID_VARS%Sdepth_us
+
 wcip1 = GRID_VARS%wcip1
+cuminf = GRID_VARS%cuminf
+sorp = GRID_VARS%sorp
+cc = GRID_VARS%cc
+sesq = GRID_VARS%sesq
+alb_snow = GRID_VARS%alb_snow
+istmst = GRID_VARS%istmst
+intstm = GRID_VARS%intstm
+intstp = GRID_VARS%intstp
+istorm = GRID_VARS%istorm
+xintst = GRID_VARS%xintst
+atanb = GRID_VARS%atanb
+
+!Global variables
+dt = GLOBAL%dt
+inc_frozen = GLOBAL%inc_frozen
+zrzmax = GLOBAL%zrzmax
+toleb = GLOBAL%toleb
+maxnri = GLOBAL%maxnri
+smpet0 = GLOBAL%smpet0
+endstm = GLOBAL%endstm
+iopthermc = GLOBAL%iopthermc
+iopgveg = GLOBAL%iopgveg
+iopthermc_v = GLOBAL%iopthermc_v
+iopsmini = GLOBAL%iopsmini
+ikopt = GLOBAL%ikopt
+irestype = GLOBAL%irestype
+ioppet = GLOBAL%ioppet
+iopveg = GLOBAL%iopveg
+iopstab = GLOBAL%iopstab
+iopwv = GLOBAL%iopwv
+i_2l = GLOBAL%i_2l
+newstorm = GLOBAL%newstorm
+mul_fac = GLOBAL%mul_fac
 
 !Point Data
 !Water Balance
@@ -264,9 +253,8 @@ roi = GRID_VARS%roi!roi
 !Catchment
 !fwcat = CAT%fwcat
 zbar = CAT%zbar
-
-!if(i.eq. 2)print*,ipix,GRID_VARS
-            !GRID_VEG%wcip1 = wcip1
+ff = CAT%ff
+xlamda = CAT%xlamda
 
 ! ====================================================================
 ! If the vegetation type is greater than or equal to zero then
@@ -628,6 +616,29 @@ GRID_VARS%row = row
 GRID_VARS%cph2o = cph2o
 GRID_VARS%cp = cp
 GRID_VARS%roi = roi
+GRID_VARS%wcip1 = wcip1
+
+!SNOW
+GRID_VARS%SurfWater = SurfWater
+GRID_VARS%Outflow = Outflow
+GRID_VARS%Swq = Swq
+GRID_VARS%Tpack = Tpack
+GRID_VARS%TSurf = Tsurf
+GRID_VARS%xleact_snow = xleact_snow
+GRID_VARS%hact_snow = hact_snow
+GRID_VARS%rn_snow = rn_snow
+GRID_VARS%Swq_us = Swq_us
+GRID_VARS%TPack_us = TPack_us
+GRID_VARS%TSurf_us = TSurf_us
+GRID_VARS%xleact_snow_us = xleact_snow_us
+GRID_VARS%hact_snow_us = hact_snow_us
+GRID_VARS%rn_snow_us = rn_snow_us
+GRID_VARS%dens = dens
+GRID_VARS%dens_us = dens_us
+GRID_VARS%dsty = dsty
+GRID_VARS%dsty_us = dsty_us
+GRID_VARS%Sdepth = Sdepth
+GRID_VARS%Sdepth_us = Sdepth_us
 
 !$OMP ORDERED
 !$OMP CRITICAL
@@ -650,11 +661,15 @@ REG%perusc = REG%perusc + perusc
 
 !CATCHMENT
 CAT%fwcat = CAT%fwcat + fwcat
+
+!SOIL
+GRID_SOIL%Tdeepstep = Tdeepstep
+
 !$OMP END CRITICAL
 !$OMP END ORDERED
 
       return
 
-      end subroutine land_lake
+      end subroutine Update_Cell
 
 END MODULE MODULE_CELL
