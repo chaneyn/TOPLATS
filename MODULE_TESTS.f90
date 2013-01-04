@@ -19,7 +19,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine lswb(i,r_lakearea,f_lake,veg_pdf,nlcs,veg,REG,GLOBAL,GRID)
+      subroutine lswb(i,REG,GLOBAL,GRID)
 
       implicit none
       include "help/lswb.h"
@@ -105,22 +105,10 @@ contains
       Sdepth_ussum = REG%Sdepth_ussum
 
 ! ====================================================================
-! Calculate the number of pixels covered by lakes.
+! Calculate the number of pixels covered by vegetation
 ! ====================================================================
 
-      nlakpix=0
-
-      tot=0.d0
-
-         do ic=1,ncatch
-
-            tot=tot+r_lakearea(ic)/pixsiz/pixsiz
-
-         enddo
-
-         nlakpix=tot
-
-      nvegpix=npix-nlakpix
+      nvegpix=npix
 
       vegd=1.d0
 

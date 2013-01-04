@@ -63,7 +63,6 @@ type GRID_VARS_template
 	real*8 :: TPack,TSurf,xleact_snow,hact_snow,rn_snow,&
 		TPack_us,TSurf_us,xleact_snow_us,hact_snow_us,&
                 rn_snow_us,dens,dens_us,dsty,dsty_us,Sdepth,Sdepth_us
-        !real*8,dimension(1+SNOW_RUN*(MAX_PIX-1)) :: PackWater,&
         real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
         !Old POINT_VARS!
@@ -171,6 +170,7 @@ type GLOBAL_template
         integer :: ntdveg 
         !Time
         integer :: iyear,iday,ihour
+	real*8 :: djday
 	!Misc
 	real*8 :: mul_fac
 	!OpenMP parameters

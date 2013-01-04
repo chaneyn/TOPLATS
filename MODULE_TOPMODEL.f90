@@ -213,14 +213,12 @@ contains
 !
 ! ====================================================================
 
-      subroutine catflx(i,ic,area,pixsiz,r_lakearea,ettot,&
+      subroutine catflx(i,ic,area,pixsiz,ettot,&
        etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
        etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
        conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat)
 
       implicit none
-!       include "SNOW.h"
-!       include "wgtpar.h"
       include "help/catflx.h"
 
 ! ====================================================================
@@ -228,7 +226,7 @@ contains
 ! ====================================================================
 
       catpix = area/pixsiz/pixsiz
-      catlakpix = r_lakearea/pixsiz/pixsiz
+      !catlakpix = r_lakearea/pixsiz/pixsiz
       catvegpix = (area-r_lakearea)/pixsiz/pixsiz
 
 ! ====================================================================
@@ -327,7 +325,7 @@ contains
 ! ====================================================================
 
       subroutine upzbar(i,ic,iopbf,q0,ff,zbar,dtil,basink,dd,xlength,&
-       gwtsum,capsum,area,r_lakearea,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
+       gwtsum,capsum,area,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
        ilandc,npix,icatch,zw,psic,isoil,zrzmax,&
        tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,pixsiz)
 
@@ -363,7 +361,7 @@ contains
 ! water storage.
 ! ====================================================================
 
-      zbrflx = (gwtsum - capsum - etwtsum - (qb/ (area-r_lakearea) )) * dt
+      zbrflx = (gwtsum - capsum - etwtsum - (qb/ area)) * dt
       zbrpor = (rzpsum+tzpsum) * (zbar-psicav)
 
       if (zbrflx.gt.zbrpor) then
@@ -374,7 +372,7 @@ contains
 
          qzbar = (zbrflx - zbrpor)/dt
          zbrflx = zbrpor
-         qb = qb + qzbar*(area-r_lakearea)
+         qb = qb + qzbar*area
 
 ! --------------------------------------------------------------------&
 ! If water table is falling but storage is full zbar1 will
