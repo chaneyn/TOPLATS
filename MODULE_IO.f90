@@ -168,7 +168,7 @@ contains
        GRID%VEG%Tsep,GRID%VEG%Twsep,GRID%VEG%eps,&
        GRID%VEG%rtact,GRID%VEG%rtdens,GRID%VEG%rtres,&
        GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
-       GRID%VEG%wsc,GRID%VEG%wcip1,&
+       GRID%VEG%wsc,GRID%VARS%wcip1,&
        GLOBAL%pixsiz,CAT%area,CAT%fbs,&
        REG%fbsrg,GLOBAL%ncatch)
 

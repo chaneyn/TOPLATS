@@ -734,7 +734,7 @@ type GRID_VEG_template
                 r_moss_depth,eps,srespar3_moss,thetas_moss,tk0moss,tmid0_moss,&
                 r_mossmpet0,a_ice_moss,b_ice_moss,bulk_dens_moss
         !Miscellanous
-        real*8 :: wcip1
+        !real*8 :: wcip1
         !Indices
         integer :: i_und,i_moss,ivgtyp,ilandc
 
@@ -783,6 +783,8 @@ type GRID_VARS_template
         real*8 :: atanb
         !INFILTRATION PARAM
         real*8 :: xintst,cuminf,sorp,cc,sesq,qb0,xintst_moss
+        !Vegetation
+        real*8 :: wcip1
 
 end type GRID_VARS_template
 

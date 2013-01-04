@@ -138,7 +138,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 ! Temporarily reassgin variables from old to new format
     !General Vegetation parameters
-      canclos = GRID_VEG%canclos
+       canclos = GRID_VEG%canclos
       extinct = GRID_VEG%extinct
       i_und = GRID_VEG%i_und
       i_moss = GRID_VEG%i_moss
@@ -149,23 +149,23 @@ MODULE MODULE_LAND
     !Snow Pack variables
       PackWater = GRID_VARS%PackWater
       SurfWater = GRID_VARS%SurfWater
-      Swq = GRID_VARS%Swq
-      VaporMassFlux = GRID_VARS%VaporMassFlux
+      !Swq = GRID_VARS%Swq
+      !VaporMassFlux = GRID_VARS%VaporMassFlux
       !TPack = GRID_VARS%TPack
       !TSurf = GRID_VARS%TSurf
-      r_MeltEnergy = GRID_VARS%r_MeltEnergy
-      Outflow = GRID_VARS%Outflow
+      !r_MeltEnergy = GRID_VARS%r_MeltEnergy
+      !Outflow = GRID_VARS%Outflow
       !xleact_snow = GRID_VARS%xleact_snow
       !hact_snow = GRID_VARS%hact_snow
       !rn_snow = GRID_VARS%rn_snow
-      PackWater_us = GRID_VARS%PackWater_us
-      SurfWater_us = GRID_VARS%SurfWater_us
-      Swq_us = GRID_VARS%Swq_us
-      VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+      !PackWater_us = GRID_VARS%PackWater_us
+      !SurfWater_us = GRID_VARS%SurfWater_us
+      !Swq_us = GRID_VARS%Swq_us
+      !VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
       !TPack_us = GRID_VARS%TPack_us
       !TSurf_us = GRID_VARS%TSurf_us
-      r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
-      Outflow_us = GRID_VARS%Outflow_us
+      !r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+      !Outflow_us = GRID_VARS%Outflow_us
       !xleact_snow_us = GRID_VARS%xleact_snow_us
       !hact_snow_us = GRID_VARS%hact_snow_us
       !rn_snow_us = GRID_VARS%rn_snow_us
@@ -282,8 +282,8 @@ MODULE MODULE_LAND
       rescan = GRID_VEG%rescan
       tc = GRID_VEG%tc
       tw = GRID_VEG%tw
-      !tc_us = GRID_VEG%tc_us
-      !tw_us = GRID_VEG%tw_us       
+      tc_us = GRID_VEG%tc_us
+      tw_us = GRID_VEG%tw_us       
       rescan_us = GRID_VEG%rescan_us
       rtact = GRID_VEG%rtact
       rtdens = GRID_VEG%rtdens
@@ -365,7 +365,7 @@ MODULE MODULE_LAND
       fw = GRID_VARS%fw
       !dc_us
       !fw_us
-      wcip1 = GRID_VEG%wcip1
+      wcip1 = GRID_VARS%wcip1
       par = GRID_SOIL%par
       !dewrun
       dsrz = GRID_VARS%dsrz
@@ -387,22 +387,22 @@ MODULE MODULE_LAND
       xlamda = CAT%xlamda
       
     !Regional Saturation Parameters
-      fwcat = CAT%fwcat
-      fwreg = REG%fwreg
-      pr3sat = REG%pr3sat
-      perrg2 = REG%perrg2
-      pr2sat = REG%pr2sat
-      pr2uns = REG%pr2uns
-      perrg1 = REG%perrg1
-      pr1sat = REG%pr1sat
-      pr1rzs = REG%pr1rzs
-      pr1tzs = REG%pr1tzs
-      pr1uns = REG%pr1uns
-      persxr = REG%persxr
-      perixr = REG%perixr
-      persac = REG%persac
-      peruac = REG%peruac
-      perusc = REG%perusc  
+      !fwcat = CAT%fwcat
+      !fwreg = REG%fwreg
+      !pr3sat = REG%pr3sat
+      !perrg2 = REG%perrg2
+      !pr2sat = REG%pr2sat
+      !pr2uns = REG%pr2uns
+      !perrg1 = REG%perrg1
+      !pr1sat = REG%pr1sat
+      !pr1rzs = REG%pr1rzs
+      !pr1tzs = REG%pr1tzs
+      !pr1uns = REG%pr1uns
+      !persxr = REG%persxr
+      !perixr = REG%perixr
+      !persac = REG%persac
+      !peruac = REG%peruac
+      !perusc = REG%perusc  
 
     !Different option parameters
       !iopthermc = GLOBAL%iopthermc
@@ -763,6 +763,9 @@ MODULE MODULE_LAND
             if (Swq.ge.wcip1) wcip1=Swq
 
       endif
+
+! Set the structure to the new value
+!GRID_VEG%wcip1 = wcip1
 
       return
     end subroutine land
