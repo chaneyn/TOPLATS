@@ -229,6 +229,7 @@ rnpet = GRID_VARS%rnpet
 xlepet = GRID_VARS%xlepet
 hpet = GRID_VARS%hpet
 gpet = GRID_VARS%gpet
+wcip1 = GRID_VARS%wcip1
 
 !Point Data
 !Water Balance
@@ -265,6 +266,7 @@ roi = GRID_VARS%roi!roi
 zbar = CAT%zbar
 
 !if(i.eq. 2)print*,ipix,GRID_VARS
+            !GRID_VEG%wcip1 = wcip1
 
 ! ====================================================================
 ! If the vegetation type is greater than or equal to zero then
@@ -402,6 +404,13 @@ zbar = CAT%zbar
 ! The uncouples the radiation balances for both layers from each
 ! other.  This option is also used when under story is not represented.
 ! ....................................................................
+       
+       GRID_VARS%dc = dc
+       GRID_VARS%fw = fw
+       GRID_MET%uzw = uzw
+       GRID_VARS%precip_o = precip_o
+       GRID_VARS%tkmid = tkmid
+
 
             call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
 
@@ -411,7 +420,7 @@ zbar = CAT%zbar
 
 ! General vegetation parameters
 
-       GRID_VEG,canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
+       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
 
 ! Snow pack variables
 
@@ -501,7 +510,7 @@ zbar = CAT%zbar
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg)
+       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.

@@ -205,7 +205,7 @@ call OMP_SET_NUM_THREADS(8)
        GRID(ipix)%VARS%sorp,GRID(ipix)%VARS%cc,&
        GRID(ipix)%VARS%sesq,GRID(GRID(ipix)%SOIL%isoil)%SOIL%corr,&
        GRID(GRID(ipix)%SOIL%isoil)%SOIL%idifind,&
-       GRID(ipix)%VEG%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
+       GRID(ipix)%VARS%wcip1,GRID(GRID(ipix)%SOIL%isoil)%SOIL%par,&
        GLOBAL%smpet0,&
 
 ! Storm parameters
@@ -271,7 +271,7 @@ call OMP_SET_NUM_THREADS(8)
 
 ! Grid data
 
-       GRID(ipix)%MET%tdry,GRID(ipix)%MET%pptms,GRID(ipix)%VEG%wcip1,&
+       GRID(ipix)%MET%tdry,GRID(ipix)%MET%pptms,GRID(ipix)%VARS%wcip1,&
 
 ! Soil moisture variables
 
