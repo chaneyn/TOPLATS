@@ -466,38 +466,19 @@ contains
 !
 ! ====================================================================
 
-      subroutine sumflx(REG,CAT,GRID_VARS,&
-
-! Factor to rescale all local fluxes
-
-       rescale,&
-
-! General vegetation parameters
-
-       ivgtyp,i,canclos,ilandc,dt,&
-
-! Condensation variables
-
-       tair,pptms,wcip1,&
-
-! Soil moisture variables
-
-       inc_frozen,thetas,&
-       Swq,Swq_us,Sdepth,Sdepth_us,&
-
-! GRID Variables
-       
-       Tdeepstep)
+      subroutine sumflx(REG,CAT,GRID_VARS,GLOBAL,&
+       GRID_VEG,GRID_SOIL,GRID_MET,i,ilandc)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      
     
       include "help/sumflx.dif.h"
-      type (REGIONAL_template) :: REG
-      type (GRID_VARS_template) :: GRID_VARS
-      type (CATCHMENT_template) :: CAT
+      type (REGIONAL_template),intent(inout) :: REG
+      type (GRID_VARS_template),intent(inout) :: GRID_VARS
+      type (GRID_VEG_template),intent(inout) :: GRID_VEG
+      type (GRID_SOIL_template),intent(inout) :: GRID_SOIL
+      type (GRID_MET_template),intent(inout) :: GRID_MET
+      type (CATCHMENT_template),intent(inout) :: CAT
+      type (GLOBAL_template),intent(in) :: GLOBAL
 
 ! TEMPORARY
 !GRID
@@ -523,6 +504,18 @@ runtot = GRID_VARS%runtot
 pnet = GRID_VARS%pnet
 evtact = GRID_VARS%evtact
 etpix = GRID_VARS%etpix
+ivgtyp = GRID_VEG%ivgtyp
+canclos = GRID_VEG%canclos
+tair = GRID_MET%tdry
+pptms = GRID_MET%pptms
+Swq = GRID_VARS%Swq
+Swq_us = GRID_VARS%Swq_us
+Sdepth = GRID_VARS%Sdepth
+Sdepth_us = GRID_VARS%Sdepth_us
+Tdeepstep = GRID_SOIL%Tdeepstep
+
+!Soil Data
+thetas = GRID_SOIL%thetas
 
 !Point Data
 zrz = GRID_VARS%zrz
@@ -547,25 +540,12 @@ dswc = GRID_VARS%dswc
 wcrhs = GRID_VARS%wcrhs
 !Energy fluxes
 epwms = GRID_VARS%epwms
+wcip1 = GRID_VARS%wcip1
 
-!Catchment Variables
-!etstsum = CAT%etstsum
-!etwtsum = CAT%etwtsum
-!etbssum = CAT%etbssum
-!etdcsum = CAT%etdcsum
-!etwcsum = CAT%etwcsum
-!contot = CAT%contot
-!pptsum = CAT%pptsum
-!pnetsum = CAT%pnetsum
-!qsurf = CAT%qsurf
-!sxrtot = CAT%sxrtot
-!xixtot = CAT%xixtot
-!ranrun = CAT%ranrun
-!conrun = CAT%conrun
-!gwtsum = CAT%gwtsum
-!capsum = CAT%capsum
-!tzpsum = CAT%tzpsum
-!rzpsum = CAT%rzpsum
+!GLOBAL
+rescale = GLOBAL%mul_fac
+dt = GLOBAL%dt
+inc_frozen = GLOBAL%inc_frozen
 
 ! ====================================================================
 ! Compute regional average evapotranspiration rate for the time step.    

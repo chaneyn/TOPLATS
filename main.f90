@@ -112,31 +112,9 @@ do i=1,GLOBAL%ndata
 ! Sum the local water and energy balance fluxes.
 !#####################################################################
 
-    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,&        
-
-! Factor to rescale all the local fluxes with
-
-       1.d0,&
-
-! General vegetation parameters
-
-       GRID(ilandc)%VEG%ivgtyp,&
-       i,GRID(ilandc)%VEG%canclos,GRID(ipix)%VEG%ilandc,GLOBAL%dt,&
-
-! Grid data
-
-       GRID(ipix)%MET%tdry,GRID(ipix)%MET%pptms,GRID(ipix)%VARS%wcip1,&
-
-! Soil moisture variables
-
-       GLOBAL%inc_frozen,&
-       GRID(isoil)%SOIL%thetas,&
-       GRID(ipix)%VARS%Swq,GRID(ipix)%VARS%Swq_us,&
-       GRID(ipix)%VARS%Sdepth,GRID(ipix)%VARS%Sdepth_us,&
-
-! GRID Variables
-
-       GRID(isoil)%SOIL%Tdeepstep)
+    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,& 
+       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
+       i,ilandc)
 
   enddo
 
