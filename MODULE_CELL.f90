@@ -187,7 +187,7 @@ dsty_us = GRID_VARS%dsty_us
 Sdepth = GRID_VARS%Sdepth
 Sdepth_us = GRID_VARS%Sdepth_us
 
-wcip1 = GRID_VARS%wcip1
+!wcip1 = GRID_VARS%wcip1
 cuminf = GRID_VARS%cuminf
 sorp = GRID_VARS%sorp
 cc = GRID_VARS%cc
@@ -618,7 +618,7 @@ GRID_VARS%row = row
 GRID_VARS%cph2o = cph2o
 GRID_VARS%cp = cp
 GRID_VARS%roi = roi
-GRID_VARS%wcip1 = wcip1
+!GRID_VARS%wcip1 = wcip1
 
 !SNOW
 GRID_VARS%SurfWater = SurfWater
