@@ -22,10 +22,10 @@ USE MODULE_TESTS,ONLY: lswb
 
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
-	            file_close
+                    file_close
 
 !Module containing topmodel
-USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx
+USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx,Update_Catchment
 
 !Module containing the cell model
 USE MODULE_CELL,ONLY: Update_Cell
@@ -86,7 +86,7 @@ do i=1,GLOBAL%ndata
   call rdatmo(i,GRID%MET,GLOBAL,IO)
 
 !#####################################################################
-! Loop through each pixel in atanb map.
+! Loop through each grid cell
 !#####################################################################
 
   call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
@@ -114,43 +114,26 @@ do i=1,GLOBAL%ndata
 
     call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,& 
        GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-       i,ilandc)
+       ilandc)
 
   enddo
 
 !$OMP END DO
 !$OMP END PARALLEL
 
-! --------------------------------------------------------------------
-! Loop through each catchment to calculate catchment total fluxes
-! (catflx) and update average water table depths (upzbar).
-! --------------------------------------------------------------------
+!#####################################################################
+! Loop through each catchment and update with the catchment module
+!#####################################################################
 
   do ic=1,GLOBAL%ncatch
 
-    call catflx(i,ic,CAT(ic)%area,GLOBAL%pixsiz,&
-       CAT(ic)%ettot,&
-       CAT(ic)%etstsum,CAT(ic)%etwtsum,CAT(ic)%etlakesum,&
-       CAT(ic)%etbssum,CAT(ic)%fbs,CAT(ic)%etdcsum,&
-       CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
-       CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
-       CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
-       CAT(ic)%rzpsum,CAT(ic)%fwcat,CAT(ic))
-
-    call upzbar(i,ic,GLOBAL%iopbf,CAT(ic)%q0,&
-       CAT(ic)%ff,CAT(ic)%zbar,CAT(ic)%dtil,&
-       CAT(ic)%basink,CAT(ic)%dd,CAT(ic)%xlength,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%area,&
-       GLOBAL%dt,CAT(ic)%etwtsum,CAT(ic)%rzpsum,CAT(ic)%tzpsum,CAT(ic)%psicav,&
-       GRID%VEG%ivgtyp,GRID%VEG%ilandc,GLOBAL%npix,GRID%VARS%icatch,GRID%VARS%zw,&
-       GRID%SOIL%psic,GRID%SOIL%isoil,GLOBAL%zrzmax,GRID%VARS%tzsm1,GRID%SOIL%thetas,&
-       GRID%VARS%rzsm1,CAT(ic)%zbar1,REG%qbreg,REG%zbar1rg,GLOBAL%pixsiz)
+    call Update_Catchment(GLOBAL,CAT(ic),GRID,REG,ic)
 
   enddo
 
-! --------------------------------------------------------------------
-! Call lswb to ouput areal average flux rates for the time step
-! and sum simulation totals.  Then goto next time step.
-! --------------------------------------------------------------------
+!#####################################################################
+! Run Tests to compare to previous model
+!#####################################################################
 
   call lswb(i,REG,GLOBAL,GRID)
 
@@ -161,8 +144,6 @@ enddo
 ! ####################################################################
 
 call FILE_CLOSE()
-
-write (*,*) 'Simulation terminated'
 
 ! ####################################################################
 ! Finalize unit testing and print summary

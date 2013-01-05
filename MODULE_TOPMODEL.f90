@@ -10,6 +10,31 @@ contains
 
 ! ====================================================================
 !
+!               subroutine Update_Catchment
+!
+! ====================================================================
+!
+! Subroutine to run TOPMODEL section
+!
+! ====================================================================
+
+  subroutine Update_Catchment(GLOBAL,CAT,GRID,REG,ic)
+
+    implicit none
+    type (GLOBAL_template),intent(in) :: GLOBAL
+    type (GRID_template),dimension(:),intent(inout) :: GRID
+    type (CATCHMENT_template),intent(inout) :: CAT
+    type (REGIONAL_template),intent(inout) :: REG
+    integer :: ic
+
+    call catflx(GLOBAL%pixsiz,CAT)
+
+    call upzbar(ic,CAT,GLOBAL,GRID,REG)
+
+  end subroutine Update_Catchment
+
+! ====================================================================
+!
 !		subroutine instep
 !
 ! ====================================================================
@@ -213,14 +238,33 @@ contains
 !
 ! ====================================================================
 
-      subroutine catflx(i,ic,area,pixsiz,ettot,&
-       etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
-       etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
-       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,CAT)
+      subroutine catflx(pixsiz,CAT)
 
       implicit none
       type (CATCHMENT_template),intent(inout) :: CAT
       include "help/catflx.h"
+       area = CAT%area
+       ettot = CAT%ettot
+       etstsum = CAT%etstsum
+       etwtsum = CAT%etwtsum
+       etlakesum = CAT%etlakesum
+       etbssum = CAT%etbssum
+       fbs = CAT%fbs
+       etdcsum = CAT%etdcsum
+       etwcsum = CAT%etwcsum
+       pptsum = CAT%pptsum 
+       pnetsum = CAT%pnetsum
+       contot = CAT%contot
+       qsurf = CAT%qsurf
+       sxrtot = CAT%sxrtot
+       xixtot = CAT%xixtot
+       ranrun = CAT%ranrun
+       conrun = CAT%conrun
+       gwtsum = CAT%gwtsum
+       capsum = CAT%capsum
+       tzpsum = CAT%tzpsum
+       rzpsum = CAT%rzpsum
+       fwcat = CAT%fwcat
 
 ! ====================================================================
 ! Calculate the number of pixels in the current catchment.
@@ -311,6 +355,29 @@ contains
 1000  format(2i5,4f10.5,2f7.3)
 1100  format(2i5,7f10.5)
 
+       CAT%area = area
+       CAT%ettot = ettot
+       CAT%etstsum = etstsum
+       CAT%etwtsum = etwtsum
+       CAT%etlakesum = etlakesum
+       CAT%etbssum = etbssum
+       CAT%fbs = fbs
+       CAT%etdcsum = etdcsum
+       CAT%etwcsum = etwcsum
+       CAT%pptsum = pptsum
+       CAT%pnetsum = pnetsum
+       CAT%contot = contot
+       CAT%qsurf = qsurf
+       CAT%sxrtot = sxrtot
+       CAT%xixtot = xixtot
+       CAT%ranrun = ranrun
+       CAT%conrun = conrun
+       CAT%gwtsum = gwtsum
+       CAT%capsum = capsum
+       CAT%tzpsum = tzpsum
+       CAT%rzpsum = rzpsum 
+       CAT%fwcat = fwcat
+
       return
 
       end subroutine catflx
@@ -325,15 +392,46 @@ contains
 !
 ! ====================================================================
 
-      subroutine upzbar(i,ic,iopbf,q0,ff,zbar,dtil,basink,dd,xlength,&
-       gwtsum,capsum,area,dt,etwtsum,rzpsum,tzpsum,psicav,ivgtyp,&
-       ilandc,npix,icatch,zw,psic,isoil,zrzmax,&
-       tzsm1,thetas,rzsm1,zbar1,qbreg,zbar1rg,pixsiz)
+      subroutine upzbar(ic,CAT,GLOBAL,GRID,REG)
 
       implicit none
-!       include "SNOW.h"
-!       include "wgtpar.h"
+      type (GLOBAL_template),intent(in) :: GLOBAL
+      type (GRID_template),dimension(:),intent(inout) :: GRID
+      type (CATCHMENT_template),intent(inout) :: CAT
+      type (REGIONAL_template),intent(inout) :: REG
       include "help/upzbar.h"
+
+      iopbf = GLOBAL%iopbf
+      q0 = CAT%q0
+      ff = CAT%ff
+      zbar = CAT%zbar
+      dtil = CAT%dtil
+      basink = CAT%basink
+      dd = CAT%dd
+      xlength = CAT%xlength
+      gwtsum = CAT%gwtsum
+      capsum = CAT%capsum
+      area = CAT%area 
+      dt = GLOBAL%dt
+      etwtsum = CAT%etwtsum
+      rzpsum = CAT%rzpsum 
+      tzpsum = CAT%tzpsum
+      psicav = CAT%psicav 
+      ivgtyp = GRID%VEG%ivgtyp
+      ilandc = GRID%VEG%ilandc
+      npix = GLOBAL%npix
+      icatch = GRID%VARS%icatch
+      zw = GRID%VARS%zw
+      psic = GRID%SOIL%psic
+      isoil = GRID%SOIL%isoil
+      zrzmax = GLOBAL%zrzmax
+      tzsm1 = GRID%VARS%tzsm1
+      thetas = GRID%SOIL%thetas 
+      rzsm1 = GRID%VARS%rzsm1
+      zbar1 = CAT%zbar1
+      qbreg = REG%qbreg
+      zbar1rg = REG%zbar1rg
+      pixsiz = GLOBAL%pixsiz
 
 ! ====================================================================
 ! Chose option for calculating baseflow.
@@ -452,6 +550,10 @@ contains
 ! Format statements.
 ! ====================================================================
 
+      CAT%zbar1 = zbar1
+      REG%qbreg = qbreg
+      REG%zbar1rg = zbar1rg
+
       return
 
       end subroutine upzbar
@@ -468,7 +570,7 @@ contains
 ! ====================================================================
 
       subroutine sumflx(REG,CAT,GRID_VARS,GLOBAL,&
-       GRID_VEG,GRID_SOIL,GRID_MET,i,ilandc)
+       GRID_VEG,GRID_SOIL,GRID_MET,ilandc)
 
       implicit none
     
