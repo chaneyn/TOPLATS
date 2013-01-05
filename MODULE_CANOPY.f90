@@ -1,5 +1,13 @@
 MODULE MODULE_CANOPY
 
+USE MODULE_VARIABLES_OLD
+
+USE MODULE_VARIABLES
+
+USE MODULE_SHARED
+
+USE MODULE_SNOW
+
 implicit none
 
 contains
@@ -10,7 +18,7 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to calculate interception by vegetation and calculate
+!Subroutine to calculate interception by vegetation and calculate
 ! canopy water balance.
 !
 ! ====================================================================
@@ -19,10 +27,13 @@ contains
 pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
-tkd,tkmidd,dshd,tkw,tkmidw,dshw)
+tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
+GRID_VARS)
 
   implicit none
   include "help/canopy.h"
+
+  type (GRID_VARS_template) :: GRID_VARS
 
 !integer ipix
 !integer intstp,istmst,istorm,intstm,ioppet
@@ -37,6 +48,8 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 !real*8 zero,one,two,three,four,five,six,dt,dummy
 !data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
 !3.d0,4.d0,5.d0,6.d0/
+ 
+wcip1 = GRID_VARS%wcip1
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
@@ -155,6 +168,8 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 
   endif
 
+GRID_VARS%wcip1 = wcip1
+  
   return
 
   end subroutine canopy

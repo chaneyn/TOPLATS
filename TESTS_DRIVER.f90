@@ -4,6 +4,8 @@ USE FRUIT
 
 USE MODULE_ATMOS
 
+USE MODULE_CANOPY
+
 implicit none
 
 contains
