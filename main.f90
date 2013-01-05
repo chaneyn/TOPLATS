@@ -135,7 +135,7 @@ do i=1,GLOBAL%ndata
        CAT(ic)%etwcsum,CAT(ic)%pptsum,CAT(ic)%pnetsum,CAT(ic)%contot,&
        CAT(ic)%qsurf,CAT(ic)%sxrtot,CAT(ic)%xixtot,CAT(ic)%ranrun,&
        CAT(ic)%conrun,CAT(ic)%gwtsum,CAT(ic)%capsum,CAT(ic)%tzpsum,&
-       CAT(ic)%rzpsum,CAT(ic)%fwcat)
+       CAT(ic)%rzpsum,CAT(ic)%fwcat,CAT(ic))
 
     call upzbar(i,ic,GLOBAL%iopbf,CAT(ic)%q0,&
        CAT(ic)%ff,CAT(ic)%zbar,CAT(ic)%dtil,&

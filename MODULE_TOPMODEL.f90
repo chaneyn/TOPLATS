@@ -216,9 +216,10 @@ contains
       subroutine catflx(i,ic,area,pixsiz,ettot,&
        etstsum,etwtsum,etlakesum,etbssum,fbs,etdcsum,&
        etwcsum,pptsum,pnetsum,contot,qsurf,sxrtot,xixtot,ranrun,&
-       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat)
+       conrun,gwtsum,capsum,tzpsum,rzpsum,fwcat,CAT)
 
       implicit none
+      type (CATCHMENT_template),intent(inout) :: CAT
       include "help/catflx.h"
 
 ! ====================================================================
