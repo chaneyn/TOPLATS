@@ -398,6 +398,87 @@ contains
     call set_unit_name ('calcrsoil_test4')
     call assert_equals (rsoil_true,rsoil)
   end subroutine
+  
+  subroutine reset_inf_pars_test1()
+  
+    real*8 :: cuminf,zero,rzsmt,rzsm,thetas,tolinf
+    real*8 :: sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one
+    real*8 :: cuminf_true,rzsmt_true,sorp_true,deltrz_true,cc_true
+
+    cuminf = 1.0d0
+    zero = 0.0d0
+    one = 1.0d0
+    two = 2.0d0
+    rzsmt = 0.0d0
+    rzsm  = 1.0d0
+    thetas = 2.0d0
+    tolinf = 0.0d0
+    sorp = 0.0d0
+    xk0 = 0.01d0
+    psic = 2.0d0
+    thetar = 0.5d0
+    bcgamm = 17.0d0
+    bcbeta = 5.0d0
+    deltrz = 0.0d0
+    cc = 0.0d0
+
+    cuminf_true = 0.0d0
+    rzsmt_true = 1.0d0
+    sorp_true = 0.20357171080835726d0
+    deltrz_true = 0.5d0
+    cc_true = 0.51193322249957873d0
+
+    call reset_inf_pars(cuminf,zero,rzsmt,rzsm,thetas,tolinf,sorp,two,&
+                        xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
+    call set_unit_name ('reset_inf_pars_test1')
+    call assertequals(cuminf_true,cuminf)
+    call assertequals(rzsmt_true,rzsmt)
+    call assertequals(sorp_true,sorp)
+    call assertequals(deltrz_true,deltrz)
+    call assertequals(cc_true,cc)
+    
+  end subroutine
+
+  subroutine reset_inf_pars_test2()
+  
+    real*8 :: cuminf,zero,rzsmt,rzsm,thetas,tolinf
+    real*8 :: sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one
+    real*8 :: cuminf_true,rzsmt_true,sorp_true,deltrz_true,cc_true
+
+    cuminf = 1.0d0
+    zero = 0.0d0
+    one = 1.0d0
+    two = 2.0d0
+    rzsmt = 0.0d0
+    rzsm  = 2.0d0
+    thetas = 2.0d0
+    tolinf = 0.1d0
+    sorp = 0.0d0
+    xk0 = 0.01d0
+    psic = 2.0d0
+    thetar = 0.5d0
+    bcgamm = 17.0d0
+    bcbeta = 5.0d0
+    deltrz = 0.0d0
+    cc = 0.0d0
+
+    cuminf_true = 0.0d0
+    rzsmt_true = 1.9d0
+    sorp_true = 0.063359406676628677d0
+    deltrz_true = 1.4d0
+    cc_true = 0.89545315507131318d0
+
+    call reset_inf_pars(cuminf,zero,rzsmt,rzsm,thetas,tolinf,sorp,two,&
+                        xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
+    call set_unit_name ('reset_inf_pars_test2')
+    call assertequals(cuminf_true,cuminf)
+    call assertequals(rzsmt_true,rzsmt)
+    call assertequals(sorp_true,sorp)
+    call assertequals(deltrz_true,deltrz)
+    call assertequals(cc_true,cc)
+    
+  end subroutine
+
 
   subroutine run_unit_tests()
   
@@ -431,7 +512,9 @@ contains
     call calcrsoil_test2()
     call calcrsoil_test3()
     call calcrsoil_test4()
-
+    call reset_inf_pars_test1()    
+    call reset_inf_pars_test2()
+        
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
