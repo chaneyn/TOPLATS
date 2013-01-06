@@ -383,7 +383,7 @@ xlamda = CAT%xlamda
         intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
         rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
         tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
-        GRID_VARS, GLOBAL)
+        GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
 ! ....................................................................
 ! Calculate the local land surface water/energy balance.

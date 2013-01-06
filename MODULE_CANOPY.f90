@@ -10,6 +10,10 @@ USE MODULE_SNOW
 
 implicit none
 
+type CANOPY_template
+  real*8 wc
+end type CANOPY_template
+
 contains
 
 ! ====================================================================
@@ -28,30 +32,62 @@ pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
-GRID_VARS, GLOBAL )
+GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
 
   implicit none
   include "help/canopy.h"
 
   type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GRID_MET_template) :: GRID_MET
   type (GLOBAL_template) :: GLOBAL
- 
-!integer ipix
-!integer intstp,istmst,istorm,intstm,ioppet
-!real*8 wc,wcip1,Swq,fw
-!real*8 wsc,dc,epetw
-!real*8 epwms,pnet,pptms,precip_o
-!real*8 dswc,wcrhs
-!real*8 endstm
-!real*8 xintst,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet
-!real*8 gpet,rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet
-!real*8 dspet,tkd,tkmidd,dshd,tkw,tkmidw,dshw
-!real*8 zero,one,two,three,four,five,six,dt,dummy
-!data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
-!3.d0,4.d0,5.d0,6.d0/
- 
-wcip1 = GRID_VARS%wcip1
+  type (CANOPY_template) :: GRID_CANOPY
+
 dt = GLOBAL%dt
+wc = GRID_CANOPY%wc
+wcip1 = GRID_VARS%wcip1
+Swq = GRID_VARS%Swq
+fw = GRID_VARS%fw
+wsc = GRID_VEG%wsc
+dc = GRID_VARS%dc
+!epetw-Shared with MODULE_ATMOS
+epwms = GRID_VARS%epwms
+pnet = GRID_VARS%pnet
+pptms = GRID_MET%pptms
+precip_o = GRID_VARS%precip_o
+dswc = GRID_VARS%dswc
+wcrhs = GRID_VARS%wcrhs
+endstm = GLOBAL%endstm
+xintst = GRID_VARS%xintst
+intstp = GRID_VARS%intstp
+istmst = GRID_VARS%istmst
+istorm = GRID_VARS%istorm
+intstm = GRID_VARS%intstm
+Outflow = GRID_VARS%Outflow
+PackWater = GRID_VARS%PackWater
+SurfWater = GRID_VARS%SurfWater
+rnpet = GRID_VARS%rnpet
+xlepet = GRID_VARS%xlepet
+hpet = GRID_VARS%hpet
+gpet = GRID_VARS%gpet
+!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+ioppet = GLOBAL%ioppet
+tkpet = GRID_VARS%tkpet
+tkmidpet = GRID_VARS%tkmidpet
+dspet = GRID_VARS%dspet
+!tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
@@ -170,9 +206,56 @@ dt = GLOBAL%dt
 
   endif
 
-GRID_VARS%wcip1 = wcip1
 GLOBAL%dt = dt
-  
+GRID_VARS%wcip1 = wcip1
+GRID_CANOPY%wc = wc
+GRID_VARS%Swq = Swq
+GRID_VARS%fw = fw
+GRID_VEG%wsc = wsc
+GRID_VARS%dc = dc
+!epetw-Shared with MODULE_ATMOS
+GRID_VARS%epwms = epwms
+GRID_VARS%pnet = pnet
+GRID_MET%pptms = pptms
+GRID_VARS%precip_o = precip_o
+GRID_VARS%dswc = dswc
+GRID_VARS%wcrhs = wcrhs
+GLOBAL%endstm = endstm
+GRID_VARS%xintst = xintst
+GRID_VARS%intstp = intstp
+GRID_VARS%istmst = istmst
+GRID_VARS%istorm = istorm
+GRID_VARS%intstm = intstm
+GRID_VARS%Outflow = Outflow
+GRID_VARS%PackWater = PackWater
+GRID_VARS%SurfWater = SurfWater
+GRID_VARS%rnpet = rnpet
+GRID_VARS%xlepet = xlepet
+GRID_VARS%hpet = hpet
+GRID_VARS%gpet = gpet
+GRID_VARS%rnpet = rnpet
+GRID_VARS%xlepet = xlepet
+GRID_VARS%hpet = hpet
+GRID_VARS%gpet = gpet
+!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+GLOBAL%ioppet = ioppet
+GRID_VARS%tkpet = tkpet
+GRID_VARS%tkmidpet = tkmidpet
+GRID_VARS%dspet = dspet 
+!tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+
   return
 
   end subroutine canopy
