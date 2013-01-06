@@ -479,7 +479,44 @@ contains
     
   end subroutine
 
+  subroutine calcsmcond_test1()
+    
+    real*8 :: rzsm,tc,smcond,one,tw,zero
+    real*8 :: smcond_true
 
+    one = 1.0d0
+    zero = 0.0d0
+    rzsm = 0.5d0
+    tc = 0.75d0
+    tw = 0.1d0
+    smcond = 0.0d0
+
+    smcond_true = 0.61538461538461542d0
+
+    call calcsmcond(rzsm,tc,smcond,one,tw,zero)
+    call set_unit_name ('calcsmcond_test1')
+    call assertequals(smcond_true,smcond)
+  end subroutine
+
+  subroutine calcsmcond_test2()
+    
+    real*8 :: rzsm,tc,smcond,one,tw,zero
+    real*8 :: smcond_true
+
+    one = 1.0d0
+    zero = 0.0d0
+    rzsm = 0.5d0
+    tc = 0.4d0
+    tw = 0.1d0
+    smcond = 0.0d0
+
+    smcond_true = 1.0d0
+
+    call calcsmcond(rzsm,tc,smcond,one,tw,zero)
+    call set_unit_name ('calcsmcond_test2')
+    call assertequals(smcond_true,smcond)
+  end subroutine
+  
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -514,7 +551,9 @@ contains
     call calcrsoil_test4()
     call reset_inf_pars_test1()    
     call reset_inf_pars_test2()
-        
+    call calcsmcond_test1()
+    call calcsmcond_test2()    
+    
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
