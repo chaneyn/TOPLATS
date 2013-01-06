@@ -378,11 +378,10 @@ xlamda = CAT%xlamda
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
-         call canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
-        pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
-        intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
-        rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
-        tkd,tkmidd,dshd,tkw,tkmidw,dshw)
+         call canopy(ipix,epetw,&
+        rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
+        tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
+        GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
 ! ....................................................................
 ! Calculate the local land surface water/energy balance.
@@ -395,12 +394,14 @@ xlamda = CAT%xlamda
 ! other.  This option is also used when under story is not represented.
 ! ....................................................................
        
-       GRID_VARS%dc = dc
-       GRID_VARS%fw = fw
+       !GRID_VARS%dc = dc
+       !GRID_VARS%fw = fw
        GRID_MET%uzw = uzw
-       GRID_VARS%precip_o = precip_o
+       !GRID_VARS%precip_o = precip_o
        GRID_VARS%tkmid = tkmid
 
+       pnet = GRID_VARS%pnet
+       epwms = GRID_VARS%epwms
 
             call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
 
@@ -609,8 +610,8 @@ GRID_VARS%dsrz = dsrz
 GRID_VARS%rzrhs = rzrhs
 GRID_VARS%dstz = dstz
 GRID_VARS%tzrhs = tzrhs
-GRID_VARS%dswc = dswc
-GRID_VARS%wcrhs = wcrhs
+!GRID_VARS%dswc = dswc
+!GRID_VARS%wcrhs = wcrhs
 !Energy Fluxes
 GRID_VARS%epwms = epwms
 !Constants
