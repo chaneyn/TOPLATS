@@ -380,8 +380,8 @@ xlamda = CAT%xlamda
 
          call canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
         precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-        intstm,rnpet,xlepet,hpet,gpet,&
-        rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet,dspet,&
+        intstm,&
+        rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
         tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
         GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 

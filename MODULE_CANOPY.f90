@@ -29,8 +29,8 @@ contains
 
   subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
 precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-intstm,rnpet,xlepet,hpet,gpet,&
-rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet,dspet,&
+intstm,&
+rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
 GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
 
@@ -66,10 +66,10 @@ intstm = GRID_VARS%intstm
 !Outflow = GRID_VARS%Outflow
 !PackWater = GRID_VARS%PackWater
 !SurfWater = GRID_VARS%SurfWater
-rnpet = GRID_VARS%rnpet
-xlepet = GRID_VARS%xlepet
-hpet = GRID_VARS%hpet
-gpet = GRID_VARS%gpet
+!rnpet = GRID_VARS%rnpet
+!xlepet = GRID_VARS%xlepet
+!hpet = GRID_VARS%hpet
+!gpet = GRID_VARS%gpet
 !rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
@@ -79,9 +79,9 @@ gpet = GRID_VARS%gpet
 !hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !ioppet = GLOBAL%ioppet
-tkpet = GRID_VARS%tkpet
-tkmidpet = GRID_VARS%tkmidpet
-dspet = GRID_VARS%dspet
+!tkpet = GRID_VARS%tkpet
+!tkmidpet = GRID_VARS%tkmidpet
+!dspet = GRID_VARS%dspet
 !tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
@@ -182,10 +182,10 @@ dspet = GRID_VARS%dspet
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-  rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
-  xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
-  hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
-  gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
+  GRID_VARS%rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
+  GRID_VARS%xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
+  GRID_VARS%hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
+  GRID_VARS%gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
 
 ! --------------------------------------------------------------------
 ! Solve for temperature and heat storage only when energy balance
@@ -194,15 +194,15 @@ dspet = GRID_VARS%dspet
 
   if (GLOBAL%ioppet.eq.0) then
 
-    tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
-    tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
-    dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
+    GRID_VARS%tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
+    GRID_VARS%tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
+    GRID_VARS%dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
 
   else
 
-    tkpet = zero
-    tkmidpet = zero
-    dspet = zero
+    GRID_VARS%tkpet = zero
+    GRID_VARS%tkmidpet = zero
+    GRID_VARS%dspet = zero
 
   endif
 
@@ -229,14 +229,10 @@ GRID_VARS%intstm = intstm
 !GRID_VARS%Outflow = Outflow
 !GRID_VARS%PackWater = PackWater
 !GRID_VARS%SurfWater = SurfWater
-GRID_VARS%rnpet = rnpet
-GRID_VARS%xlepet = xlepet
-GRID_VARS%hpet = hpet
-GRID_VARS%gpet = gpet
-GRID_VARS%rnpet = rnpet
-GRID_VARS%xlepet = xlepet
-GRID_VARS%hpet = hpet
-GRID_VARS%gpet = gpet
+!GRID_VARS%rnpet = rnpet
+!GRID_VARS%xlepet = xlepet
+!GRID_VARS%hpet = hpet
+!GRID_VARS%gpet = gpet
 !rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
@@ -246,9 +242,9 @@ GRID_VARS%gpet = gpet
 !hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !GLOBAL%ioppet = ioppet
-GRID_VARS%tkpet = tkpet
-GRID_VARS%tkmidpet = tkmidpet
-GRID_VARS%dspet = dspet 
+!GRID_VARS%tkpet = tkpet
+!GRID_VARS%tkmidpet = tkmidpet
+!GRID_VARS%dspet = dspet 
 !tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
