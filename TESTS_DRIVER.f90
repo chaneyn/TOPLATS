@@ -345,23 +345,24 @@ contains
   subroutine interstorm_test1()
     implicit none
     real*8 :: interstorm_result, interstorm_true
-    integer :: ipix,intstp,istmst,istorm,intstm
-    real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+    integer :: ipix
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GLOBAL_template) :: GLOBAL
     ipix = 1
-    intstp = 1
-    istmst = 1
-    istorm = 1
-    intstm = 1
-    precipi = 2.0d0
-    outf = 0.5d0
-    snowp = 0.1d0
-    xintst = 1.0d0
-    dt = 0.5d0
-    endstm = 2.0d0
-    r_input = 1.0d0
-    call interstorm(ipix,precipi,outf,snowp,xintst,&
-        dt,intstp,endstm,istmst,istorm,intstm)
-    interstorm_result = istmst
+    GRID_VARS%intstp = 1
+    GRID_VARS%istmst = 1
+    GRID_VARS%istorm = 1
+    GRID_VARS%intstm = 1
+    GRID_VARS%pnet = 2.0d0
+    GRID_VARS%Outflow = 0.5d0
+    GRID_VARS%PackWater = 0.05d0
+    GRID_VARS%SurfWater = 0.03d0
+    GRID_VARS%Swq = 0.02d0
+    GRID_VARS%xintst = 1.0d0
+    GLOBAL%dt = 0.5d0
+    GLOBAL%endstm = 2.0d0
+    call interstorm(ipix,GRID_VARS,GLOBAL)
+    interstorm_result = GRID_VARS%istmst
     interstorm_true = 2.00000000000
     call set_unit_name ('interstorm_test1')
     call assert_equals (interstorm_result, interstorm_true)
@@ -370,27 +371,28 @@ contains
   subroutine interstorm_test2()
     implicit none
     real*8 :: interstorm_result, interstorm_true
-    integer :: ipix,intstp,istmst,istorm,intstm
-    real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+    integer :: ipix
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GLOBAL_template) :: GLOBAL
     ipix = 1
-    intstp = 1
-    istmst = 1
-    istorm = 1
-    intstm = 1
-    precipi = 2.0d0
-    outf = 0.5d0
-    snowp = 0.1d0
-    xintst = 1.0d0
-    dt = 0.5d0
-    endstm = 2.0d0
-    r_input = 1.0d0
-    call interstorm(ipix,precipi,outf,snowp,xintst,&
-        dt,intstp,endstm,istmst,istorm,intstm)
-    interstorm_result = intstp
+    GRID_VARS%intstp = 1
+    GRID_VARS%istmst = 1
+    GRID_VARS%istorm = 1
+    GRID_VARS%intstm = 1
+    GRID_VARS%pnet = 2.0d0
+    GRID_VARS%Outflow = 0.5d0
+    GRID_VARS%PackWater = 0.05d0
+    GRID_VARS%SurfWater = 0.03d0
+    GRID_VARS%Swq = 0.02d0
+    GRID_VARS%xintst = 1.0d0
+    GLOBAL%dt = 0.5d0
+    GLOBAL%endstm = 2.0d0
+    call interstorm(ipix,GRID_VARS,GLOBAL)
+    interstorm_result = GRID_VARS%intstp
     interstorm_true = 1.00000000000
     call set_unit_name ('interstorm_test2')
     call assert_equals (interstorm_result, interstorm_true)
-  end subroutine
+  end subroutine     
  
   subroutine run_unit_tests()
   
