@@ -27,9 +27,7 @@ contains
 !
 ! ====================================================================
 
-  subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
-precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-intstm,&
+  subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,intstm,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
 GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
@@ -54,14 +52,14 @@ dc = GRID_VARS%dc
 epwms = GRID_VARS%epwms
 pnet = GRID_VARS%pnet
 !pptms = GRID_MET%pptms
-precip_o = GRID_VARS%precip_o
-dswc = GRID_VARS%dswc
-wcrhs = GRID_VARS%wcrhs
+!precip_o = GRID_VARS%precip_o
+!dswc = GRID_VARS%dswc
+!wcrhs = GRID_VARS%wcrhs
 !endstm = GLOBAL%endstm
-xintst = GRID_VARS%xintst
-intstp = GRID_VARS%intstp
-istmst = GRID_VARS%istmst
-istorm = GRID_VARS%istorm
+!xintst = GRID_VARS%xintst
+!intstp = GRID_VARS%intstp
+!istmst = GRID_VARS%istmst
+!istorm = GRID_VARS%istorm
 intstm = GRID_VARS%intstm
 !Outflow = GRID_VARS%Outflow
 !PackWater = GRID_VARS%PackWater
@@ -154,14 +152,14 @@ intstm = GRID_VARS%intstm
 ! over story.
 ! ====================================================================
 
-  precip_o=GRID_MET%pptms
+  GRID_VARS%precip_o=GRID_MET%pptms
 
 ! ====================================================================
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
-  dswc = GRID_VARS%wcip1-wc
-  wcrhs=(GRID_MET%pptms-epwms-pnet)*(GLOBAL%dt)
+  GRID_VARS%dswc = GRID_VARS%wcip1-wc
+  GRID_VARS%wcrhs=(GRID_MET%pptms-epwms-pnet)*(GLOBAL%dt)
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
@@ -176,7 +174,7 @@ intstm = GRID_VARS%intstm
 ! ====================================================================
 
   call interstorm(ipix,pnet,GRID_VARS%Outflow,GRID_VARS%PackWater+GRID_VARS%SurfWater+GRID_VARS%Swq,&
-  xintst,GLOBAL%dt,intstp,GLOBAL%endstm,istmst,istorm,intstm)
+  GRID_VARS%xintst,GLOBAL%dt,GRID_VARS%intstp,GLOBAL%endstm,GRID_VARS%istmst,GRID_VARS%istorm,intstm)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
@@ -217,14 +215,14 @@ GRID_VARS%dc = dc
 GRID_VARS%epwms = epwms
 GRID_VARS%pnet = pnet
 !GRID_MET%pptms = pptms
-GRID_VARS%precip_o = precip_o
-GRID_VARS%dswc = dswc
-GRID_VARS%wcrhs = wcrhs
+!GRID_VARS%precip_o = precip_o
+!GRID_VARS%dswc = dswc
+!GRID_VARS%wcrhs = wcrhs
 !GLOBAL%endstm = endstm
-GRID_VARS%xintst = xintst
-GRID_VARS%intstp = intstp
-GRID_VARS%istmst = istmst
-GRID_VARS%istorm = istorm
+!GRID_VARS%xintst = xintst
+!GRID_VARS%intstp = intstp
+!GRID_VARS%istmst = istmst
+!GRID_VARS%istorm = istorm
 GRID_VARS%intstm = intstm
 !GRID_VARS%Outflow = Outflow
 !GRID_VARS%PackWater = PackWater

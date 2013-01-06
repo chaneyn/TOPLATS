@@ -378,9 +378,7 @@ xlamda = CAT%xlamda
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
-         call canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
-        precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-        intstm,&
+         call canopy(ipix,wc,fw,dc,epetw,epwms,pnet,intstm,&
         rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
         tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
         GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
@@ -399,7 +397,7 @@ xlamda = CAT%xlamda
        GRID_VARS%dc = dc
        GRID_VARS%fw = fw
        GRID_MET%uzw = uzw
-       GRID_VARS%precip_o = precip_o
+       !GRID_VARS%precip_o = precip_o
        GRID_VARS%tkmid = tkmid
 
 
@@ -610,8 +608,8 @@ GRID_VARS%dsrz = dsrz
 GRID_VARS%rzrhs = rzrhs
 GRID_VARS%dstz = dstz
 GRID_VARS%tzrhs = tzrhs
-GRID_VARS%dswc = dswc
-GRID_VARS%wcrhs = wcrhs
+!GRID_VARS%dswc = dswc
+!GRID_VARS%wcrhs = wcrhs
 !Energy Fluxes
 GRID_VARS%epwms = epwms
 !Constants
