@@ -3,7 +3,8 @@
       integer intstp,istmst,istorm,intstm,ioppet
 
       real*8 wc,wc_us,wcip1,wcip1_us,Swq,fw,Swq_us,fw_us
-      real*8 wsc,wsc_us,dc,epetw,dc_us,epetw_us,dc_moss
+      real*8 wsc,wsc_us,dc
+      real*8 epetw,dc_us,epetw_us,dc_moss
       real*8 epet_moss,epwms,epwms_us,pnet,pptms,precip_o
       real*8 dswc,wcrhs,canclos,precip_u,dswc_us,wcrhs_us,Outflow_us
       real*8 PackWater_us,SurfWater_us,xintst_moss,endstm,zmoss

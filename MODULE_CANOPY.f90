@@ -28,9 +28,9 @@ contains
 ! ====================================================================
 
   subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
-pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
+pptms,precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
-rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
+rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet,dspet,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
 GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
 
@@ -57,7 +57,7 @@ pptms = GRID_MET%pptms
 precip_o = GRID_VARS%precip_o
 dswc = GRID_VARS%dswc
 wcrhs = GRID_VARS%wcrhs
-endstm = GLOBAL%endstm
+!endstm = GLOBAL%endstm
 xintst = GRID_VARS%xintst
 intstp = GRID_VARS%intstp
 istmst = GRID_VARS%istmst
@@ -78,7 +78,7 @@ gpet = GRID_VARS%gpet
 !xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-ioppet = GLOBAL%ioppet
+!ioppet = GLOBAL%ioppet
 tkpet = GRID_VARS%tkpet
 tkmidpet = GRID_VARS%tkmidpet
 dspet = GRID_VARS%dspet
@@ -120,8 +120,8 @@ dspet = GRID_VARS%dspet
 ! Calculate through fall of rainfall.  This is the part of the
 ! rainfall that can get through the canopy to the underlying soil
 ! ====================================================================
-
-  pnet = zero
+ 
+  pnet = zero 
 
   if ((pptms-epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-wc)) then
 
@@ -135,7 +135,7 @@ dspet = GRID_VARS%dspet
 ! ====================================================================
 
   GRID_VARS%wcip1 = wc + GLOBAL%dt*(pptms-epwms-pnet)
- 
+
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
@@ -168,15 +168,15 @@ dspet = GRID_VARS%dspet
 ! under story.
 ! --------------------------------------------------------------------
 
-  if (pptms.eq.(0.d0)) pnet=0.d0
+  if (pptms.eq.(0.d0)) pnet =0.d0
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-  call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+GRID_VARS%Swq,&
-  xintst,GLOBAL%dt,intstp,endstm,istmst,istorm,intstm)
+  call interstorm(ipix,pnet ,Outflow,PackWater+SurfWater+GRID_VARS%Swq,&
+  xintst,GLOBAL%dt,intstp,GLOBAL%endstm,istmst,istorm,intstm)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
@@ -192,7 +192,7 @@ dspet = GRID_VARS%dspet
 ! method is used.
 ! --------------------------------------------------------------------
 
-  if (ioppet.eq.0) then
+  if (GLOBAL%ioppet.eq.0) then
 
     tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
     tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
@@ -220,7 +220,7 @@ GRID_MET%pptms = pptms
 GRID_VARS%precip_o = precip_o
 GRID_VARS%dswc = dswc
 GRID_VARS%wcrhs = wcrhs
-GLOBAL%endstm = endstm
+!GLOBAL%endstm = endstm
 GRID_VARS%xintst = xintst
 GRID_VARS%intstp = intstp
 GRID_VARS%istmst = istmst
@@ -245,7 +245,7 @@ GRID_VARS%gpet = gpet
 !xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-GLOBAL%ioppet = ioppet
+!GLOBAL%ioppet = ioppet
 GRID_VARS%tkpet = tkpet
 GRID_VARS%tkmidpet = tkmidpet
 GRID_VARS%dspet = dspet 
