@@ -278,14 +278,15 @@ contains
   subroutine calcfw_test1()
     implicit none
     real*8 :: calcfw_result,calcfw_true
-    real*8 :: Swq,wc,zero,fw,wsc
-    Swq = 0.0d0
-    wc = 3.1d0
-    zero = 0.0d0
-    fw = 2.2d0
-    wsc = 1.7d0
-    call calcfw(Swq,wc,zero,fw,wsc)
-    calcfw_result = fw
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (CANOPY_template) :: GRID_CANOPY
+    GRID_VARS%Swq = 0.0d0
+    GRID_CANOPY%wc = 3.1d0
+    GRID_VARS%fw = 2.2d0
+    GRID_VEG%wsc = 1.7d0
+    call calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
+    calcfw_result = GRID_VARS%fw
     calcfw_true = 1.000000000
     call set_unit_name ('calcfw_test1')
     call assert_equals (calcfw_result, calcfw_true)
@@ -294,13 +295,12 @@ contains
   subroutine calcdc_test1()
     implicit none
     real*8 :: calcdc_result, calcdc_true
-    real*8 :: dc,one,epetw,zero
-    dc = 2.38
-    one = 1.0d0
+    type (GRID_VARS_template) :: GRID_VARS
+    real*8 :: epetw 
+    GRID_VARS%dc = 2.38
     epetw = 2.0d0
-    zero = 0.0d0
-    call calcdc(dc,one,epetw,zero)
-    calcdc_result = dc
+    call calcdc(GRID_VARS,epetw)
+    calcdc_result = GRID_VARS%dc
     calcdc_true = 1.00000000 
     call set_unit_name ('calcdc_test1')
     call assert_equals (calcdc_result, calcdc_true)
@@ -309,16 +309,18 @@ contains
   subroutine calcepw_test1()
     implicit none
     real*8 :: calcepw_result, calcepw_true
-    real*8 :: epwms,epetw,one,dc,fw,dt,wc
-    epwms = 2.5d0
+    type (GRID_VARS_template) :: GRID_VARS
+    type (CANOPY_template) :: GRID_CANOPY
+    type (GLOBAL_template) :: GLOBAL
+    real*8 :: epetw
+    GRID_VARS%epwms = 2.5d0
     epetw = 3.2d0
-    one = 1.0d0
-    dc = 1.5d0
-    fw = 0.5d0
-    dt = 1.0d0
-    wc = 0.2d0
-    call calcepw(epwms,epetw,one,dc,fw,dt,wc)
-    calcepw_result = fw
+    GRID_VARS%dc = 1.5d0
+    GRID_VARS%fw = 0.5d0
+    GLOBAL%dt = 1.0d0
+    GRID_CANOPY%wc = 0.2d0
+    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    calcepw_result = GRID_VARS%fw
     calcepw_true = 0.12500000000000000
     call set_unit_name ('calcepw_test1')
     call assert_equals (calcepw_result, calcepw_true)
@@ -327,16 +329,18 @@ contains
   subroutine calcepw_test2()
     implicit none
     real*8 :: calcepw_result, calcepw_true
-    real*8 :: epwms,epetw,one,dc,fw,dt,wc
-    epwms = 2.5d0
+    type (GRID_VARS_template) :: GRID_VARS
+    type (CANOPY_template) :: GRID_CANOPY
+    type (GLOBAL_template) :: GLOBAL
+    real*8 :: epetw
+    GRID_VARS%epwms = 2.5d0
     epetw = 3.2d0
-    one = 1.0d0
-    dc = 1.5d0
-    fw = 0.5d0
-    dt = 1.0d0
-    wc = 0.2d0
-    call calcepw(epwms,epetw,one,dc,fw,dt,wc)
-    calcepw_result = epwms
+    GRID_VARS%dc = 1.5d0
+    GRID_VARS%fw = 0.5d0
+    GLOBAL%dt = 1.0d0
+    GRID_CANOPY%wc = 0.2d0
+    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    calcepw_result = GRID_VARS%epwms
     calcepw_true = -1.000000000000
     call set_unit_name ('calcepw_test2')
     call assert_equals (calcepw_result, calcepw_true)

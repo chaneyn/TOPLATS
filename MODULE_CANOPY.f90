@@ -78,22 +78,21 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 ! is wet and 0% if canopy is dry.
 ! ====================================================================
 
-  call calcfw(GRID_VARS%Swq,GRID_CANOPY%wc,GRID_CANOPY%zero,GRID_VARS%fw,GRID_VEG%wsc)
+  call calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
 
 ! ====================================================================
 ! If potential evaporation is negative, dew forms over the
 ! whole canopy.  Set dc to zero for this case.
 ! ====================================================================
 
-  call calcdc(GRID_VARS%dc,GRID_CANOPY%one,epetw,GRID_CANOPY%zero)
+  call calcdc(GRID_VARS,epetw)
 
 ! ====================================================================
 ! Calculate evaporation from the wet canopy
 ! ====================================================================
 
-  call calcepw(GRID_VARS%epwms,epetw,GRID_CANOPY%one,&
-  GRID_VARS%dc,GRID_VARS%fw,GLOBAL%dt,GRID_CANOPY%wc)
-
+  call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+ 
 ! ====================================================================
 ! Calculate through fall of rainfall.  This is the part of the
 ! rainfall that can get through the canopy to the underlying soil
@@ -205,42 +204,48 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 !
 ! ====================================================================
 
-  subroutine calcfw(Swq,wc,zero,fw,wsc)
+  subroutine calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
 
   implicit none
 
-  real*8 Swq,wc,zero,fw,wsc
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (CANOPY_template) :: GRID_CANOPY
+  
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
 
-  if (Swq.le.zero) then
+  if (GRID_VARS%Swq.le.zero) then
 
-  if (wc.gt.zero) then
+  if (GRID_CANOPY%wc.gt.zero) then
 
-  fw = (wc/wsc)**(0.667d0)
+  GRID_VARS%fw = (GRID_CANOPY%wc/GRID_VEG%wsc)**(0.667d0)
 
   else
 
-  fw = zero
+  GRID_VARS%fw = zero
 
   endif
 
-  if (wsc.eq.zero) fw=zero
+  if (GRID_VEG%wsc.eq.zero) GRID_VARS%fw=zero
 
   else
 
-  fw=1.d0
+  GRID_VARS%fw=one
 
   endif
 
-  if (fw.ge.1.d0) fw=1.d0
+  if (GRID_VARS%fw.ge.one) GRID_VARS%fw=one
 
-  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  if ( (GRID_VARS%fw.ge.zero).and.(GRID_VARS%fw.le.one) ) then
 
-  fw=fw
+  GRID_VARS%fw=GRID_VARS%fw
 
   else
 
-  write (*,*) 'CALCFW : fw : ',fw
-  write (*,*) Swq,wc,zero,fw,wsc
+  write (*,*) 'CALCFW : fw : ',GRID_VARS%fw
+  write (*,*) GRID_VARS%Swq,GRID_CANOPY%wc,GRID_VARS%fw,GRID_VEG%wsc
   stop
 
   endif
@@ -260,24 +265,29 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 !
 ! ====================================================================
 
-  subroutine calcdc(dc,one,epetw,zero)
+  subroutine calcdc(GRID_VARS,epetw)
 
   implicit none
-  !include "help/calcdc.h"
-  real*8 dc,one,epetw,zero
+  
+  type (GRID_VARS_template) :: GRID_VARS
+  real*8 epetw
 
-  dc = one
-  if (epetw.lt.zero) dc=zero
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
 
-  if ( (dc.ge.0.d0).and.(dc.le.1.d0) ) then
+  GRID_VARS%dc = one
+  if (epetw.lt.zero) GRID_VARS%dc=zero
 
-  dc=dc
+  if ( (GRID_VARS%dc.ge.0.d0).and.(GRID_VARS%dc.le.1.d0) ) then
+
+  GRID_VARS%dc=GRID_VARS%dc
 
   else
 
-  write (*,*) 'CALCD! : d! out of bounds ',dc
-  if (dc.lt.0.d0) dc=zero
-  if (dc.gt.1.d0) dc=one
+  write (*,*) 'CALCD! : d! out of bounds ',GRID_VARS%dc
+  if (GRID_VARS%dc.lt.0.d0) GRID_VARS%dc=zero
+  if (GRID_VARS%dc.gt.1.d0) GRID_VARS%dc=one
 
   endif
 
@@ -295,29 +305,37 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 !
 ! ====================================================================
 
-  subroutine calcepw(epwms,epetw,one,dc,fw,dt,wc)
+  subroutine calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
 
   implicit none
-  !include "help/calcepw.h"
-  real*8 epwms,epetw,one,dc,fw,dt,wc
-
-  epwms = epetw * (one-dc*(one-fw))
-
-  if ((epwms*dt).gt.wc) then
+  
+  type (GRID_VARS_template) :: GRID_VARS
+  type (CANOPY_template) :: GRID_CANOPY
+  type (GLOBAL_template) :: GLOBAL
  
-  fw = fw*wc/(epwms*dt)
-  epwms=epetw*(one-dc*(one-fw))
+  real*8 epetw
 
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
+
+  GRID_VARS%epwms = epetw * (one-GRID_VARS%dc*(one-GRID_VARS%fw))
+
+  if ((GRID_VARS%epwms*GLOBAL%dt).gt.GRID_CANOPY%wc) then
+ 
+  GRID_VARS%fw = GRID_VARS%fw*GRID_CANOPY%wc/(GRID_VARS%epwms*GLOBAL%dt)
+  GRID_VARS%epwms=epetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+ 
   endif
 
-  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  if ( (GRID_VARS%fw.ge.zero).and.(GRID_VARS%fw.le.one) ) then
 
-  fw=fw
-
+  GRID_VARS%fw=GRID_VARS%fw
+ 
   else
 
-  write (*,*) 'CALEPW : fw : ',fw
-  write (*,*) epwms,epetw,one,dc,fw,dt,wc
+  write (*,*) 'CALEPW : fw : ',GRID_VARS%fw
+  write (*,*) GRID_VARS%epwms,epetw,GRID_VARS%dc,GRID_VARS%fw,GLOBAL%dt,GRID_CANOPY%wc
   stop
 
   endif
