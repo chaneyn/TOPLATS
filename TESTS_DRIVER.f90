@@ -275,6 +275,123 @@ contains
     call assert_equals (calcra_true,calcra_result)
   end subroutine
 
+  subroutine calcfw_test1()
+    implicit none
+    real*8 :: calcfw_result,calcfw_true
+    real*8 :: Swq,wc,zero,fw,wsc
+    Swq = 0.0d0
+    wc = 3.1d0
+    zero = 0.0d0
+    fw = 2.2d0
+    wsc = 1.7d0
+    call calcfw(Swq,wc,zero,fw,wsc)
+    calcfw_result = fw
+    calcfw_true = 1.000000000
+    call set_unit_name ('calcfw_test1')
+    call assert_equals (calcfw_result, calcfw_true)
+  end subroutine
+ 
+  subroutine calcdc_test1()
+    implicit none
+    real*8 :: calcdc_result, calcdc_true
+    real*8 :: dc,one,epetw,zero
+    dc = 2.38
+    one = 1.0d0
+    epetw = 2.0d0
+    zero = 0.0d0
+    call calcdc(dc,one,epetw,zero)
+    calcdc_result = dc
+    calcdc_true = 1.00000000 
+    call set_unit_name ('calcdc_test1')
+    call assert_equals (calcdc_result, calcdc_true)
+  end subroutine
+
+  subroutine calcepw_test1()
+    implicit none
+    real*8 :: calcepw_result, calcepw_true
+    real*8 :: epwms,epetw,one,dc,fw,dt,wc
+    epwms = 2.5d0
+    epetw = 3.2d0
+    one = 1.0d0
+    dc = 1.5d0
+    fw = 0.5d0
+    dt = 1.0d0
+    wc = 0.2d0
+    call calcepw(epwms,epetw,one,dc,fw,dt,wc)
+    calcepw_result = fw
+    calcepw_true = 0.12500000000000000
+    call set_unit_name ('calcepw_test1')
+    call assert_equals (calcepw_result, calcepw_true)
+  end subroutine
+  
+  subroutine calcepw_test2()
+    implicit none
+    real*8 :: calcepw_result, calcepw_true
+    real*8 :: epwms,epetw,one,dc,fw,dt,wc
+    epwms = 2.5d0
+    epetw = 3.2d0
+    one = 1.0d0
+    dc = 1.5d0
+    fw = 0.5d0
+    dt = 1.0d0
+    wc = 0.2d0
+    call calcepw(epwms,epetw,one,dc,fw,dt,wc)
+    calcepw_result = epwms
+    calcepw_true = -1.000000000000
+    call set_unit_name ('calcepw_test2')
+    call assert_equals (calcepw_result, calcepw_true)
+  end subroutine
+
+  subroutine interstorm_test1()
+    implicit none
+    real*8 :: interstorm_result, interstorm_true
+    integer :: ipix,intstp,istmst,istorm,intstm
+    real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+    ipix = 1
+    intstp = 1
+    istmst = 1
+    istorm = 1
+    intstm = 1
+    precipi = 2.0d0
+    outf = 0.5d0
+    snowp = 0.1d0
+    xintst = 1.0d0
+    dt = 0.5d0
+    endstm = 2.0d0
+    r_input = 1.0d0
+    call interstorm(ipix,precipi,outf,snowp,xintst,&
+        dt,intstp,endstm,istmst,istorm,intstm)
+    interstorm_result = istmst
+    interstorm_true = 2.00000000000
+    call set_unit_name ('interstorm_test1')
+    call assert_equals (interstorm_result, interstorm_true)
+  end subroutine
+
+  subroutine interstorm_test2()
+    implicit none
+    real*8 :: interstorm_result, interstorm_true
+    integer :: ipix,intstp,istmst,istorm,intstm
+    real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+    ipix = 1
+    intstp = 1
+    istmst = 1
+    istorm = 1
+    intstm = 1
+    precipi = 2.0d0
+    outf = 0.5d0
+    snowp = 0.1d0
+    xintst = 1.0d0
+    dt = 0.5d0
+    endstm = 2.0d0
+    r_input = 1.0d0
+    call interstorm(ipix,precipi,outf,snowp,xintst,&
+        dt,intstp,endstm,istmst,istorm,intstm)
+    interstorm_result = intstp
+    interstorm_true = 1.00000000000
+    call set_unit_name ('interstorm_test2')
+    call assert_equals (interstorm_result, interstorm_true)
+  end subroutine
+ 
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -301,6 +418,14 @@ contains
     call stabcor_test2()
     call calcra_test1()
     call calcra_test2()
+
+    !MODULE_CANOPY tests
+    call calcfw_test1()
+    call calcdc_test1()
+    call calcepw_test1()
+    call calcepw_test2()
+    call interstorm_test1()
+    call interstorm_test2() 
 
     !Summarize and finalize the unit tests
     call fruit_summary

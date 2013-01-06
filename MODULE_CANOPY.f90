@@ -28,13 +28,14 @@ pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
-GRID_VARS)
+GRID_VARS, GLOBAL )
 
   implicit none
   include "help/canopy.h"
 
   type (GRID_VARS_template) :: GRID_VARS
-
+  type (GLOBAL_template) :: GLOBAL
+ 
 !integer ipix
 !integer intstp,istmst,istorm,intstm,ioppet
 !real*8 wc,wcip1,Swq,fw
@@ -50,6 +51,7 @@ GRID_VARS)
 !3.d0,4.d0,5.d0,6.d0/
  
 wcip1 = GRID_VARS%wcip1
+dt = GLOBAL%dt
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
@@ -169,6 +171,7 @@ wcip1 = GRID_VARS%wcip1
   endif
 
 GRID_VARS%wcip1 = wcip1
+GLOBAL%dt = dt
   
   return
 
