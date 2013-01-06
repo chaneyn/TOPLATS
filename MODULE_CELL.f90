@@ -378,7 +378,7 @@ xlamda = CAT%xlamda
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
-         call canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
+         call canopy(ipix,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
         pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
         intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
         rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&

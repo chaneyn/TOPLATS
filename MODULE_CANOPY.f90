@@ -27,7 +27,7 @@ contains
 !
 ! ====================================================================
 
-  subroutine canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
+  subroutine canopy(ipix,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
 pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
@@ -43,7 +43,7 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
   type (GLOBAL_template) :: GLOBAL
   type (CANOPY_template) :: GRID_CANOPY
 
-dt = GLOBAL%dt
+!dt = GLOBAL%dt
 wc = GRID_CANOPY%wc
 wcip1 = GRID_VARS%wcip1
 Swq = GRID_VARS%Swq
@@ -114,7 +114,7 @@ dspet = GRID_VARS%dspet
 ! Calculate evaporation from the wet canopy
 ! ====================================================================
 
-  call calcepw(epwms,epetw,one,dc,fw,dt,wc)
+  call calcepw(epwms,epetw,one,dc,fw,GLOBAL%dt,wc)
 
 ! ====================================================================
 ! Calculate through fall of rainfall.  This is the part of the
@@ -123,9 +123,9 @@ dspet = GRID_VARS%dspet
 
   pnet = zero
 
-  if ((pptms-epwms)*dt.gt.(wsc-wc)) then
+  if ((pptms-epwms)*GLOBAL%dt.gt.(wsc-wc)) then
 
-    pnet = (pptms-epwms)-((wsc-wc)/dt)
+    pnet = (pptms-epwms)-((wsc-wc)/GLOBAL%dt)
 
   endif
 
@@ -134,15 +134,15 @@ dspet = GRID_VARS%dspet
 ! interception storage.
 ! ====================================================================
 
-  wcip1 = wc + dt*(pptms-epwms-pnet)
-
+  wcip1 = wc + GLOBAL%dt*(pptms-epwms-pnet)
+ 
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
 
   if (wcip1.lt.zero) then
 
-    epwms = epwms + wcip1/dt
+    epwms = epwms + wcip1/GLOBAL%dt
     wcip1 = zero
 
   endif
@@ -161,7 +161,7 @@ dspet = GRID_VARS%dspet
 ! ====================================================================
 
   dswc = wcip1-wc
-  wcrhs=(pptms-epwms-pnet)*dt
+  wcrhs=(pptms-epwms-pnet)*GLOBAL%dt
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
@@ -176,7 +176,7 @@ dspet = GRID_VARS%dspet
 ! ====================================================================
 
   call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+Swq,&
-  xintst,dt,intstp,endstm,istmst,istorm,intstm)
+  xintst,GLOBAL%dt,intstp,endstm,istmst,istorm,intstm)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
@@ -206,7 +206,7 @@ dspet = GRID_VARS%dspet
 
   endif
 
-GLOBAL%dt = dt
+!GLOBAL%dt = dt
 GRID_VARS%wcip1 = wcip1
 GRID_CANOPY%wc = wc
 GRID_VARS%Swq = Swq
