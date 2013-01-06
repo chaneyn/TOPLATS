@@ -274,8 +274,8 @@ GRID_VARS%dspet = dspet
   subroutine calcfw(Swq,wc,zero,fw,wsc)
 
   implicit none
-  include "help/calcfw.h"
-  !real*8 Swq,wc,zero,fw,wsc
+  !include "help/calcfw.h"
+  real*8 Swq,wc,zero,fw,wsc
 
   if (Swq.le.zero) then
 
@@ -329,8 +329,8 @@ GRID_VARS%dspet = dspet
   subroutine calcdc(dc,one,epetw,zero)
 
   implicit none
-  include "help/calcdc.h"
-  !real*8 dc,one,epetw,zero
+  !include "help/calcdc.h"
+  real*8 dc,one,epetw,zero
 
   dc = one
   if (epetw.lt.zero) dc=zero
@@ -364,8 +364,8 @@ GRID_VARS%dspet = dspet
   subroutine calcepw(epwms,epetw,one,dc,fw,dt,wc)
 
   implicit none
-  include "help/calcepw.h"
-  !real*8 epwms,epetw,one,dc,fw,dt,wc
+  !include "help/calcepw.h"
+  real*8 epwms,epetw,one,dc,fw,dt,wc
 
   epwms = epetw * (one-dc*(one-fw))
 
@@ -407,10 +407,9 @@ GRID_VARS%dspet = dspet
 dt,intstp,endstm,istmst,istorm,intstm)
 
   implicit none
-  include "help/interstorm.h"
-
-!integer :: ipix,intstp,istmst,istorm,intstm
-!real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+  !include "help/interstorm.h"
+  integer :: ipix,intstp,istmst,istorm,intstm
+  real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
 
 
 ! ====================================================================
