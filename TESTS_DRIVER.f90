@@ -598,7 +598,78 @@ contains
     call assertequals(gtz_true,gtz)
     call assertequals(relstz_true,relstz)
   end subroutine
- 
+
+  subroutine new_difflx_test1()
+    
+    integer :: ikopt,inc_frozen
+    real*8 :: xksrz,xkstz,ff,zrz,ztz,rzsm,tzsm,thetas,thetar
+    real*8 :: bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz
+    real*8 :: difrz_true,diftz_true
+    ikopt = 1
+    inc_frozen = 1
+    xksrz = 0.26d0
+    xkstz = 0.7d0
+    ff = 1.0d0
+    zrz = 0.5d0
+    ztz = 1.0d0
+    rzsm = 0.5d0
+    tzsm = 0.3d0
+    thetas = 0.7d0
+    thetar = 0.1d0
+    bcbeta = 7.0d0
+    psic = 2.0d0 
+    difrz = 1.0d0
+    rzsm_u = 0.5d0
+    tzsm_u = 0.4d0
+    diftz = 0.5d0
+
+    difrz_true = 0.0085829351856200782d0
+    diftz_true = -0.035652192309498787d0
+
+    call new_difflx(ikopt,xksrz,xkstz,ff,zrz,ztz,inc_frozen,&
+                    rzsm,tzsm,thetas,thetar,bcbeta,psic,difrz,&
+                    rzsm_u,tzsm_u,diftz)
+    call set_unit_name('new_difflx_test1')
+    call assertequals(difrz_true,difrz)
+    call assertequals(diftz_true,diftz)
+  end subroutine
+
+  subroutine new_difflx_test2()
+    
+    integer :: ikopt,inc_frozen
+    real*8 :: xksrz,xkstz,ff,zrz,ztz,rzsm,tzsm,thetas,thetar
+    real*8 :: bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz
+    real*8 :: difrz_true,diftz_true
+    ikopt = 1
+    inc_frozen = 0
+    xksrz = 0.26d0
+    xkstz = 0.8d0
+    ff = 1.0d0
+    zrz = 0.3d0
+    ztz = 0.9d0
+    rzsm = 0.5d0
+    tzsm = 0.3d0
+    thetas = 0.7d0
+    thetar = 0.1d0
+    bcbeta = 7.0d0
+    psic = 2.0d0 
+    difrz = 1.0d0
+    rzsm_u = 0.5d0
+    tzsm_u = 0.4d0
+    diftz = 0.5d0
+
+    difrz_true = 0.011936146649400578d0
+    diftz_true = -0.0081018518518518705d0
+
+    call new_difflx(ikopt,xksrz,xkstz,ff,zrz,ztz,inc_frozen,&
+                    rzsm,tzsm,thetas,thetar,bcbeta,psic,difrz,&
+                    rzsm_u,tzsm_u,diftz)
+    call set_unit_name('new_difflx_test2')
+    call assertequals(difrz_true,difrz)
+    call assertequals(diftz_true,diftz)
+  end subroutine
+
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -637,6 +708,8 @@ contains
     call calcsmcond_test2()    
     call new_dwnflx_test1()
     call new_dwnflx_test2()
+    call new_difflx_test1()
+    call new_difflx_test2()
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
