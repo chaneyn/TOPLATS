@@ -418,8 +418,6 @@ contains
     call stabcor_test2()
     call calcra_test1()
     call calcra_test2()
-
-    !MODULE_CANOPY tests
     call calcfw_test1()
     call calcdc_test1()
     call calcepw_test1()
