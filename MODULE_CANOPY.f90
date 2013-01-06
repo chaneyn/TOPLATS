@@ -27,10 +27,10 @@ contains
 !
 ! ====================================================================
 
-  subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,intstm,&
+  subroutine canopy(ipix,epetw,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
-GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
+GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
   implicit none
   include "help/canopy.h"
@@ -41,16 +41,31 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
   type (GLOBAL_template) :: GLOBAL
   type (CANOPY_template) :: GRID_CANOPY
 
+!epetw-Shared with MODULE_ATMOS
+!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+!dshw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
+
 !dt = GLOBAL%dt
-wc = GRID_CANOPY%wc
+!wc = GRID_CANOPY%wc
 !wcip1 = GRID_VARS%wcip1
 !Swq = GRID_VARS%Swq
-fw = GRID_VARS%fw
+!fw = GRID_VARS%fw
 !wsc = GRID_VEG%wsc
-dc = GRID_VARS%dc
-!epetw-Shared with MODULE_ATMOS
-epwms = GRID_VARS%epwms
-pnet = GRID_VARS%pnet
+!dc = GRID_VARS%dc
+!epwms = GRID_VARS%epwms
+!pnet = GRID_VARS%pnet
 !pptms = GRID_MET%pptms
 !precip_o = GRID_VARS%precip_o
 !dswc = GRID_VARS%dswc
@@ -60,7 +75,7 @@ pnet = GRID_VARS%pnet
 !intstp = GRID_VARS%intstp
 !istmst = GRID_VARS%istmst
 !istorm = GRID_VARS%istorm
-intstm = GRID_VARS%intstm
+!intstm = GRID_VARS%intstm
 !Outflow = GRID_VARS%Outflow
 !PackWater = GRID_VARS%PackWater
 !SurfWater = GRID_VARS%SurfWater
@@ -68,62 +83,49 @@ intstm = GRID_VARS%intstm
 !xlepet = GRID_VARS%xlepet
 !hpet = GRID_VARS%hpet
 !gpet = GRID_VARS%gpet
-!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!xled-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!hd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!gd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!xlew-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!hw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!gw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 !ioppet = GLOBAL%ioppet
 !tkpet = GRID_VARS%tkpet
 !tkmidpet = GRID_VARS%tkmidpet
 !dspet = GRID_VARS%dspet
-!tkd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!dshd-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!tkw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
-!dshw-Shared with MODULE_ATMOS, MODULE_LAND, MODULE_CELL
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
 ! step.
 ! ====================================================================
 
-  wc = GRID_VARS%wcip1
+  GRID_CANOPY%wc = GRID_VARS%wcip1
 
 ! ====================================================================
 ! Set fraction of wet canopy which is considered 100% if canopy
 ! is wet and 0% if canopy is dry.
 ! ====================================================================
 
-  call calcfw(GRID_VARS%Swq,wc,zero,fw,GRID_VEG%wsc)
+  call calcfw(GRID_VARS%Swq,GRID_CANOPY%wc,zero,GRID_VARS%fw,GRID_VEG%wsc)
 
 ! ====================================================================
 ! If potential evaporation is negative, dew forms over the
 ! whole canopy.  Set dc to zero for this case.
 ! ====================================================================
 
-  call calcdc(dc,one,epetw,zero)
+  call calcdc(GRID_VARS%dc,one,epetw,zero)
 
 ! ====================================================================
 ! Calculate evaporation from the wet canopy
 ! ====================================================================
 
-  call calcepw(epwms,epetw,one,dc,fw,GLOBAL%dt,wc)
+  call calcepw(GRID_VARS%epwms,epetw,one,&
+  GRID_VARS%dc,GRID_VARS%fw,GLOBAL%dt,GRID_CANOPY%wc)
 
 ! ====================================================================
 ! Calculate through fall of rainfall.  This is the part of the
 ! rainfall that can get through the canopy to the underlying soil
 ! ====================================================================
  
-  pnet = zero 
+  GRID_VARS%pnet = zero 
 
-  if ((GRID_MET%pptms-epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-wc)) then
+  if ((GRID_MET%pptms-GRID_VARS%epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-GRID_CANOPY%wc)) then
 
-    pnet = (GRID_MET%pptms-epwms)-((GRID_VEG%wsc-wc)/GLOBAL%dt)
+    GRID_VARS%pnet = (GRID_MET%pptms-GRID_VARS%epwms)-((GRID_VEG%wsc-GRID_CANOPY%wc)/GLOBAL%dt)
 
   endif
 
@@ -132,7 +134,7 @@ intstm = GRID_VARS%intstm
 ! interception storage.
 ! ====================================================================
 
-  GRID_VARS%wcip1 = wc + GLOBAL%dt*(GRID_MET%pptms-epwms-pnet)
+  GRID_VARS%wcip1 = GRID_CANOPY%wc + GLOBAL%dt*(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)
 
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
@@ -140,7 +142,7 @@ intstm = GRID_VARS%intstm
 
   if (GRID_VARS%wcip1.lt.zero) then
  
-    epwms = epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
+    GRID_VARS%epwms = GRID_VARS%epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
     GRID_VARS%wcip1 = zero
 
   endif
@@ -158,32 +160,36 @@ intstm = GRID_VARS%intstm
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
-  GRID_VARS%dswc = GRID_VARS%wcip1-wc
-  GRID_VARS%wcrhs=(GRID_MET%pptms-epwms-pnet)*(GLOBAL%dt)
+  GRID_VARS%dswc = GRID_VARS%wcip1-GRID_CANOPY%wc
+  GRID_VARS%wcrhs=(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)*(GLOBAL%dt)
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
 ! under story.
 ! --------------------------------------------------------------------
 
-  if (GRID_MET%pptms.eq.(0.d0)) pnet =0.d0
+  if (GRID_MET%pptms.eq.(0.d0)) GRID_VARS%pnet =0.d0
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-  call interstorm(ipix,pnet,GRID_VARS%Outflow,GRID_VARS%PackWater+GRID_VARS%SurfWater+GRID_VARS%Swq,&
-  GRID_VARS%xintst,GLOBAL%dt,GRID_VARS%intstp,GLOBAL%endstm,GRID_VARS%istmst,GRID_VARS%istorm,intstm)
+  call interstorm(ipix,GRID_VARS%pnet,GRID_VARS%Outflow,GRID_VARS%PackWater+GRID_VARS%SurfWater+GRID_VARS%Swq,&
+  GRID_VARS%xintst,GLOBAL%dt,GRID_VARS%intstp,GLOBAL%endstm,GRID_VARS%istmst,GRID_VARS%istorm,GRID_VARS%intstm)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-  GRID_VARS%rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
-  GRID_VARS%xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
-  GRID_VARS%hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
-  GRID_VARS%gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
+  GRID_VARS%rnpet = rnetd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                     rnetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%xlepet = xled*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                      xlew*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%hpet = hd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    hw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%gpet = gd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    gw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
 ! --------------------------------------------------------------------
 ! Solve for temperature and heat storage only when energy balance
@@ -192,9 +198,12 @@ intstm = GRID_VARS%intstm
 
   if (GLOBAL%ioppet.eq.0) then
 
-    GRID_VARS%tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
-    GRID_VARS%tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
-    GRID_VARS%dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
+    GRID_VARS%tkpet = tkd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       tkw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%tkmidpet = tkmidd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                          tkmidw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%dspet = dshd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       dshw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
   else
 
@@ -205,15 +214,15 @@ intstm = GRID_VARS%intstm
   endif
 
 !GLOBAL%dt = dt
-GRID_CANOPY%wc = wc
+!GRID_CANOPY%wc = wc
 !GRID_VARS%wcip1 = wcip1
 !GRID_VARS%Swq = Swq
-GRID_VARS%fw = fw
+!GRID_VARS%fw = fw
 !GRID_VEG%wsc = wsc
-GRID_VARS%dc = dc
+!GRID_VARS%dc = dc
 !epetw-Shared with MODULE_ATMOS
-GRID_VARS%epwms = epwms
-GRID_VARS%pnet = pnet
+!GRID_VARS%epwms = epwms
+!GRID_VARS%pnet = pnet
 !GRID_MET%pptms = pptms
 !GRID_VARS%precip_o = precip_o
 !GRID_VARS%dswc = dswc
@@ -223,7 +232,7 @@ GRID_VARS%pnet = pnet
 !GRID_VARS%intstp = intstp
 !GRID_VARS%istmst = istmst
 !GRID_VARS%istorm = istorm
-GRID_VARS%intstm = intstm
+!GRID_VARS%intstm = intstm
 !GRID_VARS%Outflow = Outflow
 !GRID_VARS%PackWater = PackWater
 !GRID_VARS%SurfWater = SurfWater
