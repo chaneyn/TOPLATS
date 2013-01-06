@@ -27,7 +27,7 @@ contains
 !
 ! ====================================================================
 
-  subroutine canopy(ipix,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
+  subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
 pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
 intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
@@ -45,10 +45,10 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
 
 !dt = GLOBAL%dt
 wc = GRID_CANOPY%wc
-wcip1 = GRID_VARS%wcip1
-Swq = GRID_VARS%Swq
+!wcip1 = GRID_VARS%wcip1
+!Swq = GRID_VARS%Swq
 fw = GRID_VARS%fw
-wsc = GRID_VEG%wsc
+!wsc = GRID_VEG%wsc
 dc = GRID_VARS%dc
 !epetw-Shared with MODULE_ATMOS
 epwms = GRID_VARS%epwms
@@ -94,14 +94,14 @@ dspet = GRID_VARS%dspet
 ! step.
 ! ====================================================================
 
-  wc = wcip1
+  wc = GRID_VARS%wcip1
 
 ! ====================================================================
 ! Set fraction of wet canopy which is considered 100% if canopy
 ! is wet and 0% if canopy is dry.
 ! ====================================================================
 
-  call calcfw(Swq,wc,zero,fw,wsc)
+  call calcfw(GRID_VARS%Swq,wc,zero,fw,GRID_VEG%wsc)
 
 ! ====================================================================
 ! If potential evaporation is negative, dew forms over the
@@ -123,9 +123,9 @@ dspet = GRID_VARS%dspet
 
   pnet = zero
 
-  if ((pptms-epwms)*GLOBAL%dt.gt.(wsc-wc)) then
+  if ((pptms-epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-wc)) then
 
-    pnet = (pptms-epwms)-((wsc-wc)/GLOBAL%dt)
+    pnet = (pptms-epwms)-((GRID_VEG%wsc-wc)/GLOBAL%dt)
 
   endif
 
@@ -134,16 +134,16 @@ dspet = GRID_VARS%dspet
 ! interception storage.
 ! ====================================================================
 
-  wcip1 = wc + GLOBAL%dt*(pptms-epwms-pnet)
+  GRID_VARS%wcip1 = wc + GLOBAL%dt*(pptms-epwms-pnet)
  
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
 
-  if (wcip1.lt.zero) then
-
-    epwms = epwms + wcip1/GLOBAL%dt
-    wcip1 = zero
+  if (GRID_VARS%wcip1.lt.zero) then
+ 
+    epwms = epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
+    GRID_VARS%wcip1 = zero
 
   endif
 
@@ -160,8 +160,8 @@ dspet = GRID_VARS%dspet
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
-  dswc = wcip1-wc
-  wcrhs=(pptms-epwms-pnet)*GLOBAL%dt
+  dswc = GRID_VARS%wcip1-wc
+  wcrhs=(pptms-epwms-pnet)*(GLOBAL%dt)
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
@@ -175,7 +175,7 @@ dspet = GRID_VARS%dspet
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-  call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+Swq,&
+  call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+GRID_VARS%Swq,&
   xintst,GLOBAL%dt,intstp,endstm,istmst,istorm,intstm)
 
 ! ====================================================================
@@ -207,11 +207,11 @@ dspet = GRID_VARS%dspet
   endif
 
 !GLOBAL%dt = dt
-GRID_VARS%wcip1 = wcip1
 GRID_CANOPY%wc = wc
-GRID_VARS%Swq = Swq
+!GRID_VARS%wcip1 = wcip1
+!GRID_VARS%Swq = Swq
 GRID_VARS%fw = fw
-GRID_VEG%wsc = wsc
+!GRID_VEG%wsc = wsc
 GRID_VARS%dc = dc
 !epetw-Shared with MODULE_ATMOS
 GRID_VARS%epwms = epwms
