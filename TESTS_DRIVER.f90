@@ -516,7 +516,89 @@ contains
     call set_unit_name ('calcsmcond_test2')
     call assertequals(smcond_true,smcond)
   end subroutine
-  
+ 
+  subroutine new_dwnflx_test1()
+
+    integer :: ikopt,inc_frozen
+    real*8 :: zrz,rzsm,ff,thetar,thetas,rzsm_u,grz,bcbeta
+    real*8 :: ztz,gtz,tzsm,tzsm_u,xksrz,relsrz,xkstz,relstz
+    real*8 :: grz_true,gtz_true,relsrz_true,relstz_true
+   
+    ikopt = 1
+    inc_frozen = 1
+    zrz = 1.0d0
+    rzsm = 0.5d0
+    ff = 1.0d0
+    thetar = 0.3d0
+    thetas = 0.7d0
+    rzsm_u = 0.0d0
+    grz = 0.15d0
+    bcbeta = 10.0d0
+    ztz = 0.0d0
+    gtz = 0.0d0
+    tzsm = 0.2d0
+    tzsm_u = 0.03d0
+    xksrz = 0.25d0
+    relsrz = 0.5d0
+    xkstz = 0.1d0
+    relstz = 0.05d0
+    
+    grz_true = 0.0d0
+    relsrz_true = 0.5d0
+    gtz_true = 0.0d0
+    relstz_true = 0.05d0
+
+    call new_dwnflx(zrz,ikopt,xksrz,xkstz,rzsm,ff,inc_frozen,&
+                    thetar,thetas,rzsm_u,grz,bcbeta,ztz,gtz,&
+                    tzsm,tzsm_u)
+    call set_unit_name ('new_dwnflx_test1')
+    call assertequals(grz_true,grz)
+    call assertequals(relsrz_true,relsrz)
+    call assertequals(gtz_true,gtz)
+    call assertequals(relstz_true,relstz)
+  end subroutine
+        
+  subroutine new_dwnflx_test2()
+
+    integer :: ikopt,inc_frozen
+    real*8 :: zrz,rzsm,ff,thetar,thetas,rzsm_u,grz,bcbeta
+    real*8 :: ztz,gtz,tzsm,tzsm_u,xksrz,relsrz,xkstz,relstz
+    real*8 :: grz_true,gtz_true,relsrz_true,relstz_true
+   
+    ikopt = 1
+    inc_frozen = 0
+    zrz = 1.0d0
+    rzsm = 0.5d0
+    ff = 1.0d0
+    thetar = 0.1d0
+    thetas = 0.7d0
+    rzsm_u = 0.0d0
+    grz = 0.15d0
+    bcbeta = 7.0d0
+    ztz = 0.0d0
+    gtz = 0.0d0
+    tzsm = 0.37d0
+    tzsm_u = 0.03d0
+    xksrz = 0.26d0
+    relsrz = 0.5d0
+    xkstz = 0.7d0
+    relstz = 0.05d0
+    
+    grz_true = 0.068610057374659361d0
+    relsrz_true = 0.5d0
+    gtz_true = 0.0d0
+    relstz_true = 0.05d0
+
+    call new_dwnflx(zrz,ikopt,xksrz,xkstz,rzsm,ff,inc_frozen,&
+                    thetar,thetas,rzsm_u,grz,bcbeta,ztz,gtz,&
+                    tzsm,tzsm_u)
+    call set_unit_name ('new_dwnflx_test2')
+    call assertequals(grz_true,grz)
+    call assertequals(relsrz_true,relsrz)
+    call assertequals(gtz_true,gtz)
+    call assertequals(relstz_true,relstz)
+  end subroutine
+ 
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -553,7 +635,8 @@ contains
     call reset_inf_pars_test2()
     call calcsmcond_test1()
     call calcsmcond_test2()    
-    
+    call new_dwnflx_test1()
+    call new_dwnflx_test2()
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
