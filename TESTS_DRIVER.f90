@@ -3,6 +3,7 @@ MODULE MODULE_UNIT_TESTS
 USE FRUIT
 
 USE MODULE_ATMOS
+USE MODULE_LAND
 
 implicit none
 
@@ -273,6 +274,131 @@ contains
     call assert_equals (calcra_true,calcra_result)
   end subroutine
 
+  subroutine calcrain_test1()
+    implicit none
+    real*8 :: tcel,snow,rain,precip_o,dt,snow_true,rain_true    
+    tcel = 10.0d0
+    snow = 0.0d0
+    rain = 0.0d0
+    precip_o = 0.1d0
+    dt = 3600.0d0
+    snow_true = 0.0d0
+    rain_true = 360.0d0
+
+    call calcrain(tcel,snow,rain,precip_o,dt)
+        
+    call set_unit_name ('calcrain_test1')
+    call assert_equals (snow_true,snow)
+    call assert_equals (rain_true,rain)
+  end subroutine 
+
+  subroutine calcrain_test2()
+    implicit none
+    real*8 :: tcel,snow,rain,precip_o,dt,snow_true,rain_true    
+    tcel = -0.1d0
+    snow = 1.0d0
+    rain = 12.0d0
+    precip_o = 0.01d0
+    dt = 3600.0d0
+    snow_true = 36.0d0
+    rain_true = 0.0d0
+
+    call calcrain(tcel,snow,rain,precip_o,dt)
+        
+    call set_unit_name ('calcrain_test2')
+    call assert_equals (snow_true,snow)
+    call assert_equals (rain_true,rain)
+  end subroutine 
+
+  subroutine calcrsoil_test1()
+
+    integer :: irestype
+    real*8 :: rsoil,srespar1,srespar2,srespar3
+    real*8 :: thetas,rzsm,tkact,rsoil_true
+
+    irestype = 2
+    rsoil = 0.0d0
+    srespar1 = 0.1d0
+    srespar2 = 0.1d0
+    srespar3 = 0.1d0
+    thetas = 0.1d0
+    rzsm = 0.1d0 
+    tkact = 0.1d0
+    rsoil_true = 0.2d0
+    
+    call calcrsoil(irestype,rsoil,srespar1,srespar2,srespar3,&
+                   thetas,rzsm,tkact)
+    call set_unit_name ('calcrsoil_test1')
+    call assert_equals (rsoil_true,rsoil)
+
+  end subroutine
+
+  subroutine calcrsoil_test2()
+  
+    integer :: irestype
+    real*8 :: rsoil,srespar1,srespar2,srespar3
+    real*8 :: thetas,rzsm,tkact,rsoil_true
+
+
+    irestype = 3
+    rsoil = 0.0d0
+    srespar1 = 0.1d0
+    srespar2 = 1.0d0
+    srespar3 = 0.1d0
+    thetas = 1.0d0
+    rzsm = 0.1d0 
+    tkact = 10.0d0
+    rsoil_true = 5470.7735443438487d0
+    
+    call calcrsoil(irestype,rsoil,srespar1,srespar2,srespar3,&
+                   thetas,rzsm,tkact)
+    call set_unit_name ('calcrsoil_test2')
+    call assert_equals (rsoil_true,rsoil)
+  end subroutine
+
+  subroutine calcrsoil_test3()
+
+    integer :: irestype
+    real*8 :: rsoil,srespar1,srespar2,srespar3
+    real*8 :: thetas,rzsm,tkact,rsoil_true
+
+    irestype = 4
+    rsoil = 0.0d0
+    srespar1 = 0.1d0
+    srespar2 = 0.1d0
+    srespar3 = 0.1d0
+    thetas = 2.0d0
+    rzsm = 0.1d0 
+    tkact = 10.0d0
+    rsoil_true = 0.09d0
+    
+    call calcrsoil(irestype,rsoil,srespar1,srespar2,srespar3,&
+                   thetas,rzsm,tkact)
+    call set_unit_name ('calcrsoil_test3')
+    call assert_equals (rsoil_true,rsoil)
+  end subroutine
+
+  subroutine calcrsoil_test4()
+    integer :: irestype 
+    real*8 :: rsoil,srespar1,srespar2,srespar3
+    real*8 :: thetas,rzsm,tkact,rsoil_true
+
+    irestype = 5
+    rsoil = 0.0d0
+    srespar1 = 0.1d0
+    srespar2 = 0.1d0
+    srespar3 = 0.1d0
+    thetas = 0.1d0
+    rzsm = 0.1d0 
+    tkact = 0.1d0
+    rsoil_true = 0.11051709180756478d0
+    
+    call calcrsoil(irestype,rsoil,srespar1,srespar2,srespar3,&
+                   thetas,rzsm,tkact)
+    call set_unit_name ('calcrsoil_test4')
+    call assert_equals (rsoil_true,rsoil)
+  end subroutine
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -299,6 +425,12 @@ contains
     call stabcor_test2()
     call calcra_test1()
     call calcra_test2()
+    call calcrain_test1()
+    call calcrain_test2()
+    call calcrsoil_test1()
+    call calcrsoil_test2()
+    call calcrsoil_test3()
+    call calcrsoil_test4()
 
     !Summarize and finalize the unit tests
     call fruit_summary
