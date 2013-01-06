@@ -299,7 +299,7 @@ contains
     real*8 :: epetw 
     GRID_VARS%dc = 2.38
     epetw = 2.0d0
-    call calcdc(GRID_VARS,epetw)
+    call calcdc(epetw,GRID_VARS)
     calcdc_result = GRID_VARS%dc
     calcdc_true = 1.00000000 
     call set_unit_name ('calcdc_test1')

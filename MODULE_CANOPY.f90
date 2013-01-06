@@ -1,7 +1,5 @@
 MODULE MODULE_CANOPY
 
-USE MODULE_VARIABLES_OLD
-
 USE MODULE_VARIABLES
 
 USE MODULE_SHARED
@@ -12,7 +10,6 @@ implicit none
 
 type CANOPY_template
   real*8 wc
-  real*8 zero,one
 end type CANOPY_template
 
 contains
@@ -42,13 +39,14 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
   type (GLOBAL_template) :: GLOBAL
   type (CANOPY_template) :: GRID_CANOPY
 
-  integer ipix
-  real*8 epetw
-  real*8 rnetd,xled,hd,gd,rnetw,xlew,hw,gw
-  real*8 tkd,tkmidd,dshd,tkw,tkmidw,dshw
+  integer :: ipix
+  real*8 :: epetw
+  real*8 :: rnetd,xled,hd,gd,rnetw,xlew,hw,gw
+  real*8 :: tkd,tkmidd,dshd,tkw,tkmidw,dshw
 
-  GRID_CANOPY%zero = 0.0d0
-  GRID_CANOPY%one = 1.0d0
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
 
 !epetw-Shared with MODULE_ATMOS, used in MODULE_CELL
 !rnetd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
@@ -85,7 +83,7 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 ! whole canopy.  Set dc to zero for this case.
 ! ====================================================================
 
-  call calcdc(GRID_VARS,epetw)
+  call calcdc(epetw,GRID_VARS)
 
 ! ====================================================================
 ! Calculate evaporation from the wet canopy
@@ -98,7 +96,7 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 ! rainfall that can get through the canopy to the underlying soil
 ! ====================================================================
  
-  GRID_VARS%pnet = GRID_CANOPY%zero 
+  GRID_VARS%pnet = zero 
 
   if ((GRID_MET%pptms-GRID_VARS%epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-GRID_CANOPY%wc)) then
 
@@ -117,10 +115,10 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
 
-  if (GRID_VARS%wcip1.lt.GRID_CANOPY%zero) then
+  if (GRID_VARS%wcip1.lt.zero) then
  
     GRID_VARS%epwms = GRID_VARS%epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
-    GRID_VARS%wcip1 = GRID_CANOPY%zero
+    GRID_VARS%wcip1 = zero
 
   endif
 
@@ -158,14 +156,14 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-  GRID_VARS%rnpet = rnetd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                     rnetw*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
-  GRID_VARS%xlepet = xled*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                      xlew*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
-  GRID_VARS%hpet = hd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                    hw*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
-  GRID_VARS%gpet = gd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                    gw*(GRID_CANOPY%one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%rnpet = rnetd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                     rnetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%xlepet = xled*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                      xlew*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%hpet = hd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    hw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%gpet = gd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    gw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
 ! --------------------------------------------------------------------
 ! Solve for temperature and heat storage only when energy balance
@@ -174,18 +172,18 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
   if (GLOBAL%ioppet.eq.0) then
 
-    GRID_VARS%tkpet = tkd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                       tkw*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
-    GRID_VARS%tkmidpet = tkmidd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                          tkmidw*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
-    GRID_VARS%dspet = dshd*GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw)+&
-                       dshw*(GRID_CANOPY%one-GRID_VARS%dc*(GRID_CANOPY%one-GRID_VARS%fw))
+    GRID_VARS%tkpet = tkd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       tkw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%tkmidpet = tkmidd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                          tkmidw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%dspet = dshd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       dshw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
   else
 
-    GRID_VARS%tkpet = GRID_CANOPY%zero
-    GRID_VARS%tkmidpet = GRID_CANOPY%zero
-    GRID_VARS%dspet = GRID_CANOPY%zero
+    GRID_VARS%tkpet = zero
+    GRID_VARS%tkmidpet = zero
+    GRID_VARS%dspet = zero
 
   endif
 
@@ -265,12 +263,12 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 !
 ! ====================================================================
 
-  subroutine calcdc(GRID_VARS,epetw)
+  subroutine calcdc(epetw,GRID_VARS)
 
   implicit none
   
   type (GRID_VARS_template) :: GRID_VARS
-  real*8 epetw
+  real*8 :: epetw
 
   real*8 :: zero,one
   zero = 0.0d0
@@ -279,15 +277,15 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
   GRID_VARS%dc = one
   if (epetw.lt.zero) GRID_VARS%dc=zero
 
-  if ( (GRID_VARS%dc.ge.0.d0).and.(GRID_VARS%dc.le.1.d0) ) then
+  if ( (GRID_VARS%dc.ge.zero).and.(GRID_VARS%dc.le.one) ) then
 
   GRID_VARS%dc=GRID_VARS%dc
 
   else
 
   write (*,*) 'CALCD! : d! out of bounds ',GRID_VARS%dc
-  if (GRID_VARS%dc.lt.0.d0) GRID_VARS%dc=zero
-  if (GRID_VARS%dc.gt.1.d0) GRID_VARS%dc=one
+  if (GRID_VARS%dc.lt.zero) GRID_VARS%dc=zero
+  if (GRID_VARS%dc.gt.one) GRID_VARS%dc=one
 
   endif
 
@@ -313,7 +311,7 @@ GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
   type (CANOPY_template) :: GRID_CANOPY
   type (GLOBAL_template) :: GLOBAL
  
-  real*8 epetw
+  real*8 :: epetw
 
   real*8 :: zero,one
   zero = 0.0d0
