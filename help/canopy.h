@@ -1,6 +1,6 @@
       integer i,ipix,i_und,i_moss,intstp_moss,istmst_moss
       integer istorm_moss,intstm_moss
-      integer intstp,istmst,istorm,intstm,ioppet
+      integer intstp,istmst,istorm,intstm
 
       real*8 wc,wc_us,wcip1,wcip1_us,Swq,fw,Swq_us,fw_us
       real*8 wsc,wsc_us,dc

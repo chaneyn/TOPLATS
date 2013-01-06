@@ -28,8 +28,8 @@ contains
 ! ====================================================================
 
   subroutine canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
-pptms,precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
+precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
+intstm,rnpet,xlepet,hpet,gpet,&
 rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet,dspet,&
 tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
 GRID_VARS, GRID_VEG, GRID_MET, GLOBAL )
@@ -53,7 +53,7 @@ dc = GRID_VARS%dc
 !epetw-Shared with MODULE_ATMOS
 epwms = GRID_VARS%epwms
 pnet = GRID_VARS%pnet
-pptms = GRID_MET%pptms
+!pptms = GRID_MET%pptms
 precip_o = GRID_VARS%precip_o
 dswc = GRID_VARS%dswc
 wcrhs = GRID_VARS%wcrhs
@@ -63,9 +63,9 @@ intstp = GRID_VARS%intstp
 istmst = GRID_VARS%istmst
 istorm = GRID_VARS%istorm
 intstm = GRID_VARS%intstm
-Outflow = GRID_VARS%Outflow
-PackWater = GRID_VARS%PackWater
-SurfWater = GRID_VARS%SurfWater
+!Outflow = GRID_VARS%Outflow
+!PackWater = GRID_VARS%PackWater
+!SurfWater = GRID_VARS%SurfWater
 rnpet = GRID_VARS%rnpet
 xlepet = GRID_VARS%xlepet
 hpet = GRID_VARS%hpet
@@ -123,9 +123,9 @@ dspet = GRID_VARS%dspet
  
   pnet = zero 
 
-  if ((pptms-epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-wc)) then
+  if ((GRID_MET%pptms-epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-wc)) then
 
-    pnet = (pptms-epwms)-((GRID_VEG%wsc-wc)/GLOBAL%dt)
+    pnet = (GRID_MET%pptms-epwms)-((GRID_VEG%wsc-wc)/GLOBAL%dt)
 
   endif
 
@@ -134,7 +134,7 @@ dspet = GRID_VARS%dspet
 ! interception storage.
 ! ====================================================================
 
-  GRID_VARS%wcip1 = wc + GLOBAL%dt*(pptms-epwms-pnet)
+  GRID_VARS%wcip1 = wc + GLOBAL%dt*(GRID_MET%pptms-epwms-pnet)
 
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
@@ -154,28 +154,28 @@ dspet = GRID_VARS%dspet
 ! over story.
 ! ====================================================================
 
-  precip_o=pptms
+  precip_o=GRID_MET%pptms
 
 ! ====================================================================
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
   dswc = GRID_VARS%wcip1-wc
-  wcrhs=(pptms-epwms-pnet)*(GLOBAL%dt)
+  wcrhs=(GRID_MET%pptms-epwms-pnet)*(GLOBAL%dt)
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
 ! under story.
 ! --------------------------------------------------------------------
 
-  if (pptms.eq.(0.d0)) pnet =0.d0
+  if (GRID_MET%pptms.eq.(0.d0)) pnet =0.d0
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-  call interstorm(ipix,pnet ,Outflow,PackWater+SurfWater+GRID_VARS%Swq,&
+  call interstorm(ipix,pnet,GRID_VARS%Outflow,GRID_VARS%PackWater+GRID_VARS%SurfWater+GRID_VARS%Swq,&
   xintst,GLOBAL%dt,intstp,GLOBAL%endstm,istmst,istorm,intstm)
 
 ! ====================================================================
@@ -216,7 +216,7 @@ GRID_VARS%dc = dc
 !epetw-Shared with MODULE_ATMOS
 GRID_VARS%epwms = epwms
 GRID_VARS%pnet = pnet
-GRID_MET%pptms = pptms
+!GRID_MET%pptms = pptms
 GRID_VARS%precip_o = precip_o
 GRID_VARS%dswc = dswc
 GRID_VARS%wcrhs = wcrhs
@@ -226,9 +226,9 @@ GRID_VARS%intstp = intstp
 GRID_VARS%istmst = istmst
 GRID_VARS%istorm = istorm
 GRID_VARS%intstm = intstm
-GRID_VARS%Outflow = Outflow
-GRID_VARS%PackWater = PackWater
-GRID_VARS%SurfWater = SurfWater
+!GRID_VARS%Outflow = Outflow
+!GRID_VARS%PackWater = PackWater
+!GRID_VARS%SurfWater = SurfWater
 GRID_VARS%rnpet = rnpet
 GRID_VARS%xlepet = xlepet
 GRID_VARS%hpet = hpet
@@ -410,7 +410,6 @@ dt,intstp,endstm,istmst,istorm,intstm)
   !include "help/interstorm.h"
   integer :: ipix,intstp,istmst,istorm,intstm
   real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
-
 
 ! ====================================================================
 ! Calculate the water input to the ground.

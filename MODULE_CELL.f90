@@ -379,8 +379,8 @@ xlamda = CAT%xlamda
 ! ....................................................................
 
          call canopy(ipix,wc,fw,dc,epetw,epwms,pnet,&
-        pptms,precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
-        intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
+        precip_o,dswc,wcrhs,xintst,intstp,istmst,istorm,&
+        intstm,Outflow,rnpet,xlepet,hpet,gpet,&
         rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet,dspet,&
         tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
         GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
