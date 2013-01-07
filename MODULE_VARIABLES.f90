@@ -31,6 +31,10 @@ type GRID_VEG_template
                 r_mossmpet0,a_ice_moss,b_ice_moss,bulk_dens_moss
         !Miscellanous
         !real*8 :: wcip1
+        !Temperature Variables
+        real*8 :: tkd,tkmidd,tkw,tkmidw
+        !Energy fluxes
+        real*8 :: rnetd,xled,hd,gd,dshd,rnetw,xlew,hw,gw,dshw
         !Indices
         integer :: i_und,i_moss,ivgtyp,ilandc
 
@@ -56,6 +60,7 @@ type GRID_VARS_template
 	real*8 :: rib
         !Evapotranspiration
         real*8 :: etpix
+        real*8 :: epetw
         !Snow Variables
         real*8 :: PackWater_us,&
                 SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&

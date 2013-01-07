@@ -692,11 +692,10 @@ contains
   subroutine calcdc_test1()
     implicit none
     real*8 :: calcdc_result, calcdc_true
-    type (GRID_VARS_template) :: GRID_VARS
-    real*8 :: epetw 
+    type (GRID_VARS_template) :: GRID_VARS 
     GRID_VARS%dc = 2.38
-    epetw = 2.0d0
-    call calcdc(epetw,GRID_VARS)
+    GRID_VARS%epetw = 2.0d0
+    call calcdc(GRID_VARS)
     calcdc_result = GRID_VARS%dc
     calcdc_true = 1.00000000 
     call set_unit_name ('calcdc_test1')
@@ -709,14 +708,13 @@ contains
     type (GRID_VARS_template) :: GRID_VARS
     type (CANOPY_template) :: GRID_CANOPY
     type (GLOBAL_template) :: GLOBAL
-    real*8 :: epetw
     GRID_VARS%epwms = 2.5d0
-    epetw = 3.2d0
+    GRID_VARS%epetw = 3.2d0
     GRID_VARS%dc = 1.5d0
     GRID_VARS%fw = 0.5d0
     GLOBAL%dt = 1.0d0
     GRID_CANOPY%wc = 0.2d0
-    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    call calcepw(GRID_VARS,GRID_CANOPY,GLOBAL)
     calcepw_result = GRID_VARS%fw
     calcepw_true = 0.12500000000000000
     call set_unit_name ('calcepw_test1')
@@ -729,14 +727,13 @@ contains
     type (GRID_VARS_template) :: GRID_VARS
     type (CANOPY_template) :: GRID_CANOPY
     type (GLOBAL_template) :: GLOBAL
-    real*8 :: epetw
     GRID_VARS%epwms = 2.5d0
-    epetw = 3.2d0
+    GRID_VARS%epetw = 3.2d0
     GRID_VARS%dc = 1.5d0
     GRID_VARS%fw = 0.5d0
     GLOBAL%dt = 1.0d0
     GRID_CANOPY%wc = 0.2d0
-    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    call calcepw(GRID_VARS,GRID_CANOPY,GLOBAL)
     calcepw_result = GRID_VARS%epwms
     calcepw_true = -1.000000000000
     call set_unit_name ('calcepw_test2')

@@ -378,11 +378,39 @@ xlamda = CAT%xlamda
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
-         call canopy(ipix,epetw,&
-        rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
-        tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
-        GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
+         GRID_VARS%epetw = epetw
+         GRID_VEG%rnetd = rnetd
+         GRID_VEG%xled = xled
+         GRID_VEG%hd = hd
+         GRID_VEG%gd = gd
+         GRID_VEG%dshd = dshd
+         GRID_VEG%rnetw = rnetw
+         GRID_VEG%xlew = xlew
+         GRID_VEG%hw = hw
+         GRID_VEG%gw = gw
+         GRID_VEG%dshw = dshw
+         GRID_VEG%tkd = tkd
+         GRID_VEG%tkmidd = tkmidd
+         GRID_VEG%tkw = tkw
+         GRID_VEG%tkmidw = tkmidw 
+ 
+         call canopy(ipix,GRID_VARS,GRID_VEG,GRID_MET,GLOBAL)
 
+         epetw = GRID_VARS%epetw
+         rnetd = GRID_VEG%rnetd
+         xled = GRID_VEG%xled
+         hd = GRID_VEG%hd
+         gd = GRID_VEG%gd
+         dshd = GRID_VEG%dshd
+         rnetw = GRID_VEG%rnetw
+         xlew = GRID_VEG%xlew
+         hw = GRID_VEG%hw
+         gw = GRID_VEG%gw
+         dshw = GRID_VEG%dshw
+         tkd = GRID_VEG%tkd
+         tkmidd = GRID_VEG%tkmidd
+         tkw = GRID_VEG%tkw
+         tkmidw = GRID_VEG%tkmidw
 ! ....................................................................
 ! Calculate the local land surface water/energy balance.
 ! ....................................................................
