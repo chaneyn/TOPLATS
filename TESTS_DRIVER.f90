@@ -892,7 +892,47 @@ contains
     call assert_equals(0.0d0,hact_snow)
     call assert_equals(0.0d0,dens)
   end subroutine     
- 
+
+  subroutine acttrans_test1()
+    real*8 Swq,vegcap,epet,evtact,evtact_true,zrz
+    integer ievcon,ievcon_true
+    
+    Swq = -1.0d0
+    vegcap = 1.0d0
+    epet = 2.0d0
+    evtact = 0.0d0
+    zrz = 0.0d0
+    ievcon = 0
+    ievcon_true = 1
+    evtact_true = 1.0d0
+
+    call acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
+
+    call set_unit_name('acttrans_test1')
+    call assertequals(evtact_true,evtact)
+    call assertequals(ievcon_true,ievcon)
+  end subroutine
+
+  subroutine acttrans_test2()
+    real*8 Swq,vegcap,epet,evtact,evtact_true,zrz
+    integer ievcon,ievcon_true
+    
+    Swq = 1.0d0
+    vegcap = 1.0d0
+    epet = 2.0d0
+    evtact = 0.0d0
+    zrz = 0.0d0
+    ievcon = 0
+    ievcon_true = 3
+    evtact_true = 2.0d0
+
+    call acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
+
+    call set_unit_name('acttrans_test1')
+    call assertequals(evtact_true,evtact)
+    call assertequals(ievcon_true,ievcon)
+  end subroutine
+    
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -942,6 +982,8 @@ contains
     call interstorm_test1()
     call interstorm_test2() 
     call zero_snowvar_test1()
+    call acttrans_test1()
+    call acttrans_test2()
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
