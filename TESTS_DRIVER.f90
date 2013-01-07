@@ -794,6 +794,90 @@ contains
     call set_unit_name ('interstorm_test2')
     call assert_equals (interstorm_result, interstorm_true)
   end subroutine     
+
+  subroutine calc_rs_test1()
+    implicit none
+    type (GRID_VEG_template) :: GRID_VEG
+    real*8 :: calc_rs_result,calc_rs_true
+    integer :: i_und,i_moss
+    real*8 :: Swq_us,alb_moss,alb_snow,rsd,rs_over,rs_under
+    GRID_VEG%canclos = 4.0d0
+    GRID_VEG%extinct = 3.0d0
+    GRID_VEG%albd_us = 1.5d0
+    i_und = -2
+    i_moss = -5
+    Swq_us = 5.0d0
+    alb_moss = 10.0d0
+    alb_snow = 7.0d0
+    rsd = 15.0d0
+    rs_over = 1.0d0
+    rs_under = 6.0d0
+    call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,alb_moss,&
+      alb_snow,rsd,rs_over,rs_under)
+    calc_rs_result = rs_over
+    calc_rs_true = 1.0d0
+    call set_unit_name ('calc_rs_test1')
+    call assert_equals(calc_rs_result,calc_rs_true)
+  end subroutine
+
+  subroutine calc_rs_test2()
+    implicit none
+    type (GRID_VEG_template) :: GRID_VEG
+    real*8 :: calc_rs_result,calc_rs_true
+    integer :: i_und,i_moss
+    real*8 :: Swq_us,alb_moss,alb_snow,rsd,rs_over,rs_under
+    GRID_VEG%canclos = 2.0d0
+    GRID_VEG%extinct = 10.0d0
+    GRID_VEG%albd_us = 11.0d0
+    i_und = 9
+    i_moss = -5
+    Swq_us = -5.0d0
+    alb_moss = 15.0d0
+    alb_snow = 3.0d0
+    rsd = 30.0d0
+    rs_over = 1.0d0
+    rs_under = 6.0d0
+    call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,alb_moss,&
+      alb_snow,rsd,rs_over,rs_under)
+    calc_rs_result = rs_under
+    calc_rs_true = 570.0d0
+    call set_unit_name ('calc_rs_test2')
+    call assert_equals(calc_rs_result,calc_rs_true)
+  end subroutine
+
+  subroutine calcrib_test1()
+    implicit none
+    real*8 :: tk2,q2,p2,u2,z2,tk1,q1
+    real*8 :: calcrib_result,calcrib_true
+    tk2 = 8.0d0
+    q2 = -5.0d0
+    p2 = 7.0d0
+    u2 = 0.05d0
+    z2 = 2.0d0
+    tk1 = 10.0d0
+    q1 = 1.0d0
+    calcrib_result = calcrib(tk2,q2,p2,u2,z2,tk1,q1)
+    calcrib_true = -490.50000000000006d0
+    call set_unit_name ('calcrib_test1')
+    call assert_equals(calcrib_result,calcrib_true)
+  end subroutine
+ 
+  subroutine calcrib_test2()
+    implicit none
+    real*8 :: tk2,q2,p2,u2,z2,tk1,q1
+    real*8 :: calcrib_result,calcrib_true
+    tk2 = 3.0d0
+    q2 = -2.0d0
+    p2 = 6.0d0
+    u2 = 0.05d0
+    z2 = 1.5d0
+    tk1 = 1.0d0
+    q1 = 6.3d0
+    calcrib_result = calcrib(tk2,q2,p2,u2,z2,tk1,q1)
+    calcrib_true = 980.99999999999989d0
+    call set_unit_name ('calcrib_test2')
+    call assert_equals(calcrib_result,calcrib_true)
+  end subroutine
  
   subroutine run_unit_tests()
   
@@ -841,6 +925,10 @@ contains
     call calcepw_test2()
     call interstorm_test1()
     call interstorm_test2() 
+    call calc_rs_test1()
+    call calc_rs_test2()
+    call calcrib_test1()
+    call calcrib_test2()
 
     !Summarize and finalize the unit tests
     call fruit_summary
