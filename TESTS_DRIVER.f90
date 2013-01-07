@@ -394,6 +394,110 @@ contains
     call set_unit_name ('interstorm_test2')
     call assert_equals (interstorm_result, interstorm_true)
   end subroutine     
+
+  subroutine calcwt_test1()
+    implicit none
+    real*8 :: calcwt_result,calcwt_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (GRID_MET_template) :: GRID_MET
+    type (GLOBAL_template) :: GLOBAL
+    type (CANOPY_template) :: GRID_CANOPY
+    GRID_MET%pptms=1.0d0
+    GRID_VARS%epwms=0.50d0
+    GLOBAL%dt=1.0d0
+    GRID_VEG%wsc=0.80d0
+    GRID_CANOPY%wc=0.20d0
+    call calcwt(GRID_VARS,GRID_VEG,GRID_MET,GLOBAL,GRID_CANOPY)
+    calcwt_result = GRID_VARS%epwms
+    calcwt_true = 0.50000000
+    call set_unit_name ('calcwt_test1')
+    call assert_equals (calcwt_result,calcwt_true)
+  end subroutine
+
+  subroutine calcwt_test2()
+    implicit none
+    real*8 :: calcwt_result,calcwt_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (GRID_MET_template) :: GRID_MET
+    type (GLOBAL_template) :: GLOBAL
+    type (CANOPY_template) :: GRID_CANOPY
+    GRID_MET%pptms=1.0d0
+    GRID_VARS%epwms=0.50d0
+    GLOBAL%dt=1.0d0
+    GRID_VEG%wsc=0.80d0
+    GRID_CANOPY%wc=0.20d0
+    call calcwt(GRID_VARS,GRID_VEG,GRID_MET,GLOBAL,GRID_CANOPY)
+    calcwt_result = GRID_VARS%wcrhs
+    calcwt_true = 0.50000000
+    call set_unit_name ('calcwt_test2')
+    call assert_equals (calcwt_result,calcwt_true)
+  end subroutine
+
+  subroutine calcnet_test1()
+    implicit none
+    real*8 :: calcnet_result,calcnet_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (GRID_MET_template) :: GRID_MET
+    type (GLOBAL_template) :: GLOBAL
+    type (CANOPY_template) :: GRID_CANOPY
+    GLOBAL%ioppet = 1
+    GRID_VARS%dc = 0.50d0
+    GRID_VARS%fw = 0.80d0
+    GRID_VEG%rnetd = 0.10d0
+    GRID_VEG%rnetw = 0.30d0
+    GRID_VEG%xlew = 0.20d0
+    GRID_VEG%xled = 0.10d0
+    GRID_VEG%hw = 0.20d0
+    GRID_VEG%hd = 0.10d0
+    GRID_VEG%gw = 0.20d0
+    GRID_VEG%gd = 0.10d0
+    GRID_VEG%tkw = 0.20d0
+    GRID_VEG%tkd = 0.10d0
+    GRID_VEG%tkmidd = 0.10d0
+    GRID_VEG%tkmidw = 0.20d0
+    GRID_VEG%dshd = 0.10d0
+    GRID_VEG%dshw = 0.20d0
+    call calcnet(GRID_VARS,GRID_VEG,GLOBAL)
+    calcnet_result = GRID_VARS%tkmidpet
+    calcnet_true = 0.0000000
+    call set_unit_name ('calcnet_test1')
+    call assert_equals (calcnet_result,calcnet_true)
+  end subroutine
+
+  subroutine calcnet_test2()
+    implicit none
+    real*8 :: calcnet_result,calcnet_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (GRID_MET_template) :: GRID_MET
+    type (GLOBAL_template) :: GLOBAL
+    type (CANOPY_template) :: GRID_CANOPY
+    GLOBAL%ioppet = 1
+    GRID_VARS%dc = 0.50d0
+    GRID_VARS%fw = 0.80d0
+    GRID_VEG%rnetd = 0.10d0
+    GRID_VEG%rnetw = 0.30d0
+    GRID_VEG%xlew = 0.20d0
+    GRID_VEG%xled = 0.10d0
+    GRID_VEG%hw = 0.20d0
+    GRID_VEG%hd = 0.10d0
+    GRID_VEG%gw = 0.20d0
+    GRID_VEG%gd = 0.10d0
+    GRID_VEG%tkw = 0.20d0
+    GRID_VEG%tkd = 0.10d0
+    GRID_VEG%tkmidd = 0.10d0
+    GRID_VEG%tkmidw = 0.20d0
+    GRID_VEG%dshd = 0.10d0
+    GRID_VEG%dshw = 0.20d0
+    call calcnet(GRID_VARS,GRID_VEG,GLOBAL)
+    calcnet_result = GRID_VARS%tkpet
+    calcnet_true = 0.0000000
+    call set_unit_name ('calcnet_test2')
+    call assert_equals (calcnet_result,calcnet_true)
+  end subroutine
  
   subroutine run_unit_tests()
   
@@ -427,6 +531,10 @@ contains
     call calcepw_test2()
     call interstorm_test1()
     call interstorm_test2() 
+    call calcwt_test1()
+    call calcwt_test2()
+    call calcnet_test1()
+    call calcnet_test2()
 
     !Summarize and finalize the unit tests
     call fruit_summary
