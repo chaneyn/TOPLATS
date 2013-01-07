@@ -3,7 +3,10 @@ MODULE MODULE_UNIT_TESTS
 USE FRUIT
 
 USE MODULE_ATMOS
+
 USE MODULE_LAND
+
+USE MODULE_CANOPY
 
 implicit none
 
@@ -733,6 +736,129 @@ contains
     call assertequals(evrz_true,evrz)     
   end subroutine   
       
+  subroutine calcfw_test1()
+    implicit none
+    real*8 :: calcfw_result,calcfw_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GRID_VEG_template) :: GRID_VEG
+    type (CANOPY_template) :: GRID_CANOPY
+    GRID_VARS%Swq = 0.0d0
+    GRID_CANOPY%wc = 3.1d0
+    GRID_VARS%fw = 2.2d0
+    GRID_VEG%wsc = 1.7d0
+    call calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
+    calcfw_result = GRID_VARS%fw
+    calcfw_true = 1.000000000
+    call set_unit_name ('calcfw_test1')
+    call assert_equals (calcfw_result, calcfw_true)
+  end subroutine
+ 
+  subroutine calcdc_test1()
+    implicit none
+    real*8 :: calcdc_result, calcdc_true
+    type (GRID_VARS_template) :: GRID_VARS
+    real*8 :: epetw 
+    GRID_VARS%dc = 2.38
+    epetw = 2.0d0
+    call calcdc(epetw,GRID_VARS)
+    calcdc_result = GRID_VARS%dc
+    calcdc_true = 1.00000000 
+    call set_unit_name ('calcdc_test1')
+    call assert_equals (calcdc_result, calcdc_true)
+  end subroutine
+
+  subroutine calcepw_test1()
+    implicit none
+    real*8 :: calcepw_result, calcepw_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (CANOPY_template) :: GRID_CANOPY
+    type (GLOBAL_template) :: GLOBAL
+    real*8 :: epetw
+    GRID_VARS%epwms = 2.5d0
+    epetw = 3.2d0
+    GRID_VARS%dc = 1.5d0
+    GRID_VARS%fw = 0.5d0
+    GLOBAL%dt = 1.0d0
+    GRID_CANOPY%wc = 0.2d0
+    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    calcepw_result = GRID_VARS%fw
+    calcepw_true = 0.12500000000000000
+    call set_unit_name ('calcepw_test1')
+    call assert_equals (calcepw_result, calcepw_true)
+  end subroutine
+  
+  subroutine calcepw_test2()
+    implicit none
+    real*8 :: calcepw_result, calcepw_true
+    type (GRID_VARS_template) :: GRID_VARS
+    type (CANOPY_template) :: GRID_CANOPY
+    type (GLOBAL_template) :: GLOBAL
+    real*8 :: epetw
+    GRID_VARS%epwms = 2.5d0
+    epetw = 3.2d0
+    GRID_VARS%dc = 1.5d0
+    GRID_VARS%fw = 0.5d0
+    GLOBAL%dt = 1.0d0
+    GRID_CANOPY%wc = 0.2d0
+    call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+    calcepw_result = GRID_VARS%epwms
+    calcepw_true = -1.000000000000
+    call set_unit_name ('calcepw_test2')
+    call assert_equals (calcepw_result, calcepw_true)
+  end subroutine
+
+  subroutine interstorm_test1()
+    implicit none
+    real*8 :: interstorm_result, interstorm_true
+    integer :: ipix
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GLOBAL_template) :: GLOBAL
+    ipix = 1
+    GRID_VARS%intstp = 1
+    GRID_VARS%istmst = 1
+    GRID_VARS%istorm = 1
+    GRID_VARS%intstm = 1
+    GRID_VARS%pnet = 2.0d0
+    GRID_VARS%Outflow = 0.5d0
+    GRID_VARS%PackWater = 0.05d0
+    GRID_VARS%SurfWater = 0.03d0
+    GRID_VARS%Swq = 0.02d0
+    GRID_VARS%xintst = 1.0d0
+    GLOBAL%dt = 0.5d0
+    GLOBAL%endstm = 2.0d0
+    call interstorm(ipix,GRID_VARS,GLOBAL)
+    interstorm_result = GRID_VARS%istmst
+    interstorm_true = 2.00000000000
+    call set_unit_name ('interstorm_test1')
+    call assert_equals (interstorm_result, interstorm_true)
+  end subroutine
+
+  subroutine interstorm_test2()
+    implicit none
+    real*8 :: interstorm_result, interstorm_true
+    integer :: ipix
+    type (GRID_VARS_template) :: GRID_VARS
+    type (GLOBAL_template) :: GLOBAL
+    ipix = 1
+    GRID_VARS%intstp = 1
+    GRID_VARS%istmst = 1
+    GRID_VARS%istorm = 1
+    GRID_VARS%intstm = 1
+    GRID_VARS%pnet = 2.0d0
+    GRID_VARS%Outflow = 0.5d0
+    GRID_VARS%PackWater = 0.05d0
+    GRID_VARS%SurfWater = 0.03d0
+    GRID_VARS%Swq = 0.02d0
+    GRID_VARS%xintst = 1.0d0
+    GLOBAL%dt = 0.5d0
+    GLOBAL%endstm = 2.0d0
+    call interstorm(ipix,GRID_VARS,GLOBAL)
+    interstorm_result = GRID_VARS%intstp
+    interstorm_true = 1.00000000000
+    call set_unit_name ('interstorm_test2')
+    call assert_equals (interstorm_result, interstorm_true)
+  end subroutine     
+ 
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -775,6 +901,13 @@ contains
     call new_difflx_test2()
     call clc_evrz_test1()
     call clc_evrz_test2()   
+    call calcfw_test1()
+    call calcdc_test1()
+    call calcepw_test1()
+    call calcepw_test2()
+    call interstorm_test1()
+    call interstorm_test2() 
+
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize

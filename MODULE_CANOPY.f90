@@ -1,6 +1,16 @@
 MODULE MODULE_CANOPY
 
+USE MODULE_VARIABLES
+
+USE MODULE_SHARED
+
+USE MODULE_SNOW
+
 implicit none
+
+type CANOPY_template
+  real*8 wc
+end type CANOPY_template
 
 contains
 
@@ -10,71 +20,87 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to calculate interception by vegetation and calculate
+!Subroutine to calculate interception by vegetation and calculate
 ! canopy water balance.
 !
 ! ====================================================================
 
-  subroutine canopy(ipix,dt,wc,wcip1,Swq,fw,wsc,dc,epetw,epwms,pnet,&
-pptms,precip_o,dswc,wcrhs,endstm,xintst,intstp,istmst,istorm,&
-intstm,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet,gpet,&
-rnetd,xled,hd,gd,rnetw,xlew,hw,gw,ioppet,tkpet,tkmidpet,dspet,&
-tkd,tkmidd,dshd,tkw,tkmidw,dshw)
+  subroutine canopy(ipix,epetw,&
+rnetd,xled,hd,gd,rnetw,xlew,hw,gw,&
+tkd,tkmidd,dshd,tkw,tkmidw,dshw,&
+GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
   implicit none
-  include "help/canopy.h"
+  !include "help/canopy.h"
 
-!integer ipix
-!integer intstp,istmst,istorm,intstm,ioppet
-!real*8 wc,wcip1,Swq,fw
-!real*8 wsc,dc,epetw
-!real*8 epwms,pnet,pptms,precip_o
-!real*8 dswc,wcrhs
-!real*8 endstm
-!real*8 xintst,Outflow,PackWater,SurfWater,rnpet,xlepet,hpet
-!real*8 gpet,rnetd,xled,hd,gd,rnetw,xlew,hw,gw,tkpet,tkmidpet
-!real*8 dspet,tkd,tkmidd,dshd,tkw,tkmidw,dshw
-!real*8 zero,one,two,three,four,five,six,dt,dummy
-!data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
-!3.d0,4.d0,5.d0,6.d0/
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GRID_MET_template) :: GRID_MET
+  type (GLOBAL_template) :: GLOBAL
+  type (CANOPY_template) :: GRID_CANOPY
+
+  integer :: ipix
+  real*8 :: epetw
+  real*8 :: rnetd,xled,hd,gd,rnetw,xlew,hw,gw
+  real*8 :: tkd,tkmidd,dshd,tkw,tkmidw,dshw
+
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
+
+!epetw-Shared with MODULE_ATMOS, used in MODULE_CELL
+!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!xled-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!hd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!gd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!xlew-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!hw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!gw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!tkd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!dshd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!tkw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
+!dshw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
 ! step.
 ! ====================================================================
 
-  wc = wcip1
+  GRID_CANOPY%wc = GRID_VARS%wcip1
 
 ! ====================================================================
 ! Set fraction of wet canopy which is considered 100% if canopy
 ! is wet and 0% if canopy is dry.
 ! ====================================================================
 
-  call calcfw(Swq,wc,zero,fw,wsc)
+  call calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
 
 ! ====================================================================
 ! If potential evaporation is negative, dew forms over the
 ! whole canopy.  Set dc to zero for this case.
 ! ====================================================================
 
-  call calcdc(dc,one,epetw,zero)
+  call calcdc(epetw,GRID_VARS)
 
 ! ====================================================================
 ! Calculate evaporation from the wet canopy
 ! ====================================================================
 
-  call calcepw(epwms,epetw,one,dc,fw,dt,wc)
-
+  call calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
+ 
 ! ====================================================================
 ! Calculate through fall of rainfall.  This is the part of the
 ! rainfall that can get through the canopy to the underlying soil
 ! ====================================================================
+ 
+  GRID_VARS%pnet = zero 
 
-  pnet = zero
+  if ((GRID_MET%pptms-GRID_VARS%epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-GRID_CANOPY%wc)) then
 
-  if ((pptms-epwms)*dt.gt.(wsc-wc)) then
-
-    pnet = (pptms-epwms)-((wsc-wc)/dt)
+    GRID_VARS%pnet = (GRID_MET%pptms-GRID_VARS%epwms)-((GRID_VEG%wsc-GRID_CANOPY%wc)/GLOBAL%dt)
 
   endif
 
@@ -83,16 +109,16 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 ! interception storage.
 ! ====================================================================
 
-  wcip1 = wc + dt*(pptms-epwms-pnet)
+  GRID_VARS%wcip1 = GRID_CANOPY%wc + GLOBAL%dt*(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)
 
 ! --------------------------------------------------------------------
 ! Don't allow canopy storage to go below zero.
 ! --------------------------------------------------------------------
 
-  if (wcip1.lt.zero) then
-
-    epwms = epwms + wcip1/dt
-    wcip1 = zero
+  if (GRID_VARS%wcip1.lt.zero) then
+ 
+    GRID_VARS%epwms = GRID_VARS%epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
+    GRID_VARS%wcip1 = zero
 
   endif
 
@@ -103,55 +129,61 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 ! over story.
 ! ====================================================================
 
-  precip_o=pptms
+  GRID_VARS%precip_o=GRID_MET%pptms
 
 ! ====================================================================
 ! Check canopy water balance, calculate the change in water storage.
 ! ====================================================================
 
-  dswc = wcip1-wc
-  wcrhs=(pptms-epwms-pnet)*dt
+  GRID_VARS%dswc = GRID_VARS%wcip1-GRID_CANOPY%wc
+  GRID_VARS%wcrhs=(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)*(GLOBAL%dt)
 
 ! --------------------------------------------------------------------
 ! Double check : if no rain there is no precipitation input to the
 ! under story.
 ! --------------------------------------------------------------------
 
-  if (pptms.eq.(0.d0)) pnet=0.d0
+  if (GRID_MET%pptms.eq.(0.d0)) GRID_VARS%pnet =0.d0
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
 ! period or not in the calculation of the soil water balance.
 ! ====================================================================
 
-  call interstorm(ipix,pnet,Outflow,PackWater+SurfWater+Swq,&
-  xintst,dt,intstp,endstm,istmst,istorm,intstm)
+  call interstorm(ipix,GRID_VARS,GLOBAL)
 
 ! ====================================================================
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-  rnpet = rnetd*dc*(one-fw) + rnetw*(one-dc*(one-fw))
-  xlepet = xled*dc*(one-fw) + xlew*(one-dc*(one-fw))
-  hpet = hd*dc*(one-fw) + hw*(one-dc*(one-fw))
-  gpet = gd*dc*(one-fw) + gw*(one-dc*(one-fw))
+  GRID_VARS%rnpet = rnetd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                     rnetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%xlepet = xled*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                      xlew*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%hpet = hd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    hw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%gpet = gd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    gw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
 ! --------------------------------------------------------------------
 ! Solve for temperature and heat storage only when energy balance
 ! method is used.
 ! --------------------------------------------------------------------
 
-  if (ioppet.eq.0) then
+  if (GLOBAL%ioppet.eq.0) then
 
-    tkpet = tkd*dc*(one-fw) + tkw*(one-dc*(one-fw))
-    tkmidpet = tkmidd*dc*(one-fw) + tkmidw*(one-dc*(one-fw))
-    dspet = dshd*dc*(one-fw) + dshw*(one-dc*(one-fw))
+    GRID_VARS%tkpet = tkd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       tkw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%tkmidpet = tkmidd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                          tkmidw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%dspet = dshd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       dshw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
 
   else
 
-    tkpet = zero
-    tkmidpet = zero
-    dspet = zero
+    GRID_VARS%tkpet = zero
+    GRID_VARS%tkmidpet = zero
+    GRID_VARS%dspet = zero
 
   endif
 
@@ -170,42 +202,48 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 !
 ! ====================================================================
 
-  subroutine calcfw(Swq,wc,zero,fw,wsc)
+  subroutine calcfw(GRID_VARS,GRID_VEG,GRID_CANOPY)
 
   implicit none
-  include "help/calcfw.h"
-  !real*8 Swq,wc,zero,fw,wsc
 
-  if (Swq.le.zero) then
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (CANOPY_template) :: GRID_CANOPY
+  
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
 
-  if (wc.gt.zero) then
+  if (GRID_VARS%Swq.le.zero) then
 
-  fw = (wc/wsc)**(0.667d0)
+  if (GRID_CANOPY%wc.gt.zero) then
+
+  GRID_VARS%fw = (GRID_CANOPY%wc/GRID_VEG%wsc)**(0.667d0)
 
   else
 
-  fw = zero
+  GRID_VARS%fw = zero
 
   endif
 
-  if (wsc.eq.zero) fw=zero
+  if (GRID_VEG%wsc.eq.zero) GRID_VARS%fw=zero
 
   else
 
-  fw=1.d0
+  GRID_VARS%fw=one
 
   endif
 
-  if (fw.ge.1.d0) fw=1.d0
+  if (GRID_VARS%fw.ge.one) GRID_VARS%fw=one
 
-  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  if ( (GRID_VARS%fw.ge.zero).and.(GRID_VARS%fw.le.one) ) then
 
-  fw=fw
+  GRID_VARS%fw=GRID_VARS%fw
 
   else
 
-  write (*,*) 'CALCFW : fw : ',fw
-  write (*,*) Swq,wc,zero,fw,wsc
+  write (*,*) 'CALCFW : fw : ',GRID_VARS%fw
+  write (*,*) GRID_VARS%Swq,GRID_CANOPY%wc,GRID_VARS%fw,GRID_VEG%wsc
   stop
 
   endif
@@ -225,24 +263,29 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 !
 ! ====================================================================
 
-  subroutine calcdc(dc,one,epetw,zero)
+  subroutine calcdc(epetw,GRID_VARS)
 
   implicit none
-  include "help/calcdc.h"
-  !real*8 dc,one,epetw,zero
+  
+  type (GRID_VARS_template) :: GRID_VARS
+  real*8 :: epetw
 
-  dc = one
-  if (epetw.lt.zero) dc=zero
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
 
-  if ( (dc.ge.0.d0).and.(dc.le.1.d0) ) then
+  GRID_VARS%dc = one
+  if (epetw.lt.zero) GRID_VARS%dc=zero
 
-  dc=dc
+  if ( (GRID_VARS%dc.ge.zero).and.(GRID_VARS%dc.le.one) ) then
+
+  GRID_VARS%dc=GRID_VARS%dc
 
   else
 
-  write (*,*) 'CALCD! : d! out of bounds ',dc
-  if (dc.lt.0.d0) dc=zero
-  if (dc.gt.1.d0) dc=one
+  write (*,*) 'CALCD! : d! out of bounds ',GRID_VARS%dc
+  if (GRID_VARS%dc.lt.zero) GRID_VARS%dc=zero
+  if (GRID_VARS%dc.gt.one) GRID_VARS%dc=one
 
   endif
 
@@ -260,29 +303,37 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 !
 ! ====================================================================
 
-  subroutine calcepw(epwms,epetw,one,dc,fw,dt,wc)
+  subroutine calcepw(epetw,GRID_VARS,GRID_CANOPY,GLOBAL)
 
   implicit none
-  include "help/calcepw.h"
-  !real*8 epwms,epetw,one,dc,fw,dt,wc
-
-  epwms = epetw * (one-dc*(one-fw))
-
-  if ((epwms*dt).gt.wc) then
+  
+  type (GRID_VARS_template) :: GRID_VARS
+  type (CANOPY_template) :: GRID_CANOPY
+  type (GLOBAL_template) :: GLOBAL
  
-  fw = fw*wc/(epwms*dt)
-  epwms=epetw*(one-dc*(one-fw))
+  real*8 :: epetw
 
+  real*8 :: zero,one
+  zero = 0.0d0
+  one = 1.0d0
+
+  GRID_VARS%epwms = epetw * (one-GRID_VARS%dc*(one-GRID_VARS%fw))
+
+  if ((GRID_VARS%epwms*GLOBAL%dt).gt.GRID_CANOPY%wc) then
+ 
+  GRID_VARS%fw = GRID_VARS%fw*GRID_CANOPY%wc/(GRID_VARS%epwms*GLOBAL%dt)
+  GRID_VARS%epwms=epetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+ 
   endif
 
-  if ( (fw.ge.0.d0).and.(fw.le.1.d0) ) then
+  if ( (GRID_VARS%fw.ge.zero).and.(GRID_VARS%fw.le.one) ) then
 
-  fw=fw
-
+  GRID_VARS%fw=GRID_VARS%fw
+ 
   else
 
-  write (*,*) 'CALEPW : fw : ',fw
-  write (*,*) epwms,epetw,one,dc,fw,dt,wc
+  write (*,*) 'CALEPW : fw : ',GRID_VARS%fw
+  write (*,*) GRID_VARS%epwms,epetw,GRID_VARS%dc,GRID_VARS%fw,GLOBAL%dt,GRID_CANOPY%wc
   stop
 
   endif
@@ -302,27 +353,27 @@ tkd,tkmidd,dshd,tkw,tkmidw,dshw)
 !
 ! ====================================================================
 
-  subroutine interstorm(ipix,precipi,outf,snowp,xintst,&
-dt,intstp,endstm,istmst,istorm,intstm)
+  subroutine interstorm(ipix,GRID_VARS,GLOBAL)
 
   implicit none
-  include "help/interstorm.h"
 
-!integer :: ipix,intstp,istmst,istorm,intstm
-!real*8 :: precipi,outf,snowp,xintst,dt,endstm,r_input
+  integer :: ipix
+  real*8 :: r_input
 
-
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GLOBAL_template) :: GLOBAL
+  
 ! ====================================================================
 ! Calculate the water input to the ground.
 ! ====================================================================
 
-  if (snowp.gt.(0.001d0)) then
+  if ((GRID_VARS%PackWater+GRID_VARS%SurfWater+GRID_VARS%Swq).gt.(0.001d0)) then
 
-  r_input=outf
+  r_input=GRID_VARS%Outflow
 
   else
 
-  r_input=precipi
+  r_input=GRID_VARS%pnet
 
   endif
 
@@ -339,7 +390,7 @@ dt,intstp,endstm,istmst,istorm,intstm)
 
   if (r_input.le.(0.d0))then
 
-  xintst=xintst+dt
+  GRID_VARS%xintst=GRID_VARS%xintst+GLOBAL%dt
 
 ! --------------------------------------------------------------------
 ! Now check if time since end of ppt is past threshold
@@ -347,9 +398,9 @@ dt,intstp,endstm,istmst,istorm,intstm)
 ! interstorm period.
 ! --------------------------------------------------------------------
 
-  if (xintst.gt.endstm)then
+  if (GRID_VARS%xintst.gt.GLOBAL%endstm)then
 
-  intstp=intstp+1
+  GRID_VARS%intstp=GRID_VARS%intstp+1
 
 ! --------------------------------------------------------------------
 ! Now, if this is the first step in the interstorm period then
@@ -357,11 +408,11 @@ dt,intstp,endstm,istmst,istorm,intstm)
 ! steps into storm period to zero.
 ! --------------------------------------------------------------------
 
-  if (intstp.eq.1) then
+  if (GRID_VARS%intstp.eq.1) then
 
-  istmst=0
-  istorm=0
-  intstm=1
+  GRID_VARS%istmst=0
+  GRID_VARS%istorm=0
+  GRID_VARS%intstm=1
 
   endif
 
@@ -372,7 +423,7 @@ dt,intstp,endstm,istmst,istorm,intstm)
 
   else
 
-  istmst=istmst+1
+  GRID_VARS%istmst=GRID_VARS%istmst+1
 
   endif
 
@@ -384,8 +435,8 @@ dt,intstp,endstm,istmst,istorm,intstm)
 
   else
 
-  istmst=istmst+1
-  xintst=0.d0
+  GRID_VARS%istmst=GRID_VARS%istmst+1
+  GRID_VARS%xintst=0.d0
 
 ! --------------------------------------------------------------------
 ! If this is the first time step in the storm period
@@ -393,11 +444,11 @@ dt,intstp,endstm,istmst,istorm,intstm)
 ! steps in the interstorm period.
 ! --------------------------------------------------------------------
 
-  if (istmst.eq.1)then
+  if (GRID_VARS%istmst.eq.1)then
 
-  intstp=0
-  intstm=0
-  istorm=1
+  GRID_VARS%intstp=0
+  GRID_VARS%intstm=0
+  GRID_VARS%istorm=1
 
   endif
 
