@@ -932,7 +932,48 @@ contains
     call assertequals(evtact_true,evtact)
     call assertequals(ievcon_true,ievcon)
   end subroutine
-    
+  
+  subroutine clcdg_test1()
+    real*8 clcdg_ans,clcdg_true,sm,xksrz,ff,zrz,bcbeta,thetas,thetar
+    integer ikopt
+
+    ikopt = 0
+    sm = 0.15d0
+    xksrz = 2.0d0
+    ff = 0.0d0
+    zrz = 0.0d0
+    bcbeta = 0.5d0
+    thetas = 0.4d0
+    thetar = 0.05d0
+    clcdg_true = 0.021759640965924025d0
+
+    clcdg_ans = clcdg(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)
+
+    call set_unit_name('clcdg_test1')
+    call assertequals(clcdg_true,clcdg_ans)
+  end subroutine
+
+  subroutine clcdg_test2()
+    real*8 clcdg_ans,clcdg_true,sm,xksrz,ff,zrz,bcbeta,thetas,thetar
+    integer ikopt
+
+    ikopt = 0
+    sm = 0.10d0
+    xksrz = 1.0d0
+    ff = 0.0d0
+    zrz = 0.0d0
+    bcbeta = 0.37d0
+    thetas = 0.14d0
+    thetar = 0.05d0
+    clcdg_true = 1.2020423430979581d0
+
+    clcdg_ans = clcdg(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)
+
+    call set_unit_name('clcdg_test2')
+    call assertequals(clcdg_true,clcdg_ans)
+  end subroutine
+
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -984,6 +1025,8 @@ contains
     call zero_snowvar_test1()
     call acttrans_test1()
     call acttrans_test2()
+    call clcdg_test1()
+    call clcdg_test2()
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
