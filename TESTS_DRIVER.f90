@@ -669,7 +669,70 @@ contains
     call assertequals(diftz_true,diftz)
   end subroutine
 
+  subroutine clc_evrz_test1()
+    
+    integer :: ivgtyp,i_und,i_moss
+    real*8 :: evrz,Swq,Swq_us,evtact,dc,fw,evtact_us,dc_us
+    real*8 :: fw_us,evrz_moss,dummy,f_und
+    real*8 :: evrz_true
 
+    ivgtyp = 0
+    i_und = 0
+    i_moss = 0
+    evrz = 0.0d0
+    Swq = -0.1d0
+    Swq_us = 0.0d0
+    evtact = 0.5d0
+    evtact_us = 0.0d0
+    dc = 0.5d0
+    dc_us = 0.0d0
+    fw = 0.5d0
+    fw_us = 0.0d0
+    evrz_moss = 0.0d0
+    dummy = 0.0d0
+    f_und = 0.0d0
+    
+    evrz_true = 0.25d0
+        
+    call clc_evrz(evrz,Swq,Swq_us,ivgtyp,evtact,dc,i_und,&
+                  i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,&
+                  dummy,f_und)
+    call set_unit_name('clc_evrz_test1')
+    call assertequals(evrz_true,evrz)     
+  end subroutine   
+ 
+  subroutine clc_evrz_test2()
+    
+    integer :: ivgtyp,i_und,i_moss
+    real*8 :: evrz,Swq,Swq_us,evtact,dc,fw,evtact_us,dc_us
+    real*8 :: fw_us,evrz_moss,dummy,f_und
+    real*8 :: evrz_true
+
+    ivgtyp = 1
+    i_und = 0
+    i_moss = 0
+    evrz = 0.0d0
+    Swq = -0.1d0
+    Swq_us = 0.0d0
+    evtact = 0.5d0
+    evtact_us = 0.1d0
+    dc = 0.5d0
+    dc_us = 0.1d0
+    fw = 0.5d0
+    fw_us = 0.1d0
+    evrz_moss = 0.0d0
+    dummy = 0.0d0
+    f_und = 0.0d0
+    
+    evrz_true = 0.125d0
+        
+    call clc_evrz(evrz,Swq,Swq_us,ivgtyp,evtact,dc,i_und,&
+                  i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,&
+                  dummy,f_und)
+    call set_unit_name('clc_evrz_test2')
+    call assertequals(evrz_true,evrz)     
+  end subroutine   
+      
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -710,6 +773,8 @@ contains
     call new_dwnflx_test2()
     call new_difflx_test1()
     call new_difflx_test2()
+    call clc_evrz_test1()
+    call clc_evrz_test2()   
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
