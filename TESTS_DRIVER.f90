@@ -858,6 +858,40 @@ contains
     call set_unit_name ('interstorm_test2')
     call assert_equals (interstorm_result, interstorm_true)
   end subroutine     
+  
+  subroutine zero_snowvar_test1()
+     
+    real*8 PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf
+    real*8 r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens
+
+    PackWater = 1.0d0
+    SurfWater = 1.0d0
+    Swq = 1.0d0
+    VaporMassFlux = 1.0d0
+    TPack = 1.0d0
+    TSurf = 1.0d0
+    r_MeltEnergy = 1.0d0
+    Outflow = 1.0d0
+    xleact_snow = 1.0d0 
+    hact_snow = 1.0d0 
+    dens = 1.0d0
+
+    call zero_snowvar(PackWater,SurfWater,Swq,VaporMassFlux,&
+                      TPack,TSurf,r_MeltEnergy,Outflow,&
+                      xleact_snow,hact_snow,dens)
+    call set_unit_name('zero_snowvar_test1')
+    call assert_equals(0.0d0,PackWater)
+    call assert_equals(0.0d0,SurfWater)
+    call assert_equals(0.0d0,Swq)
+    call assert_equals(0.0d0,VaporMassFlux)
+    call assert_equals(0.0d0,TPack)
+    call assert_equals(0.0d0,TSurf)
+    call assert_equals(0.0d0,r_MeltEnergy)
+    call assert_equals(0.0d0,Outflow)
+    call assert_equals(0.0d0,xleact_snow)
+    call assert_equals(0.0d0,hact_snow)
+    call assert_equals(0.0d0,dens)
+  end subroutine     
  
   subroutine run_unit_tests()
   
@@ -907,7 +941,7 @@ contains
     call calcepw_test2()
     call interstorm_test1()
     call interstorm_test2() 
-
+    call zero_snowvar_test1()
     !Summarize and finalize the unit tests
     call fruit_summary
     call fruit_finalize
