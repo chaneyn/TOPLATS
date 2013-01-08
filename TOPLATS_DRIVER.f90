@@ -27,7 +27,7 @@ USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
                     file_close
 
 !Module containing topmodel
-USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx,Update_Catchment
+USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx,Update_Catchments
 
 !Module containing the cell model
 USE MODULE_CELL,ONLY: Update_Cell
@@ -110,42 +110,38 @@ do i=1,GLOBAL%ndata
        GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
        REG,CAT(icatch),GLOBAL)
 
-!$OMP ORDERED
-!$OMP CRITICAL
-
-
-!$OMP END CRITICAL
-!$OMP END ORDERED
-
-
-!#####################################################################
-! Sum the local water and energy balance fluxes.
-!#####################################################################
-
-    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,& 
-       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-       ilandc)
-
   enddo
 
 !$OMP END DO
 !$OMP END PARALLEL
 
 !#####################################################################
-! Loop through each catchment and update with the catchment module
+! Update the catchments
 !#####################################################################
 
-  do ic=1,GLOBAL%ncatch
+  call Update_Catchments(GLOBAL,CAT,GRID,REG)
 
-    call Update_Catchment(GLOBAL,CAT(ic),GRID,REG,ic)
+!#####################################################################
+! Sum the local water and energy balance fluxes.
+!#####################################################################
 
-  enddo
+do ipix = 1,GLOBAL%npix
+
+    isoil = GRID(ipix)%SOIL%isoil
+    ilandc = GRID(ipix)%VEG%ilandc
+    icatch = GRID(ipix)%VARS%icatch
+
+    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
+       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
+       ilandc)
+enddo
+
 
 !#####################################################################
 ! Run Tests to compare to previous model
 !#####################################################################
 
-  call lswb(i,REG,GLOBAL,GRID)
+  call lswb(i,REG,GLOBAL,GRID,CAT)
 
 enddo
 

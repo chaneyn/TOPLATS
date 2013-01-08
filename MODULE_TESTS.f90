@@ -19,7 +19,7 @@ contains
 !
 ! ====================================================================
 
-      subroutine lswb(i,REG,GLOBAL,GRID)
+      subroutine lswb(i,REG,GLOBAL,GRID,CAT)
 
       implicit none
       include "help/lswb.h"
@@ -27,9 +27,10 @@ contains
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (REGIONAL_template) :: REG_OLD
       type (GRID_template),dimension(:),intent(in) :: GRID
+      type (CATCHMENT_template),dimension(:),intent(in) :: CAT
       real*8 rest
       real*8 :: tmp
-      integer :: isoil
+      integer :: isoil,icatch
       ncatch = GLOBAL%ncatch
       pixsiz = GLOBAL%pixsiz
       npix = GLOBAL%npix
@@ -147,6 +148,17 @@ contains
       persac = REG%persac
       peruac = REG%peruac
       perusc = REG%perusc
+
+! ====================================================================
+! Find new average water table depth and baseflow for entire region.
+! ====================================================================
+
+      qbreg = zero
+      zbar1rg = zero
+      do icatch = 1,GLOBAL%ncatch
+        qbreg = qbreg + CAT(icatch)%qb
+        zbar1rg = zbar1rg + CAT(icatch)%zbar1*CAT(icatch)%area/(GLOBAL%pixsiz*GLOBAL%pixsiz)
+      enddo
 
 ! ====================================================================
 ! Compute regional water balance fluxes.

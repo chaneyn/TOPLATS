@@ -121,6 +121,8 @@ type CATCHMENT_template
         real*8 :: fwcat
         !TOPMODEL PARAM
         real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
+        !Runoff
+        real*8 :: qb
 end type
 
 !REGIONAL DATA

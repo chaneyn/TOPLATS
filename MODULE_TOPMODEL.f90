@@ -18,20 +18,37 @@ contains
 !
 ! ====================================================================
 
-  subroutine Update_Catchment(GLOBAL,CAT,GRID,REG,ic)
+  subroutine Update_Catchments(GLOBAL,CAT,GRID,REG)
 
     implicit none
     type (GLOBAL_template),intent(in) :: GLOBAL
     type (GRID_template),dimension(:),intent(inout) :: GRID
-    type (CATCHMENT_template),intent(inout) :: CAT
+    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
     type (REGIONAL_template),intent(inout) :: REG
-    integer :: ic
+    type (REGIONAL_template) :: REG_DUMMY
+    integer :: icatch,isoil,ilandc
 
-    call catflx(GLOBAL%pixsiz,CAT)
+    do ipix = 1,GLOBAL%npix
 
-    call upzbar(ic,CAT,GLOBAL,GRID,REG)
+      isoil = GRID(ipix)%SOIL%isoil
+      ilandc = GRID(ipix)%VEG%ilandc
+      icatch = GRID(ipix)%VARS%icatch
 
-  end subroutine Update_Catchment
+      call sumflx(REG_DUMMY,CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
+         GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
+         ilandc)
+
+    enddo
+
+    do icatch = 1,GLOBAL%ncatch
+
+      call catflx(GLOBAL%pixsiz,CAT(icatch))
+
+      call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
+  
+    enddo 
+
+  end subroutine Update_Catchments
 
 ! ====================================================================
 !
@@ -392,13 +409,12 @@ contains
 !
 ! ====================================================================
 
-      subroutine upzbar(ic,CAT,GLOBAL,GRID,REG)
+      subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
       implicit none
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
       type (CATCHMENT_template),intent(inout) :: CAT
-      type (REGIONAL_template),intent(inout) :: REG
       include "help/upzbar.h"
 
       iopbf = GLOBAL%iopbf
@@ -429,8 +445,6 @@ contains
       thetas = GRID%SOIL%thetas 
       rzsm1 = GRID%VARS%rzsm1
       zbar1 = CAT%zbar1
-      qbreg = REG%qbreg
-      zbar1rg = REG%zbar1rg
       pixsiz = GLOBAL%pixsiz
 
 ! ====================================================================
@@ -551,8 +565,7 @@ contains
 ! ====================================================================
 
       CAT%zbar1 = zbar1
-      REG%qbreg = qbreg
-      REG%zbar1rg = zbar1rg
+      CAT%qb = qb
 
       return
 
