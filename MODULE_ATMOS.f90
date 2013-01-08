@@ -1002,7 +1002,18 @@ dspet = GRID_VARS%dspet
       hd = rnetd-xled-gd
       hw = rnetw-xlew-gw
       
-    
+      GRID_VEG%albd = albd
+      GRID_VEG%xlai = xlai
+      GRID_MET%rsd = rsd
+      GRID_VEG%rsmin = rsmin
+      GRID_VEG%rsmax = rsmax
+      GRID_VEG%Rpl = Rpl
+      GRID_VEG%trefk = trefk
+      GRID_VARS%rnetpn = rnetpn
+      GRID_VARS%gbspen = gbspen
+      GRID_VEG%rescan = rescan
+      GRID_VARS%row = row
+      GRID_VARS%cp = cp    
 
       return
 
