@@ -1127,6 +1127,67 @@ dspet = GRID_VARS%dspet
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GLOBAL_template) :: GLOBAL
 
+
+!General Vegetation parameters
+!canclos = GRID_VEG%canclos
+!extinct = GRID_VEG%extinct
+i_und = GRID_VEG%i_und
+i_moss = GRID_VEG%i_moss
+ivgtyp = GRID_VEG%ivgtyp
+
+!Snow Pack variables
+PackWater = GRID_VARS%PackWater
+SurfWater = GRID_VARS%SurfWater
+Swq = GRID_VARS%Swq
+VaporMassFlux = GRID_VARS%VaporMassFlux
+r_MeltEnergy = GRID_VARS%r_MeltEnergy
+Outflow = GRID_VARS%Outflow
+PackWater_us = GRID_VARS%PackWater_us
+SurfWater_us = GRID_VARS%SurfWater_us
+Swq_us = GRID_VARS%Swq_us
+VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+Outflow_us = GRID_VARS%Outflow_us
+
+!Albedos of the over story, under story, and moss layer
+!albd_us = GRID_VEG%albd_us
+alb_moss = GRID_VEG%alb_moss
+albd = GRID_VEG%albd
+albw = GRID_VEG%albw
+albw_us = GRID_VEG%albw_us
+!alb_snow = GRID_VARS%alb_snow
+
+!Meteorological data
+rsd = GRID_MET%rsd
+rld = GRID_MET%rld
+zww = GRID_VEG%zww
+za = GRID_VEG%za
+!uzw = GRID_MET%uzw
+press = GRID_MET%press
+
+!Temperature variables
+tkmid = GRID_VARS%tkmid
+tkact = GRID_VARS%tkact
+
+!Energy fluxes and states
+dshact = GRID_VARS%dshact
+gact = GRID_VARS%gact
+rnetd = GRID_VEG%rnetd
+xled = GRID_VEG%xled
+hd = GRID_VEG%hd
+gd = GRID_VEG%gd
+dshd = GRID_VEG%dshd
+tkd = GRID_VEG%tkd
+tkmidd = GRID_VEG%tkmidd
+rnetw = GRID_VEG%rnetw
+xlew = GRID_VEG%xlew
+hw = GRID_VEG%hw
+gw = GRID_VEG%gw
+dshw = GRID_VEG%dshw
+tkw = GRID_VEG%tkw
+tkmidw = GRID_VEG%tkmidw
+epetw = GRID_VARS%epetw
+
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
 ! story layers.
