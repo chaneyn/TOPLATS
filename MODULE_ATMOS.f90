@@ -512,6 +512,8 @@ iopsmini = GLOBAL%iopsmini
 ! NONLINEAR ENERGY BALANCE EQUATIONS.  The program has not been set
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
+      GRID_MET%uzw = uzw
+      GRID_VARS%alb_snow = alb_snow
 
       if(ioppet.eq.0)then
 
@@ -587,7 +589,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini)
+       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini,GLOBAL)
 
       else if(ioppet.eq.1)then
 
@@ -1115,17 +1117,17 @@ dspet = GRID_VARS%dspet
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini)
+       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini,GLOBAL)
 
       implicit none
       include "help/peteb.h"
 
 
-      type (GRID_MET_template) :: GRID_MET
-      type (GRID_VEG_template) :: GRID_VEG
-      type (GRID_VARS_template) :: GRID_VARS
-      type (GRID_SOIL_template) :: GRID_SOIL
-      type (GLOBAL_template) :: GLOBAL
+      type (GRID_MET_template),intent(in) :: GRID_MET
+      type (GRID_VEG_template),intent(in) :: GRID_VEG
+      type (GRID_VARS_template),intent(inout) :: GRID_VARS
+      type (GRID_SOIL_template),intent(in) :: GRID_SOIL
+      type (GLOBAL_template),intent(in) :: GLOBAL
 
 
 !General Vegetation parameters
@@ -1155,14 +1157,14 @@ alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
 albw_us = GRID_VEG%albw_us
-!alb_snow = GRID_VARS%alb_snow
+alb_snow = GRID_VARS%alb_snow
 
 !Meteorological data
 rsd = GRID_MET%rsd
 rld = GRID_MET%rld
 zww = GRID_VEG%zww
 za = GRID_VEG%za
-!uzw = GRID_MET%uzw
+uzw = GRID_MET%uzw
 press = GRID_MET%press
 
 !Temperature variables
@@ -1194,13 +1196,13 @@ thetas = GRID_SOIL%thetas
 psic = GRID_SOIL%psic
 bcbeta = GRID_SOIL%bcbeta
 quartz = GRID_SOIL%quartz
-!ifcoarse = GRID_SOIL%ifcoarse 
+ifcoarse = GRID_SOIL%ifcoarse 
 rocpsoil = GRID_SOIL%rocpsoil
 tcbeta = GRID_VEG%tcbeta
 tcbeta_us = GRID_VEG%tcbeta_us
 zdeep = GRID_SOIL%zdeep
 zmid = GRID_SOIL%zmid
-!zrzmax = GLOBAL%zrzmax
+zrzmax = GLOBAL%zrzmax
 
 !Moss Parameters
 r_moss_depth = GRID_VEG%r_moss_depth
@@ -1234,8 +1236,8 @@ trefk_us = GRID_VEG%trefk_us
 
 !COnstants
 
-!toleb = GLOBAL%toleb
-!maxnri = GLOBAL%maxnri
+toleb = GLOBAL%toleb
+maxnri = GLOBAL%maxnri
 row = GRID_VARS%row
 cph2o = GRID_VARS%cph2o
 cp = GRID_VARS%cp
@@ -1243,7 +1245,7 @@ roi = GRID_VARS%roi
 
 
 !Energy balance variables
-!rib = GRID_VARS%rib
+rib = GRID_VARS%rib
 
 !Water balance variables
 rzsm = GRID_VARS%rzsm
@@ -1254,14 +1256,14 @@ r_mossm = GRID_VARS%r_mossm
 zrz = GRID_VARS%zrz
 smold = GRID_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
-!smpet0 = GLOBAL%smpet0
+smpet0 = GLOBAL%smpet0
 
 !DIFF option parameters
-!iopthermc = GLOBAL%iopthermc
-!iopgveg = GLOBAL%iopgveg
-!iopthermc_v = GLOBAL%iopthermc_v
-!iopstab = GLOBAL%iopstab
-!iopsmini = GLOBAL%iopsmini
+iopthermc = GLOBAL%iopthermc
+iopgveg = GLOBAL%iopgveg
+iopthermc_v = GLOBAL%iopthermc_v
+iopstab = GLOBAL%iopstab
+iopsmini = GLOBAL%iopsmini
 
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
