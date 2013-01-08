@@ -1188,6 +1188,81 @@ tkw = GRID_VEG%tkw
 tkmidw = GRID_VEG%tkmidw
 epetw = GRID_VARS%epetw
 
+!Soil Parameters
+thetar = GRID_SOIL%thetar
+thetas = GRID_SOIL%thetas
+psic = GRID_SOIL%psic
+bcbeta = GRID_SOIL%bcbeta
+quartz = GRID_SOIL%quartz
+!ifcoarse = GRID_SOIL%ifcoarse 
+rocpsoil = GRID_SOIL%rocpsoil
+tcbeta = GRID_VEG%tcbeta
+tcbeta_us = GRID_VEG%tcbeta_us
+zdeep = GRID_SOIL%zdeep
+zmid = GRID_SOIL%zmid
+!zrzmax = GLOBAL%zrzmax
+
+!Moss Parameters
+r_moss_depth = GRID_VEG%r_moss_depth
+eps = GRID_VEG%eps
+emiss_moss = GRID_VEG%emiss_moss
+zpd_moss = GRID_VEG%zpd_moss
+z0m_moss = GRID_VEG%z0m_moss
+z0h_moss = GRID_VEG%z0h_moss
+
+!Vegetation parameters
+xlai = GRID_VEG%xlai
+xlai_us = GRID_VEG%xlai_us
+emiss = GRID_VEG%emiss
+zpd = GRID_VEG%zpd
+zpd_us = GRID_VEG%zpd_us
+z0m = GRID_VEG%z0m
+z0h = GRID_VEG%z0h
+z0m_us = GRID_VEG%z0m_us
+z0h_us = GRID_VEG%z0h_us
+rescan = GRID_VEG%rescan
+rescan_us = GRID_VEG%rescan_us
+emiss_us = GRID_VEG%emiss_us
+rsmin = GRID_VEG%rsmin
+rsmax = GRID_VEG%rsmax
+rsmin_us = GRID_VEG%rsmin_us
+rsmax_us = GRID_VEG%rsmax_us
+Rpl = GRID_VEG%Rpl
+Rpl_us = GRID_VEG%Rpl_us
+trefk = GRID_VEG%trefk
+trefk_us = GRID_VEG%trefk_us
+
+!COnstants
+
+!toleb = GLOBAL%toleb
+!maxnri = GLOBAL%maxnri
+row = GRID_VARS%row
+cph2o = GRID_VARS%cph2o
+cp = GRID_VARS%cp
+roi = GRID_VARS%roi
+
+
+!Energy balance variables
+!rib = GRID_VARS%rib
+
+!Water balance variables
+rzsm = GRID_VARS%rzsm
+tzsm = GRID_VARS%tzsm
+rzsm1 = GRID_VARS%rzsm1
+tzsm1 = GRID_VARS%tzsm1
+r_mossm = GRID_VARS%r_mossm
+zrz = GRID_VARS%zrz
+smold = GRID_VARS%smold
+rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+!smpet0 = GLOBAL%smpet0
+
+!DIFF option parameters
+!iopthermc = GLOBAL%iopthermc
+!iopgveg = GLOBAL%iopgveg
+!iopthermc_v = GLOBAL%iopthermc_v
+!iopstab = GLOBAL%iopstab
+!iopsmini = GLOBAL%iopsmini
+
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
 ! story layers.
