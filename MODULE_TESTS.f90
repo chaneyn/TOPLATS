@@ -29,6 +29,7 @@ contains
       type (GRID_template),dimension(:),intent(in) :: GRID
       real*8 rest
       real*8 :: tmp
+      integer :: isoil
       ncatch = GLOBAL%ncatch
       pixsiz = GLOBAL%pixsiz
       npix = GLOBAL%npix
@@ -79,7 +80,7 @@ contains
       tksum = REG%tksum
       tkmidsum = REG%tkmidsum
       tkdeepsum = REG%tkdeepsum
-      fwreg = REG%fwreg
+      !REG%fwreg = REG%fwreg
       wcip1sum = REG%wcip1sum
       zbar1rg = REG%zbar1rg
       pr3sat = REG%pr3sat 
@@ -111,6 +112,41 @@ contains
       nvegpix=npix
 
       vegd=1.d0
+
+! ====================================================================
+! Calculate regional fraction of wet canopy.
+! ====================================================================
+
+      REG%fwreg = sum(GRID%VARS%fw)
+
+! ====================================================================
+! Calculate the percent of land surface in various surface states.
+! ====================================================================
+
+      do ipix = 1,npix
+        isoil = GRID(ipix)%SOIL%isoil
+        call sursat(GRID(ipix)%VARS%zw,GRID(isoil)%SOIL%psic,GRID(ipix)%VARS%fw,&
+          GLOBAL%mul_fac,REG%pr3sat,GLOBAL%zrzmax,REG%perrg2,GRID(ipix)%VARS%rzsm1,&
+          GRID(isoil)%SOIL%thetas,REG%pr2sat,REG%pr2uns,REG%perrg1,GRID(ipix)%VARS%tzsm1,&
+          REG%pr1sat,REG%pr1rzs,REG%pr1tzs,REG%pr1uns,GRID(ipix)%VARS%satxr,&
+          REG%persxr,GRID(ipix)%VARS%xinfxr,REG%perixr,GRID(ipix)%VARS%ievcon,&
+          REG%persac,REG%peruac,REG%perusc,i,ipix)
+      enddo
+      pr1sat = REG%pr1sat
+      pr3sat = REG%pr3sat 
+      perrg2 = REG%perrg2
+      pr2sat = REG%pr2sat
+      pr2uns = REG%pr2uns
+      perrg1 = REG%perrg1
+      pr1sat = REG%pr1sat
+      pr1rzs = REG%pr1rzs
+      pr1tzs = REG%pr1tzs
+      pr1uns = REG%pr1uns
+      persxr = REG%persxr
+      perixr = REG%perixr
+      persac = REG%persac
+      peruac = REG%peruac
+      perusc = REG%perusc
 
 ! ====================================================================
 ! Compute regional water balance fluxes.
@@ -331,11 +367,11 @@ contains
 
          if (fbsrg.lt.(1.d0)) then
 
-            fwreg = fwreg / real(nvegpix)/(one-fbsrg)
+            REG%fwreg = REG%fwreg / real(nvegpix)/(one-fbsrg)
 
          else
 
-            fwreg=0.d0
+            REG%fwreg=0.d0
 
          endif
 
@@ -343,7 +379,7 @@ contains
 
       else
 
-         fwreg=0.d0
+         REG%fwreg=0.d0
          wcip1sum=0.d0
 
       endif
@@ -450,8 +486,8 @@ contains
   call assert_equals (pnetsumrg*3600000,REG_OLD%pnetsumrg)
   call set_unit_name ('lswb.f90: etwcsumrg')
   call assert_equals (etwcsumrg*3600000,REG_OLD%etwcsumrg)
-  call set_unit_name ('lswb.f90: fwreg')
-  call assert_equals (fwreg,REG_OLD%fwreg)
+  call set_unit_name ('lswb.f90: REG%fwreg')
+  call assert_equals (REG%fwreg,REG_OLD%fwreg)
   call set_unit_name ('lswb.f90: dswcsum')
   call assert_equals (dswcsum,REG_OLD%dswcsum)
   call set_unit_name ('lswb.f90: wcrhssum')
@@ -494,8 +530,8 @@ contains
   call assert_equals (etdcsumrg*3600000,REG_OLD%etdcsumrg)
   call set_unit_name ('lswb.f90: etwcsumrg')
   call assert_equals (etwcsumrg*3600000,REG_OLD%etwcsumrg)
-  call set_unit_name ('lswb.f90: fwreg')
-  call assert_equals (fwreg,REG_OLD%fwreg)
+  call set_unit_name ('lswb.f90: REG%fwreg')
+  call assert_equals (REG%fwreg,REG_OLD%fwreg)
   call set_unit_name ('lswb.f90: fbsrg')
   call assert_equals (fbsrg,REG_OLD%fbsrg)
 
@@ -627,5 +663,149 @@ contains
       return
 
       end subroutine lswb
+
+! ====================================================================
+!
+!                       subroutine sursat
+!
+! ====================================================================
+!
+! Define land surface saturation states for the region.
+!
+! ====================================================================
+
+    subroutine sursat(zw,psic,fw,mul_fac,pr3sat,zrzmax,perrg2,&
+       rzsm1,thetas,pr2sat,pr2uns,perrg1,tzsm1,pr1sat,pr1rzs,pr1tzs,pr1uns,&
+       satxr,persxr,xinfxr,perixr,ievcon,persac,peruac,perusc,i,ipix)
+
+      implicit none
+      include "help/sursat.h"
+      integer :: i,ipix
+
+      data tolsat / 0.0001d0 /
+
+! ====================================================================
+! Define land surface saturation states for the region:
+!
+! Region 3:  Water Table at surface.
+! Region 2:  Water Table in root zone.
+! Region 1:  Water Table below root zone.
+! ====================================================================
+
+      if ((zw-psic).le.zero) then
+
+! --------------------------------------------------------------------&
+! First find areas in region 3.
+! --------------------------------------------------------------------&
+
+         pr3sat = pr3sat + one*mul_fac
+
+      else if (((zw-psic).lt.zrzmax).and.((zw-psic).gt.zero)) then
+
+! --------------------------------------------------------------------&
+! For all pixels not in area 3 : first see if the water table is
+! in the root zone and if the root zone is not saturated (region 2).
+! --------------------------------------------------------------------&
+
+         perrg2 = perrg2 + one*mul_fac
+
+
+         if (rzsm1.ge.thetas-tolsat) then
+
+            pr2sat = pr2sat + one*mul_fac
+
+         else
+
+            pr2uns = pr2uns + one*mul_fac
+
+         endif
+
+      else
+
+! --------------------------------------------------------------------&
+! If a pixel is not in in region 3 or 2 it has to be in region 1.
+! Ssplit into four possibilities for root and transmission zone
+! saturation:
+! --------------------------------------------------------------------&
+
+         perrg1 = perrg1 + one
+
+         if ((rzsm1.ge.thetas-tolsat).and.(tzsm1.ge.thetas-tolsat)) then
+
+! ....................................................................
+! 1) Boot root and transmsission zone are saturated.
+! ....................................................................
+
+            pr1sat = pr1sat + one*mul_fac
+
+         else if ((rzsm1.ge.thetas-tolsat).and.(tzsm1.lt.thetas-tolsat)) then
+
+! ....................................................................
+! 2) Root zone is saturated and transmsission zone is not
+!    saturated.
+! ....................................................................
+
+            pr1rzs = pr1rzs + one*mul_fac
+
+         else if ((rzsm1.lt.thetas-tolsat).and.(tzsm1.ge.thetas-tolsat)) then
+
+! ....................................................................
+! 3) Root zone is not saturated and transmsission zone is
+!    saturated.
+! ....................................................................
+
+            pr1tzs = pr1tzs + one*mul_fac
+
+         else
+
+! ....................................................................
+! 4) Both root and transmsission zone are not saturated.
+! ....................................................................
+
+            pr1uns = pr1uns + one*mul_fac
+
+         endif
+
+      endif
+
+! ====================================================================
+! Determine fractions of land surface contribtuting saturation
+! or infiltration excess runoff.
+! ====================================================================
+
+      if (satxr.gt.zero) then
+
+         persxr = persxr + one*mul_fac
+
+      else if (xinfxr.gt.zero) then
+
+         perixr = perixr + one*mul_fac
+
+      endif
+
+! ====================================================================
+! Determine areal fractions of bare soil evaporation
+! controls - check for atmospheri! contolled (saturated),&
+! atmospheri! contolled (unsaturated) and soil controlled.
+! ====================================================================
+
+      if (ievcon.eq.3) then
+
+         persac = persac + one*mul_fac
+
+      else if (ievcon.eq.2) then
+
+         peruac = peruac + one*mul_fac
+
+      else
+
+         perusc = perusc + one*mul_fac
+
+      endif
+
+      return
+
+    end subroutine sursat
+                         
 
 END MODULE MODULE_TESTS

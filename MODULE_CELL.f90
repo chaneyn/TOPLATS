@@ -253,7 +253,6 @@ cp = GRID_VARS%cp!cp
 roi = GRID_VARS%roi!roi
 
 !Catchment
-!fwcat = CAT%fwcat
 zbar = CAT%zbar
 ff = CAT%ff
 xlamda = CAT%xlamda
@@ -671,33 +670,9 @@ GRID_VARS%dsty_us = dsty_us
 GRID_VARS%Sdepth = Sdepth
 GRID_VARS%Sdepth_us = Sdepth_us
 
-!$OMP ORDERED
-!$OMP CRITICAL
-!REGIONAL
-REG%fwreg = REG%fwreg + fwreg
-REG%pr3sat = REG%pr3sat + pr3sat
-REG%perrg2 = REG%perrg2 + perrg2
-REG%pr2sat = REG%pr2sat + pr2sat
-REG%pr2uns = REG%pr2uns + pr2uns
-REG%perrg1 = REG%perrg1 + perrg1
-REG%pr1sat = REG%pr1sat + pr1sat
-REG%pr1rzs = REG%pr1rzs + pr1rzs
-REG%pr1tzs = REG%pr1tzs + pr1tzs
-REG%pr1uns = REG%pr1uns + pr1uns
-REG%persxr = REG%persxr + persxr
-REG%perixr = REG%perixr + perixr
-REG%persac = REG%persac + persac
-REG%peruac = REG%peruac + peruac
-REG%perusc = REG%perusc + perusc
-
-!CATCHMENT
-CAT%fwcat = CAT%fwcat + fwcat
-
 !SOIL
 GRID_SOIL%Tdeepstep = Tdeepstep
 
-!$OMP END CRITICAL
-!$OMP END ORDERED
 
       return
 

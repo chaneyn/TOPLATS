@@ -110,6 +110,14 @@ do i=1,GLOBAL%ndata
        GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
        REG,CAT(icatch),GLOBAL)
 
+!$OMP ORDERED
+!$OMP CRITICAL
+
+
+!$OMP END CRITICAL
+!$OMP END ORDERED
+
+
 !#####################################################################
 ! Sum the local water and energy balance fluxes.
 !#####################################################################

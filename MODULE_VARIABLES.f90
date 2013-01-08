@@ -54,8 +54,9 @@ type GRID_VARS_template
         !Temperature Variables
         real*8 :: tkmid,tkact,tkmidpet,tkpet
         !Energy Fluxes
-        real*8 :: dshact,rnetpn,gbspen,evtact,ievcon,gact,rnact,xleact,&
+        real*8 :: dshact,rnetpn,gbspen,evtact,gact,rnact,xleact,&
                 hact,ebspot,dspet,rnpet,xlepet,hpet,gpet
+        integer :: ievcon
         !Energy Balance
 	real*8 :: rib
         !Evapotranspiration
