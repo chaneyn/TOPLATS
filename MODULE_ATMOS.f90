@@ -850,6 +850,17 @@ dspet = GRID_VARS%dspet
       Tsurf_us=tkel-273.15d0
       Tpack_us=tkel-273.15d0
 
+      GRID_SOIL%tdeep = tdeep
+      GRID_SOIL%tmid0 = tmid0
+      GRID_VEG%tmid0_moss = tmid0_moss
+      GRID_VARS%tkmid = tkmid
+
+      GRID_VEG%tk0moss = tk0moss
+      GRID_VARS%dshact = dshact
+      GRID_VARS%tkpet = tkpet
+      GRID_VARS%tkmidpet = tkmidpet
+      GRID_VARS%dspet = dspet
+
       return
 
   end subroutine inittk
