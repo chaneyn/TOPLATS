@@ -1,5 +1,6 @@
-FC = gfortran
-OPTS = 
+GFC = /home/ice/nchaney/UTILS/gcc-4.8/bin/gfortran
+#GFC = gfortran
+IFC = /opt/intel/bin/ifort
 FFLAGS = -g -fbounds-check -finit-local-zero
 LIBS = -fopenmp
 TOPLATS = TOPLATS_3.0
@@ -12,13 +13,13 @@ CATCHMENT_TEST_OBJS = fruit/fruit_util.f90 fruit/fruit.f90 MODULE_VARIABLES.f90 
 all: $(TOPLATS) $(TESTS) $(CATCHMENT_TESTS)
 
 $(TOPLATS) : $(TOPLATS_OBJS)
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS)
 
 $(TESTS) : $(TEST_OBJS)
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS)
 
 $(CATCHMENT_TESTS) : $(CATCHMENT_TEST_OBJS)
-	$(FC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -Wall -o $@ $^ $(LIBS)
 
 clean:
 	rm $(TOPLATS) $(TESTS) $(CATCHMENT_TESTS) *.mod

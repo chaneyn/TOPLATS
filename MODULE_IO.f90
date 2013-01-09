@@ -368,7 +368,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
   implicit none
   type (GLOBAL_template) :: GLOBAL
-  type (GRID_template),dimension(:),allocatable :: GRID
+  type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),allocatable :: CAT
   type (IO_template),intent(inout) :: IO
   integer kk,jj
@@ -1001,9 +1001,13 @@ end subroutine Write_Regional
 
       fbsrg = zero
 
+      do jj=1,ncatch
+        fbs(jj) = zero
+      enddo
+
       do 570 jj=1,ncatch+1
 
-         fbs(jj)  = zero
+         !fbs(jj)  = zero
 
          do 560 kk=1,nlandc
 

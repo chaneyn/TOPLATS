@@ -58,7 +58,7 @@ type GRID_VARS_template
                 hact,ebspot,dspet,rnpet,xlepet,hpet,gpet
         integer :: ievcon
         !Energy Balance
-	real*8 :: rib
+        real*8 :: rib
         !Evapotranspiration
         real*8 :: etpix
         real*8 :: epetw
@@ -66,8 +66,8 @@ type GRID_VARS_template
         real*8 :: PackWater_us,&
                 SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
                 Outflow_us,alb_snow
-	real*8 :: TPack,TSurf,xleact_snow,hact_snow,rn_snow,&
-		TPack_us,TSurf_us,xleact_snow_us,hact_snow_us,&
+        real*8 :: TPack,TSurf,xleact_snow,hact_snow,rn_snow,&
+                TPack_us,TSurf_us,xleact_snow_us,hact_snow_us,&
                 rn_snow_us,dens,dens_us,dsty,dsty_us,Sdepth,Sdepth_us
         real*8 :: PackWater,&
                 SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow
@@ -164,25 +164,25 @@ type GLOBAL_template
         real*8 :: zrzmax
         !Soil
         real*8 :: smpet0
-	!OPTIONS template
+        !OPTIONS template
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
         integer :: iopsmini
         integer :: dtveg
         real*8 :: frcbeta
-	!STORM PARAM
+        !STORM PARAM
         real*8 :: endstm,toleb,pixsiz,dt
         integer :: newstorm
         !Vegetation
         integer :: ntdveg 
         !Time
         integer :: iyear,iday,ihour
-	real*8 :: djday
-	!Misc
-	real*8 :: mul_fac
-	!OpenMP parameters
-	integer :: nthreads
+        real*8 :: djday
+        !Misc
+        real*8 :: mul_fac
+        !OpenMP parameters
+        integer :: nthreads
 
 end type GLOBAL_template
 
