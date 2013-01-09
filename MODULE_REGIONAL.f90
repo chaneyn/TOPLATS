@@ -49,7 +49,7 @@ contains
 
     enddo
 
-    call lswb(REG,GLOBAL,GRID,CAT)
+    call Compute_Regional(REG,GLOBAL,GRID,CAT)
 
   end subroutine Update_Regional
 
@@ -775,7 +775,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
 !
 ! ====================================================================
 
-      subroutine lswb(REG,GLOBAL,GRID,CAT)
+      subroutine Compute_Regional(REG,GLOBAL,GRID,CAT)
 
       implicit none
       include "help/lswb.h"
@@ -1258,7 +1258,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
 
       return
 
-      end subroutine lswb
+      end subroutine Compute_Regional
 
 
 ! ====================================================================

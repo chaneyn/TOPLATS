@@ -655,6 +655,14 @@ open(2098,file=trim(filename))
 filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SWE_fruit.txt"
 open(2099,file=trim(filename))
 
+!Regional Variables Output
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/NEW/Regional_Variables.txt"
+open(2000,file=trim(filename))
+
+!Old Regional Variables Output
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/Regional_Variables.txt"
+open(2001,file=trim(filename))
+
 end subroutine FILE_OPEN
 
 subroutine FILE_CLOSE()
@@ -707,7 +715,23 @@ close(2098)
 !Regional Snow Cover (VALIDATION FILE)
 close(2099)
 
+!Regional Variables Output
+close(2000)
+
+!Regional Variables Output (OLD)
+close(2001)
+
 end subroutine FILE_CLOSE
+
+subroutine Write_Regional(i,REG)
+
+  type(REGIONAL_template),intent(in) :: REG
+  integer,intent(in) :: i
+
+  !Write regional variables to file
+  write(2000,*)i,REG
+
+end subroutine Write_Regional
 
 ! ====================================================================
 !

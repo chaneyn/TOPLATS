@@ -20,11 +20,11 @@ USE FRUIT
 USE MODULE_VARIABLES
 
 !Module containing all the tests
-USE MODULE_TESTS,ONLY: lswb
+USE MODULE_TESTS,ONLY: Run_Tests
 
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
-                    file_close
+                    file_close,Write_Regional
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
@@ -115,16 +115,22 @@ do i=1,GLOBAL%ndata
   call Update_Regional(REG,GRID,GLOBAL,CAT)
 
 !#####################################################################
+! Output regional variables
+!#####################################################################
+
+  call Write_Regional(i,REG)
+
+!#####################################################################
 ! Run Tests to compare to previous model
 !#####################################################################
 
-  call lswb(i,REG,GLOBAL,GRID,CAT)
+  call Run_Tests(REG)
 
 enddo
 
-! ####################################################################
+!#####################################################################
 ! Close all files
-! ####################################################################
+!#####################################################################
 
 call FILE_CLOSE()
 
