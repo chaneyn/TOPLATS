@@ -13,14 +13,8 @@ PROGRAM TOPLATS_DRIVER
 !
 ! ====================================================================
 
-!Module containing the unit tests
-USE FRUIT
-
 !Module containing all the variables used in the model
 USE MODULE_VARIABLES
-
-!Module containing all the tests
-USE MODULE_TESTS,ONLY: Run_Tests
 
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
@@ -43,12 +37,6 @@ type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
 integer :: i,ic,ipix,isoil,ilandc,icatch
 GLOBAL%nthreads = 8
-
-!####################################################################
-! Initialize unit testing
-!####################################################################
-
-call init_fruit
 
 !####################################################################
 ! Open all files
@@ -120,12 +108,6 @@ do i=1,GLOBAL%ndata
 
   call Write_Regional(i,REG)
 
-!#####################################################################
-! Run Tests to compare to previous model
-!#####################################################################
-
-  call Run_Tests(REG)
-
 enddo
 
 !#####################################################################
@@ -133,12 +115,5 @@ enddo
 !#####################################################################
 
 call FILE_CLOSE()
-
-! ####################################################################
-! Finalize unit testing and print summary
-! ####################################################################
-
-call fruit_summary
-call fruit_finalize
 
 END PROGRAM
