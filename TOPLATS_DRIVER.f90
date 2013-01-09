@@ -27,7 +27,10 @@ USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
                     file_close
 
 !Module containing topmodel
-USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx,Update_Catchments
+USE MODULE_TOPMODEL,ONLY: instep_catchment,catflx,upzbar,Update_Catchments
+
+!Module containing regional subroutines
+USE MODULE_REGIONAL,ONLY: Update_Regional,instep_regional
 
 !Module containing the cell model
 USE MODULE_CELL,ONLY: Update_Cell
@@ -76,10 +79,17 @@ do i=1,GLOBAL%ndata
   if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID)
 
 !#####################################################################
+! Update the decimal Julian day.
+!#####################################################################
+
+  GLOBAL%djday = GLOBAL%djday + 0.0416666667d0*2.777777777d-4*GLOBAL%dt
+
+!#####################################################################
 ! Initialize water balance variables for the time step.
 !#####################################################################
 
-  call instep(i,GLOBAL%ncatch,GLOBAL%djday,GLOBAL%dt,REG,CAT)
+  call instep_catchment(GLOBAL%ncatch,CAT)
+  call instep_regional(REG)
 
 !#####################################################################
 ! Read meteorological data.
@@ -119,23 +129,13 @@ do i=1,GLOBAL%ndata
 ! Update the catchments
 !#####################################################################
 
-  call Update_Catchments(GLOBAL,CAT,GRID,REG)
+  call Update_Catchments(GLOBAL,CAT,GRID)
 
 !#####################################################################
-! Sum the local water and energy balance fluxes.
+! Update regional variables
 !#####################################################################
 
-do ipix = 1,GLOBAL%npix
-
-    isoil = GRID(ipix)%SOIL%isoil
-    ilandc = GRID(ipix)%VEG%ilandc
-    icatch = GRID(ipix)%VARS%icatch
-
-    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
-       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-       ilandc)
-enddo
-
+  call Update_Regional(REG,GRID,GLOBAL)
 
 !#####################################################################
 ! Run Tests to compare to previous model

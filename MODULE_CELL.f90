@@ -36,7 +36,6 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
-      !type (REGIONAL_template) :: REG
       GLOBAL%mul_fac = 1.0d0
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
