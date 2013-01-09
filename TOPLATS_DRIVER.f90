@@ -33,7 +33,7 @@ USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
 USE MODULE_REGIONAL,ONLY: Update_Regional
 
 !Module containing the cell model
-USE MODULE_CELL,ONLY: Update_Cell
+USE MODULE_CELL,ONLY: Update_Cells
 
 implicit none
 type (GLOBAL_template) :: GLOBAL
@@ -97,32 +97,10 @@ do i=1,GLOBAL%ndata
   call rdatmo(i,GRID%MET,GLOBAL,IO)
 
 !#####################################################################
-! Loop through each grid cell
+! Update each grid cell
 !#####################################################################
 
-  call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
-
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix,isoil,ilandc,icatch) 
-!$OMP DO SCHEDULE(DYNAMIC) ORDERED
-
-  do ipix=1,GLOBAL%npix
-
-    isoil = GRID(ipix)%SOIL%isoil
-    ilandc = GRID(ipix)%VEG%ilandc
-    icatch = GRID(ipix)%VARS%icatch
-
-!#####################################################################
-! Update the current grid cell
-!#####################################################################
-
-    call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-       GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
-       CAT(icatch),GLOBAL)
-
-  enddo
-
-!$OMP END DO
-!$OMP END PARALLEL
+  call Update_Cells(GRID,CAT,GLOBAL,i)
 
 !#####################################################################
 ! Update the catchments
@@ -134,7 +112,7 @@ do i=1,GLOBAL%ndata
 ! Update regional variables
 !#####################################################################
 
-  call Update_Regional(REG,GRID,GLOBAL)
+  call Update_Regional(REG,GRID,GLOBAL,CAT)
 
 !#####################################################################
 ! Run Tests to compare to previous model

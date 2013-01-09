@@ -18,12 +18,13 @@ contains
 !
 ! ====================================================================
 
-  subroutine Update_Regional(REG,GRID,GLOBAL)
+  subroutine Update_Regional(REG,GRID,GLOBAL,CAT)
 
     implicit none
     type (GLOBAL_template),intent(in) :: GLOBAL
     type (GRID_template),dimension(:),intent(in) :: GRID
     type (REGIONAL_template),intent(inout) :: REG
+    type (CATCHMENT_template),dimension(:),intent(in) :: CAT
     integer :: icatch,isoil,ilandc
 
 !#####################################################################
@@ -47,6 +48,8 @@ contains
          ilandc)
 
     enddo
+
+    call lswb(REG,GLOBAL,GRID,CAT)
 
   end subroutine Update_Regional
 
@@ -704,13 +707,6 @@ inc_frozen = GLOBAL%inc_frozen
       tksum = tkact*rescale
       tkmidsum = tkmid*rescale
 
-! ====================================================================
-! Format statements.
-! ====================================================================
-
-125   format (1i5,9(f11.5," "))
-126   format (1i5,7(f11.5," "))
-
 !$OMP CRITICAL
 !Regional 
 REG%ettotrg = REG%ettotrg + ettotrg
@@ -768,5 +764,645 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
       return
 
       end subroutine sumflx_regional
+
+! ====================================================================
+!
+!                       subroutine lswb
+!
+! ====================================================================
+!
+!  Check regional scale water balance and sum simulation totals.
+!
+! ====================================================================
+
+      subroutine lswb(REG,GLOBAL,GRID,CAT)
+
+      implicit none
+      include "help/lswb.h"
+      type (REGIONAL_template),intent(inout) :: REG
+      type (GLOBAL_template),intent(in) :: GLOBAL
+      type (GRID_template),dimension(:),intent(in) :: GRID
+      type (CATCHMENT_template),dimension(:),intent(in) :: CAT
+      real*8 rest
+      real*8 :: tmp
+      integer :: isoil,icatch
+      ncatch = GLOBAL%ncatch
+      pixsiz = GLOBAL%pixsiz
+      npix = GLOBAL%npix
+      ettotrg = REG%ettotrg
+      etlakesumrg = REG%etlakesumrg
+      etstsumrg = REG%etstsumrg
+      etwtsumrg = REG%etwtsumrg
+      fbsrg = REG%fbsrg
+      etbssumrg = REG%etbssumrg
+      etdcsumrg = REG%etdcsumrg
+      etwcsumrg = REG%etwcsumrg
+      pptsumrg = REG%pptsumrg
+      pnetsumrg = REG%pnetsumrg
+      qsurfrg = REG%qsurfrg
+      sxrtotrg = REG%sxrtotrg
+      xixtotrg = REG%xixtotrg
+      contotrg = REG%contotrg
+      ranrunrg = REG%ranrunrg
+      conrunrg = REG%conrunrg
+      qbreg = REG%qbreg
+      gwtsumrg = REG%gwtsumrg
+      grzsumrg = REG%grzsumrg
+      gtzsumrg = REG%gtzsumrg
+      capsumrg = REG%capsumrg
+      difrzsumrg = REG%difrzsumrg
+      dswcsum = REG%dswcsum
+      wcrhssum = REG%wcrhssum
+      dsrzsum = REG%dsrzsum
+      rzrhssum = REG%rzrhssum
+      dstzsum = REG%dstzsum
+      tzrhssum = REG%tzrhssum
+      dssum = REG%dssum
+      svarhssum = REG%svarhssum
+      rzsmav = REG%rzsmav
+      tzsmav = REG%tzsmav
+      rnpetsum = REG%rnpetsum
+      xlepetsum = REG%xlepetsum
+      hpetsum = REG%hpetsum
+      gpetsum = REG%gpetsum
+      dshpetsum = REG%dshpetsum
+      tkpetsum = REG%tkpetsum
+      tkmidpetsum = REG%tkmidpetsum
+      rnsum = REG%rnsum
+      xlesum = REG%xlesum
+      hsum = REG%hsum
+      gsum = REG%gsum
+      dshsum = REG%dshsum
+      tksum = REG%tksum
+      tkmidsum = REG%tkmidsum
+      tkdeepsum = REG%tkdeepsum
+      !REG%fwreg = REG%fwreg
+      wcip1sum = REG%wcip1sum
+      zbar1rg = REG%zbar1rg
+      pr3sat = REG%pr3sat
+      perrg2 = REG%perrg2
+      pr2sat = REG%pr2sat
+      pr2uns = REG%pr2uns
+      perrg1 = REG%perrg1
+      pr1sat = REG%pr1sat
+      pr1rzs = REG%pr1rzs
+      pr1tzs = REG%pr1tzs
+      pr1uns = REG%pr1uns
+      persxr = REG%persxr
+      perixr = REG%perixr
+      persac = REG%persac
+      peruac = REG%peruac
+      perusc = REG%perusc
+      wcsum = REG%wcsum
+      zbarrg = REG%zbarrg
+      ivgtyp = GRID%VEG%ivgtyp
+      Swqsum = REG%Swqsum
+      Swq_ussum = REG%Swq_ussum
+      Sdepthsum = REG%Sdepthsum
+      Sdepth_ussum = REG%Sdepth_ussum
+
+! ====================================================================
+! Calculate the number of pixels covered by vegetation
+! ====================================================================
+
+      nvegpix=npix
+
+      vegd=1.d0
+
+! ====================================================================
+! Calculate regional fraction of wet canopy.
+! ====================================================================
+
+      REG%fwreg = sum(GRID%VARS%fw)
+
+! ====================================================================
+! Calculate the percent of land surface in various surface states.
+! ====================================================================
+
+      do ipix = 1,npix
+        isoil = GRID(ipix)%SOIL%isoil
+        call sursat(GRID(ipix)%VARS%zw,GRID(isoil)%SOIL%psic,GRID(ipix)%VARS%fw,&
+          GLOBAL%mul_fac,REG%pr3sat,GLOBAL%zrzmax,REG%perrg2,GRID(ipix)%VARS%rzsm1,&
+          GRID(isoil)%SOIL%thetas,REG%pr2sat,REG%pr2uns,REG%perrg1,GRID(ipix)%VARS%tzsm1,&
+          REG%pr1sat,REG%pr1rzs,REG%pr1tzs,REG%pr1uns,GRID(ipix)%VARS%satxr,&
+          REG%persxr,GRID(ipix)%VARS%xinfxr,REG%perixr,GRID(ipix)%VARS%ievcon,&
+          REG%persac,REG%peruac,REG%perusc,i,ipix)
+      enddo
+      pr1sat = REG%pr1sat
+      pr3sat = REG%pr3sat
+      perrg2 = REG%perrg2
+      pr2sat = REG%pr2sat
+      pr2uns = REG%pr2uns
+      perrg1 = REG%perrg1
+      pr1sat = REG%pr1sat
+      pr1rzs = REG%pr1rzs
+      pr1tzs = REG%pr1tzs
+      pr1uns = REG%pr1uns
+      persxr = REG%persxr
+      perixr = REG%perixr
+      persac = REG%persac
+      peruac = REG%peruac
+      perusc = REG%perusc
+
+! ====================================================================
+! Find new average water table depth and baseflow for entire region.
+! ====================================================================
+
+      qbreg = zero
+      zbar1rg = zero
+      do icatch = 1,GLOBAL%ncatch
+        qbreg = qbreg + CAT(icatch)%qb
+        zbar1rg = zbar1rg + CAT(icatch)%zbar1*CAT(icatch)%area/(GLOBAL%pixsiz*GLOBAL%pixsiz)
+      enddo
+
+! ====================================================================
+! Compute regional water balance fluxes.
+! ====================================================================
+
+! --------------------------------------------------------------------
+! Evapotranspiration.
+! --------------------------------------------------------------------
+
+      ettotrg = ettotrg / real(npix)
+
+      if (nlakpix.gt.0) then
+
+         etlakesumrg=etlakesumrg/nlakpix
+
+      else
+
+         etlakesumrg=0.d0
+
+      endif
+
+      if (nvegpix.gt.0) then
+
+         etstsumrg = etstsumrg / real(nvegpix)
+         etwtsumrg = etwtsumrg / real(nvegpix)
+
+         if (fbsrg.gt.0.) then
+
+            etbssumrg = etbssumrg / fbsrg/real(nvegpix)
+
+         else
+
+            etbssumrg = 0.
+
+         endif
+
+         if (npix.gt.1) then
+
+            etdcsumrg = etdcsumrg / (1-fbsrg)/real(nvegpix)
+            etwcsumrg = etwcsumrg / (1-fbsrg)/real(nvegpix)
+
+         else
+
+            if (fbsrg.lt.(1.d0)) then
+
+               etdcsumrg = etdcsumrg / (1-fbsrg)/real(nvegpix)
+               etwcsumrg = etwcsumrg / (1-fbsrg)/real(nvegpix)
+
+            else
+
+               etdcsumrg=0.d0
+               etwcsumrg=0.d0
+
+            endif
+
+         endif
+
+      else
+
+         etstsumrg=0.d0
+         etwtsumrg=0.d0
+         etbssumrg=0.d0
+         etdcsumrg=0.d0
+         etwcsumrg=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Precipitation, Runoff, Infiltration and condensation.
+! --------------------------------------------------------------------
+
+      pptsumrg = pptsumrg / real(npix)
+      pnetsumrg = pnetsumrg / real(npix)
+
+      if (npix.gt.0) then
+
+         qsurfrg = qsurfrg / real(npix)
+         sxrtotrg = sxrtotrg / real(npix)
+         xixtotrg = xixtotrg / real(npix)
+         contotrg = contotrg / real(npix)
+         ranrunrg = ranrunrg / real(npix)
+         conrunrg = conrunrg / real(npix)
+
+      else
+
+         qsurfrg=0.d0
+         sxrtotrg=0.d0
+         xixtotrg=0.d0
+         contotrg=0.d0
+         ranrunrg=0.d0
+         conrunrg=0.d0
+         qbreg=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Vertical soil moisture flux.
+! --------------------------------------------------------------------
+
+      if (nvegpix.gt.0) then
+
+         gwtsumrg = gwtsumrg / real(nvegpix)
+         grzsumrg = grzsumrg / real(nvegpix)
+         gtzsumrg = gtzsumrg / real(nvegpix)
+         capsumrg = capsumrg / real(nvegpix)
+         difrzsumrg = difrzsumrg / real(nvegpix)
+
+      else
+
+         gwtsumrg=0.d0
+         grzsumrg=0.d0
+         gtzsumrg=0.d0
+         capsumrg=0.d0
+         difrzsumrg=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Water balance checks.
+! --------------------------------------------------------------------
+
+      if (nvegpix.gt.0) then
+
+         dswcsum = dswcsum / real(nvegpix)
+         wcrhssum = wcrhssum / real(nvegpix)
+         dsrzsum = dsrzsum / real(nvegpix)
+         rzrhssum = rzrhssum / real(nvegpix)
+         dstzsum = dstzsum / real(nvegpix)
+         tzrhssum = tzrhssum / real(nvegpix)
+         dssum = dssum / real(nvegpix)
+         svarhssum = svarhssum / real(nvegpix)
+
+      else
+
+         dswcsum=0.d0
+         wcrhssum=0.d0
+         dsrzsum=0.d0
+         rzrhssum=0.d0
+         dstzsum=0.d0
+         tzrhssum=0.d0
+         dssum=0.d0
+         svarhssum=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Average soil moistures and snow cover.
+! --------------------------------------------------------------------
+
+      if (nvegpix.gt.0) then
+
+         Swqsum = vegd * Swqsum / real(nvegpix)
+         Swq_ussum = vegd * Swq_ussum / real(nvegpix)
+         Sdepthsum = vegd * Sdepthsum / real(nvegpix)
+         Sdepth_ussum = vegd * Sdepth_ussum / real(nvegpix)
+         rzsmav = vegd * rzsmav / real(nvegpix)
+         tzsmav = vegd * tzsmav / real(nvegpix)
+
+      else
+
+         Swqsum=0.d0
+         Swq_ussum=0.d0
+         Sdepthsum=0.d0
+         Sdepth_ussum=0.d0
+         rzsmav=0.d0
+         tzsmav=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Regional average energy fluxes at PET.
+! --------------------------------------------------------------------
+
+      rnpetsum = rnpetsum / real(npix)
+      xlepetsum = xlepetsum / real(npix)
+      hpetsum = hpetsum / real(npix)
+      gpetsum = gpetsum / real(npix)
+      dshpetsum = dshpetsum / real(npix)
+      tkpetsum = tkpetsum / real(npix)
+      if (nvegpix.gt.0) then
+
+         tkmidpetsum = tkmidpetsum / real(nvegpix)
+
+      else
+
+         tkmidpetsum = tkmidpetsum
+
+      endif
+
+! --------------------------------------------------------------------
+! Regional average actual surface energy fluxes.
+! --------------------------------------------------------------------
+
+      rnsum = rnsum / real(npix)
+      xlesum = xlesum / real(npix)
+      hsum = hsum / real(npix)
+      gsum = gsum / real(npix)
+      dshsum = dshsum / real(npix)
+      tksum = tksum / real(npix)
+
+      if (nvegpix.gt.0) then
+
+         tkmidsum = tkmidsum / real(nvegpix)
+
+      else
+
+         tkmidsum = tksum
+
+      endif
+
+      tkdeepsum = tkdeepsum / real(npix)
+
+! --------------------------------------------------------------------
+! Region percentages of moisture states.
+! --------------------------------------------------------------------
+
+      if (nvegpix.gt.0) then
+
+         if (fbsrg.lt.(1.d0)) then
+
+            REG%fwreg = REG%fwreg / real(nvegpix)/(one-fbsrg)
+
+         else
+
+            REG%fwreg=0.d0
+
+         endif
+
+         wcip1sum = wcip1sum / real(nvegpix)
+
+      else
+
+         REG%fwreg=0.d0
+         wcip1sum=0.d0
+
+      endif
+
+         zbar1rg = zbar1rg / npix
+
+! --------------------------------------------------------------------
+! Find percentage of land cover saturation states.
+! --------------------------------------------------------------------
+
+      if (nvegpix.gt.0) then
+
+         pr3sat = pr3sat / real(npix)
+
+         perrg2 = perrg2 / real(npix)
+         pr2sat = pr2sat / real(npix)
+         pr2uns = pr2uns / real(npix)
+
+         perrg1 = perrg1 / real(npix)
+         pr1sat = pr1sat / real(npix)
+         pr1rzs = pr1rzs / real(npix)
+         pr1tzs = pr1tzs / real(npix)
+         pr1uns = pr1uns / real(npix)
+
+      else
+
+         pr3sat=0.d0
+         perrg2=0.d0
+         pr2sat=0.d0
+         pr2uns=0.d0
+         perrg1=0.d0
+         pr1sat=0.d0
+         pr1rzs=0.d0
+         pr1tzs=0.d0
+         pr1uns=0.d0
+
+      endif
+
+! --------------------------------------------------------------------
+! Fractions of land surface saturation/infiltration excess runoff
+! and atmosphere/land surface controled evapotranspiration.
+! --------------------------------------------------------------------
+
+      if (npix.gt.0) then
+
+         persxr = persxr / real(npix)
+         perixr = perixr / real(npix)
+
+         persac = persac / real(npix)
+         peruac = peruac / real(npix)
+         perusc = perusc / real(npix)
+
+      else
+
+         persxr=0.d0
+         perixr=0.d0
+
+         persac=0.d0
+         peruac=0.d0
+         perusc=0.d0
+
+      endif
+
+      REG%wcip1sum = wcip1sum
+      REG%zbar1rg = zbar1rg
+      REG%ettotrg = ettotrg
+      REG%hsum = hsum
+      REG%etwtsumrg = etwtsumrg
+      REG%dswcsum  = dswcsum
+      REG%wcrhssum = wcrhssum
+      REG%etdcsumrg = etdcsumrg
+      REG%etwcsumrg = etwcsumrg
+      REG%tkmidsum = tkmidsum
+      REG%tksum = tksum
+      REG%gsum = gsum
+      REG%xlesum = xlesum
+      REG%perrg2 = perrg2
+      REG%pr3sat = pr3sat
+      REG%capsumrg = capsumrg
+      REG%difrzsumrg = difrzsumrg
+      REG%pr2uns = pr2uns
+      REG%gtzsumrg = gtzsumrg
+      REG%grzsumrg = grzsumrg
+      REG%qbreg = qbreg
+      REG%pr2sat = pr2sat
+      REG%perrg1 = perrg1
+      REG%pr1uns = pr1uns
+      REG%persac = persac
+      REG%peruac = peruac
+      REG%perusc = perusc
+      REG%rnsum = rnsum
+      REG%tkdeepsum = tkdeepsum
+      REG%rzsmav = rzsmav 
+      REG%dsrzsum = dsrzsum
+      REG%rzrhssum = rzrhssum
+      REG%tzsmav = tzsmav
+      REG%contotrg = contotrg
+      REG%dstzsum = dstzsum
+      REG%tzrhssum = tzrhssum
+      REG%gwtsumrg = gwtsumrg
+      REG%sxrtotrg = sxrtotrg
+      REG%pptsumrg = pptsumrg
+      REG%pnetsumrg = pnetsumrg 
+      REG%persxr = persxr
+      REG%qsurfrg = qsurfrg
+      REG%pr1tzs = pr1tzs
+      REG%Swqsum = Swqsum
+      REG%Sdepthsum = Sdepthsum
+
+      return
+
+      end subroutine lswb
+
+
+! ====================================================================
+!
+!                       subroutine sursat
+!
+! ====================================================================
+!
+! Define land surface saturation states for the region.
+!
+! ====================================================================
+
+    subroutine sursat(zw,psic,fw,mul_fac,pr3sat,zrzmax,perrg2,&
+       rzsm1,thetas,pr2sat,pr2uns,perrg1,tzsm1,pr1sat,pr1rzs,pr1tzs,pr1uns,&
+       satxr,persxr,xinfxr,perixr,ievcon,persac,peruac,perusc,i,ipix)
+
+      implicit none
+      include "help/sursat.h"
+      integer :: i,ipix
+
+      data tolsat / 0.0001d0 /
+
+! ====================================================================
+! Define land surface saturation states for the region:
+!
+! Region 3:  Water Table at surface.
+! Region 2:  Water Table in root zone.
+! Region 1:  Water Table below root zone.
+! ====================================================================
+
+      if ((zw-psic).le.zero) then
+
+! --------------------------------------------------------------------&
+! First find areas in region 3.
+! --------------------------------------------------------------------&
+
+         pr3sat = pr3sat + one*mul_fac
+
+      else if (((zw-psic).lt.zrzmax).and.((zw-psic).gt.zero)) then
+
+! --------------------------------------------------------------------&
+! For all pixels not in area 3 : first see if the water table is
+! in the root zone and if the root zone is not saturated (region 2).
+! --------------------------------------------------------------------&
+
+         perrg2 = perrg2 + one*mul_fac
+
+
+         if (rzsm1.ge.thetas-tolsat) then
+
+            pr2sat = pr2sat + one*mul_fac
+
+         else
+
+            pr2uns = pr2uns + one*mul_fac
+
+         endif
+
+      else
+
+! --------------------------------------------------------------------&
+! If a pixel is not in in region 3 or 2 it has to be in region 1.
+! Ssplit into four possibilities for root and transmission zone
+! saturation:
+! --------------------------------------------------------------------&
+
+         perrg1 = perrg1 + one
+
+         if ((rzsm1.ge.thetas-tolsat).and.(tzsm1.ge.thetas-tolsat)) then
+
+! ....................................................................
+! 1) Boot root and transmsission zone are saturated.
+! ....................................................................
+
+            pr1sat = pr1sat + one*mul_fac
+
+         else if ((rzsm1.ge.thetas-tolsat).and.(tzsm1.lt.thetas-tolsat)) then
+
+! ....................................................................
+! 2) Root zone is saturated and transmsission zone is not
+!    saturated.
+! ....................................................................
+
+            pr1rzs = pr1rzs + one*mul_fac
+
+         else if ((rzsm1.lt.thetas-tolsat).and.(tzsm1.ge.thetas-tolsat)) then
+
+! ....................................................................
+! 3) Root zone is not saturated and transmsission zone is
+!    saturated.
+! ....................................................................
+
+            pr1tzs = pr1tzs + one*mul_fac
+
+         else
+
+! ....................................................................
+! 4) Both root and transmsission zone are not saturated.
+! ....................................................................
+
+            pr1uns = pr1uns + one*mul_fac
+
+         endif
+
+      endif
+
+! ====================================================================
+! Determine fractions of land surface contribtuting saturation
+! or infiltration excess runoff.
+! ====================================================================
+
+      if (satxr.gt.zero) then
+
+         persxr = persxr + one*mul_fac
+
+      else if (xinfxr.gt.zero) then
+
+         perixr = perixr + one*mul_fac
+
+      endif
+
+! ====================================================================
+! Determine areal fractions of bare soil evaporation
+! controls - check for atmospheri! contolled (saturated),&
+! atmospheri! contolled (unsaturated) and soil controlled.
+! ====================================================================
+
+      if (ievcon.eq.3) then
+
+         persac = persac + one*mul_fac
+
+      else if (ievcon.eq.2) then
+
+         peruac = peruac + one*mul_fac
+
+      else
+
+         perusc = perusc + one*mul_fac
+
+      endif
+
+      return
+
+    end subroutine sursat
+
 
 END MODULE MODULE_REGIONAL

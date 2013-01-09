@@ -14,6 +14,52 @@ USE MODULE_SNOW
 
 contains
 
+!#####################################################################
+!
+!                        subroutine Update_Cells
+!
+!#####################################################################
+!
+! Solve the water and energy budget for all land surface area
+!
+!#####################################################################
+
+  subroutine Update_Cells(GRID,CAT,GLOBAL,i)
+  
+    implicit none
+    type (GRID_template),dimension(:),intent(inout) :: GRID
+    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+    type (GLOBAL_template),intent(in) :: GLOBAL
+    integer,intent(in) :: i
+    integer :: ipix,isoil,icatch,ilandc
+
+!#####################################################################
+! Update each grid cell
+!#####################################################################
+
+    call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix,isoil,ilandc,icatch) 
+!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+
+    do ipix=1,GLOBAL%npix
+
+      isoil = GRID(ipix)%SOIL%isoil
+      ilandc = GRID(ipix)%VEG%ilandc
+      icatch = GRID(ipix)%VARS%icatch
+
+      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
+         GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
+         CAT(icatch),GLOBAL)
+
+    enddo
+
+!$OMP END DO
+!$OMP END PARALLEL
+
+  end subroutine Update_Cells
+
+
 ! ====================================================================
 !
 !                        subroutine Update_Cell
