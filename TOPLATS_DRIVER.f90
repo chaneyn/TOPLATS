@@ -27,10 +27,10 @@ USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
                     file_close
 
 !Module containing topmodel
-USE MODULE_TOPMODEL,ONLY: instep_catchment,catflx,upzbar,Update_Catchments
+USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
 
 !Module containing regional subroutines
-USE MODULE_REGIONAL,ONLY: Update_Regional,instep_regional
+USE MODULE_REGIONAL,ONLY: Update_Regional
 
 !Module containing the cell model
 USE MODULE_CELL,ONLY: Update_Cell
@@ -89,7 +89,6 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 
   call instep_catchment(GLOBAL%ncatch,CAT)
-  call instep_regional(REG)
 
 !#####################################################################
 ! Read meteorological data.

@@ -62,7 +62,7 @@ contains
 
       implicit none
       include "help/instep.h"
-      type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
 
 ! ====================================================================
 ! Initialize variables for catchment average/total values
