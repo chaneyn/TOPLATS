@@ -13,9 +13,10 @@ USE MODULE_CANOPY
 USE MODULE_SNOW
 
 contains
+
 ! ====================================================================
 !
-!                        subroutine land_lake
+!                        subroutine Update_Cell
 !
 ! ====================================================================
 !
@@ -25,17 +26,17 @@ contains
 
 
       subroutine Update_Cell(ipix,i,GRID_MET,GRID_SOIL,GRID_VEG,&
-               GRID_VARS,wcip1,REG,CAT,GLOBAL)
+               GRID_VARS,wcip1,CAT,GLOBAL)
 
       implicit none
       include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GRID_MET_template) :: GRID_MET
-      type (REGIONAL_template),intent(inout) :: REG
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
+      !type (REGIONAL_template) :: REG
       GLOBAL%mul_fac = 1.0d0
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
@@ -528,7 +529,7 @@ xlamda = CAT%xlamda
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
+       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.

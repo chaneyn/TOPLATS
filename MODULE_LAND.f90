@@ -122,7 +122,7 @@ MODULE MODULE_LAND
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,irestype,ioppet,&
-       iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
+       iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
       include "help/land.h"!Remove when variables are changed
@@ -131,7 +131,6 @@ MODULE MODULE_LAND
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
       type (GRID_SOIL_template) :: GRID_SOIL
-      type (REGIONAL_template) :: REG
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
       real*8 gold
@@ -389,22 +388,6 @@ MODULE MODULE_LAND
       atanb = GRID_VARS%atanb
       xlamda = CAT%xlamda
       
-    !Regional Saturation Parameters
-      !pr3sat = REG%pr3sat
-      !perrg2 = REG%perrg2
-      !pr2sat = REG%pr2sat
-      !pr2uns = REG%pr2uns
-      !perrg1 = REG%perrg1
-      !pr1sat = REG%pr1sat
-      !pr1rzs = REG%pr1rzs
-      !pr1tzs = REG%pr1tzs
-      !pr1uns = REG%pr1uns
-      !persxr = REG%persxr
-      !perixr = REG%perixr
-      !persac = REG%persac
-      !peruac = REG%peruac
-      !perusc = REG%perusc  
-
     !Different option parameters
       !iopthermc = GLOBAL%iopthermc
       !iopthermc_v = GLOBAL%iopthermc_v

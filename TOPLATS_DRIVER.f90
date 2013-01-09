@@ -108,7 +108,7 @@ do i=1,GLOBAL%ndata
 
     call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
        GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
-       REG,CAT(icatch),GLOBAL)
+       CAT(icatch),GLOBAL)
 
   enddo
 
