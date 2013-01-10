@@ -496,9 +496,8 @@ xlamda = CAT%xlamda
 
 ! Meteorological data
 
-       rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,pptms,appa,&
-       vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,precip_o,&
-       precip_u,&
+       tcel,vppa,psychr,xlhv,tkel,appa,&
+       vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
