@@ -55,8 +55,8 @@ MODULE MODULE_LAND
 
 ! Energy fluxes
 
-       dshact,rnetpn,gbspen,epetd,evtact,ievcon,bsdew,gact,rnact,xleact,&
-       hact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       epetd,bsdew,&
+       epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,ievcon_us,rnact_us,&
        xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,&
@@ -189,17 +189,8 @@ MODULE MODULE_LAND
       !Tdeepstep
 
     !Energy fluxes and states
-      dshact = GRID_VARS%dshact
-      rnetpn = GRID_VARS%rnetpn
-      gbspen = GRID_VARS%gbspen
       !epetd
-      evtact = GRID_VARS%evtact
-      ievcon  = GRID_VARS%ievcon
       !bsdew
-      gact = GRID_VARS%gact
-      rnact = GRID_VARS%rnact
-      xleact = GRID_VARS%xleact
-      hact = GRID_VARS%hact
       !rnetd
       !xled
       !hd
@@ -378,7 +369,7 @@ MODULE MODULE_LAND
       f2=0.d0
       f3=0.d0
 
-      gold=gact
+      gold=GRID_VARS%gact
 
 ! ====================================================================
 ! Calculate the incoming solar radiation for the under story and over
@@ -501,9 +492,10 @@ MODULE MODULE_LAND
        zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
        iopthermc,thermc1,thermc2,thetar,heatcapold,psic,bcbeta,&
        quartz,heatcap1,ifcoarse,heatcap2,rocpsoil,row,cph2o,roa,cp,&
-       roi,thermc,heatcap,rzdthetaudtemp,dshact,GRID_VEG%albd,emiss,rahd,ebscap,&
+       roi,thermc,heatcap,rzdthetaudtemp,GRID_VARS%dshact,GRID_VEG%albd,emiss,rahd,ebscap,&
        tcel,vppa,psychr,xlhv,zdeep,Tdeepstep,GRID_MET%rsd,GRID_MET%rld,toleb,maxnri,dt,i,tkel,&
-       GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,zpd,z0m,GRID_MET%press,rib,rnetpn,gbspen,epetd,evtact,ievcon,&
+       GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,zpd,z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
+       GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
        bsdew,z0h,ioppet)
 
          else
@@ -514,8 +506,8 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
             ebscap=epetd
-            evtact = ebscap
-            ievcon = 3
+            GRID_VARS%evtact = ebscap
+            GRID_VARS%ievcon = 3
 
             call calcrain (tcel,snow,rain,GRID_MET%pptms,dt)
 
@@ -534,11 +526,11 @@ MODULE MODULE_LAND
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        tkactd,tkmidactd,tsnow,zdeep,Tdeepstep,zmid,dt,dum)
 
-            rnact=rn_snow
-            xleact=xleact_snow
-            hact=hact_snow
-            gact=gactd
-            dshact=0.d0
+            GRID_VARS%rnact=rn_snow
+            GRID_VARS%xleact=xleact_snow
+            GRID_VARS%hact=hact_snow
+            GRID_VARS%gact=gactd
+            GRID_VARS%dshact=0.d0
             GRID_VARS%tkact=tkactd
             GRID_VARS%tkmid=tkmidactd
 
@@ -559,7 +551,7 @@ MODULE MODULE_LAND
        tc_us,tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,zrz,srzrel,thetas,thetar,psisoi,&
        psic,bcbeta,ikopt,xksrz,xk0,ff,ressoi,rtact,rtdens,psicri,&
-       respla,xkrz,ztz,stzrel,xkstz,xktz,Swq,evtact,ievcon,Swq_us,evtact_us,&
+       respla,xkrz,ztz,stzrel,xkstz,xktz,Swq,GRID_VARS%evtact,GRID_VARS%ievcon,Swq_us,evtact_us,&
        ievcon_us,bsdew,i,ipix)
 
       endif
@@ -591,7 +583,7 @@ MODULE MODULE_LAND
       call tz_and_rzbal(i,newstorm,inc_frozen,ikopt,GRID_VEG%ivgtyp,&
        dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,rzsm1,tzsm1,&
        zrz,ztz,zw0,zrzmax,&
-       evtact,evtact_us,bsdew,dewrun,grz,gtz,diftz,difrz,&
+       GRID_VARS%evtact,evtact_us,bsdew,dewrun,grz,gtz,diftz,difrz,&
        satxr,runtot,xinact,cuminf,&
        ff,thetar,thetas_add,bcbeta,xk0,psic,&
        Swq,Swq_us,&
@@ -627,16 +619,16 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
-       tkactd,tkmidactd,GRID_VEG%canclos,ievcon,xlhv,row,GRID_VEG%ivgtyp,xleactd,evtact,&
+       tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,xlhv,row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
        bsdew,ioppet,iffroz,GRID_VARS%tkmid,zmid,zrzmax,smtmp,rzsm,&
        tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thetar,thetas,psic,&
        bcbeta,quartz,ifcoarse,heatcap1,rocpsoil,cph2o,roa,cp,roi,thermc,&
        rzdthetaudtemp,iopgveg,iopthermc_v,tcbeta,xlai,GRID_VARS%tkact,&
        i_2l,f1,f2,f3,emiss,rescan,ravd,rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,zdeep,Tdeepstep,&
-       GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,rnetpn,&
-       gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,rnact,xleact,hact,&
-       gact,dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,&
+       GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
+       GRID_VARS%gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
+       GRID_VARS%gact,GRID_VARS%dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,&
        ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
        r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens,GRID_VARS%precip_o,GRID_VEG%za,&
        zpd,z0h,RaSnow,appa,vpsat,GRID_MET%uzw,rn_snow,alb_snow)
