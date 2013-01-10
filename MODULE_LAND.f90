@@ -29,13 +29,9 @@ MODULE MODULE_LAND
 
        mul_fac,&
 
-! General vegetation parameters
-
-       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
-
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
+       Swq,VaporMassFlux,TPack,TSurf,&
        r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
        TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
@@ -139,18 +135,7 @@ MODULE MODULE_LAND
       initer=2
 ! ====================================================================
 ! Temporarily reassgin variables from old to new format
-    !General Vegetation parameters
-       canclos = GRID_VEG%canclos
-      extinct = GRID_VEG%extinct
-      i_und = GRID_VEG%i_und
-      i_moss = GRID_VEG%i_moss
-      ivgtyp = GRID_VEG%ivgtyp
-      f_moss = GRID_VEG%f_moss
-      f_und = GRID_VEG%f_und
-
     !Snow Pack variables
-      PackWater = GRID_VARS%PackWater
-      SurfWater = GRID_VARS%SurfWater
       !Swq = GRID_VARS%Swq
       !VaporMassFlux = GRID_VARS%VaporMassFlux
       !TPack = GRID_VARS%TPack
@@ -415,7 +400,7 @@ MODULE MODULE_LAND
 ! story layers.
 ! ====================================================================
 
-      call calc_rs(GRID_VEG,i_und,i_moss,Swq_us,&
+      call calc_rs(GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,Swq_us,&
                    alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
@@ -439,7 +424,7 @@ MODULE MODULE_LAND
 ! Modify the thermal parameters for soils under vegetation.
 ! ====================================================================
 
-      if (ivgtyp.ne.0) then
+      if (GRID_VEG%ivgtyp.ne.0) then
          call soiladapt(iopgveg,thermc,iopthermc_v,tcbeta,&
                         xlai,thermc1,heatcap,heatcap1,zero)
 
@@ -472,7 +457,7 @@ MODULE MODULE_LAND
 
       if (inc_frozen.eq.1) then
 
-         call ice_change(ipix,rzdthetaidt,tzdthetaidt,f_moss,f_und,&
+         call ice_change(ipix,rzdthetaidt,tzdthetaidt,GRID_VEG%f_moss,GRID_VEG%f_und,&
        tkmidpet,tkmidpet_us,tkmidpet_moss,rzsm1_f,tzsm1_f,bulk_dens,&
        a_ice,b_ice,row,roi,rzsm1_u,rzsm1,tzsm1_u,tzsm1,thetas,thetar,&
        rzdthetaudtemp,dt,rzsm_f,tzsm_f,tsoilold)
@@ -487,7 +472,7 @@ MODULE MODULE_LAND
 ! moisture.
 ! ====================================================================
 
-      call states(zw0,inc_frozen,i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
+      call states(zw0,inc_frozen,GRID_VEG%i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
        r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff,atanb,xlamda,psic,&
        zrz,ztz,rzsm1,tzsm1,thetas,zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,&
        tzsm1_u,rzsm1_f,tzsm1_f,tsoilold,bulk_dens,a_ice,b_ice,&
@@ -504,8 +489,8 @@ MODULE MODULE_LAND
 !            depends on cumulative infiltration, rainfall, ...
 ! --------------------------------------------------------------------
 
-         call infilt(pnet,i_moss,i_und,PackWater_us,SurfWater_us,Swq_us,&
-       Outflow_us,dt,PackWater,SurfWater,Swq,Outflow,&
+         call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,PackWater_us,SurfWater_us,Swq_us,&
+       Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,Outflow,&
        istmst,cuminf,inc_frozen,rzsmst,rzsm,rzsm_u,thetas,thetar,&
        tolinf,sorp,xk0,psic,bcgamm,bcbeta,deltrz,cc,zw,xinact,satxr,xinfxr,&
        intstm,xinfcp,runtot,irntyp)
@@ -514,7 +499,7 @@ MODULE MODULE_LAND
 ! Calculate actual rate of evaporation.
 ! ====================================================================
 
-      if (ivgtyp.eq.0) then
+      if (GRID_VEG%ivgtyp.eq.0) then
 
 ! --------------------------------------------------------------------
 ! Option 1 : Bare soil surface.
@@ -551,7 +536,7 @@ MODULE MODULE_LAND
 
             call calcsnowmelt(0,0,dt/3600.d0,za,zpd,z0h,RaSnow,roa,vppa,xlhv,&
             rsd*(1.d0-alb_snow),rld,appa,rain,snow,tcel,vpsat-vppa,uzw,&
-            PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
+            GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
             Outflow,xleact_snow,hact_snow,rn_snow,1.d0,dens,gold)
 
             xleact_snow=0.d0-xleact_snow
@@ -584,8 +569,8 @@ MODULE MODULE_LAND
 ! Calculate the transpiration from dry canopy for vegetated pixels.
 ! --------------------------------------------------------------------
 
-         call transv(epetd,epetd_us,i_und,iopveg,f1par,f3vpd,f4temp,&
-       rescan,inc_frozen,ivgtyp,rzsm,rzsm_u,tc,tw,smcond,tzsm,tzsm_u,&
+         call transv(epetd,epetd_us,GRID_VEG%i_und,iopveg,f1par,f3vpd,f4temp,&
+       rescan,inc_frozen,GRID_VEG%ivgtyp,rzsm,rzsm_u,tc,tw,smcond,tzsm,tzsm_u,&
        tc_us,tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,zrz,srzrel,thetas,thetar,psisoi,&
        psic,bcbeta,ikopt,xksrz,xk0,ff,ressoi,rtact,rtdens,psicri,&
@@ -618,14 +603,14 @@ MODULE MODULE_LAND
 
       endif
 
-      call tz_and_rzbal(i,newstorm,inc_frozen,ikopt,ivgtyp,&
+      call tz_and_rzbal(i,newstorm,inc_frozen,ikopt,GRID_VEG%ivgtyp,&
        dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,rzsm1,tzsm1,&
        zrz,ztz,zw0,zrzmax,&
        evtact,evtact_us,bsdew,dewrun,grz,gtz,diftz,difrz,&
        satxr,runtot,xinact,cuminf,&
        ff,thetar,thetas_add,bcbeta,xk0,psic,&
        Swq,Swq_us,&
-       dc,i_und,i_moss,fw,dc_us,fw_us,evrz_moss,f_und,dstz,dsrz,&
+       dc,GRID_VEG%i_und,GRID_VEG%i_moss,fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,dstz,dsrz,&
        tzrhs,rzrhs)
 
       if (inc_frozen.eq.1) then
@@ -657,7 +642,7 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
-       tkactd,tkmidactd,canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
+       tkactd,tkmidactd,GRID_VEG%canclos,ievcon,xlhv,row,GRID_VEG%ivgtyp,xleactd,evtact,&
        bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
        tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thetar,thetas,psic,&
        bcbeta,quartz,ifcoarse,heatcap1,rocpsoil,cph2o,roa,cp,roi,thermc,&
@@ -667,7 +652,7 @@ MODULE MODULE_LAND
        rsd,r_lup,rld,toleb,maxnri,dt,i,albd,r_sdn,rnetpn,&
        gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,rnact,xleact,hact,&
        gact,dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,&
-       ipix,initer,PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
+       ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
        r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens,precip_o,za,&
        zpd,z0h,RaSnow,appa,vpsat,uzw,rn_snow,alb_snow)
 
@@ -680,7 +665,7 @@ MODULE MODULE_LAND
 
          call land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,canclos,ievcon_us,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,ievcon_us,&
        rnact_us,xleact_us,hact_us,gact_us,dshact_us,tkact_us,&
        tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
        gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,xlai_us,&
@@ -701,7 +686,7 @@ MODULE MODULE_LAND
        z0h,RaSnow,alb_snow,appa,vpsat_ic,uzw,PackWater_us,&
        SurfWater_us,VaporMassFlux_us,TPack_us,TSurf_us,&
        r_MeltEnergy_us,Outflow_us,xleact_snow_us,hact_snow_us,&
-       rn_snow_us,dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,i_und,i_moss,i_2l)
+       rn_snow_us,dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,i_2l)
 
       endif
 
@@ -720,8 +705,8 @@ MODULE MODULE_LAND
 
       if (dens.gt.(0.d0)) then
 
-         p1=PackWater*1000.d0
-         p2=SurfWater*1000.d0
+         p1=GRID_VARS%PackWater*1000.d0
+         p2=GRID_VARS%SurfWater*1000.d0
          p3=Swq*1000.d0
          r_dens=(p3/(p1+p2+p3))*dens+((p1+p2)/(p1+p2+p3))*1.d0
 
@@ -734,7 +719,7 @@ MODULE MODULE_LAND
 ! does not exceed its water holding capacity.
 ! ====================================================================
 
-      if (ivgtyp.gt.0) then
+      if (GRID_VEG%ivgtyp.gt.0) then
 
             if (Swq.ge.wcip1) wcip1=Swq
 

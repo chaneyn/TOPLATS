@@ -482,13 +482,9 @@ xlamda = CAT%xlamda
 
        mul_fac,&
 
-! General vegetation parameters
-
-       canclos,extinct,i_und,i_moss,ivgtyp,f_moss,f_und,&
-
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
+       Swq,VaporMassFlux,TPack,TSurf,&
        r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
        Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
