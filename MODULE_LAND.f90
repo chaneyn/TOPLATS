@@ -50,8 +50,8 @@ MODULE MODULE_LAND
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet,tkmidpet_us,tkmidpet_moss,tsoilold,Tdeepstep,&
+       tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,Tdeepstep,&
 
 ! Energy fluxes
 
@@ -178,14 +178,11 @@ MODULE MODULE_LAND
       !vpsat_ic
       
     !Temperature variables
-      tkmid = GRID_VARS%tkmid
-      tkact = GRID_VARS%tkact
       !tkmid_us
       !tkact_us
       !tskinact_moss
       !tkact_moss
       !tkmid_moss
-      tkmidpet = GRID_VARS%tkmidpet
       !tkmidpet_us
       !tkmidpet_moss
       !tsoilold
@@ -396,7 +393,7 @@ MODULE MODULE_LAND
 ! parameters, as a centered difference.
 ! ====================================================================
 
-      call sm_cen_dif(iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
+      call sm_cen_dif(iffroz,GRID_VARS%tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
                       rzsmold,tzsmold)
 
 ! ====================================================================
@@ -404,7 +401,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call soiltherm(iopthermc,thermc1,thermc2,rzsm,smtmp,&
-       thetar,thetas,psic,bcbeta,tkmid,quartz,ifcoarse,&
+       thetar,thetas,psic,bcbeta,GRID_VARS%tkmid,quartz,ifcoarse,&
        heatcap1,heatcap2,heatcapold,rocpsoil,row,cph2o,roa,cp,roi,&
        smold,thermc,heatcap,inc_frozen,rzdthetaudtemp)
 
@@ -427,8 +424,8 @@ MODULE MODULE_LAND
 ! Initialize actual temperatures.
 ! ====================================================================
 
-      tkactd = tkact
-      tkmidactd = tkmid
+      tkactd = GRID_VARS%tkact
+      tkmidactd = GRID_VARS%tkmid
       tkactd_us = tkact_us
       tkmidactd_us = tkmid_us
       tskinactd_moss = tskinact_moss
@@ -446,7 +443,7 @@ MODULE MODULE_LAND
       if (inc_frozen.eq.1) then
 
          call ice_change(ipix,rzdthetaidt,tzdthetaidt,GRID_VEG%f_moss,GRID_VEG%f_und,&
-       tkmidpet,tkmidpet_us,tkmidpet_moss,rzsm1_f,tzsm1_f,bulk_dens,&
+       GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,rzsm1_f,tzsm1_f,bulk_dens,&
        a_ice,b_ice,row,roi,rzsm1_u,rzsm1,tzsm1_u,tzsm1,thetas,thetar,&
        rzdthetaudtemp,dt,rzsm_f,tzsm_f,tsoilold)
 
@@ -499,8 +496,8 @@ MODULE MODULE_LAND
 ! In case of absence of a snow pack, solve the energy balance for
 ! the bare soil.
 ! --------------------------------------------------------------------
-            call ebsres(inc_frozen,irestype,rsoil,rzsm,srespar1,tkact,&
-       srespar2,rzsm_u,srespar3,ravd,iffroz,thetas,tkmid,&
+            call ebsres(inc_frozen,irestype,rsoil,rzsm,srespar1,GRID_VARS%tkact,&
+       srespar2,rzsm_u,srespar3,ravd,iffroz,thetas,GRID_VARS%tkmid,&
        zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
        iopthermc,thermc1,thermc2,thetar,heatcapold,psic,bcbeta,&
        quartz,heatcap1,ifcoarse,heatcap2,rocpsoil,row,cph2o,roa,cp,&
@@ -542,8 +539,8 @@ MODULE MODULE_LAND
             hact=hact_snow
             gact=gactd
             dshact=0.d0
-            tkact=tkactd
-            tkmid=tkmidactd
+            GRID_VARS%tkact=tkactd
+            GRID_VARS%tkmid=tkmidactd
 
          endif
 
@@ -631,10 +628,10 @@ MODULE MODULE_LAND
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,GRID_VEG%canclos,ievcon,xlhv,row,GRID_VEG%ivgtyp,xleactd,evtact,&
-       bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
+       bsdew,ioppet,iffroz,GRID_VARS%tkmid,zmid,zrzmax,smtmp,rzsm,&
        tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thetar,thetas,psic,&
        bcbeta,quartz,ifcoarse,heatcap1,rocpsoil,cph2o,roa,cp,roi,thermc,&
-       rzdthetaudtemp,iopgveg,iopthermc_v,tcbeta,xlai,tkact,&
+       rzdthetaudtemp,iopgveg,iopthermc_v,tcbeta,xlai,GRID_VARS%tkact,&
        i_2l,f1,f2,f3,emiss,rescan,ravd,rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,zdeep,Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,rnetpn,&
@@ -657,7 +654,7 @@ MODULE MODULE_LAND
        rnact_us,xleact_us,hact_us,gact_us,dshact_us,tkact_us,&
        tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
        gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,xlai_us,&
-       dc_us,fw_us,trlup,ipix,xlhv_ic,row,evtact_us,iffroz_us,tkmid,zmid,&
+       dc_us,fw_us,trlup,ipix,xlhv_ic,row,evtact_us,iffroz_us,GRID_VARS%tkmid,zmid,&
        zrzmax,smtmp,rzsm,tzsm,smold,rzsmold,tzsmold,iopthermc,&
        thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,cph2o,roa,cp,roi,&
        thermc,inc_frozen,rzdthetaudtemp,iopgveg,thermc_us,iopthermc_v,tcbeta_us,&

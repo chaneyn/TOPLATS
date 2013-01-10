@@ -501,8 +501,8 @@ xlamda = CAT%xlamda
 
 ! Temperature variables
 
-       tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet,tkmidpet_us,tkmidpet_moss,tsoilold,Tdeepstep,&
+       tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,Tdeepstep,&
 
 ! Energy fluxes
 
