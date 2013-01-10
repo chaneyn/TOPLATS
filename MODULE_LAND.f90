@@ -67,9 +67,7 @@ MODULE MODULE_LAND
 
 ! Soil parameters
 
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
-       tcbeta_us,bulk_dens,a_ice,b_ice,xk0,bcgamm,srespar1,srespar2,&
-       srespar3,zdeep,zmid,zrzmax,&
+       zrzmax,&
 
 ! Moss parameters
 
@@ -207,25 +205,6 @@ MODULE MODULE_LAND
       !tkmidw
       
     !Soil Parameters
-      thetar = GRID_SOIL%thetar
-      thetas = GRID_SOIL%thetas
-      psic = GRID_SOIL%psic
-      bcbeta = GRID_SOIL%bcbeta
-      quartz = GRID_SOIL%quartz
-      ifcoarse = GRID_SOIL%ifcoarse
-      rocpsoil = GRID_SOIL%rocpsoil
-      tcbeta = GRID_VEG%tcbeta
-      tcbeta_us = GRID_VEG%tcbeta_us
-      bulk_dens = GRID_SOIL%bulk_dens
-      a_ice = GRID_SOIL%a_ice
-      b_ice = GRID_SOIL%b_ice
-      xk0 = GRID_SOIL%xk0
-      bcgamm = GRID_SOIL%bcgamm
-      srespar1 = GRID_SOIL%srespar1
-      srespar2 = GRID_SOIL%srespar2
-      srespar3 = GRID_SOIL%srespar3
-      zdeep = GRID_SOIL%zdeep
-      zmid = GRID_SOIL%zmid
       !zrzmax = GLOBAL%zrzmax
       
     !Vegetation parameters
@@ -384,7 +363,7 @@ MODULE MODULE_LAND
 ! parameters, as a centered difference.
 ! ====================================================================
 
-      call sm_cen_dif(iffroz,GRID_VARS%tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
+      call sm_cen_dif(iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,zrzmax,smtmp,rzsm,tzsm,smold,&
                       rzsmold,tzsmold)
 
 ! ====================================================================
@@ -392,8 +371,9 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call soiltherm(iopthermc,thermc1,thermc2,rzsm,smtmp,&
-       thetar,thetas,psic,bcbeta,GRID_VARS%tkmid,quartz,ifcoarse,&
-       heatcap1,heatcap2,heatcapold,rocpsoil,row,cph2o,roa,cp,roi,&
+       GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_VARS%tkmid,&
+       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,&
+       heatcap1,heatcap2,heatcapold,GRID_SOIL%rocpsoil,row,cph2o,roa,cp,roi,&
        smold,thermc,heatcap,inc_frozen,rzdthetaudtemp)
 
 ! ====================================================================
@@ -401,7 +381,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       if (GRID_VEG%ivgtyp.ne.0) then
-         call soiladapt(iopgveg,thermc,iopthermc_v,tcbeta,&
+         call soiladapt(iopgveg,thermc,iopthermc_v,GRID_VEG%tcbeta,&
                         xlai,thermc1,heatcap,heatcap1,zero)
 
       endif
@@ -434,8 +414,8 @@ MODULE MODULE_LAND
       if (inc_frozen.eq.1) then
 
          call ice_change(ipix,rzdthetaidt,tzdthetaidt,GRID_VEG%f_moss,GRID_VEG%f_und,&
-       GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,rzsm1_f,tzsm1_f,bulk_dens,&
-       a_ice,b_ice,row,roi,rzsm1_u,rzsm1,tzsm1_u,tzsm1,thetas,thetar,&
+       GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,rzsm1_f,tzsm1_f,GRID_SOIL%bulk_dens,&
+       GRID_SOIL%a_ice,GRID_SOIL%b_ice,row,roi,rzsm1_u,rzsm1,tzsm1_u,tzsm1,GRID_SOIL%thetas,GRID_SOIL%thetar,&
        rzdthetaudtemp,dt,rzsm_f,tzsm_f,tsoilold)
 
       endif
@@ -449,9 +429,9 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call states(zw0,inc_frozen,GRID_VEG%i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
-       r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff,atanb,xlamda,psic,&
-       zrz,ztz,rzsm1,tzsm1,thetas,zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,&
-       tzsm1_u,rzsm1_f,tzsm1_f,tsoilold,bulk_dens,a_ice,b_ice,&
+       r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff,atanb,xlamda,GRID_SOIL%psic,&
+       zrz,ztz,rzsm1,tzsm1,GRID_SOIL%thetas,zrzmax,iopsmini,GRID_SOIL%thetar,GRID_SOIL%bcbeta,rzsm1_u,&
+       tzsm1_u,rzsm1_f,tzsm1_f,tsoilold,GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
        row,rzsmold,tzsmold,r_mossmold,rzsm,tzsm,r_mossm1,zmoss,r_moss_depth,&
        thetas_moss,rzsm_u,rzsm_f,tzsm_u,tzsm_f,r_mossm1_u,&
        r_mossm1_f,i,a_ice_moss,b_ice_moss,bulk_dens_moss)
@@ -467,8 +447,8 @@ MODULE MODULE_LAND
 
          call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,PackWater_us,SurfWater_us,Swq_us,&
        Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,Outflow,&
-       istmst,cuminf,inc_frozen,rzsmst,rzsm,rzsm_u,thetas,thetar,&
-       tolinf,sorp,xk0,psic,bcgamm,bcbeta,deltrz,cc,zw,xinact,satxr,xinfxr,&
+       istmst,cuminf,inc_frozen,rzsmst,rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
+       tolinf,sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,cc,zw,xinact,satxr,xinfxr,&
        intstm,xinfcp,runtot,irntyp)
 
 ! ====================================================================
@@ -487,13 +467,13 @@ MODULE MODULE_LAND
 ! In case of absence of a snow pack, solve the energy balance for
 ! the bare soil.
 ! --------------------------------------------------------------------
-            call ebsres(inc_frozen,irestype,rsoil,rzsm,srespar1,GRID_VARS%tkact,&
-       srespar2,rzsm_u,srespar3,ravd,iffroz,thetas,GRID_VARS%tkmid,&
-       zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
-       iopthermc,thermc1,thermc2,thetar,heatcapold,psic,bcbeta,&
-       quartz,heatcap1,ifcoarse,heatcap2,rocpsoil,row,cph2o,roa,cp,&
+            call ebsres(inc_frozen,irestype,rsoil,rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
+       GRID_SOIL%srespar2,rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
+       GRID_SOIL%zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
+       iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
+       GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,row,cph2o,roa,cp,&
        roi,thermc,heatcap,rzdthetaudtemp,GRID_VARS%dshact,GRID_VEG%albd,emiss,rahd,ebscap,&
-       tcel,vppa,psychr,xlhv,zdeep,Tdeepstep,GRID_MET%rsd,GRID_MET%rld,toleb,maxnri,dt,i,tkel,&
+       tcel,vppa,psychr,xlhv,GRID_SOIL%zdeep,Tdeepstep,GRID_MET%rsd,GRID_MET%rld,toleb,maxnri,dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,zpd,z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
        bsdew,z0h,ioppet)
@@ -524,7 +504,7 @@ MODULE MODULE_LAND
             if (Swq.lt.(0.d0)) tsnow=tcel+273.15d0
 
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
-       tkactd,tkmidactd,tsnow,zdeep,Tdeepstep,zmid,dt,dum)
+       tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,Tdeepstep,GRID_SOIL%zmid,dt,dum)
 
             GRID_VARS%rnact=rn_snow
             GRID_VARS%xleact=xleact_snow
@@ -549,8 +529,8 @@ MODULE MODULE_LAND
          call transv(epetd,epetd_us,GRID_VEG%i_und,iopveg,f1par,f3vpd,f4temp,&
        rescan,inc_frozen,GRID_VEG%ivgtyp,rzsm,rzsm_u,tc,tw,smcond,tzsm,tzsm_u,&
        tc_us,tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,rescan_us,&
-       vegcap,ravd,vegcap_us,ravd_us,zrz,srzrel,thetas,thetar,psisoi,&
-       psic,bcbeta,ikopt,xksrz,xk0,ff,ressoi,rtact,rtdens,psicri,&
+       vegcap,ravd,vegcap_us,ravd_us,zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
+       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,ff,ressoi,rtact,rtdens,psicri,&
        respla,xkrz,ztz,stzrel,xkstz,xktz,Swq,GRID_VARS%evtact,GRID_VARS%ievcon,Swq_us,evtact_us,&
        ievcon_us,bsdew,i,ipix)
 
@@ -566,7 +546,7 @@ MODULE MODULE_LAND
          tzsm_test=tzsm
          rzsm_u_test=rzsm
          tzsm_u_test=tzsm
-         thetas_add=thetas
+         thetas_add=GRID_SOIL%thetas
 
       endif
 
@@ -576,7 +556,7 @@ MODULE MODULE_LAND
          tzsm_test=tzsm_u
          rzsm_u_test=rzsm_u
          tzsm_u_test=tzsm_u
-         thetas_add=thetas-rzsm_f
+         thetas_add=GRID_SOIL%thetas-rzsm_f
 
       endif
 
@@ -585,7 +565,7 @@ MODULE MODULE_LAND
        zrz,ztz,zw0,zrzmax,&
        GRID_VARS%evtact,evtact_us,bsdew,dewrun,grz,gtz,diftz,difrz,&
        satxr,runtot,xinact,cuminf,&
-       ff,thetar,thetas_add,bcbeta,xk0,psic,&
+       ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        Swq,Swq_us,&
        dc,GRID_VEG%i_und,GRID_VEG%i_moss,fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,dstz,dsrz,&
        tzrhs,rzrhs)
@@ -620,12 +600,12 @@ MODULE MODULE_LAND
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,xlhv,row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
-       bsdew,ioppet,iffroz,GRID_VARS%tkmid,zmid,zrzmax,smtmp,rzsm,&
-       tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thetar,thetas,psic,&
-       bcbeta,quartz,ifcoarse,heatcap1,rocpsoil,cph2o,roa,cp,roi,thermc,&
-       rzdthetaudtemp,iopgveg,iopthermc_v,tcbeta,xlai,GRID_VARS%tkact,&
+       bsdew,ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,zrzmax,smtmp,rzsm,&
+       tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
+       GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,cph2o,roa,cp,roi,thermc,&
+       rzdthetaudtemp,iopgveg,iopthermc_v,GRID_VEG%tcbeta,xlai,GRID_VARS%tkact,&
        i_2l,f1,f2,f3,emiss,rescan,ravd,rahd,rnactd,&
-       hactd,gactd,dshactd,tcel,vppa,psychr,zdeep,Tdeepstep,&
+       hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,&
@@ -646,12 +626,13 @@ MODULE MODULE_LAND
        rnact_us,xleact_us,hact_us,gact_us,dshact_us,tkact_us,&
        tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
        gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,xlai_us,&
-       dc_us,fw_us,trlup,ipix,xlhv_ic,row,evtact_us,iffroz_us,GRID_VARS%tkmid,zmid,&
+       dc_us,fw_us,trlup,ipix,xlhv_ic,row,evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        zrzmax,smtmp,rzsm,tzsm,smold,rzsmold,tzsmold,iopthermc,&
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,cph2o,roa,cp,roi,&
-       thermc,inc_frozen,rzdthetaudtemp,iopgveg,thermc_us,iopthermc_v,tcbeta_us,&
+       GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
+       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,cph2o,roa,cp,roi,&
+       thermc,inc_frozen,rzdthetaudtemp,iopgveg,thermc_us,iopthermc_v,GRID_VEG%tcbeta_us,&
        xlai,f3,GRID_VEG%albd_us,emiss_us,ravd_us,rahd_us,rescan_us,tcel_ic,vppa_ic,&
-       roa_ic,psychr_ic,zdeep,Tdeepstep,r_sdn,r_ldn,toleb,maxnri,dt,i,&
+       roa_ic,psychr_ic,GRID_SOIL%zdeep,Tdeepstep,r_sdn,r_ldn,toleb,maxnri,dt,i,&
        GRID_MET%rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
        ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
        r_mossm,tskinact_moss,tkact_moss,tkmid_moss,hactd_moss,gactd_moss,&

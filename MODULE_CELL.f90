@@ -517,10 +517,7 @@ xlamda = CAT%xlamda
        ds_p_moss,&
 
 ! Soil parameters
-
-       thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
-       tcbeta_us,bulk_dens,a_ice,b_ice,xk0,bcgamm,&
-       srespar1,srespar2,srespar3,zdeep,zmid,zrzmax,&
+       zrzmax,&
 
 ! Moss parameters
 
