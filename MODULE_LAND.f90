@@ -40,7 +40,7 @@ MODULE MODULE_LAND
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,&
+       alb_snow,&
 
 ! Meteorological data
 
@@ -160,11 +160,8 @@ MODULE MODULE_LAND
       !dens_us = GRID_VARS%dens_us
       
     !Albedos of the over story, under story, and moss layer
-      albd_us = GRID_VEG%albd_us
-      alb_moss = GRID_VEG%alb_moss
       !alb_snow = GRID_VEG%alb_snow
-      albd = GRID_VEG%albd
-
+      
     !Meteorological data
       rsd = GRID_MET%rsd
       rld = GRID_MET%rld
@@ -401,7 +398,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call calc_rs(GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,Swq_us,&
-                   alb_moss,alb_snow,rsd,rs_over,rs_under)
+                   GRID_VEG%alb_moss,alb_snow,rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize soil moisture for the calculation of the thermodynami!
@@ -516,7 +513,7 @@ MODULE MODULE_LAND
        zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
        iopthermc,thermc1,thermc2,thetar,heatcapold,psic,bcbeta,&
        quartz,heatcap1,ifcoarse,heatcap2,rocpsoil,row,cph2o,roa,cp,&
-       roi,thermc,heatcap,rzdthetaudtemp,dshact,albd,emiss,rahd,ebscap,&
+       roi,thermc,heatcap,rzdthetaudtemp,dshact,GRID_VEG%albd,emiss,rahd,ebscap,&
        tcel,vppa,psychr,xlhv,zdeep,Tdeepstep,rsd,rld,toleb,maxnri,dt,i,tkel,&
        zww,za,uzw,zpd,z0m,press,rib,rnetpn,gbspen,epetd,evtact,ievcon,&
        bsdew,z0h,ioppet)
@@ -649,7 +646,7 @@ MODULE MODULE_LAND
        rzdthetaudtemp,iopgveg,iopthermc_v,tcbeta,xlai,tkact,&
        i_2l,f1,f2,f3,emiss,rescan,ravd,rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,zdeep,Tdeepstep,&
-       rsd,r_lup,rld,toleb,maxnri,dt,i,albd,r_sdn,rnetpn,&
+       rsd,r_lup,rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,rnetpn,&
        gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,rnact,xleact,hact,&
        gact,dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,&
        ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
@@ -673,12 +670,12 @@ MODULE MODULE_LAND
        zrzmax,smtmp,rzsm,tzsm,smold,rzsmold,tzsmold,iopthermc,&
        thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,cph2o,roa,cp,roi,&
        thermc,inc_frozen,rzdthetaudtemp,iopgveg,thermc_us,iopthermc_v,tcbeta_us,&
-       xlai,f3,albd_us,emiss_us,ravd_us,rahd_us,rescan_us,tcel_ic,vppa_ic,&
+       xlai,f3,GRID_VEG%albd_us,emiss_us,ravd_us,rahd_us,rescan_us,tcel_ic,vppa_ic,&
        roa_ic,psychr_ic,zdeep,Tdeepstep,r_sdn,r_ldn,toleb,maxnri,dt,i,&
        rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
        ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
        r_mossm,tskinact_moss,tkact_moss,tkmid_moss,hactd_moss,gactd_moss,&
-       dshactd_moss,rav_moss,rah_moss,r_moss_depth,alb_moss,&
+       dshactd_moss,rav_moss,rah_moss,r_moss_depth,GRID_VEG%alb_moss,&
        rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
        g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,zmoss,&
        thetas_moss,rnact_moss,xleact_moss,hact_moss,&

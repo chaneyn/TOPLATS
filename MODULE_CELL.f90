@@ -492,7 +492,7 @@ xlamda = CAT%xlamda
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd_us,alb_moss,alb_snow,albd,&
+       alb_snow,&
 
 ! Meteorological data
 
