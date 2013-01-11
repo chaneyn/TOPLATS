@@ -176,23 +176,7 @@ contains
 ! Read in and initialize vegatation parameters.
 ! ====================================================================
 
-      call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GRID%VEG%ilandc,&
-       IO%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
-       GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
-       GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
-       GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
-       GRID%VEG%zpd,GRID%VEG%rsmin,GRID%VEG%rsmax,&
-       GRID%VEG%Rpl,GRID%VEG%f3vpdpar,GRID%VEG%f4temppar,&
-       GRID%VEG%trefk,GRID%VEG%tcbeta,GRID%VEG%extinct,&
-       GRID%VEG%canclos,GRID%VEG%Tslope1,GRID%VEG%Tint1,&
-       GRID%VEG%Tslope2,GRID%VEG%Tint2,GRID%VEG%Twslope1,&
-       GRID%VEG%Twint1,GRID%VEG%Twslope2,GRID%VEG%Twint2,&
-       GRID%VEG%Tsep,GRID%VEG%Twsep,GRID%VEG%eps,&
-       GRID%VEG%rtact,GRID%VEG%rtdens,GRID%VEG%rtres,&
-       GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
-       GRID%VEG%wsc,GRID%VARS%wcip1,&
-       GLOBAL%pixsiz,CAT%area,CAT%fbs,&
-       REG%fbsrg,GLOBAL%ncatch,GLOBAL,CAT,GRID,REG)
+       call rdveg(GLOBAL,CAT,GRID,REG,IO)
 
       print*,'rddata:  Done reading vegetation parameters'
 
@@ -762,29 +746,72 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,&
-       xlai,xlai_wsc,albd,albw,emiss,za,zww,z0m,z0h,zpd,rsmin,rsmax,Rpl,&
-       f3vpdpar,f4temppar,trefk,tcbeta,extinct,canclos,Tslope1,Tint1,&
-       Tslope2,Tint2,Twslope1,Twint1,Twslope2,Twint2,Tsep,Twsep,&
-       eps,&
-       rtact,rtdens,rtres,psicri,&
-       rescan,respla,wsc,wcip1,&
-       pixsiz,area,fbs,fbsrg,ncatch,GLOBAL,CAT,GRID,REG)
+      subroutine rdveg(GLOBAL,CAT,GRID,REG,IO)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
       include "help/rdveg.h"
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
       type (REGIONAL_template),intent(inout) :: REG
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (IO_template),intent(inout) :: IO
       type (VegDataTemplate) :: VegData
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
       vegnvars = 20
       dvegnvars = 2
+      npix = GLOBAL%npix
+      nrow = GLOBAL%nrow
+      ncol = GLOBAL%ncol
+      ilandc = GRID%VEG%ilandc
+      ipixnum = IO%ipixnum
+      nlandc = GLOBAL%nlandc 
+      iopveg = GLOBAL%iopveg
+      ivgtyp = GRID%VEG%ivgtyp
+      xlai = GRID%VEG%xlai
+      xlai_wsc = GRID%VEG%xlai_wsc
+      albd = GRID%VEG%albd
+      albw = GRID%VEG%albw
+      emiss = GRID%VEG%emiss
+      za = GRID%VEG%za
+      zww = GRID%VEG%zww
+      z0m = GRID%VEG%z0m
+      z0h = GRID%VEG%z0h
+      zpd = GRID%VEG%zpd
+      rsmin = GRID%VEG%rsmin
+      rsmax = GRID%VEG%rsmax
+      Rpl = GRID%VEG%Rpl
+      f3vpdpar = GRID%VEG%f3vpdpar
+      f4temppar = GRID%VEG%f4temppar
+      trefk = GRID%VEG%trefk
+      tcbeta = GRID%VEG%tcbeta
+      extinct = GRID%VEG%extinct
+      canclos = GRID%VEG%canclos
+      Tslope1 = GRID%VEG%Tslope1
+      Tint1 = GRID%VEG%Tint1
+      Tslope2 = GRID%VEG%Tslope2
+      Tint2 = GRID%VEG%Tint2
+      Twslope1 = GRID%VEG%Twslope1
+      Twint1 = GRID%VEG%wsc
+      Twslope2 = GRID%VEG%Twslope2
+      Twint2 = GRID%VEG%Twint2
+      Tsep = GRID%VEG%Tsep
+      Twsep = GRID%VEG%Twsep
+      eps = GRID%VEG%eps
+      rtact = GRID%VEG%rtact
+      rtdens = GRID%VEG%rtdens
+      rtres = GRID%VEG%rtres
+      psicri = GRID%VEG%psicri
+      rescan = GRID%VEG%rescan
+      respla = GRID%VEG%respla
+      wsc = GRID%VEG%wsc
+      wcip1 = GRID%VARS%wcip1
+      pixsiz = GLOBAL%pixsiz
+      area = CAT%area
+      fbs = CAT%fbs
+      fbsrg = REG%fbsrg
+      ncatch = GLOBAL%ncatch
       allocate(TempArray(ncol,nrow,vegnvars))
 
 ! ====================================================================
@@ -1030,6 +1057,55 @@ end subroutine Write_Regional
 570   continue
 
       print*,"rdveg:  Calculated fractional covers for bare soil"        
+
+      GLOBAL%nlandc = nlandc
+      GLOBAL%iopveg = iopveg
+      GRID%VEG%ivgtyp = ivgtyp
+      GRID%VEG%ilandc = ilandc
+      IO%ipixnum = ipixnum
+      GRID%VEG%xlai = xlai
+      GRID%VEG%xlai_wsc = xlai_wsc
+      GRID%VEG%albd = albd
+      GRID%VEG%albw = albw
+      GRID%VEG%emiss = emiss
+      GRID%VEG%za = za
+      GRID%VEG%zww = zww
+      GRID%VEG%z0m = z0m
+      GRID%VEG%z0h = z0h
+      GRID%VEG%zpd = zpd
+      GRID%VEG%rsmin = rsmin
+      GRID%VEG%rsmax = rsmax
+      GRID%VEG%Rpl = Rpl
+      GRID%VEG%f3vpdpar = f3vpdpar
+      GRID%VEG%f4temppar = f4temppar
+      GRID%VEG%trefk = trefk
+      GRID%VEG%tcbeta = tcbeta
+      GRID%VEG%extinct = extinct
+      GRID%VEG%canclos = canclos
+      GRID%VEG%Tslope1 = Tslope1
+      GRID%VEG%Tint1 = Tint1
+      GRID%VEG%Tslope2 = Tslope2
+      GRID%VEG%Tint2 = Tint2
+      GRID%VEG%Twslope1 = Twslope1
+      GRID%VEG%Twint1 = wsc
+      GRID%VEG%Twslope2 = Twslope2
+      GRID%VEG%Twint2 = Twint2
+      GRID%VEG%Tsep = Tsep
+      GRID%VEG%Twsep = Twsep
+      GRID%VEG%eps = eps
+      GRID%VEG%rtact = rtact
+      GRID%VEG%rtdens = rtdens
+      GRID%VEG%rtres = rtres
+      GRID%VEG%psicri = psicri
+      GRID%VEG%rescan = rescan
+      GRID%VEG%respla = respla
+      GRID%VEG%wsc = wsc
+      GRID%VARS%wcip1 = wcip1
+      GLOBAL%pixsiz = pixsiz
+      CAT%area = area
+      CAT%fbs = fbs
+      REG%fbsrg = fbsrg
+      GLOBAL%ncatch = ncatch
 
       return
 
