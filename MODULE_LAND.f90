@@ -95,15 +95,6 @@ MODULE MODULE_LAND
        deltrz,&
        dc_us,fw_us,dewrun,&
 
-! Storm parameters
-
-       istmst,intstm,istmst_moss,intstm_moss,intstp,istorm,&
-
-! Topmodel parameters
-
-       ff,atanb,xlamda,&
-
-
 ! Regional saturation parameters
 
        fwcat,fwreg,pr3sat,perrg2,pr2sat,pr2uns,perrg1,pr1sat,&
@@ -239,20 +230,7 @@ MODULE MODULE_LAND
       !dc_us
       !fw_us
       !dewrun
-      
-    !Storm Parameters
-      istmst = GRID_VARS%istmst
-      intstm = GRID_VARS%intstm
-      istmst_moss = GRID_VARS%istmst_moss
-      intstm_moss = GRID_VARS%intstm_moss
-      intstp = GRID_VARS%intstp
-      istorm = GRID_VARS%istorm
-      
-    !TOPMODEL Parameters
-      ff = CAT%ff
-      atanb = GRID_VARS%atanb
-      xlamda = CAT%xlamda
-      
+                  
     !Different option parameters
       !iopthermc = GLOBAL%iopthermc
       !iopthermc_v = GLOBAL%iopthermc_v
@@ -355,7 +333,8 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call states(zw0,inc_frozen,GRID_VEG%i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
-       GRID_VARS%r_mossm_u,GRID_VARS%r_mossm_f,GRID_VARS%r_mossm,GRID_VARS%zw,CAT%zbar,ff,atanb,xlamda,GRID_SOIL%psic,&
+       GRID_VARS%r_mossm_u,GRID_VARS%r_mossm_f,GRID_VARS%r_mossm,GRID_VARS%zw,CAT%zbar,&
+       CAT%ff,GRID_VARS%atanb,CAT%xlamda,GRID_SOIL%psic,&
        GRID_VARS%zrz,GRID_VARS%ztz,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_SOIL%thetas,zrzmax,iopsmini,&
        GRID_SOIL%thetar,GRID_SOIL%bcbeta,GRID_VARS%rzsm1_u,&
        GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,tsoilold,GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
@@ -375,10 +354,10 @@ MODULE MODULE_LAND
 
          call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,PackWater_us,SurfWater_us,Swq_us,&
        Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,Outflow,&
-       istmst,GRID_VARS%cuminf,inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
+       GRID_VARS%istmst,GRID_VARS%cuminf,inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
        tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
        GRID_VARS%zw,GRID_VARS%xinact,GRID_VARS%satxr,GRID_VARS%xinfxr,&
-       intstm,xinfcp,GRID_VARS%runtot,GRID_VARS%irntyp)
+       GRID_VARS%intstm,xinfcp,GRID_VARS%runtot,GRID_VARS%irntyp)
 
 ! ====================================================================
 ! Calculate actual rate of evaporation.
@@ -459,7 +438,7 @@ MODULE MODULE_LAND
        GRID_VEG%rescan,inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,smcond,GRID_VARS%tzsm,tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
-       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,ff,ressoi,GRID_VEG%rtact,GRID_VEG%rtdens,GRID_VEG%psicri,&
+       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,Swq,GRID_VARS%evtact,GRID_VARS%ievcon,Swq_us,evtact_us,&
        ievcon_us,bsdew,i,ipix)
 
@@ -494,7 +473,7 @@ MODULE MODULE_LAND
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,zrzmax,&
        GRID_VARS%evtact,evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
-       ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
+       CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        Swq,Swq_us,&
        GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
        GRID_VARS%tzrhs,GRID_VARS%rzrhs)

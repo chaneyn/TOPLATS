@@ -543,14 +543,6 @@ xlamda = CAT%xlamda
        rzsm_u,tzsm_u,r_mossmold,&
        pnet,deltrz,dc_us,fw_us,dewrun,&
 
-! Storm parameters
-
-       istmst,intstm,istmst_moss,intstm_moss,intstp,istorm,&
-
-! Topmodel parameters
-
-       ff,atanb,xlamda,&
-
 ! Regional saturation parameters
 
        fwcat,fwreg,pr3sat,perrg2,pr2sat,pr2uns,perrg1,pr1sat,&
