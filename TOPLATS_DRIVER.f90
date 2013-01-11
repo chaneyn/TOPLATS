@@ -13,24 +13,21 @@ PROGRAM TOPLATS_DRIVER
 !
 ! ====================================================================
 
-!Module containing the unit tests
-USE FRUIT
-
 !Module containing all the variables used in the model
 USE MODULE_VARIABLES
 
-!Module containing all the tests
-USE MODULE_TESTS,ONLY: lswb
-
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
-                    file_close
+                    file_close,Write_Regional
 
 !Module containing topmodel
-USE MODULE_TOPMODEL,ONLY: instep,catflx,upzbar,sumflx,Update_Catchment
+USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
+
+!Module containing regional subroutines
+USE MODULE_REGIONAL,ONLY: Update_Regional
 
 !Module containing the cell model
-USE MODULE_CELL,ONLY: Update_Cell
+USE MODULE_CELL,ONLY: Update_Cells
 
 implicit none
 type (GLOBAL_template) :: GLOBAL
@@ -40,12 +37,6 @@ type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
 integer :: i,ic,ipix,isoil,ilandc,icatch
 GLOBAL%nthreads = 8
-
-!####################################################################
-! Initialize unit testing
-!####################################################################
-
-call init_fruit
 
 !####################################################################
 ! Open all files
@@ -76,10 +67,16 @@ do i=1,GLOBAL%ndata
   if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID)
 
 !#####################################################################
+! Update the decimal Julian day.
+!#####################################################################
+
+  GLOBAL%djday = GLOBAL%djday + 0.0416666667d0*2.777777777d-4*GLOBAL%dt
+
+!#####################################################################
 ! Initialize water balance variables for the time step.
 !#####################################################################
 
-  call instep(i,GLOBAL%ncatch,GLOBAL%djday,GLOBAL%dt,REG,CAT)
+  call instep_catchment(GLOBAL%ncatch,CAT)
 
 !#####################################################################
 ! Read meteorological data.
@@ -88,70 +85,35 @@ do i=1,GLOBAL%ndata
   call rdatmo(i,GRID%MET,GLOBAL,IO)
 
 !#####################################################################
-! Loop through each grid cell
+! Update each grid cell
 !#####################################################################
 
-  call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
-
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix,isoil,ilandc,icatch) 
-!$OMP DO SCHEDULE(DYNAMIC) ORDERED
-
-  do ipix=1,GLOBAL%npix
-
-    isoil = GRID(ipix)%SOIL%isoil
-    ilandc = GRID(ipix)%VEG%ilandc
-    icatch = GRID(ipix)%VARS%icatch
+  call Update_Cells(GRID,CAT,GLOBAL,i)
 
 !#####################################################################
-! Update the current grid cell
+! Update the catchments
 !#####################################################################
 
-    call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-       GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
-       REG,CAT(icatch),GLOBAL)
+  call Update_Catchments(GLOBAL,CAT,GRID)
 
 !#####################################################################
-! Sum the local water and energy balance fluxes.
+! Update regional variables
 !#####################################################################
 
-    call sumflx(REG,CAT(icatch),GRID(ipix)%VARS,GLOBAL,& 
-       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-       ilandc)
-
-  enddo
-
-!$OMP END DO
-!$OMP END PARALLEL
+  call Update_Regional(REG,GRID,GLOBAL,CAT)
 
 !#####################################################################
-! Loop through each catchment and update with the catchment module
+! Output regional variables
 !#####################################################################
 
-  do ic=1,GLOBAL%ncatch
-
-    call Update_Catchment(GLOBAL,CAT(ic),GRID,REG,ic)
-
-  enddo
-
-!#####################################################################
-! Run Tests to compare to previous model
-!#####################################################################
-
-  call lswb(i,REG,GLOBAL,GRID)
+  call Write_Regional(i,REG)
 
 enddo
 
-! ####################################################################
+!#####################################################################
 ! Close all files
-! ####################################################################
+!#####################################################################
 
 call FILE_CLOSE()
-
-! ####################################################################
-! Finalize unit testing and print summary
-! ####################################################################
-
-call fruit_summary
-call fruit_finalize
 
 END PROGRAM
