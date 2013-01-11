@@ -347,7 +347,7 @@ xlamda = CAT%xlamda
 
 ! General vegetation parameters
 
-       GRID_VEG,i_und,i_moss,ivgtyp,&
+       GRID_VEG,ivgtyp,&
 
 ! Snow pack variables
 

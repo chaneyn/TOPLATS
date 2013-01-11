@@ -37,7 +37,7 @@ contains
 
 ! General vegetation parameters
 
-       GRID_VEG,i_und,i_moss,ivgtyp,&
+       GRID_VEG,ivgtyp,&
 
 ! Snow pack variables
 
@@ -128,8 +128,8 @@ contains
 !General Vegetation parameters
 !canclos = GRID_VEG%canclos
 !extinct = GRID_VEG%extinct
-i_und = GRID_VEG%i_und
-i_moss = GRID_VEG%i_moss
+!i_und = GRID_VEG%i_und
+!i_moss = GRID_VEG%i_moss
 ivgtyp = GRID_VEG%ivgtyp
 
 !Snow Pack variables
@@ -521,7 +521,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! General vegetation parameters
 
-       GRID_VEG,i_und,i_moss,ivgtyp,&
+       GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,ivgtyp,&
 
 ! Snow pack variables
 
@@ -601,10 +601,10 @@ iopsmini = GLOBAL%iopsmini
       endif
 
       !General Vegetation Parameters
-      GRID_VEG%canclos = canclos
-      GRID_VEG%extinct = extinct
-      GRID_VEG%i_und = i_und
-      GRID_VEG%i_moss = i_moss
+      !GRID_VEG%canclos = canclos
+      !GRID_VEG%extinct = extinct
+      !GRID_VEG%i_und = i_und
+      !GRID_VEG%i_moss = i_moss
       GRID_VEG%ivgtyp = ivgtyp
 
       !Snow Pack variables
@@ -1123,11 +1123,11 @@ dspet = GRID_VARS%dspet
       include "help/peteb.h"
 
 
-      type (GRID_MET_template),intent(in) :: GRID_MET
-      type (GRID_VEG_template),intent(in) :: GRID_VEG
+      type (GRID_MET_template),intent(inout) :: GRID_MET
+      type (GRID_VEG_template),intent(inout) :: GRID_VEG
       type (GRID_VARS_template),intent(inout) :: GRID_VARS
-      type (GRID_SOIL_template),intent(in) :: GRID_SOIL
-      type (GLOBAL_template),intent(in) :: GLOBAL
+      type (GRID_SOIL_template),intent(inout) :: GRID_SOIL
+      type (GLOBAL_template),intent(inout) :: GLOBAL
 
 
 !General Vegetation parameters
