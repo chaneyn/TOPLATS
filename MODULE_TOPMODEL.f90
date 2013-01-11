@@ -18,24 +18,39 @@ contains
 !
 ! ====================================================================
 
-  subroutine Update_Catchment(GLOBAL,CAT,GRID,REG,ic)
+  subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
     implicit none
     type (GLOBAL_template),intent(in) :: GLOBAL
     type (GRID_template),dimension(:),intent(inout) :: GRID
-    type (CATCHMENT_template),intent(inout) :: CAT
-    type (REGIONAL_template),intent(inout) :: REG
-    integer :: ic
+    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+    integer :: icatch,isoil,ilandc
 
-    call catflx(GLOBAL%pixsiz,CAT)
+    do ipix = 1,GLOBAL%npix
 
-    call upzbar(ic,CAT,GLOBAL,GRID,REG)
+      isoil = GRID(ipix)%SOIL%isoil
+      ilandc = GRID(ipix)%VEG%ilandc
+      icatch = GRID(ipix)%VARS%icatch
 
-  end subroutine Update_Catchment
+      call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
+         GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
+         ilandc)
+
+    enddo
+
+    do icatch = 1,GLOBAL%ncatch
+
+      call catflx(GLOBAL%pixsiz,CAT(icatch))
+
+      call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
+  
+    enddo 
+
+  end subroutine Update_Catchments
 
 ! ====================================================================
 !
-!		subroutine instep
+!		subroutine instep_catchment
 !
 ! ====================================================================
 !
@@ -43,137 +58,11 @@ contains
 !
 ! ====================================================================
 
-  subroutine instep(i,ncatch,djday,dt,REG,CAT)
+  subroutine instep_catchment(ncatch,CAT)
 
       implicit none
       include "help/instep.h"
-      type (REGIONAL_template) :: REG
-      type (CATCHMENT_template),dimension(:),allocatable :: CAT
-
-! ====================================================================
-! Update the decimal Julian day.
-! ====================================================================
-
-      djday = djday + 0.0416666667d0*2.777777777d-4*dt
-
-! ====================================================================
-! Initialize snow water equivalent sums.
-! ====================================================================
-
-      REG%Swqsum = zero
-      REG%Swq_ussum = zero
-      REG%Sdepthsum = zero
-      REG%Sdepth_ussum = zero
-
-! ====================================================================
-! Initialize regional state variables.
-! ====================================================================
-
-      REG%fwreg = zero
-      REG%rzsmav = zero
-      REG%tzsmav = zero
-      REG%wcsum = REG%wcip1sum
-      REG%wcip1sum = zero
-
-! ====================================================================
-! Initialize regional evaporation sums.
-! ====================================================================
-
-      REG%ettotrg = zero
-      REG%etstsumrg = zero
-      REG%etwtsumrg = zero
-      REG%etbssumrg = zero
-      REG%etdcsumrg = zero
-      REG%etwcsumrg = zero
-      REG%etlakesumrg = zero
-
-! ====================================================================
-! Initialize regional condensation and precipitation sums.
-! ====================================================================
-
-      REG%pptsumrg = zero
-      REG%pnetsumrg = zero
-      REG%contotrg = zero
-
-! ====================================================================
-! Initialize regional infiltration/runoff and baseflow sums.
-! ====================================================================
-
-      REG%sxrtotrg = zero
-      REG%xixtotrg = zero
-      REG%qsurfrg = zero
-      REG%ranrunrg = zero
-      REG%conrunrg = zero
-      REG%qbreg = zero
-
-! ====================================================================
-! Initialize regional vertical moisture flux sums and water table.
-! ====================================================================
-
-      REG%capsumrg = zero
-      REG%difrzsumrg = zero
-      REG%gwtsumrg = zero
-      REG%grzsumrg = zero
-      REG%gtzsumrg = zero
-      REG%zbarrg = REG%zbar1rg
-      REG%zbar1rg = zero
-
-! ====================================================================
-! Initialize region water balance variables.
-! ====================================================================
-
-      REG%dswcsum = zero
-      REG%dsrzsum = zero
-      REG%dstzsum = zero
-      REG%dssum = zero
-      REG%wcrhssum = zero
-      REG%rzrhssum = zero
-      REG%tzrhssum = zero
-      REG%svarhssum = zero
-
-! ====================================================================
-! Initialize regional actual and potential energy fluxes.
-! ====================================================================
-
-      REG%rnsum = zero
-      REG%xlesum = zero
-      REG%hsum = zero
-      REG%gsum = zero
-      REG%tksum = zero
-      REG%dshsum = zero
-      REG%tkmidsum = zero
-      REG%tkdeepsum = zero
-
-      REG%rnpetsum = zero
-      REG%xlepetsum = zero
-      REG%hpetsum = zero
-      REG%gpetsum = zero
-      REG%tkpetsum = zero
-      REG%tkmidpetsum = zero
-      REG%dshpetsum = zero
-
-! ====================================================================
-! Initialize variables telling percent land coverages of various 
-! surface states.
-! ====================================================================
-
-      REG%perrg1 = zero
-      REG%perrg2 = zero
-      REG%pr3sat = zero
-
-      REG%pr2sat = zero
-      REG%pr2uns = zero
-      REG%pr1sat = zero
-      REG%pr1rzs = zero
-      REG%pr1tzs = zero
-      REG%pr1uns = zero
-
-      REG%persac = zero
-      REG%peruac = zero
-      REG%perusc = zero
-
-      REG%persxr = zero
-      REG%perixr = zero
+      type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
 
 ! ====================================================================
 ! Initialize variables for catchment average/total values
@@ -223,9 +112,10 @@ contains
          CAT(kk)%fwcat = zero
 
         enddo
+
         return
       
-      end subroutine instep
+      end subroutine instep_catchment
       
 ! ====================================================================
 !
@@ -392,13 +282,12 @@ contains
 !
 ! ====================================================================
 
-      subroutine upzbar(ic,CAT,GLOBAL,GRID,REG)
+      subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
       implicit none
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
       type (CATCHMENT_template),intent(inout) :: CAT
-      type (REGIONAL_template),intent(inout) :: REG
       include "help/upzbar.h"
 
       iopbf = GLOBAL%iopbf
@@ -429,8 +318,6 @@ contains
       thetas = GRID%SOIL%thetas 
       rzsm1 = GRID%VARS%rzsm1
       zbar1 = CAT%zbar1
-      qbreg = REG%qbreg
-      zbar1rg = REG%zbar1rg
       pixsiz = GLOBAL%pixsiz
 
 ! ====================================================================
@@ -551,8 +438,7 @@ contains
 ! ====================================================================
 
       CAT%zbar1 = zbar1
-      REG%qbreg = qbreg
-      REG%zbar1rg = zbar1rg
+      CAT%qb = qb
 
       return
 
@@ -569,17 +455,16 @@ contains
 !
 ! ====================================================================
 
-      subroutine sumflx(REG,CAT,GRID_VARS,GLOBAL,&
+      subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
        GRID_VEG,GRID_SOIL,GRID_MET,ilandc)
 
       implicit none
     
       include "help/sumflx.dif.h"
-      type (REGIONAL_template),intent(inout) :: REG
-      type (GRID_VARS_template),intent(inout) :: GRID_VARS
-      type (GRID_VEG_template),intent(inout) :: GRID_VEG
-      type (GRID_SOIL_template),intent(inout) :: GRID_SOIL
-      type (GRID_MET_template),intent(inout) :: GRID_MET
+      type (GRID_VARS_template),intent(in) :: GRID_VARS
+      type (GRID_VEG_template),intent(in) :: GRID_VEG
+      type (GRID_SOIL_template),intent(in) :: GRID_SOIL
+      type (GRID_MET_template),intent(in) :: GRID_MET
       type (CATCHMENT_template),intent(inout) :: CAT
       type (GLOBAL_template),intent(in) :: GLOBAL
 
@@ -663,7 +548,6 @@ inc_frozen = GLOBAL%inc_frozen
 
          etpixloc=evtact
          ettot = ettot + etpixloc*rescale
-         ettotrg = etpixloc*rescale
 
       else
 
@@ -679,7 +563,6 @@ inc_frozen = GLOBAL%inc_frozen
 
             etpixloc = evtact*dc*(one-fw) + epwms*dc
             ettot = ettot + etpixloc*rescale
-            ettotrg = etpixloc*rescale
 
          else
 
@@ -691,7 +574,6 @@ inc_frozen = GLOBAL%inc_frozen
             dummy = canclos*xleact+ f_und*xleact_us+ f_moss*xleact_moss
             etpixloc = dummy/xlhv
             ettot = ettot + etpixloc*rescale
-            ettotrg = etpixloc*rescale
 
          endif
 
@@ -751,9 +633,7 @@ inc_frozen = GLOBAL%inc_frozen
          etwt = etpixloc - etstore
          etpix=etpix+etpixloc*rescale
          etstsum = etstore*rescale
-         etstsumrg = etstore*rescale
          etwtsum = etwt*rescale
-         etwtsumrg = etwt*rescale
 
          if (ivgtyp.eq.0) then
 
@@ -762,7 +642,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! ====================================================================
 
             etbssum = evtact*rescale
-            etbssumrg = evtact*rescale
 
          else
 
@@ -777,9 +656,7 @@ inc_frozen = GLOBAL%inc_frozen
 ! --------------------------------------------------------------------&
 
                etdcsum = evtact*dc*(one-fw)*rescale
-               etdcsumrg = evtact*dc*(one-fw)*rescale
                etwcsum = epwms*dc*rescale
-               etwcsumrg = epwms*dc*rescale
 
             else
 
@@ -791,15 +668,9 @@ inc_frozen = GLOBAL%inc_frozen
                                        evtact*dc*(one-fw) +&
                                        f_und*evtact_us*dc_us*(one-fw_us) +&
                                        f_moss*evtact_moss)*rescale
-               etdcsumrg = ((1.-f_moss- f_und)*&
-                                       evtact*dc*(one-fw) +&
-                                       f_und*evtact_us*dc_us*(one-fw_us) +&
-                                       f_moss*evtact_moss)*rescale
 
                etwcsum = (epwms*dc* (1.-f_moss- f_und)+&
                                        epwms_us*dc_us*f_und)*rescale
-               etwcsumrg = (epwms*dc*(1.-f_moss-f_und)+&
-                                        epwms_us*dc_us*f_und)*rescale
 
             endif
 
@@ -846,18 +717,14 @@ inc_frozen = GLOBAL%inc_frozen
       endif
 
       contot = conpix*rescale
-      contotrg = conpix*rescale
 
 ! ====================================================================
 ! Compute total precipitation and surface runoff for the time step.
 ! ====================================================================
 
       pptsum = pptms*rescale
-      pptsumrg = pptms*rescale
       pnetsum = pnet*rescale
-      pnetsumrg = pnet*rescale
       qsurf = runtot*rescale
-      qsurfrg = runtot*rescale
 
 ! ====================================================================
 ! Compute total saturation and infiltration excess runoff for the
@@ -865,9 +732,7 @@ inc_frozen = GLOBAL%inc_frozen
 ! ====================================================================
 
       sxrtot = satxr *rescale
-      sxrtotrg = satxr *rescale
       xixtot = xinfxr*rescale
-      xixtotrg = xinfxr*rescale
 
 ! ====================================================================
 ! Compute total runoff due to rainfall and due to condensation.
@@ -880,7 +745,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! --------------------------------------------------------------------&
 
          ranrun = runtot*rescale
-         ranrunrg = runtot*rescale
 
       else
 
@@ -889,7 +753,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! --------------------------------------------------------------------&
 
          conrun = runtot *rescale
-         conrunrg = runtot *rescale
 
       endif  
 
@@ -899,15 +762,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! ====================================================================
 
       if (ivgtyp.ge.(0)) then
-
-         dswcsum = dswc*rescale
-         wcrhssum = wcrhs*rescale
-
-         dsrzsum = dsrz*rescale
-         rzrhssum = rzrhs*rescale
-
-         dstzsum = dstz*rescale
-         tzrhssum = tzrhs*rescale
 
 ! ====================================================================
 ! Compute drainage to the water table for time step.
@@ -952,17 +806,12 @@ inc_frozen = GLOBAL%inc_frozen
 
 
          gwtsum = gwt*rescale
-         gwtsumrg = gwt*rescale
-         grzsumrg = grz*rescale
-         gtzsumrg = gtz*rescale
 
 ! ====================================================================
 ! Compute the diffusion totals for the time step.
 ! ====================================================================
 
          capsum = - difwt*rescale
-         capsumrg =  - difwt*rescale
-         difrzsumrg =  - difrz*rescale
 
 ! ====================================================================
 ! Compute change in storage above the water table for the time step 
@@ -970,7 +819,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! ====================================================================
 
          dstore = dswc + dsrz + dstz
-         dssum = dstore
 
 ! ====================================================================
 ! Add up all the input terms towards the water table and make the
@@ -979,8 +827,6 @@ inc_frozen = GLOBAL%inc_frozen
 
 
          svarhs = dt*(pptms - etstore - runtot - gwt - difwt)
-
-         svarhssum = svarhs*rescale
 
 ! ====================================================================
 ! Compute average soil moistures for the end of the time step.
@@ -997,20 +843,6 @@ inc_frozen = GLOBAL%inc_frozen
             tzsm1_u=tzsm1
 
          endif
-
-         rzsmav = rzsm1*rescale
-         tzsmav = tzsm1*rescale
-         Swqsum = Swq*rescale
-         Swq_ussum = Swq_us*rescale
-         Sdepthsum = Sdepth*rescale
-         Sdepth_ussum = Sdepth_us*rescale
-
-
-! ====================================================================
-! Make a regional total of canopy interception storage.
-! ====================================================================
-
-         wcip1sum = wcip1*rescale
 
 ! ====================================================================
 ! Compute available porosity in root and transmission zones .or.&
@@ -1075,19 +907,6 @@ inc_frozen = GLOBAL%inc_frozen
       endif
 
 ! ====================================================================
-! Compute regional average energy fluxes at PET.
-! ====================================================================
-
-      rnpetsum = rnpet*rescale
-      xlepetsum = xlepet*rescale
-      hpetsum = hpet*rescale
-      gpetsum = gpet*rescale
-      dshpetsum = dspet*rescale
-      tkpetsum = tkpet*rescale
-      tkmidpetsum = tkmidpet*rescale
-      tkdeepsum = Tdeepstep*rescale
-
-! ====================================================================
 ! Compute pixel total actual surface energy fluxes for the time step.
 ! ====================================================================
 
@@ -1113,13 +932,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! Compute areal average actual surface energy fluxes for the time step.
 ! ====================================================================
 
-      rnsum = rnact*rescale
-      xlesum = xleact*rescale
-      hsum = hact*rescale
-      gsum = gact*rescale
-      dshsum = dshact*rescale
-      tksum = tkact*rescale
-      tkmidsum = tkmid*rescale
 
 ! ====================================================================
 ! Format statements.
@@ -1128,100 +940,7 @@ inc_frozen = GLOBAL%inc_frozen
 125   format (1i5,9(f11.5," "))
 126   format (1i5,7(f11.5," "))
 
-!GRID
-GRID_VARS%rnact = rnact
-GRID_VARS%xleact = xleact
-GRID_VARS%hact = hact
-GRID_VARS%gact = gact
-GRID_VARS%dshact = dshact
-GRID_VARS%tkact = tkact
-GRID_VARS%tkmid = tkmid
-GRID_VARS%rnpet = rnpet
-GRID_VARS%xlepet = xlepet
-GRID_VARS%hpet = hpet
-GRID_VARS%gpet = gpet
-GRID_VARS%dspet = dspet
-GRID_VARS%tkpet = tkpet
-GRID_VARS%tkmidpet = tkmidpet
-GRID_VARS%runtot = runtot
-GRID_VARS%pnet = pnet
-GRID_VARS%evtact = evtact
-GRID_VARS%etpix = etpix
-!Water Balance
-GRID_VARS%zrz = zrz
-GRID_VARS%ztz = ztz
-GRID_VARS%smold = smold
-GRID_VARS%rzsmold = rzsmold
-GRID_VARS%tzsmold = tzsmold
-GRID_VARS%capflx = capflx
-GRID_VARS%difrz = difrz
-GRID_VARS%diftz = diftz
-GRID_VARS%grz = grz
-GRID_VARS%gtz = gtz
-GRID_VARS%satxr = satxr
-GRID_VARS%xinfxr = xinfxr
-GRID_VARS%dc = dc
-GRID_VARS%fw = fw
-GRID_VARS%dsrz = dsrz
-GRID_VARS%rzrhs = rzrhs
-GRID_VARS%dstz = dstz
-GRID_VARS%tzrhs = tzrhs
-GRID_VARS%dswc = dswc
-GRID_VARS%wcrhs = wcrhs
-!Energy Fluxes
-GRID_VARS%epwms = epwms
-
 !$OMP CRITICAL
-!Regional 
-REG%ettotrg = REG%ettotrg + ettotrg
-REG%etstsumrg = REG%etstsumrg + etstsumrg
-REG%etwtsumrg = REG%etwtsumrg + etwtsumrg
-REG%etbssumrg = REG%etbssumrg + etbssumrg
-REG%etdcsumrg = REG%etdcsumrg + etdcsumrg
-REG%etwcsumrg = REG%etwcsumrg + etwcsumrg
-REG%pptsumrg = REG%pptsumrg + pptsumrg
-REG%pnetsumrg = REG%pnetsumrg + pnetsumrg
-REG%contotrg = REG%contotrg + contotrg
-REG%sxrtotrg = REG%sxrtotrg + sxrtotrg
-REG%xixtotrg = REG%xixtotrg + xixtotrg
-REG%qsurfrg = REG%qsurfrg + qsurfrg
-REG%ranrunrg = REG%ranrunrg + ranrunrg
-REG%conrunrg = REG%conrunrg + conrunrg
-REG%gwtsumrg = REG%gwtsumrg + gwtsumrg
-REG%grzsumrg = REG%grzsumrg + grzsumrg
-REG%gtzsumrg = REG%gtzsumrg + gtzsumrg
-REG%capsumrg = REG%capsumrg + capsumrg
-REG%difrzsumrg = REG%difrzsumrg + difrzsumrg
-REG%rnpetsum = REG%rnpetsum + rnpetsum
-REG%xlepetsum = REG%xlepetsum + xlepetsum
-REG%hpetsum = REG%hpetsum + hpetsum
-REG%gpetsum = REG%gpetsum + gpetsum
-REG%dshpetsum = REG%dshpetsum + dshpetsum
-REG%tkpetsum = REG%tkpetsum + tkpetsum
-REG%tkmidpetsum = REG%tkmidpetsum + tkmidpetsum
-REG%tkdeepsum = REG%tkdeepsum + tkdeepsum
-REG%wcip1sum = REG%wcip1sum + wcip1sum
-REG%dswcsum = REG%dswcsum + dswcsum
-REG%wcrhssum = REG%wcrhssum + wcrhssum
-REG%dsrzsum = REG%dsrzsum + dsrzsum
-REG%rzrhssum = REG%rzrhssum + rzrhssum
-REG%dstzsum = REG%dstzsum + dstzsum
-REG%tzrhssum = REG%tzrhssum + tzrhssum
-REG%dssum = REG%dssum + dssum
-REG%svarhssum = REG%svarhssum + svarhssum
-REG%rzsmav = REG%rzsmav + rzsmav
-REG%tzsmav = REG%tzsmav + tzsmav
-REG%Swqsum = REG%Swqsum + Swqsum
-REG%Swq_ussum = REG%Swq_ussum + Swq_ussum
-REG%Sdepthsum = REG%Sdepthsum + Sdepthsum
-REG%Sdepth_ussum = REG%Sdepth_ussum + Sdepth_ussum
-REG%rnsum = REG%rnsum + rnsum
-REG%xlesum = REG%xlesum + xlesum
-REG%hsum = REG%hsum + hsum
-REG%gsum = REG%gsum + gsum
-REG%dshsum = REG%dshsum + dshsum
-REG%tksum = REG%tksum + tksum
-REG%tkmidsum = REG%tkmidsum + tkmidsum
 
 !Catchment Variables
 CAT%etstsum = CAT%etstsum + etstsum
@@ -1245,6 +964,6 @@ CAT%rzpsum = CAT%rzpsum + rzpsum
 
       return
 
-      end subroutine sumflx
+      end subroutine sumflx_catchment
 
 END MODULE MODULE_TOPMODEL

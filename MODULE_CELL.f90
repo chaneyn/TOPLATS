@@ -13,9 +13,56 @@ USE MODULE_CANOPY
 USE MODULE_SNOW
 
 contains
+
+!#####################################################################
+!
+!                        subroutine Update_Cells
+!
+!#####################################################################
+!
+! Solve the water and energy budget for all land surface area
+!
+!#####################################################################
+
+  subroutine Update_Cells(GRID,CAT,GLOBAL,i)
+  
+    implicit none
+    type (GRID_template),dimension(:),intent(inout) :: GRID
+    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+    type (GLOBAL_template),intent(in) :: GLOBAL
+    integer,intent(in) :: i
+    integer :: ipix,isoil,icatch,ilandc
+
+!#####################################################################
+! Update each grid cell
+!#####################################################################
+
+    call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix,isoil,ilandc,icatch) 
+!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+
+    do ipix=1,GLOBAL%npix
+
+      isoil = GRID(ipix)%SOIL%isoil
+      ilandc = GRID(ipix)%VEG%ilandc
+      icatch = GRID(ipix)%VARS%icatch
+
+      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
+         GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
+         CAT(icatch),GLOBAL)
+
+    enddo
+
+!$OMP END DO
+!$OMP END PARALLEL
+
+  end subroutine Update_Cells
+
+
 ! ====================================================================
 !
-!                        subroutine land_lake
+!                        subroutine Update_Cell
 !
 ! ====================================================================
 !
@@ -25,14 +72,13 @@ contains
 
 
       subroutine Update_Cell(ipix,i,GRID_MET,GRID_SOIL,GRID_VEG,&
-               GRID_VARS,wcip1,REG,CAT,GLOBAL)
+               GRID_VARS,wcip1,CAT,GLOBAL)
 
       implicit none
       include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GRID_MET_template) :: GRID_MET
-      type (REGIONAL_template),intent(inout) :: REG
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
@@ -253,7 +299,6 @@ cp = GRID_VARS%cp!cp
 roi = GRID_VARS%roi!roi
 
 !Catchment
-!fwcat = CAT%fwcat
 zbar = CAT%zbar
 ff = CAT%ff
 xlamda = CAT%xlamda
@@ -529,7 +574,7 @@ xlamda = CAT%xlamda
 ! Different option paramters
 
        iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,REG,CAT,GLOBAL)
+       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.
@@ -671,33 +716,9 @@ GRID_VARS%dsty_us = dsty_us
 GRID_VARS%Sdepth = Sdepth
 GRID_VARS%Sdepth_us = Sdepth_us
 
-!$OMP ORDERED
-!$OMP CRITICAL
-!REGIONAL
-REG%fwreg = REG%fwreg + fwreg
-REG%pr3sat = REG%pr3sat + pr3sat
-REG%perrg2 = REG%perrg2 + perrg2
-REG%pr2sat = REG%pr2sat + pr2sat
-REG%pr2uns = REG%pr2uns + pr2uns
-REG%perrg1 = REG%perrg1 + perrg1
-REG%pr1sat = REG%pr1sat + pr1sat
-REG%pr1rzs = REG%pr1rzs + pr1rzs
-REG%pr1tzs = REG%pr1tzs + pr1tzs
-REG%pr1uns = REG%pr1uns + pr1uns
-REG%persxr = REG%persxr + persxr
-REG%perixr = REG%perixr + perixr
-REG%persac = REG%persac + persac
-REG%peruac = REG%peruac + peruac
-REG%perusc = REG%perusc + perusc
-
-!CATCHMENT
-CAT%fwcat = CAT%fwcat + fwcat
-
 !SOIL
 GRID_SOIL%Tdeepstep = Tdeepstep
 
-!$OMP END CRITICAL
-!$OMP END ORDERED
 
       return
 

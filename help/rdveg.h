@@ -64,7 +64,7 @@
       real*8 wcip1(MAX_PIX)
       real*8 psicri_us(1+UST_FLG*(MAX_VEG-1))
       real*8 wcip1_us(1+UST_FLG*(MAX_PIX-1))
-      real*8 pixsiz,area(MAX_CAT),fbs(MAX_CAT+1),fbsrg
+      real*8 pixsiz,area(MAX_CAT),fbs(MAX_CAT),fbsrg
       real*8 zero,one,two,three,four,five,six
 
       integer icount(MAX_VEG,MAX_CAT+1),kk,jj,m_kk,u_kk

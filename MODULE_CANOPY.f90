@@ -20,7 +20,7 @@ contains
 !
 ! ====================================================================
 !
-!Subroutine to calculate interception by vegetation and calculate
+! Subroutine to calculate interception by vegetation and calculate
 ! canopy water balance.
 !
 ! ====================================================================
@@ -28,7 +28,6 @@ contains
   subroutine canopy(ipix,GRID_VARS, GRID_VEG, GRID_MET, GLOBAL)
 
   implicit none
-  !include "help/canopy.h"
 
   type (GRID_VARS_template) :: GRID_VARS
   type (GRID_VEG_template) :: GRID_VEG
@@ -37,9 +36,6 @@ contains
   type (CANOPY_template) :: GRID_CANOPY
 
   integer :: ipix
-  !real*8 :: epetw
-  !real*8 :: rnetd,xled,hd,gd,dshd,rnetw,xlew,hw,gw,dshw
-  !real*8 :: tkd,tkmidd,tkw,tkmidw
   
   real*8 :: zero,one
   zero = 0.0d0
@@ -60,26 +56,6 @@ contains
 !tkmidd = GRID_VEG%tkmidd
 !tkw = GRID_VEG%tkw
 !tkmidw = GRID_VEG%tkmidw
-
-  !real*8 :: epetw
-  !real*8 :: rnetd,xled,hd,gd,dshd,rnetw,xlew,hw,gw,dshw
-  !real*8 :: tkd,tkmidd,tkw,tkmidw
-
-!epetw-Shared with MODULE_ATMOS, used in MODULE_CELL
-!rnetd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!xled-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!hd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!gd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!rnetw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!xlew-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!hw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!gw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!tkd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!tkmidd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!dshd-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!tkw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!tkmidw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
-!dshw-Shared with MODULE_ATMOS, MODULE_LAND, used in MODULE_CELL
 
 ! ====================================================================
 ! Initialize interception storage depth to value from previous time
@@ -107,60 +83,12 @@ contains
 ! ====================================================================
 
   call calcepw(GRID_VARS,GRID_CANOPY,GLOBAL)
+
+! ====================================================================
+! Calculate canopy rainfall and water balance
+! ====================================================================
  
-! ====================================================================
-! Calculate through fall of rainfall.  This is the part of the
-! rainfall that can get through the canopy to the underlying soil
-! ====================================================================
- 
-  GRID_VARS%pnet = zero 
-
-  if ((GRID_MET%pptms-GRID_VARS%epwms)*GLOBAL%dt.gt.(GRID_VEG%wsc-GRID_CANOPY%wc)) then
-
-    GRID_VARS%pnet = (GRID_MET%pptms-GRID_VARS%epwms)-((GRID_VEG%wsc-GRID_CANOPY%wc)/GLOBAL%dt)
-
-  endif
-
-! ====================================================================
-! Perform water balance on canopy storage, calculate the new
-! interception storage.
-! ====================================================================
-
-  GRID_VARS%wcip1 = GRID_CANOPY%wc + GLOBAL%dt*(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)
-
-! --------------------------------------------------------------------
-! Don't allow canopy storage to go below zero.
-! --------------------------------------------------------------------
-
-  if (GRID_VARS%wcip1.lt.zero) then
- 
-    GRID_VARS%epwms = GRID_VARS%epwms + (GRID_VARS%wcip1)/(GLOBAL%dt)
-    GRID_VARS%wcip1 = zero
-
-  endif
-
-! ====================================================================
-! Calculate the precipitation that will go to the overstory
-! layer and that will not fall through.
-! This is the precipitation input for the snow melt model for the
-! over story.
-! ====================================================================
-
-  GRID_VARS%precip_o=GRID_MET%pptms
-
-! ====================================================================
-! Check canopy water balance, calculate the change in water storage.
-! ====================================================================
-
-  GRID_VARS%dswc = GRID_VARS%wcip1-GRID_CANOPY%wc
-  GRID_VARS%wcrhs=(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)*(GLOBAL%dt)
-
-! --------------------------------------------------------------------
-! Double check : if no rain there is no precipitation input to the
-! under story.
-! --------------------------------------------------------------------
-
-  if (GRID_MET%pptms.eq.(0.d0)) GRID_VARS%pnet =0.d0
+  call calcwt(GRID_VARS,GRID_VEG,GRID_MET,GLOBAL,GRID_CANOPY)
 
 ! ====================================================================
 ! Check if the present time step can be considered an interstorm
@@ -173,36 +101,7 @@ contains
 ! Add up pet terms of the over story to get average values.
 ! ====================================================================
 
-  GRID_VARS%rnpet = GRID_VEG%rnetd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                     GRID_VEG%rnetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-  GRID_VARS%xlepet = GRID_VEG%xled*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                      GRID_VEG%xlew*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-  GRID_VARS%hpet = GRID_VEG%hd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                    GRID_VEG%hw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-  GRID_VARS%gpet = GRID_VEG%gd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                    GRID_VEG%gw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-
-! --------------------------------------------------------------------
-! Solve for temperature and heat storage only when energy balance
-! method is used.
-! --------------------------------------------------------------------
-
-  if (GLOBAL%ioppet.eq.0) then
-
-    GRID_VARS%tkpet = GRID_VEG%tkd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                       GRID_VEG%tkw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-    GRID_VARS%tkmidpet = GRID_VEG%tkmidd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                          GRID_VEG%tkmidw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-    GRID_VARS%dspet = GRID_VEG%dshd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
-                       GRID_VEG%dshw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
-
-  else
-
-    GRID_VARS%tkpet = zero
-    GRID_VARS%tkmidpet = zero
-    GRID_VARS%dspet = zero
-
-  endif
+  call calcnet(GRID_VARS,GRID_VEG,GLOBAL)
  
 !GRID_VARS%epetw = epetw
 !GRID_VEG%rnetd = rnetd
@@ -377,6 +276,76 @@ contains
 
 ! ====================================================================
 !
+!                   subroutine calcwt
+!
+! ====================================================================
+!
+! Calculate canopy rainfall and water balance
+!
+! ====================================================================
+
+  subroutine calcwt(GRID_VARS,GRID_VEG,GRID_MET,GLOBAL,GRID_CANOPY)
+
+  implicit none
+ 
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GRID_MET_template) :: GRID_MET
+  type (GLOBAL_template) :: GLOBAL 
+  type (CANOPY_template) :: GRID_CANOPY
+
+  real*8 :: zero
+  zero = 0.0d0
+
+! --------------------------------------------------------------------
+! Calculate through fall of rainfall.  This is the part of the
+! rainfall that can get through the canopy to the underlying soil
+! --------------------------------------------------------------------
+  GRID_VARS%pnet = zero
+  if (((GRID_MET%pptms-GRID_VARS%epwms)*GLOBAL%dt).gt.(GRID_VEG%wsc-GRID_CANOPY%wc)) then
+    GRID_VARS%pnet=(GRID_MET%pptms-GRID_VARS%epwms)-((GRID_VEG%wsc-GRID_CANOPY%wc)/GLOBAL%dt)
+  endif
+
+! --------------------------------------------------------------------
+! Perform water balance on canopy storage, calculate the new
+! interception storage.
+! --------------------------------------------------------------------
+  GRID_VARS%wcip1=GRID_CANOPY%wc+GLOBAL%dt*(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)
+
+! --------------------------------------------------------------------
+! Don't allow canopy storage to go below zero.
+! --------------------------------------------------------------------
+  if (GRID_VARS%wcip1.lt.zero) then
+    GRID_VARS%epwms=GRID_VARS%epwms+GRID_VARS%wcip1/GLOBAL%dt
+    GRID_VARS%wcip1=zero
+  endif
+
+! --------------------------------------------------------------------
+! Calculate the precipitation that will go to the overstory
+! layer and that will not fall through.
+! This is the precipitation input for the snow melt model for the
+! over story. 
+! --------------------------------------------------------------------
+  GRID_VARS%precip_o=GRID_MET%pptms
+
+! --------------------------------------------------------------------
+! Check canopy water balance, calculate the change in water storage.
+! --------------------------------------------------------------------
+  GRID_VARS%dswc=GRID_VARS%wcip1-GRID_CANOPY%wc
+  GRID_VARS%wcrhs=(GRID_MET%pptms-GRID_VARS%epwms-GRID_VARS%pnet)*GLOBAL%dt
+
+! --------------------------------------------------------------------
+! Double check : if no rain there is no precipitation input to the
+! under story.
+! --------------------------------------------------------------------
+  if (GRID_MET%pptms.eq.zero) GRID_VARS%pnet=zero
+
+  return
+
+  end subroutine calcwt
+
+! ====================================================================
+!
 !                   subroutine interstorm
 !
 ! ====================================================================
@@ -491,4 +460,60 @@ contains
 
   end subroutine interstorm
 
-END MODULE MODULE_CANOPY
+! ====================================================================
+!
+!                   subroutine calcnet
+!
+! ====================================================================
+!
+! Add up pet terms of the over story to get average values.
+!
+! ====================================================================
+  subroutine calcnet(GRID_VARS,GRID_VEG,GLOBAL)
+
+  implicit none
+
+  type (GRID_VARS_template) :: GRID_VARS
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GLOBAL_template) :: GLOBAL
+
+  real*8 :: zero,one
+  zero=0.0d0
+  one=1.0d0
+
+  GRID_VARS%rnpet = GRID_VEG%rnetd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                     GRID_VEG%rnetw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%xlepet = GRID_VEG%xled*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                      GRID_VEG%xlew*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%hpet = GRID_VEG%hd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    GRID_VEG%hw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+  GRID_VARS%gpet = GRID_VEG%gd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                    GRID_VEG%gw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+
+! --------------------------------------------------------------------
+! Solve for temperature and heat storage only when energy balance
+! method is used.
+! --------------------------------------------------------------------
+
+  if (GLOBAL%ioppet.eq.0) then
+
+    GRID_VARS%tkpet = GRID_VEG%tkd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       GRID_VEG%tkw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%tkmidpet = GRID_VEG%tkmidd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                          GRID_VEG%tkmidw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+    GRID_VARS%dspet = GRID_VEG%dshd*GRID_VARS%dc*(one-GRID_VARS%fw)+&
+                       GRID_VEG%dshw*(one-GRID_VARS%dc*(one-GRID_VARS%fw))
+
+  else
+
+    GRID_VARS%tkpet = zero
+    GRID_VARS%tkmidpet = zero
+    GRID_VARS%dspet = zero
+
+  endif
+
+  return 
+
+  end subroutine calcnet  
+
+end module MODULE_CANOPY

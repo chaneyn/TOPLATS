@@ -13,6 +13,29 @@ type IO_template
   integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
+type VegDataTemplate
+  real*8,dimension(:,:),allocatable :: ivgtyp
+  real*8,dimension(:,:),allocatable :: xlai
+  real*8,dimension(:,:),allocatable :: xlai_wsc
+  real*8,dimension(:,:),allocatable :: albd
+  real*8,dimension(:,:),allocatable :: albw
+  real*8,dimension(:,:),allocatable :: emiss
+  real*8,dimension(:,:),allocatable :: za
+  real*8,dimension(:,:),allocatable :: zww
+  real*8,dimension(:,:),allocatable :: z0m
+  real*8,dimension(:,:),allocatable :: z0h
+  real*8,dimension(:,:),allocatable :: zpd
+  real*8,dimension(:,:),allocatable :: rsmin
+  real*8,dimension(:,:),allocatable :: rsmax
+  real*8,dimension(:,:),allocatable :: Rpl
+  real*8,dimension(:,:),allocatable :: f3vpdpar
+  real*8,dimension(:,:),allocatable :: f4temppar
+  real*8,dimension(:,:),allocatable :: trefk
+  real*8,dimension(:,:),allocatable :: tcbeta
+  real*8,dimension(:,:),allocatable :: extinct
+  real*8,dimension(:,:),allocatable :: canclos
+end type VegDataTemplate
+
 contains
 
 !####################################################################
@@ -105,7 +128,6 @@ contains
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
-      !type (GRID%SOIL_template) :: GRID%SOIL
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -170,7 +192,7 @@ contains
        GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
        GRID%VEG%wsc,GRID%VARS%wcip1,&
        GLOBAL%pixsiz,CAT%area,CAT%fbs,&
-       REG%fbsrg,GLOBAL%ncatch)
+       REG%fbsrg,GLOBAL%ncatch,GLOBAL,CAT,GRID,REG)
 
       print*,'rddata:  Done reading vegetation parameters'
 
@@ -271,10 +293,6 @@ contains
       implicit none
       !include "wgtpar.h"
       include "help/rdveg_update.h"
-      type VegDataTemplate
-        real*8,dimension(:,:),allocatable :: xlai
-        real*8,dimension(:,:),allocatable :: albd
-      end type VegDataTemplate
       type (VegDataTemplate) VegData
       integer :: dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
@@ -368,7 +386,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
   implicit none
   type (GLOBAL_template) :: GLOBAL
-  type (GRID_template),dimension(:),allocatable :: GRID
+  type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),allocatable :: CAT
   type (IO_template),intent(inout) :: IO
   integer kk,jj
@@ -655,6 +673,14 @@ open(2098,file=trim(filename))
 filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SWE_fruit.txt"
 open(2099,file=trim(filename))
 
+!Regional Variables Output
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/NEW/Regional_Variables.txt"
+open(2000,file=trim(filename))
+
+!Old Regional Variables Output
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/Regional_Variables.txt"
+open(2001,file=trim(filename))
+
 end subroutine FILE_OPEN
 
 subroutine FILE_CLOSE()
@@ -707,7 +733,23 @@ close(2098)
 !Regional Snow Cover (VALIDATION FILE)
 close(2099)
 
+!Regional Variables Output
+close(2000)
+
+!Regional Variables Output (OLD)
+close(2001)
+
 end subroutine FILE_CLOSE
+
+subroutine Write_Regional(i,REG)
+
+  type(REGIONAL_template),intent(in) :: REG
+  integer,intent(in) :: i
+
+  !Write regional variables to file
+  write(2000,*)i,REG
+
+end subroutine Write_Regional
 
 ! ====================================================================
 !
@@ -727,35 +769,17 @@ end subroutine FILE_CLOSE
        eps,&
        rtact,rtdens,rtres,psicri,&
        rescan,respla,wsc,wcip1,&
-       pixsiz,area,fbs,fbsrg,ncatch)
+       pixsiz,area,fbs,fbsrg,ncatch,GLOBAL,CAT,GRID,REG)
 
       implicit none
       !include "SNOW.h"
       !include "wgtpar.h"
       include "help/rdveg.h"
-      type VegDataTemplate
-        real*8,dimension(:,:),allocatable :: ivgtyp
-        real*8,dimension(:,:),allocatable :: xlai
-        real*8,dimension(:,:),allocatable :: xlai_wsc
-        real*8,dimension(:,:),allocatable :: albd
-        real*8,dimension(:,:),allocatable :: albw
-        real*8,dimension(:,:),allocatable :: emiss
-        real*8,dimension(:,:),allocatable :: za
-        real*8,dimension(:,:),allocatable :: zww
-        real*8,dimension(:,:),allocatable :: z0m
-        real*8,dimension(:,:),allocatable :: z0h
-        real*8,dimension(:,:),allocatable :: zpd
-        real*8,dimension(:,:),allocatable :: rsmin
-        real*8,dimension(:,:),allocatable :: rsmax
-        real*8,dimension(:,:),allocatable :: Rpl
-        real*8,dimension(:,:),allocatable :: f3vpdpar
-        real*8,dimension(:,:),allocatable :: f4temppar
-        real*8,dimension(:,:),allocatable :: trefk
-        real*8,dimension(:,:),allocatable :: tcbeta
-        real*8,dimension(:,:),allocatable :: extinct
-        real*8,dimension(:,:),allocatable :: canclos
-      end type VegDataTemplate
-      type (VegDataTemplate) VegData
+      type (GLOBAL_template),intent(inout) :: GLOBAL
+      type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+      type (REGIONAL_template),intent(inout) :: REG
+      type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (VegDataTemplate) :: VegData
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
@@ -977,9 +1001,13 @@ end subroutine FILE_CLOSE
 
       fbsrg = zero
 
+      do jj=1,ncatch
+        fbs(jj) = zero
+      enddo
+
       do 570 jj=1,ncatch+1
 
-         fbs(jj)  = zero
+         !fbs(jj)  = zero
 
          do 560 kk=1,nlandc
 
