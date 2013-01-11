@@ -540,13 +540,8 @@ xlamda = CAT%xlamda
 
 ! Water balance variables
 
-       rzsm,tzsm,rzsm1,tzsm1,rzsm_u,tzsm_u,rzsm1_u,tzsm1_u,rzsm_f,&
-       tzsm_f,rzsm1_f,tzsm1_f,r_mossm,r_mossm1,r_mossm_f,r_mossm1_f,r_mossm_u,&
-       r_mossm1_u,zrz,ztz,r_mossmold,smold,rzsmold,tzsmold,rzdthetaudtemp,&
-       rzdthetaidt,tzdthetaidt,zw,zbar,zmoss,&
-       capflx,difrz,diftz,grz,gtz,pnet,cuminf,sorp,cc,deltrz,&
-       xinact,satxr,xinfxr,runtot,irntyp,sesq,corr,&
-       idifind,dc,fw,dc_us,fw_us,wcip1,par,dewrun,dsrz,rzrhs,dstz,tzrhs,&
+       rzsm_u,tzsm_u,r_mossmold,&
+       pnet,deltrz,dc_us,fw_us,dewrun,&
 
 ! Storm parameters
 

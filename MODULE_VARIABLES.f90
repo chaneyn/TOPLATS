@@ -45,7 +45,7 @@ type GRID_VARS_template
         !Water Balance Variables
         real*8 :: rzsm,tzsm,rzsm1,tzsm1,rzsm_f,tzsm_f,rzsm1_f,tzsm1_f,&
                 rzdthetaudtemp,rzdthetaidt,tzdthetaidt,zw,pnet,xinact,&
-                runtot,irntyp
+                runtot
         !Soil Moisture Variables
         real*8 :: tzsm1_u,rzsm1_u,zmoss,r_mossm1,r_mossm,&
                 r_mossm1_u,r_mossm_u,r_mossm1_f,r_mossm_f
@@ -56,7 +56,7 @@ type GRID_VARS_template
         !Energy Fluxes
         real*8 :: dshact,rnetpn,gbspen,evtact,gact,rnact,xleact,&
                 hact,ebspot,dspet,rnpet,xlepet,hpet,gpet
-        integer :: ievcon
+        integer :: ievcon,irntyp
         !Energy Balance
 	real*8 :: rib
         !Evapotranspiration
