@@ -41,7 +41,7 @@
       real*8 r_mossmpet0(1+MOS_FLG*(MAX_VEG-1))
       real*8 alb_moss(1+MOS_FLG*(MAX_VEG-1))
       real*8 r_moss_depth(1+MOS_FLG*(MAX_VEG-1))
-      real*8 eps(1+MOS_FLG*(MAX_VEG-1))
+      real*8 eps(MAX_VEG)
       real*8 zpd_moss(1+MOS_FLG*(MAX_VEG-1))
       real*8 z0m_moss(1+MOS_FLG*(MAX_VEG-1))
       real*8 z0h_moss(1+MOS_FLG*(MAX_VEG-1))

@@ -13,6 +13,29 @@ type IO_template
   integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
+type VegDataTemplate
+  real*8,dimension(:,:),allocatable :: ivgtyp
+  real*8,dimension(:,:),allocatable :: xlai
+  real*8,dimension(:,:),allocatable :: xlai_wsc
+  real*8,dimension(:,:),allocatable :: albd
+  real*8,dimension(:,:),allocatable :: albw
+  real*8,dimension(:,:),allocatable :: emiss
+  real*8,dimension(:,:),allocatable :: za
+  real*8,dimension(:,:),allocatable :: zww
+  real*8,dimension(:,:),allocatable :: z0m
+  real*8,dimension(:,:),allocatable :: z0h
+  real*8,dimension(:,:),allocatable :: zpd
+  real*8,dimension(:,:),allocatable :: rsmin
+  real*8,dimension(:,:),allocatable :: rsmax
+  real*8,dimension(:,:),allocatable :: Rpl
+  real*8,dimension(:,:),allocatable :: f3vpdpar
+  real*8,dimension(:,:),allocatable :: f4temppar
+  real*8,dimension(:,:),allocatable :: trefk
+  real*8,dimension(:,:),allocatable :: tcbeta
+  real*8,dimension(:,:),allocatable :: extinct
+  real*8,dimension(:,:),allocatable :: canclos
+end type VegDataTemplate
+
 contains
 
 !####################################################################
@@ -105,7 +128,6 @@ contains
       implicit none
       integer iophd
       type (GLOBAL_template) :: GLOBAL
-      !type (GRID%SOIL_template) :: GRID%SOIL
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
@@ -154,23 +176,7 @@ contains
 ! Read in and initialize vegatation parameters.
 ! ====================================================================
 
-      call rdveg(GLOBAL%npix,GLOBAL%nrow,GLOBAL%ncol,GRID%VEG%ilandc,&
-       IO%ipixnum,GLOBAL%nlandc,GLOBAL%iopveg,GRID%VEG%ivgtyp,&
-       GRID%VEG%xlai,GRID%VEG%xlai_wsc,GRID%VEG%albd,&
-       GRID%VEG%albw,GRID%VEG%emiss,GRID%VEG%za,&
-       GRID%VEG%zww,GRID%VEG%z0m,GRID%VEG%z0h,&
-       GRID%VEG%zpd,GRID%VEG%rsmin,GRID%VEG%rsmax,&
-       GRID%VEG%Rpl,GRID%VEG%f3vpdpar,GRID%VEG%f4temppar,&
-       GRID%VEG%trefk,GRID%VEG%tcbeta,GRID%VEG%extinct,&
-       GRID%VEG%canclos,GRID%VEG%Tslope1,GRID%VEG%Tint1,&
-       GRID%VEG%Tslope2,GRID%VEG%Tint2,GRID%VEG%Twslope1,&
-       GRID%VEG%Twint1,GRID%VEG%Twslope2,GRID%VEG%Twint2,&
-       GRID%VEG%Tsep,GRID%VEG%Twsep,GRID%VEG%eps,&
-       GRID%VEG%rtact,GRID%VEG%rtdens,GRID%VEG%rtres,&
-       GRID%VEG%psicri,GRID%VEG%rescan,GRID%VEG%respla,&
-       GRID%VEG%wsc,GRID%VARS%wcip1,&
-       GLOBAL%pixsiz,CAT%area,CAT%fbs,&
-       REG%fbsrg,GLOBAL%ncatch)
+       call rdveg(GLOBAL,CAT,GRID,REG,IO)
 
       print*,'rddata:  Done reading vegetation parameters'
 
@@ -271,10 +277,6 @@ contains
       implicit none
       !include "wgtpar.h"
       include "help/rdveg_update.h"
-      type VegDataTemplate
-        real*8,dimension(:,:),allocatable :: xlai
-        real*8,dimension(:,:),allocatable :: albd
-      end type VegDataTemplate
       type (VegDataTemplate) VegData
       integer :: dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
@@ -593,7 +595,7 @@ ncol = 66
 
 !Global Parameter File
 
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER.txt"
+filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER_1.txt"
 open(1000,file=trim(filename))
 
 !Soil Parameter File
@@ -744,62 +746,37 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-      subroutine rdveg(npix,nrow,ncol,ilandc,ipixnum,nlandc,iopveg,ivgtyp,&
-       xlai,xlai_wsc,albd,albw,emiss,za,zww,z0m,z0h,zpd,rsmin,rsmax,Rpl,&
-       f3vpdpar,f4temppar,trefk,tcbeta,extinct,canclos,Tslope1,Tint1,&
-       Tslope2,Tint2,Twslope1,Twint1,Twslope2,Twint2,Tsep,Twsep,&
-       eps,&
-       rtact,rtdens,rtres,psicri,&
-       rescan,respla,wsc,wcip1,&
-       pixsiz,area,fbs,fbsrg,ncatch)
+      subroutine rdveg(GLOBAL,CAT,GRID,REG,IO)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
       include "help/rdveg.h"
-      type VegDataTemplate
-        real*8,dimension(:,:),allocatable :: ivgtyp
-        real*8,dimension(:,:),allocatable :: xlai
-        real*8,dimension(:,:),allocatable :: xlai_wsc
-        real*8,dimension(:,:),allocatable :: albd
-        real*8,dimension(:,:),allocatable :: albw
-        real*8,dimension(:,:),allocatable :: emiss
-        real*8,dimension(:,:),allocatable :: za
-        real*8,dimension(:,:),allocatable :: zww
-        real*8,dimension(:,:),allocatable :: z0m
-        real*8,dimension(:,:),allocatable :: z0h
-        real*8,dimension(:,:),allocatable :: zpd
-        real*8,dimension(:,:),allocatable :: rsmin
-        real*8,dimension(:,:),allocatable :: rsmax
-        real*8,dimension(:,:),allocatable :: Rpl
-        real*8,dimension(:,:),allocatable :: f3vpdpar
-        real*8,dimension(:,:),allocatable :: f4temppar
-        real*8,dimension(:,:),allocatable :: trefk
-        real*8,dimension(:,:),allocatable :: tcbeta
-        real*8,dimension(:,:),allocatable :: extinct
-        real*8,dimension(:,:),allocatable :: canclos
-      end type VegDataTemplate
-      type (VegDataTemplate) VegData
+      type (GLOBAL_template),intent(inout) :: GLOBAL
+      type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+      type (REGIONAL_template),intent(inout) :: REG
+      type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (IO_template),intent(inout) :: IO
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
+      !real*8 :: frcov(GLOBAL%npix,GLOBAL%ncatch),wc0
+      !integer :: jj,kk
       vegnvars = 20
       dvegnvars = 2
-      allocate(TempArray(ncol,nrow,vegnvars))
+      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,vegnvars))
 
 ! ====================================================================
 ! Read the image with the land cover clasifications.
 ! ====================================================================
 
-      call rdimgi(ilandc,11,nrow,ncol,ipixnum)
+      call rdimgi(GRID%VEG%ilandc,11,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
 
 ! ====================================================================
 ! Read spatially constant vegetation parameters.
 ! ====================================================================
 
-      nlandc = nrow*ncol
-      iopveg = 0
-      read(1000,*) iopwc0
+      GLOBAL%nlandc = GLOBAL%nrow*GLOBAL%ncol
+      GLOBAL%iopveg = 0
 
       print*,"rdveg:  Read spatially constant veg pars"
 
@@ -816,111 +793,90 @@ end subroutine Write_Regional
 ! Read the binary vegetation binary file
 ! ====================================================================
 
-      allocate(VegData%ivgtyp(ncol,nrow))
-      allocate(VegData%xlai(ncol,nrow))
-      allocate(VegData%xlai_wsc(ncol,nrow))
-      allocate(VegData%albd(ncol,nrow))
-      allocate(VegData%albw(ncol,nrow))
-      allocate(VegData%emiss(ncol,nrow))
-      allocate(VegData%za(ncol,nrow))
-      allocate(VegData%zww(ncol,nrow))
-      allocate(VegData%z0m(ncol,nrow))
-      allocate(VegData%z0h(ncol,nrow))
-      allocate(VegData%zpd(ncol,nrow))
-      allocate(VegData%rsmin(ncol,nrow))
-      allocate(VegData%rsmax(ncol,nrow))
-      allocate(VegData%Rpl(ncol,nrow))
-      allocate(VegData%f3vpdpar(ncol,nrow))
-      allocate(VegData%f4temppar(ncol,nrow))
-      allocate(VegData%trefk(ncol,nrow))
-      allocate(VegData%tcbeta(ncol,nrow))
-      allocate(VegData%extinct(ncol,nrow))
-      allocate(VegData%canclos(ncol,nrow))
-        
       print*,"rdveg:  Reading in all the vegetation properties at once"
 
       read(1002,rec=1)TempArray(:,:,:)
 
-      VegData%ivgtyp(:,:) = dble(TempArray(:,:,1))
-      VegData%xlai(:,:) = dble(TempArray(:,:,2))
-      VegData%xlai_wsc(:,:) = dble(TempArray(:,:,3))
-      VegData%albd(:,:) = dble(TempArray(:,:,4))
-      VegData%albw(:,:) = dble(TempArray(:,:,5))
-      VegData%emiss(:,:) = dble(TempArray(:,:,6))
-      VegData%za(:,:) = dble(TempArray(:,:,7))
-      VegData%zww(:,:) = dble(TempArray(:,:,8))
-      VegData%z0m(:,:) = dble(TempArray(:,:,9))
-      VegData%z0h(:,:) = dble(TempArray(:,:,10))
-      VegData%zpd(:,:) = dble(TempArray(:,:,11))
-      VegData%rsmin(:,:) = dble(TempArray(:,:,12))
-      VegData%rsmax(:,:) = dble(TempArray(:,:,13))
-      VegData%Rpl(:,:) = dble(TempArray(:,:,14))
-      VegData%f3vpdpar(:,:) = dble(TempArray(:,:,15))
-      VegData%f4temppar(:,:) = dble(TempArray(:,:,16))
-      VegData%trefk(:,:) = dble(TempArray(:,:,17))
-      VegData%tcbeta(:,:) = dble(TempArray(:,:,18))
-      VegData%extinct(:,:) = dble(TempArray(:,:,19))
-      VegData%canclos(:,:) = dble(TempArray(:,:,20))
+      GRID_VEG_2D%ivgtyp = dble(TempArray(:,:,1))
+      GRID_VEG_2D%xlai = dble(TempArray(:,:,2))
+      GRID_VEG_2D%xlai_wsc = dble(TempArray(:,:,3))
+      GRID_VEG_2D%albd = dble(TempArray(:,:,4))
+      GRID_VEG_2D%albw = dble(TempArray(:,:,5))
+      GRID_VEG_2D%emiss = dble(TempArray(:,:,6))
+      GRID_VEG_2D%za = dble(TempArray(:,:,7))
+      GRID_VEG_2D%zww = dble(TempArray(:,:,8))
+      GRID_VEG_2D%z0m = dble(TempArray(:,:,9))
+      GRID_VEG_2D%z0h = dble(TempArray(:,:,10))
+      GRID_VEG_2D%zpd = dble(TempArray(:,:,11))
+      GRID_VEG_2D%rsmin = dble(TempArray(:,:,12))
+      GRID_VEG_2D%rsmax = dble(TempArray(:,:,13))
+      GRID_VEG_2D%Rpl = dble(TempArray(:,:,14))
+      GRID_VEG_2D%f3vpdpar = dble(TempArray(:,:,15))
+      GRID_VEG_2D%f4temppar = dble(TempArray(:,:,16))
+      GRID_VEG_2D%trefk = dble(TempArray(:,:,17))
+      GRID_VEG_2D%tcbeta = dble(TempArray(:,:,18))
+      GRID_VEG_2D%extinct = dble(TempArray(:,:,19))
+      GRID_VEG_2D%canclos = dble(TempArray(:,:,20))
 
 ! ####################################################################
 ! Read the vegetation dynamic parameter file
 ! ####################################################################
 
       deallocate(TempArray)
-      allocate(TempArray(ncol,nrow,dvegnvars))
+      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
 
       print*,"rdveg:  Reading in the dynamic vegetation properties"
 
       read(1003,rec=1)TempArray(:,:,:)
 
-      VegData%xlai(:,:) = dble(TempArray(:,:,1))
-      VegData%albd(:,:) = dble(TempArray(:,:,2))
+      GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
+      GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
 
 ! ####################################################################
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
-        do kk=1,nlandc
+        do kk=1,GLOBAL%nlandc
 
                 !Map the kk position to the i,j position
-                if(mod(kk,nrow) .ne. 0)then
-                        ipos = kk/nrow+1
-                        jpos = mod(kk,nrow)
+                if(mod(kk,GLOBAL%nrow) .ne. 0)then
+                        ipos = kk/GLOBAL%nrow+1
+                        jpos = mod(kk,GLOBAL%nrow)
                 else
-                        ipos = kk/nrow
-                        jpos = nrow
+                        ipos = kk/GLOBAL%nrow
+                        jpos = GLOBAL%nrow
                 endif
-                ivgtyp(kk) = VegData%ivgtyp(ipos,jpos)
-                emiss(kk) = VegData%emiss(ipos,jpos)
-                za(kk) = VegData%za(ipos,jpos)
-                zww(kk) = VegData%zww(ipos,jpos)
-                z0m(kk) = VegData%z0m(ipos,jpos)
-                z0h(kk) = VegData%z0h(ipos,jpos)
-                zpd(kk) = VegData%zpd(ipos,jpos)
-                rsmin(kk) = VegData%rsmin(ipos,jpos)
-                rsmax(kk) = VegData%rsmax(ipos,jpos)
-                Rpl(kk) = VegData%Rpl(ipos,jpos)
-                f3vpdpar(kk) = VegData%f3vpdpar(ipos,jpos)
-                f4temppar(kk) = VegData%f4temppar(ipos,jpos)
-                trefk(kk) = VegData%trefk(ipos,jpos)
-                xlai(kk) = VegData%xlai(ipos,jpos) !dveg
-                albd(kk) = VegData%albd(ipos,jpos) !dveg
-                tcbeta(kk) = exp(-0.5*xlai(kk)) !dveg
-                xlai_wsc(kk) = xlai(kk)
-                albw(kk) = albd(kk) !Move to its own file
-                extinct(kk) = 0.00!VegData%extinct(ipos,jpos)
-                canclos(kk) = 1.00!VegData%canclos(ipos,jpos)
-                Tslope1(kk) = 0.00!VegData%Tslope1(ipos,jpos)
-                Tint1(kk) = 0.00!VegData%Tint1(ipos,jpos)
-                Tslope2(kk) = 0.00!VegData%Tslope2(ipos,jpos)
-                Tint2(kk) = 0.00!VegData%Tint2(ipos,jpos)
-                Twslope1(kk) = 0.00!VegData%Twslope1(ipos,jpos)
-                Twint1(kk) = 0.00!VegData%Twint1(ipos,jpos)
-                Twslope2(kk) = 0.00!VegData%Twslope2(ipos,jpos)
-                Twint2(kk) = 0.00!VegData%Twint2(ipos,jpos)
-                Tsep(kk) = 0.00!VegData%Tsep(ipos,jpos)
-                Twsep(kk) = 0.00!VegData%Twsep(ipos,jpos)
+                GRID(kk)%VEG%ivgtyp = GRID_VEG_2D(ipos,jpos)%ivgtyp
+                GRID(kk)%VEG%emiss = GRID_VEG_2D(ipos,jpos)%emiss
+                GRID(kk)%VEG%za = GRID_VEG_2D(ipos,jpos)%za
+                GRID(kk)%VEG%zww = GRID_VEG_2D(ipos,jpos)%zww
+                GRID(kk)%VEG%z0m = GRID_VEG_2D(ipos,jpos)%z0m
+                GRID(kk)%VEG%z0h = GRID_VEG_2D(ipos,jpos)%z0h
+                GRID(kk)%VEG%zpd = GRID_VEG_2D(ipos,jpos)%zpd
+                GRID(kk)%VEG%rsmin = GRID_VEG_2D(ipos,jpos)%rsmin
+                GRID(kk)%VEG%rsmax = GRID_VEG_2D(ipos,jpos)%rsmax
+                GRID(kk)%VEG%Rpl = GRID_VEG_2D(ipos,jpos)%Rpl
+                GRID(kk)%VEG%f3vpdpar = GRID_VEG_2D(ipos,jpos)%f3vpdpar
+                GRID(kk)%VEG%f4temppar = GRID_VEG_2D(ipos,jpos)%f4temppar
+                GRID(kk)%VEG%trefk = GRID_VEG_2D(ipos,jpos)%trefk
+                GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai
+                GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd
+                GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
+                GRID(kk)%VEG%xlai_wsc = GRID(kk)%VEG%xlai
+                GRID(kk)%VEG%albw = GRID(kk)%VEG%albd !Move to its own file
+                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
+                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
+                GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
+                GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
+                GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
+                GRID(kk)%VEG%Tint2 = 0.00!VegData%Tint2(ipos,jpos)
+                GRID(kk)%VEG%Twslope1 = 0.00!VegData%Twslope1(ipos,jpos)
+                GRID(kk)%VEG%Twint1 = 0.00!VegData%Twint1(ipos,jpos)
+                GRID(kk)%VEG%Twslope2 = 0.00!VegData%Twslope2(ipos,jpos)
+                GRID(kk)%VEG%Twint2 = 0.00!VegData%Twint2(ipos,jpos)
+                GRID(kk)%VEG%Tsep = 0.00!VegData%Tsep(ipos,jpos)
+                GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
 
         enddo
 
@@ -928,15 +884,15 @@ end subroutine Write_Regional
 ! Calculate parameters for each land cover type.
 ! ====================================================================
 
-      do kk=1,nlandc
+      do kk=1,GLOBAL%nlandc
 
 ! --------------------------------------------------------------------&
 ! If not bare soil then calculate the canopy resistance.
 ! --------------------------------------------------------------------&
 
-         if (ivgtyp(kk).ne.0) then
+         if (GRID(kk)%VEG%ivgtyp.ne.0) then
 
-            rescan(kk) = rsmin(kk)/xlai(kk)
+            GRID(kk)%VEG%rescan = GRID(kk)%VEG%rsmin/GRID(kk)%VEG%xlai
 
 ! --------------------------------------------------------------------&
 ! If bare soil then set canopy resistance to zero.
@@ -944,7 +900,7 @@ end subroutine Write_Regional
 
          else
 
-            rescan(kk) = 0.
+            GRID(kk)%VEG%rescan = 0.
 
          endif
 
@@ -952,7 +908,7 @@ end subroutine Write_Regional
 ! Calculate canopy storage capacity and initial canopy storage.
 ! --------------------------------------------------------------------&
 
-         wsc(kk) = 0.0002*xlai_wsc(kk)
+         GRID(kk)%VEG%wsc = 0.0002*GRID(kk)%VEG%xlai_wsc
 
       enddo
 
@@ -964,10 +920,11 @@ end subroutine Write_Regional
 ! ====================================================================
 
   read(1000,*) wc0
+  print*,wc0
 
-  do kk=1,npix
+  do kk=1,GLOBAL%npix
 
-    wcip1(kk) = wc0
+    GRID(kk)%VARS%wcip1 = wc0
 
   enddo  
 
@@ -981,15 +938,15 @@ end subroutine Write_Regional
 ! Catchment ncatch+1 is total area.
 ! ====================================================================
 
-      do 550 kk=1,nlandc
+      do 550 kk=1,GLOBAL%nlandc
 
-         do 540 jj=1,ncatch
+         do 540 jj=1,GLOBAL%ncatch
 
-            frcov(kk,jj) = pixsiz*pixsiz/area(jj)
+            frcov(kk,jj) = GLOBAL%pixsiz**2/CAT(jj)%area
 
 540      continue
 
-         frcov(kk,ncatch+1) = 1/real(npix)
+         frcov(kk,GLOBAL%ncatch+1) = 1/real(GLOBAL%npix)
 
 550   continue
 
@@ -999,27 +956,27 @@ end subroutine Write_Regional
 ! Find fraction of bare soil in each catchment.
 ! ====================================================================
 
-      fbsrg = zero
+      REG%fbsrg = zero
 
-      do jj=1,ncatch
-        fbs(jj) = zero
+      do jj=1,GLOBAL%ncatch
+        CAT(jj)%fbs = zero
       enddo
 
-      do 570 jj=1,ncatch+1
+      do 570 jj=1,GLOBAL%ncatch+1
 
          !fbs(jj)  = zero
 
-         do 560 kk=1,nlandc
+         do 560 kk=1,GLOBAL%nlandc
 
-            if (ivgtyp(kk).eq.0) then
+            if (GRID(kk)%VEG%ivgtyp.eq.0) then
                
-               if (jj .eq. ncatch+1) then
+               if (jj .eq. GLOBAL%ncatch+1) then
                
-                  fbsrg = fbsrg + frcov(kk,jj)
+                  REG%fbsrg = REG%fbsrg + frcov(kk,jj)
         
                else
 
-                  fbs(jj) = fbs(jj) + frcov(kk,jj)
+                  CAT(jj)%fbs = CAT(jj)%fbs + frcov(kk,jj)
 
                endif
 
