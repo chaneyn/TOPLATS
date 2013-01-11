@@ -23,18 +23,6 @@ MODULE MODULE_LAND
 ! ====================================================================
     subroutine land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
 
-! Factor to multiply the regional parameters with
-
-       mul_fac,&
-
-! Snow pack variables
-
-       Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
-       TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
-       hact_snow_us,rn_snow_us,dens,dens_us,&
-
 ! Albedos of the over story, under story,&
 ! and moss layer
 
@@ -75,9 +63,7 @@ MODULE MODULE_LAND
 
 ! Vegetation parameters
 
-       f1par,f3vpd,f4temp,f1par_us,&
-       f3vpd_us,f4temp_us,&
-       f1,f2,f3,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,f1,f2,f3,&
 
 ! Constants
 
@@ -89,16 +75,7 @@ MODULE MODULE_LAND
 
 ! Water balance variables
 
-       rzsm_u,tzsm_u,&
-       r_mossmold,&
-       pnet,&
-       deltrz,&
-       dc_us,fw_us,dewrun,&
-
-! Regional saturation parameters
-
-       fwcat,fwreg,pr3sat,perrg2,pr2sat,pr2uns,perrg1,pr1sat,&
-       pr1rzs,pr1tzs,pr1uns,persxr,perixr,persac,peruac,perusc,&
+       rzsm_u,tzsm_u,r_mossmold,pnet,deltrz,dc_us,fw_us,dewrun,&
 
 ! Different option paramters
 
@@ -120,30 +97,6 @@ MODULE MODULE_LAND
       initer=2
 ! ====================================================================
 ! Temporarily reassgin variables from old to new format
-    !Snow Pack variables
-      !Swq = GRID_VARS%Swq
-      !VaporMassFlux = GRID_VARS%VaporMassFlux
-      !TPack = GRID_VARS%TPack
-      !TSurf = GRID_VARS%TSurf
-      !r_MeltEnergy = GRID_VARS%r_MeltEnergy
-      !Outflow = GRID_VARS%Outflow
-      !xleact_snow = GRID_VARS%xleact_snow
-      !hact_snow = GRID_VARS%hact_snow
-      !rn_snow = GRID_VARS%rn_snow
-      !PackWater_us = GRID_VARS%PackWater_us
-      !SurfWater_us = GRID_VARS%SurfWater_us
-      !Swq_us = GRID_VARS%Swq_us
-      !VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
-      !TPack_us = GRID_VARS%TPack_us
-      !TSurf_us = GRID_VARS%TSurf_us
-      !r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
-      !Outflow_us = GRID_VARS%Outflow_us
-      !xleact_snow_us = GRID_VARS%xleact_snow_us
-      !hact_snow_us = GRID_VARS%hact_snow_us
-      !rn_snow_us = GRID_VARS%rn_snow_us
-      !dens = GRID_VARS%dens
-      !dens_us = GRID_VARS%dens_us
-      
     !Albedos of the over story, under story, and moss layer
       !alb_snow = GRID_VEG%alb_snow
       
@@ -258,7 +211,7 @@ MODULE MODULE_LAND
 ! story layers.
 ! ====================================================================
 
-      call calc_rs(GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,Swq_us,&
+      call calc_rs(GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%Swq_us,&
                    GRID_VEG%alb_moss,alb_snow,GRID_MET%rsd,rs_over,rs_under)
 
 ! ====================================================================
@@ -352,8 +305,8 @@ MODULE MODULE_LAND
 !            depends on cumulative infiltration, rainfall, ...
 ! --------------------------------------------------------------------
 
-         call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,PackWater_us,SurfWater_us,Swq_us,&
-       Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,Outflow,&
+         call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,GRID_VARS%PackWater_us,GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,&
+       GRID_VARS%Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%Outflow,&
        GRID_VARS%istmst,GRID_VARS%cuminf,inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
        tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
        GRID_VARS%zw,GRID_VARS%xinact,GRID_VARS%satxr,GRID_VARS%xinfxr,&
@@ -369,7 +322,7 @@ MODULE MODULE_LAND
 ! Option 1 : Bare soil surface.
 ! --------------------------------------------------------------------
 
-         if ( (Swq.le.(0.d0)).or.(SNOW_RUN.eq.0) ) then
+         if ( (GRID_VARS%Swq.le.(0.d0)).or.(SNOW_RUN.eq.0) ) then
 
 ! --------------------------------------------------------------------
 ! In case of absence of a snow pack, solve the energy balance for
@@ -401,22 +354,23 @@ MODULE MODULE_LAND
 
             call calcsnowmelt(0,0,dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,roa,vppa,xlhv,&
             GRID_MET%rsd*(1.d0-alb_snow),GRID_MET%rld,appa,rain,snow,tcel,vpsat-vppa,GRID_MET%uzw,&
-            GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-            Outflow,xleact_snow,hact_snow,rn_snow,1.d0,dens,gold)
+            GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
+            GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
+            GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,GRID_VARS%rn_snow,1.d0,GRID_VARS%dens,gold)
 
-            xleact_snow=0.d0-xleact_snow
-            hact_snow=0.d0-hact_snow
-            tsnow=TPack+273.15d0
+            GRID_VARS%xleact_snow=0.d0-GRID_VARS%xleact_snow
+            GRID_VARS%hact_snow=0.d0-GRID_VARS%hact_snow
+            tsnow=GRID_VARS%TPack+273.15d0
 
-            if (Swq.lt.(0.005d0)) tsnow=TSurf+273.15d0
-            if (Swq.lt.(0.d0)) tsnow=tcel+273.15d0
+            if (GRID_VARS%Swq.lt.(0.005d0)) tsnow=GRID_VARS%TSurf+273.15d0
+            if (GRID_VARS%Swq.lt.(0.d0)) tsnow=tcel+273.15d0
 
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,Tdeepstep,GRID_SOIL%zmid,dt,dum)
 
-            GRID_VARS%rnact=rn_snow
-            GRID_VARS%xleact=xleact_snow
-            GRID_VARS%hact=hact_snow
+            GRID_VARS%rnact=GRID_VARS%rn_snow
+            GRID_VARS%xleact=GRID_VARS%xleact_snow
+            GRID_VARS%hact=GRID_VARS%hact_snow
             GRID_VARS%gact=gactd
             GRID_VARS%dshact=0.d0
             GRID_VARS%tkact=tkactd
@@ -435,12 +389,14 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call transv(epetd,epetd_us,GRID_VEG%i_und,iopveg,f1par,f3vpd,f4temp,&
-       GRID_VEG%rescan,inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,smcond,GRID_VARS%tzsm,tzsm_u,&
+       GRID_VEG%rescan,inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
+       smcond,GRID_VARS%tzsm,tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
-       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,GRID_VEG%rtdens,GRID_VEG%psicri,&
-       GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,Swq,GRID_VARS%evtact,GRID_VARS%ievcon,Swq_us,evtact_us,&
-       ievcon_us,bsdew,i,ipix)
+       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
+       GRID_VEG%rtdens,GRID_VEG%psicri,&
+       GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,ievcon_us,bsdew,i,ipix)
 
       endif
 
@@ -474,7 +430,7 @@ MODULE MODULE_LAND
        GRID_VARS%evtact,evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
-       Swq,Swq_us,&
+       GRID_VARS%Swq,GRID_VARS%Swq_us,&
        GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
        GRID_VARS%tzrhs,GRID_VARS%rzrhs)
 
@@ -519,9 +475,10 @@ MODULE MODULE_LAND
        GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,inc_frozen,&
-       ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens,GRID_VARS%precip_o,GRID_VEG%za,&
-       GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,appa,vpsat,GRID_MET%uzw,rn_snow,alb_snow)
+       ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,GRID_VARS%TPack,&
+       GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,&
+       GRID_VARS%dens,GRID_VARS%precip_o,GRID_VEG%za,&
+       GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,appa,vpsat,GRID_MET%uzw,GRID_VARS%rn_snow,alb_snow)
 
 ! --------------------------------------------------------------------
 ! Calculate the incoming solar radiation for the under story and
@@ -550,11 +507,11 @@ MODULE MODULE_LAND
        rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
        g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
        thetas_moss,rnact_moss,xleact_moss,hact_moss,&
-       gact_moss,dshact_moss,gold,Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
-       GRID_VEG%z0h,RaSnow,alb_snow,appa,vpsat_ic,GRID_MET%uzw,PackWater_us,&
-       SurfWater_us,VaporMassFlux_us,TPack_us,TSurf_us,&
-       r_MeltEnergy_us,Outflow_us,xleact_snow_us,hact_snow_us,&
-       rn_snow_us,dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,i_2l)
+       gact_moss,dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
+       GRID_VEG%z0h,RaSnow,alb_snow,appa,vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
+       GRID_VARS%SurfWater_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,GRID_VARS%TSurf_us,&
+       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
+       GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,i_2l)
 
       endif
 
@@ -562,21 +519,21 @@ MODULE MODULE_LAND
 ! Print some results out.
 ! ====================================================================
 
-      if (dens_us.gt.(0.d0)) then
+      if (GRID_VARS%dens_us.gt.(0.d0)) then
 
-         p1=PackWater_us*1000.d0
-         p2=SurfWater_us*1000.d0
-         p3=Swq_us*1000.d0
-         r_dens=(p3/(p1+p2+p3))*dens_us+((p1+p2)/(p1+p2+p3))*1.d0
+         p1=GRID_VARS%PackWater_us*1000.d0
+         p2=GRID_VARS%SurfWater_us*1000.d0
+         p3=GRID_VARS%Swq_us*1000.d0
+         r_dens=(p3/(p1+p2+p3))*GRID_VARS%dens_us+((p1+p2)/(p1+p2+p3))*1.d0
 
       endif
 
-      if (dens.gt.(0.d0)) then
+      if (GRID_VARS%dens.gt.(0.d0)) then
 
          p1=GRID_VARS%PackWater*1000.d0
          p2=GRID_VARS%SurfWater*1000.d0
-         p3=Swq*1000.d0
-         r_dens=(p3/(p1+p2+p3))*dens+((p1+p2)/(p1+p2+p3))*1.d0
+         p3=GRID_VARS%Swq*1000.d0
+         r_dens=(p3/(p1+p2+p3))*GRID_VARS%dens+((p1+p2)/(p1+p2+p3))*1.d0
 
       endif
 
@@ -589,7 +546,7 @@ MODULE MODULE_LAND
 
       if (GRID_VEG%ivgtyp.gt.0) then
 
-            if (Swq.ge.GRID_VARS%wcip1) GRID_VARS%wcip1=Swq
+            if (GRID_VARS%Swq.ge.GRID_VARS%wcip1) GRID_VARS%wcip1=GRID_VARS%Swq
 
       endif
 

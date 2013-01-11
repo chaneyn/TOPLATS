@@ -477,18 +477,6 @@ xlamda = CAT%xlamda
        epwms = GRID_VARS%epwms
 
             call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
-
-! Factor to multiply the regional parameters with
-
-       mul_fac,&
-
-! Snow pack variables
-
-       Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
-       Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
-
 ! Albedos of the over story, under story,&
 ! and moss layer
 
@@ -542,11 +530,6 @@ xlamda = CAT%xlamda
 
        rzsm_u,tzsm_u,r_mossmold,&
        pnet,deltrz,dc_us,fw_us,dewrun,&
-
-! Regional saturation parameters
-
-       fwcat,fwreg,pr3sat,perrg2,pr2sat,pr2uns,perrg1,pr1sat,&
-       pr1rzs,pr1tzs,pr1uns,persxr,perixr,persac,peruac,perusc,&
 
 ! Different option paramters
 
