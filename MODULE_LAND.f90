@@ -23,11 +23,6 @@ MODULE MODULE_LAND
 ! ====================================================================
     subroutine land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
 
-! Albedos of the over story, under story,&
-! and moss layer
-
-       alb_snow,&
-
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,&
@@ -42,8 +37,8 @@ MODULE MODULE_LAND
 ! Energy fluxes
 
        epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,ievcon_us,rnact_us,&
+       epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       tkd,tkmidd,ievcon_us,rnact_us,&
        xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,&
        hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,&
@@ -75,7 +70,7 @@ MODULE MODULE_LAND
 
 ! Water balance variables
 
-       rzsm_u,tzsm_u,r_mossmold,pnet,deltrz,dc_us,fw_us,dewrun,&
+       rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun,&
 
 ! Different option paramters
 
@@ -97,9 +92,6 @@ MODULE MODULE_LAND
       initer=2
 ! ====================================================================
 ! Temporarily reassgin variables from old to new format
-    !Albedos of the over story, under story, and moss layer
-      !alb_snow = GRID_VEG%alb_snow
-      
     !Meteorological data
       !tcel
       !vppa
@@ -212,7 +204,7 @@ MODULE MODULE_LAND
 ! ====================================================================
 
       call calc_rs(GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%Swq_us,&
-                   GRID_VEG%alb_moss,alb_snow,GRID_MET%rsd,rs_over,rs_under)
+                   GRID_VEG%alb_moss,GRID_VARS%alb_snow,GRID_MET%rsd,rs_over,rs_under)
 
 ! ====================================================================
 ! Initialize soil moisture for the calculation of the thermodynami!
@@ -305,7 +297,7 @@ MODULE MODULE_LAND
 !            depends on cumulative infiltration, rainfall, ...
 ! --------------------------------------------------------------------
 
-         call infilt(pnet,GRID_VEG%i_moss,GRID_VEG%i_und,GRID_VARS%PackWater_us,GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,&
+         call infilt(GRID_VARS%pnet,GRID_VEG%i_moss,GRID_VEG%i_und,GRID_VARS%PackWater_us,GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,&
        GRID_VARS%Outflow_us,dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%Outflow,&
        GRID_VARS%istmst,GRID_VARS%cuminf,inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
        tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
@@ -353,7 +345,7 @@ MODULE MODULE_LAND
             call calcrain (tcel,snow,rain,GRID_MET%pptms,dt)
 
             call calcsnowmelt(0,0,dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,roa,vppa,xlhv,&
-            GRID_MET%rsd*(1.d0-alb_snow),GRID_MET%rld,appa,rain,snow,tcel,vpsat-vppa,GRID_MET%uzw,&
+            GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,appa,rain,snow,tcel,vpsat-vppa,GRID_MET%uzw,&
             GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
             GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
             GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,GRID_VARS%rn_snow,1.d0,GRID_VARS%dens,gold)
@@ -473,12 +465,14 @@ MODULE MODULE_LAND
        i_2l,f1,f2,f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd,GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
-       GRID_VARS%gact,GRID_VARS%dshact,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,inc_frozen,&
+       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
+       GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
+       GRID_VARS%gact,GRID_VARS%dshact,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
+       GRID_VEG%dshw,GRID_VEG%tkw,GRID_VEG%tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,inc_frozen,&
        ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,GRID_VARS%TPack,&
        GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,&
        GRID_VARS%dens,GRID_VARS%precip_o,GRID_VEG%za,&
-       GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,appa,vpsat,GRID_MET%uzw,GRID_VARS%rn_snow,alb_snow)
+       GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,appa,vpsat,GRID_MET%uzw,GRID_VARS%rn_snow,GRID_VARS%alb_snow)
 
 ! --------------------------------------------------------------------
 ! Calculate the incoming solar radiation for the under story and
@@ -508,7 +502,7 @@ MODULE MODULE_LAND
        g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
        thetas_moss,rnact_moss,xleact_moss,hact_moss,&
        gact_moss,dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
-       GRID_VEG%z0h,RaSnow,alb_snow,appa,vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
+       GRID_VEG%z0h,RaSnow,GRID_VARS%alb_snow,appa,vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
        GRID_VARS%SurfWater_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,GRID_VARS%TSurf_us,&
        GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
        GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,i_2l)

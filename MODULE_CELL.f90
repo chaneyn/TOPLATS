@@ -477,11 +477,6 @@ xlamda = CAT%xlamda
        epwms = GRID_VARS%epwms
 
             call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
-! Albedos of the over story, under story,&
-! and moss layer
-
-       alb_snow,&
-
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
@@ -495,8 +490,8 @@ xlamda = CAT%xlamda
 ! Energy fluxes
 
        epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,tkmidw,ievcon_us,rnact_us,&
+       epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       tkd,tkmidd,ievcon_us,rnact_us,&
        xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,&
        tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,evtact_moss,rnet_pot_moss,&
@@ -529,7 +524,7 @@ xlamda = CAT%xlamda
 ! Water balance variables
 
        rzsm_u,tzsm_u,r_mossmold,&
-       pnet,deltrz,dc_us,fw_us,dewrun,&
+       deltrz,dc_us,fw_us,dewrun,&
 
 ! Different option paramters
 
