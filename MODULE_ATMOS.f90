@@ -57,7 +57,7 @@ contains
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        twet_ic,twet,&
-       rh,rh_ic,qv,qv_ic,ra,ra_ic,&
+       qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
 
@@ -172,8 +172,8 @@ uzw = GRID_MET%uzw
 !Twint1 = GRID_VEG%Twint1
 !Twint2 = GRID_VEG%Twint2
 !Twsep = GRID_VEG%Twsep
-rh = GRID_MET%rh
-rh_ic = GRID_VARS%rh_ic
+!rh = GRID_MET%rh
+!rh_ic = GRID_VARS%rh_ic
 
 !Temperature variables
 tkmid = GRID_VARS%tkmid
@@ -422,14 +422,14 @@ iopsmini = GLOBAL%iopsmini
       if (iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
-         rh=100.*vppa/vpsat
+         GRID_MET%rh=100.*vppa/vpsat
          vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
-         rh_ic=100.*vppa_ic/vpsat_ic
+         GRID_VARS%rh_ic=100.*vppa_ic/vpsat_ic
 
       else
 
-         vppa=0.01*rh*vpsat
-         vppa_ic=0.01*rh_ic*vpsat_ic
+         vppa=0.01*GRID_MET%rh*vpsat
+         vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
 
       endif
 
@@ -647,8 +647,8 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%Twslope2 = Twslope2
       !GRID_VEG%Twint1 = Twint1
       !GRID_VEG%Twint2 = Twint2
-      GRID_MET%rh = rh
-      GRID_VARS%rh_ic = rh_ic
+      !GRID_MET%rh = rh
+      !GRID_VARS%rh_ic = rh_ic
 
       !Temperature variables
       GRID_VARS%tkmid = tkmid
