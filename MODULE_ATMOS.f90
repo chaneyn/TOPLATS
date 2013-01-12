@@ -56,7 +56,7 @@ contains
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       Twint1,Twint2,Twsep,twet_ic,twet,&
+       twet_ic,twet,&
        rh,rh_ic,qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
@@ -169,9 +169,9 @@ uzw = GRID_MET%uzw
 !tdry = GRID_MET%tdry
 !Twslope1 = GRID_VEG%Twslope1
 !Twslope2 = GRID_VEG%Twslope2
-Twint1 = GRID_VEG%Twint1
-Twint2 = GRID_VEG%Twint2
-Twsep = GRID_VEG%Twsep
+!Twint1 = GRID_VEG%Twint1
+!Twint2 = GRID_VEG%Twint2
+!Twsep = GRID_VEG%Twsep
 rh = GRID_MET%rh
 rh_ic = GRID_VARS%rh_ic
 
@@ -351,9 +351,9 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming there is no temperature difference.
 ! --------------------------------------------------------------------
 
-      if ( (GRID_VEG%Twslope1.eq.(0.d0)).and.(Twint1.eq.(0.d0)).and.&
-           (GRId_VEG%Twslope2.eq.(0.d0)).and.(Twint2.eq.(0.d0)).and.&
-           (Twsep.eq.(0.d0)) ) then
+      if ( (GRID_VEG%Twslope1.eq.(0.d0)).and.(GRID_VEG%Twint1.eq.(0.d0)).and.&
+           (GRId_VEG%Twslope2.eq.(0.d0)).and.(GRID_VEG%Twint2.eq.(0.d0)).and.&
+           (GRID_VEG%Twsep.eq.(0.d0)) ) then
 
          twet_ic=twet
 
@@ -368,15 +368,15 @@ iopsmini = GLOBAL%iopsmini
 
          rrrr=GRID_MET%rld+GRID_MET%rsd
 
-         if (rrrr.ge.Twsep) then
+         if (rrrr.ge.GRID_VEG%Twsep) then
 
-            twet_ic=twet+Twint2+GRID_VEG%Twslope2*rrrr
+            twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
-         if (rrrr.lt.Twsep) then
+         if (rrrr.lt.GRID_VEG%Twsep) then
 
-            twet_ic=twet+Twint1+GRID_VEG%Twslope1*rrrr
+            twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -645,8 +645,8 @@ iopsmini = GLOBAL%iopsmini
       !GRID_MET%tdry = tdry
       !GRID_VEG%Twslope1 = Twslope1
       !GRID_VEG%Twslope2 = Twslope2
-      GRID_VEG%Twint1 = Twint1
-      GRID_VEG%Twint2 = Twint2
+      !GRID_VEG%Twint1 = Twint1
+      !GRID_VEG%Twint2 = Twint2
       GRID_MET%rh = rh
       GRID_VARS%rh_ic = rh_ic
 
