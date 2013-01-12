@@ -56,8 +56,7 @@ contains
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       tdry,Twslope1,&
-       Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
+       Twint1,Twint2,Twsep,twet_ic,twet,&
        rh,rh_ic,qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
@@ -167,9 +166,9 @@ uzw = GRID_MET%uzw
 !Tint2 = GRID_VEG%Tint2
 !Tsep = GRID_VEG%Tsep
 !Tincan = GRID_VARS%Tincan
-tdry = GRID_MET%tdry
-Twslope1 = GRID_VEG%Twslope1
-Twslope2 = GRID_VEG%Twslope2
+!tdry = GRID_MET%tdry
+!Twslope1 = GRID_VEG%Twslope1
+!Twslope2 = GRID_VEG%Twslope2
 Twint1 = GRID_VEG%Twint1
 Twint2 = GRID_VEG%Twint2
 Twsep = GRID_VEG%Twsep
@@ -318,7 +317,7 @@ iopsmini = GLOBAL%iopsmini
            (GRID_VEG%Tslope2.eq.(0.d0)).and.(GRID_VEG%Tint2.eq.(0.d0)).and.&
            (GRID_VEG%Tsep.eq.(0.d0)) ) then
 
-         GRID_VARS%Tincan=tdry
+         GRID_VARS%Tincan=GRID_MET%tdry
 
       else
 
@@ -331,13 +330,13 @@ iopsmini = GLOBAL%iopsmini
 
          if (rrrr.ge.GRID_VEG%Tsep) then
 
-            GRID_VARS%Tincan=tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
+            GRID_VARS%Tincan=GRID_MET%tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
 
          endif
 
          if (rrrr.lt.GRID_VEG%Tsep) then
 
-            GRID_VARS%Tincan=tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
+            GRID_VARS%Tincan=GRID_MET%tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
 
          endif
 
@@ -352,8 +351,8 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming there is no temperature difference.
 ! --------------------------------------------------------------------
 
-      if ( (Twslope1.eq.(0.d0)).and.(Twint1.eq.(0.d0)).and.&
-           (Twslope2.eq.(0.d0)).and.(Twint2.eq.(0.d0)).and.&
+      if ( (GRID_VEG%Twslope1.eq.(0.d0)).and.(Twint1.eq.(0.d0)).and.&
+           (GRId_VEG%Twslope2.eq.(0.d0)).and.(Twint2.eq.(0.d0)).and.&
            (Twsep.eq.(0.d0)) ) then
 
          twet_ic=twet
@@ -371,13 +370,13 @@ iopsmini = GLOBAL%iopsmini
 
          if (rrrr.ge.Twsep) then
 
-            twet_ic=twet+Twint2+Twslope2*rrrr
+            twet_ic=twet+Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
          if (rrrr.lt.Twsep) then
 
-            twet_ic=twet+Twint1+Twslope1*rrrr
+            twet_ic=twet+Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -387,7 +386,7 @@ iopsmini = GLOBAL%iopsmini
 ! Initialize temperature variables.
 ! ====================================================================
 
-      tcel=tdry
+      tcel=GRID_MET%tdry
       tkel=tcel+273.15d0
       tcel_ic=GRID_VARS%Tincan
       tkel_ic=tcel_ic+273.15d0
@@ -643,9 +642,9 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%Tint2 = Tint2
       !GRID_VEG%Tsep = Tsep
       !GRID_VARS%Tincan = Tincan
-      GRID_MET%tdry = tdry
-      GRID_VEG%Twslope1 = Twslope1
-      GRID_VEG%Twslope2 = Twslope2
+      !GRID_MET%tdry = tdry
+      !GRID_VEG%Twslope1 = Twslope1
+      !GRID_VEG%Twslope2 = Twslope2
       GRID_VEG%Twint1 = Twint1
       GRID_VEG%Twint2 = Twint2
       GRID_MET%rh = rh
