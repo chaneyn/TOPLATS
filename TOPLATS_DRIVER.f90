@@ -18,7 +18,7 @@ USE MODULE_VARIABLES
 
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
-                    file_close,Write_Regional
+                    file_close,Write_Regional,WRITE_BINARY
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
@@ -35,7 +35,7 @@ type (GRID_template),dimension(:),allocatable :: GRID
 type (REGIONAL_template) :: REG
 type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
-integer :: i,ic,ipix,isoil,ilandc,icatch
+integer :: ic,isoil,ilandc,icatch
 GLOBAL%nthreads = 8
 
 !####################################################################
@@ -107,6 +107,13 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 
   call Write_Regional(i,REG)
+
+!#####################################################################
+! Output spatial field
+!#####################################################################
+
+  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,i)
+
 
 enddo
 
