@@ -56,7 +56,7 @@ contains
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       Tint1,Tint2,Tsep,Tincan,tdry,Twslope1,&
+       Tsep,Tincan,tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
        rh,rh_ic,qv,qv_ic,ra,ra_ic,&
 
@@ -162,9 +162,9 @@ contains
 uzw = GRID_MET%uzw
 !press = GRID_MET%press
 !Tslope1 = GRID_VEG%Tslope1
-Tint1 = GRID_VEG%Tint1
+!Tint1 = GRID_VEG%Tint1
 !Tslope2 = GRID_VEG%Tslope2
-Tint2 = GRID_VEG%Tint2
+!Tint2 = GRID_VEG%Tint2
 Tsep = GRID_VEG%Tsep
 Tincan = GRID_VARS%Tincan
 tdry = GRID_MET%tdry
@@ -314,8 +314,8 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming there is no temperature difference.
 ! --------------------------------------------------------------------
 
-      if ( (GRID_VEG%Tslope1.eq.(0.d0)).and.(Tint1.eq.(0.d0)).and.&
-           (GRID_VEG%Tslope2.eq.(0.d0)).and.(Tint2.eq.(0.d0)).and.&
+      if ( (GRID_VEG%Tslope1.eq.(0.d0)).and.(GRID_VEG%Tint1.eq.(0.d0)).and.&
+           (GRID_VEG%Tslope2.eq.(0.d0)).and.(GRID_VEG%Tint2.eq.(0.d0)).and.&
            (Tsep.eq.(0.d0)) ) then
 
          Tincan=tdry
@@ -331,13 +331,13 @@ iopsmini = GLOBAL%iopsmini
 
          if (rrrr.ge.Tsep) then
 
-            Tincan=tdry+Tint2+GRID_VEG%Tslope2*rrrr
+            Tincan=tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
 
          endif
 
          if (rrrr.lt.Tsep) then
 
-            Tincan=tdry+Tint1+GRID_VEG%Tslope1*rrrr
+            Tincan=tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
 
          endif
 
@@ -638,9 +638,9 @@ iopsmini = GLOBAL%iopsmini
       GRID_MET%uzw = uzw
       !GRID_MET%press = press 
       !GRID_VEG%Tslope1 = Tslope1
-      GRID_VEG%Tint1 = Tint1
+      !GRID_VEG%Tint1 = Tint1
       !GRID_VEG%Tslope2 = Tslope2
-      GRID_VEG%Tint2 = Tint2
+      !GRID_VEG%Tint2 = Tint2
       GRID_VEG%Tsep = Tsep
       GRID_VARS%Tincan = Tincan
       GRID_MET%tdry = tdry
