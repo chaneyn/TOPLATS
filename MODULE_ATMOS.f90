@@ -62,8 +62,8 @@ contains
 ! Temperature variables
 
        GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,Tdeepstep,tdeep,&
-       tmid0,tmid0_moss,tk0moss,&
+       tkmid_moss,Tdeepstep,&
+       
 
 ! Energy fluxes and states
 
@@ -181,10 +181,10 @@ tkmid = GRID_VARS%tkmid
 !amp = GRID_SOIL%amp
 !phase = GRID_SOIL%phase
 !shift = GRID_SOIL%shift
-tdeep = GRID_SOIL%tdeep
-tmid0 = GRID_SOIL%tmid0
-tmid0_moss = GRID_VEG%tmid0_moss
-tk0moss = GRID_VEG%tk0moss
+!tdeep = GRID_SOIL%tdeep
+!tmid0 = GRID_SOIL%tmid0
+!tmid0_moss = GRID_VEG%tmid0_moss
+!tk0moss = GRID_VEG%tk0moss
 
 !Energy fluxes and states
 dshact = GRID_VARS%dshact
@@ -291,7 +291,7 @@ iopsmini = GLOBAL%iopsmini
       if ( (GRID_SOIL%amp.eq.(0.d0)).and.(GRID_SOIL%phase.eq.(0.d0)).and.&
       (GRID_SOIL%shift.eq.(0.d0)) ) then
 
-         Tdeepstep=tdeep
+         Tdeepstep=GRID_SOIL%tdeep
 
       else
 
@@ -301,7 +301,7 @@ iopsmini = GLOBAL%iopsmini
 
          rrr=real(i)
 
-         Tdeepstep=tdeep + GRID_SOIL%amp*cos ( rrr*GRID_SOIL%phase - GRID_SOIL%shift )
+         Tdeepstep=GRID_SOIL%tdeep + GRID_SOIL%amp*cos ( rrr*GRID_SOIL%phase - GRID_SOIL%shift )
 
       endif
 
@@ -398,9 +398,11 @@ iopsmini = GLOBAL%iopsmini
 
       if (i.eq.1) then
 
-         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
+         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
+       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,&
-       tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
+       GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
+       tskinact_moss,dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
 
@@ -658,10 +660,10 @@ iopsmini = GLOBAL%iopsmini
       !GRID_SOIL%amp = amp
       !GRID_SOIL%phase = phase
       !GRID_SOIL%shift = shift
-      GRID_SOIL%tdeep = tdeep
-      GRID_SOIL%tmid0 = tmid0
-      GRID_VEG%tmid0_moss = tmid0_moss
-      GRID_VEG%tk0moss = tk0moss
+      !GRID_SOIL%tdeep = tdeep
+      !GRID_SOIL%tmid0 = tmid0
+      !GRID_VEG%tmid0_moss = tmid0_moss
+      !GRID_VEG%tk0moss = tk0moss
 
       !Energy Fluxes and states
       GRID_VARS%dshact = dshact
