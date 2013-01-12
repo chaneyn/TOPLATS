@@ -61,7 +61,7 @@ contains
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,&
        tmid0,tmid0_moss,tk0moss,&
 
@@ -177,7 +177,7 @@ uzw = GRID_MET%uzw
 
 !Temperature variables
 tkmid = GRID_VARS%tkmid
-tkact = GRID_VARS%tkact
+!tkact = GRID_VARS%tkact
 amp = GRID_SOIL%amp
 phase = GRID_SOIL%phase
 shift = GRID_SOIL%shift
@@ -399,7 +399,7 @@ iopsmini = GLOBAL%iopsmini
 
          call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,&
-       tk0moss,tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
+       tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
 
@@ -476,7 +476,8 @@ iopsmini = GLOBAL%iopsmini
 
       if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
          
-         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,zpd,z0m,tkel,GRID_MET%press,tkact,vppa,rib)
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,zpd,z0m,tkel,GRID_MET%press,&
+       GRID_VARS%tkact,vppa,rib)
          
       else
 
@@ -542,7 +543,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,GRID_VARS%tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -652,7 +653,7 @@ iopsmini = GLOBAL%iopsmini
 
       !Temperature variables
       GRID_VARS%tkmid = tkmid
-      GRID_VARS%tkact = tkact
+      !GRID_VARS%tkact = tkact
       GRID_SOIL%amp = amp
       GRID_SOIL%phase = phase
       GRID_SOIL%shift = shift
