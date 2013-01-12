@@ -62,7 +62,7 @@ contains
 ! Temperature variables
 
        GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,&
+       tkmid_moss,Tdeepstep,tdeep,&
        tmid0,tmid0_moss,tk0moss,&
 
 ! Energy fluxes and states
@@ -178,9 +178,9 @@ uzw = GRID_MET%uzw
 !Temperature variables
 tkmid = GRID_VARS%tkmid
 !tkact = GRID_VARS%tkact
-amp = GRID_SOIL%amp
-phase = GRID_SOIL%phase
-shift = GRID_SOIL%shift
+!amp = GRID_SOIL%amp
+!phase = GRID_SOIL%phase
+!shift = GRID_SOIL%shift
 tdeep = GRID_SOIL%tdeep
 tmid0 = GRID_SOIL%tmid0
 tmid0_moss = GRID_VEG%tmid0_moss
@@ -288,7 +288,8 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming a constant temperature.
 ! --------------------------------------------------------------------
 
-      if ( (amp.eq.(0.d0)).and.(phase.eq.(0.d0)).and.(shift.eq.(0.d0)) ) then
+      if ( (GRID_SOIL%amp.eq.(0.d0)).and.(GRID_SOIL%phase.eq.(0.d0)).and.&
+      (GRID_SOIL%shift.eq.(0.d0)) ) then
 
          Tdeepstep=tdeep
 
@@ -300,7 +301,7 @@ iopsmini = GLOBAL%iopsmini
 
          rrr=real(i)
 
-         Tdeepstep=tdeep + amp*cos ( rrr*phase - shift )
+         Tdeepstep=tdeep + GRID_SOIL%amp*cos ( rrr*GRID_SOIL%phase - GRID_SOIL%shift )
 
       endif
 
@@ -654,9 +655,9 @@ iopsmini = GLOBAL%iopsmini
       !Temperature variables
       GRID_VARS%tkmid = tkmid
       !GRID_VARS%tkact = tkact
-      GRID_SOIL%amp = amp
-      GRID_SOIL%phase = phase
-      GRID_SOIL%shift = shift
+      !GRID_SOIL%amp = amp
+      !GRID_SOIL%phase = phase
+      !GRID_SOIL%shift = shift
       GRID_SOIL%tdeep = tdeep
       GRID_SOIL%tmid0 = tmid0
       GRID_VEG%tmid0_moss = tmid0_moss
