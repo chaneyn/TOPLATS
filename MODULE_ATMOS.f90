@@ -42,15 +42,15 @@ contains
 ! Snow pack variables
 
        TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
-       TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
+       xleact_snow,hact_snow,rn_snow,&
+       TPack_us,&
+       TSurf_us,xleact_snow_us,&
        hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+       
 
 ! Meteorological data
 
@@ -138,20 +138,20 @@ contains
 !Swq = GRID_VARS%Swq
 !VaporMassFlux = GRID_VARS%VaporMassFlux
 !r_MeltEnergy = GRID_VARS%r_MeltEnergy
-Outflow = GRID_VARS%Outflow
-PackWater_us = GRID_VARS%PackWater_us
-SurfWater_us = GRID_VARS%SurfWater_us
-Swq_us = GRID_VARS%Swq_us
-VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
-r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
-Outflow_us = GRID_VARS%Outflow_us
+!Outflow = GRID_VARS%Outflow
+!PackWater_us = GRID_VARS%PackWater_us
+!SurfWater_us = GRID_VARS%SurfWater_us
+!Swq_us = GRID_VARS%Swq_us
+!VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+!r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+!Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
 !albd_us = GRID_VEG%albd_us
-alb_moss = GRID_VEG%alb_moss
-albd = GRID_VEG%albd
-albw = GRID_VEG%albw
-albw_us = GRID_VEG%albw_us
+!alb_moss = GRID_VEG%alb_moss
+!albd = GRID_VEG%albd
+!albw = GRID_VEG%albw
+!albw_us = GRID_VEG%albw_us
 
 !Meteorological data
 rsd = GRID_MET%rsd
@@ -277,7 +277,7 @@ iopsmini = GLOBAL%iopsmini
 ! Define the albedo for the snow layer.
 ! ====================================================================
 
-    alb_snow = 0.75
+    GRID_VARS%alb_snow = 0.75
 
    ! call calctempds(amp,phase,shift,Tdeepstep,tdeep) 
 ! ====================================================================
@@ -513,7 +513,7 @@ iopsmini = GLOBAL%iopsmini
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
       GRID_MET%uzw = uzw
-      GRID_VARS%alb_snow = alb_snow
+      !GRID_VARS%alb_snow = alb_snow
 
       if(ioppet.eq.0)then
 
@@ -526,14 +526,14 @@ iopsmini = GLOBAL%iopsmini
 ! Snow pack variables
 
        GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,TPack,TSurf,&
-       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
-       Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,GRID_VARS%PackWater_us,&
+       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,TPack_us,TSurf_us,&
+       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+       GRID_VEG%alb_moss,GRID_VARS%alb_snow,GRID_VEG%albd,GRID_VEG%albw,GRID_VEG%albw_us,&
 
 ! Meteorological data
 
@@ -593,7 +593,7 @@ iopsmini = GLOBAL%iopsmini
 
       else if(ioppet.eq.1)then
 
-        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
        xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
@@ -614,19 +614,19 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%VaporMassFlux = VaporMassFlux
       !GRID_VARS%r_MeltEnergy = r_MeltEnergy
       !GRID_VARS%Outflow = Outflow
-      GRID_VARS%PackWater_us = PackWater_us
-      GRID_VARS%SurfWater_us = SurfWater_us
-      GRID_VARS%Swq_us = Swq_us
-      GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
-      GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
-      GRID_VARS%Outflow_us = Outflow_us
+      !GRID_VARS%PackWater_us = PackWater_us
+      !GRID_VARS%SurfWater_us = SurfWater_us
+      !GRID_VARS%Swq_us = Swq_us
+      !GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
+      !GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
+      !GRID_VARS%Outflow_us = Outflow_us
 
       !Albedos of the over story, under story, and moss layer
-      GRID_VEG%albd_us = albd_us
-      GRID_VEG%alb_moss = alb_moss
-      GRID_VEG%albd = albd
-      GRID_VEG%albw = albw
-      GRID_VEG%albw_us = albw_us
+      !GRID_VEG%albd_us = albd_us
+      !GRID_VEG%alb_moss = alb_moss
+      !GRID_VEG%albd = albd
+      !GRID_VEG%albw = albw
+      !GRID_VEG%albw_us = albw_us
 
       !Meteorological Data
       GRID_MET%rsd = rsd

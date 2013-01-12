@@ -352,14 +352,14 @@ xlamda = CAT%xlamda
 ! Snow pack variables
 
        TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
-       VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
-       Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       xleact_snow,hact_snow,rn_snow,&
+       TPack_us,TSurf_us,&
+       xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+       
 
 ! Meteorological data
        GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
