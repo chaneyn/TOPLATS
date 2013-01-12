@@ -50,7 +50,7 @@ contains
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       
+       alb_snow,alb_moss,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -148,10 +148,11 @@ contains
 
 !Albedos of the over story, under story, and moss layer
 !albd_us = GRID_VEG%albd_us
-!alb_moss = GRID_VEG%alb_moss
-!albd = GRID_VEG%albd
-!albw = GRID_VEG%albw
-!albw_us = GRID_VEG%albw_us
+alb_moss = GRID_VEG%alb_moss
+albd = GRID_VEG%albd
+albw = GRID_VEG%albw
+albw_us = GRID_VEG%albw_us
+alb_snow = GRID_VARS%alb_snow
 
 !Meteorological data
 rsd = GRID_MET%rsd
@@ -277,7 +278,7 @@ iopsmini = GLOBAL%iopsmini
 ! Define the albedo for the snow layer.
 ! ====================================================================
 
-    GRID_VARS%alb_snow = 0.75
+    alb_snow = 0.75
 
    ! call calctempds(amp,phase,shift,Tdeepstep,tdeep) 
 ! ====================================================================
@@ -513,7 +514,7 @@ iopsmini = GLOBAL%iopsmini
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
       GRID_MET%uzw = uzw
-      !GRID_VARS%alb_snow = alb_snow
+      GRID_VARS%alb_snow = alb_snow
 
       if(ioppet.eq.0)then
 
@@ -533,7 +534,7 @@ iopsmini = GLOBAL%iopsmini
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       GRID_VEG%alb_moss,GRID_VARS%alb_snow,GRID_VEG%albd,GRID_VEG%albw,GRID_VEG%albw_us,&
+       alb_moss,alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -593,7 +594,7 @@ iopsmini = GLOBAL%iopsmini
 
       else if(ioppet.eq.1)then
 
-        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,albd,&
        xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
@@ -622,11 +623,12 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%Outflow_us = Outflow_us
 
       !Albedos of the over story, under story, and moss layer
-      !GRID_VEG%albd_us = albd_us
-      !GRID_VEG%alb_moss = alb_moss
-      !GRID_VEG%albd = albd
-      !GRID_VEG%albw = albw
-      !GRID_VEG%albw_us = albw_us
+     ! GRID_VEG%albd_us = albd_us
+      GRID_VEG%alb_moss = alb_moss
+      GRID_VEG%albd = albd
+      GRID_VEG%albw = albw
+      GRID_VEG%albw_us = albw_us
+      GRID_VARS%alb_snow = alb_snow
 
       !Meteorological Data
       GRID_MET%rsd = rsd
@@ -1152,7 +1154,7 @@ r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
 Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-!albd_us = GRID_VEG%albd_us
+albd_us = GRID_VEG%albd_us
 alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
@@ -1473,7 +1475,7 @@ GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
 GRID_VARS%Outflow_us = Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-!albd_us = GRID_VEG%albd_us
+albd_us = GRID_VEG%albd_us
 GRID_VEG%alb_moss = alb_moss
 GRID_VEG%albd = albd
 GRID_VEG%albw = albw
