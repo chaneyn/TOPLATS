@@ -50,7 +50,7 @@ contains
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,albd,albw,albw_us,&
+       albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -148,7 +148,7 @@ contains
 
 !Albedos of the over story, under story, and moss layer
 !albd_us = GRID_VEG%albd_us
-alb_moss = GRID_VEG%alb_moss
+!alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
 albw_us = GRID_VEG%albw_us
@@ -534,7 +534,7 @@ iopsmini = GLOBAL%iopsmini
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,GRID_VARS%alb_snow,albd,albw,albw_us,&
+       GRID_VEG%alb_moss,GRID_VARS%alb_snow,albd,albw,albw_us,&
 
 ! Meteorological data
 
@@ -624,7 +624,7 @@ iopsmini = GLOBAL%iopsmini
 
       !Albedos of the over story, under story, and moss layer
      ! GRID_VEG%albd_us = albd_us
-      GRID_VEG%alb_moss = alb_moss
+      !GRID_VEG%alb_moss = alb_moss
       GRID_VEG%albd = albd
       GRID_VEG%albw = albw
       GRID_VEG%albw_us = albw_us
