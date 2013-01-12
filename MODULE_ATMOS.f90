@@ -56,7 +56,7 @@ contains
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       Tsep,Tincan,tdry,Twslope1,&
+       tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
        rh,rh_ic,qv,qv_ic,ra,ra_ic,&
 
@@ -165,8 +165,8 @@ uzw = GRID_MET%uzw
 !Tint1 = GRID_VEG%Tint1
 !Tslope2 = GRID_VEG%Tslope2
 !Tint2 = GRID_VEG%Tint2
-Tsep = GRID_VEG%Tsep
-Tincan = GRID_VARS%Tincan
+!Tsep = GRID_VEG%Tsep
+!Tincan = GRID_VARS%Tincan
 tdry = GRID_MET%tdry
 Twslope1 = GRID_VEG%Twslope1
 Twslope2 = GRID_VEG%Twslope2
@@ -316,9 +316,9 @@ iopsmini = GLOBAL%iopsmini
 
       if ( (GRID_VEG%Tslope1.eq.(0.d0)).and.(GRID_VEG%Tint1.eq.(0.d0)).and.&
            (GRID_VEG%Tslope2.eq.(0.d0)).and.(GRID_VEG%Tint2.eq.(0.d0)).and.&
-           (Tsep.eq.(0.d0)) ) then
+           (GRID_VEG%Tsep.eq.(0.d0)) ) then
 
-         Tincan=tdry
+         GRID_VARS%Tincan=tdry
 
       else
 
@@ -329,15 +329,15 @@ iopsmini = GLOBAL%iopsmini
 
          rrrr=GRID_MET%rld+GRID_MET%rsd
 
-         if (rrrr.ge.Tsep) then
+         if (rrrr.ge.GRID_VEG%Tsep) then
 
-            Tincan=tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
+            GRID_VARS%Tincan=tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
 
          endif
 
-         if (rrrr.lt.Tsep) then
+         if (rrrr.lt.GRID_VEG%Tsep) then
 
-            Tincan=tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
+            GRID_VARS%Tincan=tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
 
          endif
 
@@ -389,7 +389,7 @@ iopsmini = GLOBAL%iopsmini
 
       tcel=tdry
       tkel=tcel+273.15d0
-      tcel_ic=Tincan
+      tcel_ic=GRID_VARS%Tincan
       tkel_ic=tcel_ic+273.15d0
 
 ! ====================================================================
@@ -641,8 +641,8 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%Tint1 = Tint1
       !GRID_VEG%Tslope2 = Tslope2
       !GRID_VEG%Tint2 = Tint2
-      GRID_VEG%Tsep = Tsep
-      GRID_VARS%Tincan = Tincan
+      !GRID_VEG%Tsep = Tsep
+      !GRID_VARS%Tincan = Tincan
       GRID_MET%tdry = tdry
       GRID_VEG%Twslope1 = Twslope1
       GRID_VEG%Twslope2 = Twslope2
