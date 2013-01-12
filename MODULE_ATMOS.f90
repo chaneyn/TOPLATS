@@ -54,7 +54,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
@@ -155,8 +155,8 @@ contains
 !alb_snow = GRID_VARS%alb_snow
 
 !Meteorological data
-rsd = GRID_MET%rsd
-rld = GRID_MET%rld
+!rsd = GRID_MET%rsd
+!rld = GRID_MET%rld
 zww = GRID_VEG%zww
 za = GRID_VEG%za
 uzw = GRID_MET%uzw
@@ -327,7 +327,7 @@ iopsmini = GLOBAL%iopsmini
 ! total incoming radiation.
 ! --------------------------------------------------------------------
 
-         rrrr=rld+rsd
+         rrrr=GRID_MET%rld+GRID_MET%rsd
 
          if (rrrr.ge.Tsep) then
 
@@ -367,7 +367,7 @@ iopsmini = GLOBAL%iopsmini
 ! total incoming radiation.
 ! --------------------------------------------------------------------
 
-         rrrr=rld+rsd
+         rrrr=GRID_MET%rld+GRID_MET%rsd
 
          if (rrrr.ge.Twsep) then
 
@@ -538,7 +538,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Meteorological data
 
-       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
@@ -595,7 +595,7 @@ iopsmini = GLOBAL%iopsmini
       else if(ioppet.eq.1)then
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
-       xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
+       xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
  
@@ -631,8 +631,8 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%alb_snow = alb_snow
 
       !Meteorological Data
-      GRID_MET%rsd = rsd
-      GRID_MET%rld = rld
+      !GRID_MET%rsd = rsd
+      !GRID_MET%rld = rld
       GRID_VEG%zww = zww
       GRID_VEG%za = za
       GRID_MET%uzw = uzw
