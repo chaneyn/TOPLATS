@@ -207,7 +207,7 @@ PROGRAM CATCHMENT_TESTS_DRIVER
 USE MODULE_CATCHMENT_TEST
 
 implicit none
-integer :: i,nt
+integer :: t,nt
 character(len=200) :: filename
 nt = 250
 
@@ -228,7 +228,7 @@ open(2001,file=trim(filename))
 call init_fruit
 
 !Compare the regional output of the new model to the old model
-do i = 1,nt
+do t = 1,nt
   call Run_Tests()
 enddo
 

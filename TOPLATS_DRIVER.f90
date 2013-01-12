@@ -35,7 +35,7 @@ type (GRID_template),dimension(:),allocatable :: GRID
 type (REGIONAL_template) :: REG
 type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
-integer :: i,ic,ipix,isoil,ilandc,icatch
+integer :: ic,isoil,ilandc,icatch
 GLOBAL%nthreads = 8
 
 !####################################################################

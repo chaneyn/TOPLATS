@@ -74,6 +74,6 @@
       real*8 xlat_a,xlong_a,eta_a,fraci_a,precacc,avpx,tax,rha
       real*8 psurfx,qax,rlwdx,swx,uax
 
-      real*8 temp_a(1+LAK_FLG*(MAX_PIX-1),1+LAK_FLG*(MAX_NOD-1))
+      real*8 temp_a(1+LAK_FLG*(MAX_PIX-1),1+LAK_FLG*(4))
       real*8 surface(1+LAK_FLG*(MAX_PIX-1),1+LAK_FLG*(MAX_NOD-1))
       real*8 rrr,tprev

@@ -187,4 +187,7 @@ type GLOBAL_template
 
 end type GLOBAL_template
 
+!General variables
+integer :: i,ipix
+
 END MODULE MODULE_VARIABLES
