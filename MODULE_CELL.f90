@@ -345,30 +345,29 @@ xlamda = CAT%xlamda
 
 ! General vegetation parameters
 
-       GRID_VEG,ivgtyp,&
+       GRID_VEG,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
-       VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
-       Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       TPack,TSurf,&
+       xleact_snow,hact_snow,rn_snow,&
+       TPack_us,TSurf_us,&
+       xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+        
 
 ! Meteorological data
-       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,Twint1,&
-       Twslope2,Twint2,Twsep,twet_ic,twet,rh,rh_ic,qv,qv_ic,ra,ra_ic,&
+       twet_ic,twet,qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,tmid0,tmid0_moss,tk0moss,&
+       GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
 

@@ -35,34 +35,33 @@ contains
 
 ! General vegetation parameters
 
-       GRID_VEG,ivgtyp,&
+       GRID_VEG,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
-       TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
+       TPack,TSurf,&
+       xleact_snow,hact_snow,rn_snow,&
+       TPack_us,&
+       TSurf_us,xleact_snow_us,&
        hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+       
 
 ! Meteorological data
 
-       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,&
-       Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
-       rh,rh_ic,qv,qv_ic,ra,ra_ic,&
+       twet_ic,twet,&
+       qv,qv_ic,ra,ra_ic,&
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,Tdeepstep,amp,phase,shift,tdeep,&
-       tmid0,tmid0_moss,tk0moss,&
+       GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       tkmid_moss,Tdeepstep,&
+       
 
 ! Energy fluxes and states
 
@@ -128,61 +127,62 @@ contains
 !extinct = GRID_VEG%extinct
 !i_und = GRID_VEG%i_und
 !i_moss = GRID_VEG%i_moss
-ivgtyp = GRID_VEG%ivgtyp
+!ivgtyp = GRID_VEG%ivgtyp
 
 !Snow Pack variables
-PackWater = GRID_VARS%PackWater
-SurfWater = GRID_VARS%SurfWater
-Swq = GRID_VARS%Swq
-VaporMassFlux = GRID_VARS%VaporMassFlux
-r_MeltEnergy = GRID_VARS%r_MeltEnergy
-Outflow = GRID_VARS%Outflow
-PackWater_us = GRID_VARS%PackWater_us
-SurfWater_us = GRID_VARS%SurfWater_us
-Swq_us = GRID_VARS%Swq_us
-VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
-r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
-Outflow_us = GRID_VARS%Outflow_us
+!PackWater = GRID_VARS%PackWater
+!SurfWater = GRID_VARS%SurfWater
+!Swq = GRID_VARS%Swq
+!VaporMassFlux = GRID_VARS%VaporMassFlux
+!r_MeltEnergy = GRID_VARS%r_MeltEnergy
+!Outflow = GRID_VARS%Outflow
+!PackWater_us = GRID_VARS%PackWater_us
+!SurfWater_us = GRID_VARS%SurfWater_us
+!Swq_us = GRID_VARS%Swq_us
+!VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
+!r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
+!Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
 !albd_us = GRID_VEG%albd_us
-alb_moss = GRID_VEG%alb_moss
-albd = GRID_VEG%albd
-albw = GRID_VEG%albw
-albw_us = GRID_VEG%albw_us
+!alb_moss = GRID_VEG%alb_moss
+!albd = GRID_VEG%albd
+!albw = GRID_VEG%albw
+!albw_us = GRID_VEG%albw_us
+!alb_snow = GRID_VARS%alb_snow
 
 !Meteorological data
-rsd = GRID_MET%rsd
-rld = GRID_MET%rld
-zww = GRID_VEG%zww
-za = GRID_VEG%za
+!rsd = GRID_MET%rsd
+!rld = GRID_MET%rld
+!zww = GRID_VEG%zww
+!za = GRID_VEG%za
 uzw = GRID_MET%uzw
-press = GRID_MET%press
-Tslope1 = GRID_VEG%Tslope1
-Tint1 = GRID_VEG%Tint1
-Tslope2 = GRID_VEG%Tslope2
-Tint2 = GRID_VEG%Tint2
-Tsep = GRID_VEG%Tsep
-Tincan = GRID_VARS%Tincan
-tdry = GRID_MET%tdry
-Twslope1 = GRID_VEG%Twslope1
-Twslope2 = GRID_VEG%Twslope2
-Twint1 = GRID_VEG%Twint1
-Twint2 = GRID_VEG%Twint2
-Twsep = GRID_VEG%Twsep
-rh = GRID_MET%rh
-rh_ic = GRID_VARS%rh_ic
+!press = GRID_MET%press
+!Tslope1 = GRID_VEG%Tslope1
+!Tint1 = GRID_VEG%Tint1
+!Tslope2 = GRID_VEG%Tslope2
+!Tint2 = GRID_VEG%Tint2
+!Tsep = GRID_VEG%Tsep
+!Tincan = GRID_VARS%Tincan
+!tdry = GRID_MET%tdry
+!Twslope1 = GRID_VEG%Twslope1
+!Twslope2 = GRID_VEG%Twslope2
+!Twint1 = GRID_VEG%Twint1
+!Twint2 = GRID_VEG%Twint2
+!Twsep = GRID_VEG%Twsep
+!rh = GRID_MET%rh
+!rh_ic = GRID_VARS%rh_ic
 
 !Temperature variables
 tkmid = GRID_VARS%tkmid
-tkact = GRID_VARS%tkact
-amp = GRID_SOIL%amp
-phase = GRID_SOIL%phase
-shift = GRID_SOIL%shift
-tdeep = GRID_SOIL%tdeep
-tmid0 = GRID_SOIL%tmid0
-tmid0_moss = GRID_VEG%tmid0_moss
-tk0moss = GRID_VEG%tk0moss
+!tkact = GRID_VARS%tkact
+!amp = GRID_SOIL%amp
+!phase = GRID_SOIL%phase
+!shift = GRID_SOIL%shift
+!tdeep = GRID_SOIL%tdeep
+!tmid0 = GRID_SOIL%tmid0
+!tmid0_moss = GRID_VEG%tmid0_moss
+!tk0moss = GRID_VEG%tk0moss
 
 !Energy fluxes and states
 dshact = GRID_VARS%dshact
@@ -274,7 +274,7 @@ iopsmini = GLOBAL%iopsmini
 ! Define the albedo for the snow layer.
 ! ====================================================================
 
-    alb_snow = 0.75
+    GRID_VARS%alb_snow = 0.75
 
    ! call calctempds(amp,phase,shift,Tdeepstep,tdeep) 
 ! ====================================================================
@@ -285,9 +285,10 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming a constant temperature.
 ! --------------------------------------------------------------------
 
-      if ( (amp.eq.(0.d0)).and.(phase.eq.(0.d0)).and.(shift.eq.(0.d0)) ) then
+      if ( (GRID_SOIL%amp.eq.(0.d0)).and.(GRID_SOIL%phase.eq.(0.d0)).and.&
+      (GRID_SOIL%shift.eq.(0.d0)) ) then
 
-         Tdeepstep=tdeep
+         Tdeepstep=GRID_SOIL%tdeep
 
       else
 
@@ -297,7 +298,7 @@ iopsmini = GLOBAL%iopsmini
 
          rrr=real(i)
 
-         Tdeepstep=tdeep + amp*cos ( rrr*phase - shift )
+         Tdeepstep=GRID_SOIL%tdeep + GRID_SOIL%amp*cos ( rrr*GRID_SOIL%phase - GRID_SOIL%shift )
 
       endif
 
@@ -310,11 +311,11 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming there is no temperature difference.
 ! --------------------------------------------------------------------
 
-      if ( (Tslope1.eq.(0.d0)).and.(Tint1.eq.(0.d0)).and.&
-           (Tslope2.eq.(0.d0)).and.(Tint2.eq.(0.d0)).and.&
-           (Tsep.eq.(0.d0)) ) then
+      if ( (GRID_VEG%Tslope1.eq.(0.d0)).and.(GRID_VEG%Tint1.eq.(0.d0)).and.&
+           (GRID_VEG%Tslope2.eq.(0.d0)).and.(GRID_VEG%Tint2.eq.(0.d0)).and.&
+           (GRID_VEG%Tsep.eq.(0.d0)) ) then
 
-         Tincan=tdry
+         GRID_VARS%Tincan=GRID_MET%tdry
 
       else
 
@@ -323,17 +324,17 @@ iopsmini = GLOBAL%iopsmini
 ! total incoming radiation.
 ! --------------------------------------------------------------------
 
-         rrrr=rld+rsd
+         rrrr=GRID_MET%rld+GRID_MET%rsd
 
-         if (rrrr.ge.Tsep) then
+         if (rrrr.ge.GRID_VEG%Tsep) then
 
-            Tincan=tdry+Tint2+Tslope2*rrrr
+            GRID_VARS%Tincan=GRID_MET%tdry+GRID_VEG%Tint2+GRID_VEG%Tslope2*rrrr
 
          endif
 
-         if (rrrr.lt.Tsep) then
+         if (rrrr.lt.GRID_VEG%Tsep) then
 
-            Tincan=tdry+Tint1+Tslope1*rrrr
+            GRID_VARS%Tincan=GRID_MET%tdry+GRID_VEG%Tint1+GRID_VEG%Tslope1*rrrr
 
          endif
 
@@ -348,9 +349,9 @@ iopsmini = GLOBAL%iopsmini
 ! Option 1 : Assuming there is no temperature difference.
 ! --------------------------------------------------------------------
 
-      if ( (Twslope1.eq.(0.d0)).and.(Twint1.eq.(0.d0)).and.&
-           (Twslope2.eq.(0.d0)).and.(Twint2.eq.(0.d0)).and.&
-           (Twsep.eq.(0.d0)) ) then
+      if ( (GRID_VEG%Twslope1.eq.(0.d0)).and.(GRID_VEG%Twint1.eq.(0.d0)).and.&
+           (GRId_VEG%Twslope2.eq.(0.d0)).and.(GRID_VEG%Twint2.eq.(0.d0)).and.&
+           (GRID_VEG%Twsep.eq.(0.d0)) ) then
 
          twet_ic=twet
 
@@ -363,17 +364,17 @@ iopsmini = GLOBAL%iopsmini
 ! total incoming radiation.
 ! --------------------------------------------------------------------
 
-         rrrr=rld+rsd
+         rrrr=GRID_MET%rld+GRID_MET%rsd
 
-         if (rrrr.ge.Twsep) then
+         if (rrrr.ge.GRID_VEG%Twsep) then
 
-            twet_ic=twet+Twint2+Twslope2*rrrr
+            twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
-         if (rrrr.lt.Twsep) then
+         if (rrrr.lt.GRID_VEG%Twsep) then
 
-            twet_ic=twet+Twint1+Twslope1*rrrr
+            twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -383,9 +384,9 @@ iopsmini = GLOBAL%iopsmini
 ! Initialize temperature variables.
 ! ====================================================================
 
-      tcel=tdry
+      tcel=GRID_MET%tdry
       tkel=tcel+273.15d0
-      tcel_ic=Tincan
+      tcel_ic=GRID_VARS%Tincan
       tkel_ic=tcel_ic+273.15d0
 
 ! ====================================================================
@@ -394,9 +395,11 @@ iopsmini = GLOBAL%iopsmini
 
       if (i.eq.1) then
 
-         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
+         call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
+       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,&
-       tk0moss,tkact,tkact_us,tkact_moss,tskinact_moss,dshact,&
+       GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
+       tskinact_moss,dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
 
@@ -412,21 +415,21 @@ iopsmini = GLOBAL%iopsmini
 ! DEW POINT TEMPERATURES !
 ! ====================================================================
 
-      appa=100.d0*press
+      appa=100.d0*GRID_MET%press
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
 
       if (iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
-         rh=100.*vppa/vpsat
+         GRID_MET%rh=100.*vppa/vpsat
          vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
-         rh_ic=100.*vppa_ic/vpsat_ic
+         GRID_VARS%rh_ic=100.*vppa_ic/vpsat_ic
 
       else
 
-         vppa=0.01*rh*vpsat
-         vppa_ic=0.01*rh_ic*vpsat_ic
+         vppa=0.01*GRID_MET%rh*vpsat
+         vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
 
       endif
 
@@ -473,7 +476,8 @@ iopsmini = GLOBAL%iopsmini
 
       if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
          
-         call stabcor(zww,za,uzw,zpd,z0m,tkel,press,tkact,vppa,rib)
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,zpd,z0m,tkel,GRID_MET%press,&
+       GRID_VARS%tkact,vppa,rib)
          
       else
 
@@ -490,13 +494,13 @@ iopsmini = GLOBAL%iopsmini
 ! Also do this for snow.
 ! ====================================================================
 
-      rahd=calcra(uzw,zww,za,zpd,z0m,z0h,rib)
-      rahw=calcra(uzw,zww,za,zpd,z0m,z0h,rib)
+      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
+      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
 
       ravd=rahd
       ravw=rahw
 
-      RaSnow=calcra(uzw,zww,za,zpd,0.005d0,0.0005d0,1.d0)
+      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -510,7 +514,7 @@ iopsmini = GLOBAL%iopsmini
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
       GRID_MET%uzw = uzw
-      GRID_VARS%alb_snow = alb_snow
+      !GRID_VARS%alb_snow = alb_snow
 
       if(ioppet.eq.0)then
 
@@ -518,28 +522,28 @@ iopsmini = GLOBAL%iopsmini
 
 ! General vegetation parameters
 
-       GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,ivgtyp,&
+       GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VEG%ivgtyp,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
-       Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,TPack,TSurf,&
+       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,GRID_VARS%PackWater_us,&
+       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,TPack_us,TSurf_us,&
+       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       alb_moss,alb_snow,albd,albw,albw_us,&
+       GRID_VEG%alb_moss,GRID_VARS%alb_snow,GRID_VEG%albd,GRID_VEG%albw,GRID_VEG%albw_us,&
 
 ! Meteorological data
 
-       GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
+       GRID_VARS,tkmid,GRID_VARS%tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,Tdeepstep,&
 
 ! Energy fluxes and states
@@ -590,8 +594,8 @@ iopsmini = GLOBAL%iopsmini
 
       else if(ioppet.eq.1)then
 
-        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,albd,&
-       xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
+       xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
  
@@ -602,60 +606,61 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%extinct = extinct
       !GRID_VEG%i_und = i_und
       !GRID_VEG%i_moss = i_moss
-      GRID_VEG%ivgtyp = ivgtyp
+      !GRID_VEG%ivgtyp = ivgtyp
 
       !Snow Pack variables
-      GRID_VARS%PackWater = PackWater
-      GRID_VARS%SurfWater = SurfWater
-      GRID_VARS%Swq = Swq
-      GRID_VARS%VaporMassFlux = VaporMassFlux
-      GRID_VARS%r_MeltEnergy = r_MeltEnergy
-      GRID_VARS%Outflow = Outflow
-      GRID_VARS%PackWater_us = PackWater_us
-      GRID_VARS%SurfWater_us = SurfWater_us
-      GRID_VARS%Swq_us = Swq_us
-      GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
-      GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
-      GRID_VARS%Outflow_us = Outflow_us
+      !GRID_VARS%PackWater = PackWater
+      !GRID_VARS%SurfWater = SurfWater
+      !GRID_VARS%Swq = Swq
+      !GRID_VARS%VaporMassFlux = VaporMassFlux
+      !GRID_VARS%r_MeltEnergy = r_MeltEnergy
+      !GRID_VARS%Outflow = Outflow
+      !GRID_VARS%PackWater_us = PackWater_us
+      !GRID_VARS%SurfWater_us = SurfWater_us
+      !GRID_VARS%Swq_us = Swq_us
+      !GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
+      !GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
+      !GRID_VARS%Outflow_us = Outflow_us
 
       !Albedos of the over story, under story, and moss layer
-      GRID_VEG%albd_us = albd_us
-      GRID_VEG%alb_moss = alb_moss
-      GRID_VEG%albd = albd
-      GRID_VEG%albw = albw
-      GRID_VEG%albw_us = albw_us
+     ! GRID_VEG%albd_us = albd_us
+      !GRID_VEG%alb_moss = alb_moss
+      !GRID_VEG%albd = albd
+      !GRID_VEG%albw = albw
+      !GRID_VEG%albw_us = albw_us
+      !GRID_VARS%alb_snow = alb_snow
 
       !Meteorological Data
-      GRID_MET%rsd = rsd
-      GRID_MET%rld = rld
-      GRID_VEG%zww = zww
-      GRID_VEG%za = za
+      !GRID_MET%rsd = rsd
+      !GRID_MET%rld = rld
+      !GRID_VEG%zww = zww
+      !GRID_VEG%za = za
       GRID_MET%uzw = uzw
-      GRID_MET%press = press 
-      GRID_VEG%Tslope1 = Tslope1
-      GRID_VEG%Tint1 = Tint1
-      GRID_VEG%Tslope2 = Tslope2
-      GRID_VEG%Tint2 = Tint2
-      GRID_VEG%Tsep = Tsep
-      GRID_VARS%Tincan = Tincan
-      GRID_MET%tdry = tdry
-      GRID_VEG%Twslope1 = Twslope1
-      GRID_VEG%Twslope2 = Twslope2
-      GRID_VEG%Twint1 = Twint1
-      GRID_VEG%Twint2 = Twint2
-      GRID_MET%rh = rh
-      GRID_VARS%rh_ic = rh_ic
+      !GRID_MET%press = press 
+      !GRID_VEG%Tslope1 = Tslope1
+      !GRID_VEG%Tint1 = Tint1
+      !GRID_VEG%Tslope2 = Tslope2
+      !GRID_VEG%Tint2 = Tint2
+      !GRID_VEG%Tsep = Tsep
+      !GRID_VARS%Tincan = Tincan
+      !GRID_MET%tdry = tdry
+      !GRID_VEG%Twslope1 = Twslope1
+      !GRID_VEG%Twslope2 = Twslope2
+      !GRID_VEG%Twint1 = Twint1
+      !GRID_VEG%Twint2 = Twint2
+      !GRID_MET%rh = rh
+      !GRID_VARS%rh_ic = rh_ic
 
       !Temperature variables
       GRID_VARS%tkmid = tkmid
-      GRID_VARS%tkact = tkact
-      GRID_SOIL%amp = amp
-      GRID_SOIL%phase = phase
-      GRID_SOIL%shift = shift
-      GRID_SOIL%tdeep = tdeep
-      GRID_SOIL%tmid0 = tmid0
-      GRID_VEG%tmid0_moss = tmid0_moss
-      GRID_VEG%tk0moss = tk0moss
+      !GRID_VARS%tkact = tkact
+      !GRID_SOIL%amp = amp
+      !GRID_SOIL%phase = phase
+      !GRID_SOIL%shift = shift
+      !GRID_SOIL%tdeep = tdeep
+      !GRID_SOIL%tmid0 = tmid0
+      !GRID_VEG%tmid0_moss = tmid0_moss
+      !GRID_VEG%tk0moss = tk0moss
 
       !Energy Fluxes and states
       GRID_VARS%dshact = dshact
@@ -1148,7 +1153,7 @@ r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
 Outflow_us = GRID_VARS%Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-!albd_us = GRID_VEG%albd_us
+albd_us = GRID_VEG%albd_us
 alb_moss = GRID_VEG%alb_moss
 albd = GRID_VEG%albd
 albw = GRID_VEG%albw
@@ -1469,7 +1474,7 @@ GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
 GRID_VARS%Outflow_us = Outflow_us
 
 !Albedos of the over story, under story, and moss layer
-!albd_us = GRID_VEG%albd_us
+albd_us = GRID_VEG%albd_us
 GRID_VEG%alb_moss = alb_moss
 GRID_VEG%albd = albd
 GRID_VEG%albw = albw
