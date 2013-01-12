@@ -54,7 +54,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,tcel,vppa,psychr,xlhv,tkel,za,uzw,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        Tslope1,Tint1,Tslope2,Tint2,Tsep,Tincan,tdry,Twslope1,&
        Twint1,Twslope2,Twint2,Twsep,twet_ic,twet,&
@@ -157,10 +157,10 @@ contains
 !Meteorological data
 !rsd = GRID_MET%rsd
 !rld = GRID_MET%rld
-zww = GRID_VEG%zww
+!zww = GRID_VEG%zww
 za = GRID_VEG%za
 uzw = GRID_MET%uzw
-press = GRID_MET%press
+!press = GRID_MET%press
 Tslope1 = GRID_VEG%Tslope1
 Tint1 = GRID_VEG%Tint1
 Tslope2 = GRID_VEG%Tslope2
@@ -416,7 +416,7 @@ iopsmini = GLOBAL%iopsmini
 ! DEW POINT TEMPERATURES !
 ! ====================================================================
 
-      appa=100.d0*press
+      appa=100.d0*GRID_MET%press
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
 
@@ -477,7 +477,7 @@ iopsmini = GLOBAL%iopsmini
 
       if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
          
-         call stabcor(zww,za,uzw,zpd,z0m,tkel,press,tkact,vppa,rib)
+         call stabcor(GRID_VEG%zww,za,uzw,zpd,z0m,tkel,GRID_MET%press,tkact,vppa,rib)
          
       else
 
@@ -494,13 +494,13 @@ iopsmini = GLOBAL%iopsmini
 ! Also do this for snow.
 ! ====================================================================
 
-      rahd=calcra(uzw,zww,za,zpd,z0m,z0h,rib)
-      rahw=calcra(uzw,zww,za,zpd,z0m,z0h,rib)
+      rahd=calcra(uzw,GRID_VEG%zww,za,zpd,z0m,z0h,rib)
+      rahw=calcra(uzw,GRID_VEG%zww,za,zpd,z0m,z0h,rib)
 
       ravd=rahd
       ravw=rahw
 
-      RaSnow=calcra(uzw,zww,za,zpd,0.005d0,0.0005d0,1.d0)
+      RaSnow=calcra(uzw,GRID_VEG%zww,za,zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -538,7 +538,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Meteorological data
 
-       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,za,uzw,GRID_MET%press,&
        appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
@@ -633,10 +633,10 @@ iopsmini = GLOBAL%iopsmini
       !Meteorological Data
       !GRID_MET%rsd = rsd
       !GRID_MET%rld = rld
-      GRID_VEG%zww = zww
+      !GRID_VEG%zww = zww
       GRID_VEG%za = za
       GRID_MET%uzw = uzw
-      GRID_MET%press = press 
+      !GRID_MET%press = press 
       GRID_VEG%Tslope1 = Tslope1
       GRID_VEG%Tint1 = Tint1
       GRID_VEG%Tslope2 = Tslope2
