@@ -359,7 +359,7 @@ xlamda = CAT%xlamda
 ! Albedos of the over story, under story,&
 ! and moss layer
 
-       albd,albw,albw_us,& 
+       albw,albw_us,& 
 
 ! Meteorological data
        GRID_MET,rsd,rld,tcel,vppa,psychr,xlhv,tkel,zww,za,uzw,press,&
