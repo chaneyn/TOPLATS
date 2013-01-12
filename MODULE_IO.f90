@@ -36,32 +36,6 @@ type VegDataTemplate
   real*8,dimension(:,:),allocatable :: canclos
 end type VegDataTemplate
 
-type SoilDataTemplate
-        real*8,dimension(:,:),allocatable :: bcbeta
-        real*8,dimension(:,:),allocatable :: psic
-        real*8,dimension(:,:),allocatable :: thetas
-        real*8,dimension(:,:),allocatable :: thetar
-        real*8,dimension(:,:),allocatable :: xk0
-        real*8,dimension(:,:),allocatable :: zdeep
-        real*8,dimension(:,:),allocatable :: tdeep
-        real*8,dimension(:,:),allocatable :: zmid
-        real*8,dimension(:,:),allocatable :: tmid0
-        real*8,dimension(:,:),allocatable :: rocpsoil
-        real*8,dimension(:,:),allocatable :: quartz
-        integer,dimension(:,:),allocatable :: ifcoarse
-        real*8,dimension(:,:),allocatable :: srespar1
-        real*8,dimension(:,:),allocatable :: srespar2
-        real*8,dimension(:,:),allocatable :: srespar3
-        real*8,dimension(:,:),allocatable :: a_ice
-        real*8,dimension(:,:),allocatable :: b_ice
-        real*8,dimension(:,:),allocatable :: bulk_dens
-        real*8,dimension(:,:),allocatable :: amp
-        real*8,dimension(:,:),allocatable :: phase
-        real*8,dimension(:,:),allocatable :: shift
-        real*8,dimension(:,:),allocatable :: thetaw
-        real*8,dimension(:,:),allocatable :: thetac
-end type SoilDataTemplate
-
 contains
 
 !####################################################################
@@ -183,7 +157,7 @@ contains
       read(1000,*) GLOBAL%ndata
       read(1000,*) GLOBAL%dt
       read(1000,*) GLOBAL%endstm
-      read(1000,*) iophd
+      read(1000,*) GLOBAL%iophd
 
       print*, 'rddata:  Done reading time parameters'
       print*, 'rddata:  Total time steps = ',GLOBAL%ndata
@@ -194,7 +168,6 @@ contains
 ! ====================================================================
 
       call rdtpmd(GRID,CAT,IO,GLOBAL)
-       ipixnum = IO%ipixnum
 
       print*,'rddata:  Done reading TOPMODEL parameters'
 
@@ -241,22 +214,7 @@ contains
 ! interstorm flags and times.
 ! ====================================================================
 
-      call inisim(GLOBAL%iopsmini,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,GRID%VEG%ilandc,&
-       GLOBAL%npix,GLOBAL%inc_frozen,GRID%VARS%istorm,&
-       GRID%VARS%intstm,GRID%VARS%istmst,intstp,GRID%VARS%istorm_moss,&
-       GRID%VARS%intstm_moss,GRID%VARS%istmst_moss,GRID%VARS%intstp_moss,&
-       GRID%SOIL%isoil,GRID%SOIL%idifind,GLOBAL%smpet0,r_mossmpet0,GLOBAL%endstm,&
-       GRID%VARS%rzsm1,GRID%VARS%tzsm1,GRID%VARS%r_mossm1,&
-       GRID%VARS%r_mossm,GRID%VARS%rzsm1_u,GRID%VARS%tzsm1_u,&
-       GRID%VARS%rzsm1_f,GRID%VARS%tzsm1_f,GRID%VARS%r_mossm1_u,&
-       GRID%VARS%r_mossm_u,&
-       GRID%VARS%r_mossm1_f,GRID%VARS%r_mossm_f,GRID%VARS%rzdthetaidt,&
-       GRID%VARS%tzdthetaidt,GRID%VARS%zmoss,r_moss_depth,&
-       thetas_moss,GRID%VARS%xintst,GRID%VARS%xintst_moss,GRID%VARS%cuminf,GRID%SOIL%xk0,GRID%SOIL%psic,&
-       GRID%SOIL%thetas,GRID%SOIL%thetar,GRID%SOIL%bcgamm,&
-       bcbeta,GRID%VARS%sorp,GRID%VARS%cc,GLOBAL%dt,GRID%VARS%sesq,GRID%SOIL%corr,GRID%SOIL%par,PackWater_us,&
-       SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,Outflow_us,&
-       PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
+      call inisim(GLOBAL,IO,GRID)
 
       read (1000,*) GLOBAL%dtveg
 
@@ -272,8 +230,6 @@ contains
   GRID%VARS%cp = 1005.d0
   GRID%VARS%roi = 850.d0
   GRID%VARS%rzsmold = 0.d0
-
-
 
       return
 
@@ -295,11 +251,11 @@ contains
       implicit none
       !include "wgtpar.h"
       include "help/rdveg_update.h"
-      type (VegDataTemplate) VegData
+      type (GLOBAL_template),intent(inout) :: GLOBAL
+      type (GRID_template),dimension(:),intent(inout) :: GRID
       integer :: dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
-      type (GLOBAL_template) :: GLOBAL
-      type (GRID_template),dimension(:),allocatable :: GRID
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
       dvegnvars = 2
 
 ! ====================================================================
@@ -311,11 +267,9 @@ contains
 
       GLOBAL%ntdveg = GLOBAL%ntdveg + 1
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
-      allocate(VegData%xlai(GLOBAL%ncol,GLOBAL%nrow))
-      allocate(VegData%albd(GLOBAL%ncol,GLOBAL%nrow))
-      read(1003,rec=GLOBAL%ntdveg)TempArray(:,:,:)
-      VegData%xlai(:,:) = dble(TempArray(:,:,1))
-      VegData%albd(:,:) = dble(TempArray(:,:,2))
+      read(1003,rec=GLOBAL%ntdveg)TempArray
+      GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
+      GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
 ! ####################################################################
 ! Convert the 2-d arrays to the model's 1-d arrays
@@ -332,11 +286,11 @@ contains
                         jpos = GLOBAL%nrow
                 endif
 
-                GRID(kk)%VEG%xlai = VegData%xlai(ipos,jpos) !dveg
-                GRID(kk)%VEG%albd = VegData%albd(ipos,jpos) !dveg
+                GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai !dveg
+                GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd !dveg
                 GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
-                GRID(kk)%VEG%xlai_wsc = VegData%xlai(ipos,jpos)
-                GRID(kk)%VEG%albw = VegData%albd(ipos,jpos)
+                GRID(kk)%VEG%xlai_wsc = GRID_VEG_2D(ipos,jpos)%xlai
+                GRID(kk)%VEG%albw = GRID_VEG_2D(ipos,jpos)%albd
 
         enddo
 
@@ -1019,21 +973,13 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-      subroutine inisim(iopsmini,nrow,ncol,ipixnum,ilandc,npix,inc_frozen,&
-       istorm,intstm,istmst,intstp,istorm_moss,intstm_moss,istmst_moss,&
-       intstp_moss,isoil,idifind,smpet0,r_mossmpet0,endstm,rzsm1,&
-       tzsm1,r_mossm1,r_mossm,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f,r_mossm1_u,&
-       r_mossm_u,r_mossm1_f,r_mossm_f,rzdthetaidt,tzdthetaidt,zmoss,&
-       r_moss_depth,thetas_moss,xintst,xintst_moss,cuminf,xk0,psic,thetas,&
-       thetar,bcgamm,bcbeta,sorp,cc,dt,sesq,corr,par,&
-       PackWater_us,SurfWater_us,Swq_us,VaporMassFlux_us,r_MeltEnergy_us,&
-       Outflow_us,PackWater,SurfWater,Swq,VaporMassFlux,r_MeltEnergy,Outflow)
+      subroutine inisim(GLOBAL,IO,GRID)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
       include "help/inisim.h"
-
+      type (GLOBAL_template),intent(inout) :: GLOBAL
+      type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+      type (IO_template),intent(inout) :: IO
 
 ! ====================================================================
 ! If initial root zone is not entered, then set the root
@@ -1042,113 +988,48 @@ end subroutine Write_Regional
 ! based on Brooks-Corey and local water table depth.
 ! ====================================================================
 
-         do 50 kk=1,npix
+         do 50 kk=1,GLOBAL%npix
 
-            if (MOS_FLG.eq.1) then
-
-               m_kk=kk
-               v_kk=ilandc(kk)
-
-            endif
-
-            if (MOS_FLG.eq.0) then
-
-               m_kk=1
-               v_kk=1
-
-            endif
-
-            rzsm1(kk) = smpet0
-            tzsm1(kk) = smpet0
-            r_mossm1(m_kk) = r_mossmpet0(v_kk)
-            r_mossm(m_kk) = r_mossmpet0(v_kk)
-            rzsm1_u(kk) = smpet0
-            tzsm1_u(kk) = smpet0
-            rzsm1_f(kk) = 0.d0
-            tzsm1_f(kk) = 0.d0
-            r_mossm1_u(m_kk) = r_mossmpet0(v_kk)
-            r_mossm_u(m_kk) = r_mossmpet0(v_kk)
-            r_mossm1_f(m_kk) = 0.d0
-            r_mossm_f(m_kk) = 0.d0
-            rzdthetaidt(kk)=0.d0
-            tzdthetaidt(kk)=0.d0
+            GRID(kk)%VARS%rzsm1 = GLOBAL%smpet0
+            GRID(kk)%VARS%tzsm1 = GLOBAL%smpet0
+            GRID(kk)%VARS%rzsm1_u = GLOBAL%smpet0
+            GRID(kk)%VARS%tzsm1_u = GLOBAL%smpet0
+            GRID(kk)%VARS%rzsm1_f = 0.d0
+            GRID(kk)%VARS%tzsm1_f = 0.d0
+            GRID(kk)%VARS%rzdthetaidt=0.d0
+            GRID(kk)%VARS%tzdthetaidt=0.d0
 
 50       continue
-
-      do kk=1,npix
-
-         if (MOS_FLG.eq.1) then
-
-            m_kk=kk
-            v_kk=ilandc(kk)
-
-         endif
-
-         if (MOS_FLG.eq.0) then
-
-            m_kk=1
-            v_kk=1
-
-         endif
-
-         if (inc_frozen.eq.0) then
-
-          if(thetas_moss(v_kk).eq.0.)then
-            zmoss(m_kk)=0.
-          else
-            zmoss(m_kk)=r_moss_depth(v_kk)*r_mossm(m_kk)/&
-                        thetas_moss(v_kk)
-          endif
-         else
-          if(thetas_moss(v_kk).eq.0.)then
-            zmoss(m_kk)=0.
-          else
-
-            zmoss(m_kk)=r_moss_depth(v_kk)*r_mossm_u(m_kk)/&
-                        thetas_moss(v_kk)
-          endif
-
-         endif
-
-      enddo
 
 ! ====================================================================
 ! Read data to tell how program will initialize the storm
 ! and interstorm event flags and times.
 ! ====================================================================
 
-      read(1000,*) iopflg
+      read(1000,*) GLOBAL%iopflg
 
-      if (iopflg.eq.0) then
+      if (GLOBAL%iopflg.eq.0) then
 
 ! --------------------------------------------------------------------
 ! If one event flag value is used then set all flags and times
 ! accordingly.
 ! --------------------------------------------------------------------
 
-         read(1000,*) istflg
+         read(1000,*) GLOBAL%istflg
 
-         if (istflg.eq.1) then
+         if (GLOBAL%istflg.eq.1) then
 
 ! ....................................................................
 ! If the event is a storm event.
 ! ....................................................................
 
-            do 100 kk=1,npix
+            do 100 kk=1,GLOBAL%npix
 
-               if (MOS_FLG.eq.1) m_kk=kk
-               if (MOS_FLG.eq.0) m_kk=1
-
-               istorm(kk) = 1
-               intstm(kk) = 0
-               istmst(kk) = 0
-               intstp(kk) = 0
-               xintst(kk) = 0.0
-               istorm_moss(m_kk) = 1
-               intstm_moss(m_kk) = 0
-               istmst_moss(m_kk) = 0
-               intstp_moss(m_kk) = 0
-               xintst_moss(m_kk) = 0.0
+               GRID(kk)%VARS%istorm = 1
+               GRID(kk)%VARS%intstm = 0
+               GRID(kk)%VARS%istmst = 0
+               GRID(kk)%VARS%intstp = 0
+               GRID(kk)%VARS%xintst = 0.0
 
 100         continue
 
@@ -1158,21 +1039,13 @@ end subroutine Write_Regional
 ! If the event is an interstorm event.
 ! ....................................................................
 
-            do 200 kk=1,npix
+            do 200 kk=1,GLOBAL%npix
 
-               if (MOS_FLG.eq.1) m_kk=kk
-               if (MOS_FLG.eq.0) m_kk=1
-
-               istorm(kk) = 0
-               intstm(kk) = 1
-               istmst(kk) = 0
-               intstp(kk) = 0
-               xintst(kk) = endstm
-               istorm_moss(m_kk) = 0
-               intstm_moss(m_kk) = 1
-               istmst_moss(m_kk) = 0
-               intstp_moss(m_kk) = 0
-               xintst_moss(m_kk) = endstm
+               GRID(kk)%VARS%istorm = 0
+               GRID(kk)%VARS%intstm = 1
+               GRID(kk)%VARS%istmst = 0
+               GRID(kk)%VARS%intstp = 0
+               GRID(kk)%VARS%xintst = GLOBAL%endstm
 
 200         continue
 
@@ -1184,38 +1057,19 @@ end subroutine Write_Regional
 ! Set event flags, time of events, cumulative values.
 ! --------------------------------------------------------------------
 
-         do 300 kk=1,npix
+         do 300 kk=1,GLOBAL%npix
 
 ! ....................................................................
 ! For pixels under storm event.
 ! ....................................................................
 
-            if (istorm(kk).eq.1) then
+            if (GRID(kk)%VARS%istorm.eq.1) then
 
-               intstm(kk) = 0
-               istmst(kk) = istep(kk)
-               intstp(kk) = 0
-               xintst(kk) = 0.0
-               cuminf(kk) = cumdep(kk)
-
-! ....................................................................
-! Find philip's equation parameters.
-! ....................................................................
-
-               sorp(kk) = (((two*xk0(isoil(kk))*&
-                          ((thetas(isoil(kk))-smbeg(kk))**two)&
-                          *psic(isoil(kk)))/&
-                          (thetas(isoil(kk))-thetar(isoil(kk))))*&
-                          ((one/(bcgamm(isoil(kk))+&
-                               0.5d0*bcbeta(isoil(kk))-one)) +&
-                          ((thetas(isoil(kk))-thetar(isoil(kk))) /&
-                           (thetas(isoil(kk))-smbeg(kk))))) ** 0.5d0
-               deltrz = smbeg(kk) - thetar(isoil(kk))
-               if (deltrz.le.zero) deltrz=zero
-               cc(kk) = 0.5d0 *&
-                       (one+((deltrz/&
-                              (thetas(isoil(kk))-thetar(isoil(kk)))) **&
-                             (bcgamm(isoil(kk))/bcbeta(isoil(kk)))))
+               GRID(kk)%VARS%intstm = 0
+               GRID(kk)%VARS%istmst = 0
+               GRID(kk)%VARS%intstp = 0
+               GRID(kk)%VARS%xintst = zero
+               GRID(kk)%VARS%cuminf = zero
 
 ! ....................................................................
 ! For pixels under interstorm event.
@@ -1223,18 +1077,11 @@ end subroutine Write_Regional
 
             else
 
-               intstm(kk) = 1
-               istmst(kk) = 0
-               intstp(kk) = istep(kk)
-               xintst(kk) = intstp(kk)*dt + endstm
+               GRID(kk)%VARS%intstm = 1
+               GRID(kk)%VARS%istmst = 0
+               GRID(kk)%VARS%intstp = 0
+               GRID(kk)%VARS%xintst = GRID(kk)%VARS%intstp*GLOBAL%dt + GLOBAL%endstm
                
-               relrze = (smbeg(kk) - thetar(isoil(kk))) /&
-                        (thetas(isoil(kk)) - thetar(isoil(kk)))
-
-               if (relrze.le.zero) relrze=zero
-               if (relrze.ge.one) relrze=one
-
-
             endif
 
 300      continue
@@ -1245,25 +1092,20 @@ end subroutine Write_Regional
 ! Initialize snow pack variables.
 ! ====================================================================
 
-      do kk=1,npix
+      do kk=1,GLOBAL%npix
 
-         if (SNW_FLG.eq.1) s_kk=kk
-         if (SNW_FLG.eq.0) s_kk=1
-         if (SNOW_RUN.eq.1) sw_kk=kk
-         if (SNOW_RUN.eq.0) sw_kk=1
-
-         PackWater_us(s_kk)=zero
-         SurfWater_us(s_kk)=zero
-         Swq_us(s_kk)=zero
-         VaporMassFlux_us(s_kk)=zero
-         r_MeltEnergy_us(s_kk)=zero
-         Outflow_us(s_kk)=zero
-         PackWater(sw_kk)=zero
-         SurfWater(sw_kk)=zero
-         Swq(sw_kk)=zero
-         VaporMassFlux(sw_kk)=zero
-         r_MeltEnergy(sw_kk)=zero
-         Outflow(sw_kk)=zero
+         GRID(kk)%VARS%PackWater_us=zero
+         GRID(kk)%VARS%SurfWater_us=zero
+         GRID(kk)%VARS%Swq_us=zero
+         GRID(kk)%VARS%VaporMassFlux_us=zero
+         GRID(kk)%VARS%r_MeltEnergy_us=zero
+         GRID(kk)%VARS%Outflow_us=zero
+         GRID(kk)%VARS%PackWater=zero
+         GRID(kk)%VARS%SurfWater=zero
+         GRID(kk)%VARS%Swq=zero
+         GRID(kk)%VARS%VaporMassFlux=zero
+         GRID(kk)%VARS%r_MeltEnergy=zero
+         GRID(kk)%VARS%Outflow=zero
 
       enddo
 
@@ -1359,7 +1201,6 @@ end subroutine Write_Regional
       type (IO_template),intent(inout) :: IO
       type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%ncol,GLOBAL%nrow)
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
-      type (SoilDataTemplate) SoilData
       integer :: soilnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
       soilnvars = 23

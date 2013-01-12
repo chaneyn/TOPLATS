@@ -170,6 +170,7 @@ type GLOBAL_template
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
         integer :: iopsmini
         integer :: dtveg
+        integer :: iopflg,istflg,iophd
         real*8 :: frcbeta
         !STORM PARAM
         real*8 :: endstm,toleb,pixsiz,dt
