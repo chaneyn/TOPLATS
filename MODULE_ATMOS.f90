@@ -37,12 +37,12 @@ contains
 
 ! General vegetation parameters
 
-       GRID_VEG,ivgtyp,&
+       GRID_VEG,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
+       TPack,TSurf,&
+       xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,&
        TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us,&
        hact_snow_us,rn_snow_us,dens,dens_us,&
@@ -130,14 +130,14 @@ contains
 !extinct = GRID_VEG%extinct
 !i_und = GRID_VEG%i_und
 !i_moss = GRID_VEG%i_moss
-ivgtyp = GRID_VEG%ivgtyp
+!ivgtyp = GRID_VEG%ivgtyp
 
 !Snow Pack variables
-PackWater = GRID_VARS%PackWater
-SurfWater = GRID_VARS%SurfWater
-Swq = GRID_VARS%Swq
-VaporMassFlux = GRID_VARS%VaporMassFlux
-r_MeltEnergy = GRID_VARS%r_MeltEnergy
+!PackWater = GRID_VARS%PackWater
+!SurfWater = GRID_VARS%SurfWater
+!Swq = GRID_VARS%Swq
+!VaporMassFlux = GRID_VARS%VaporMassFlux
+!r_MeltEnergy = GRID_VARS%r_MeltEnergy
 Outflow = GRID_VARS%Outflow
 PackWater_us = GRID_VARS%PackWater_us
 SurfWater_us = GRID_VARS%SurfWater_us
@@ -521,12 +521,12 @@ iopsmini = GLOBAL%iopsmini
 
 ! General vegetation parameters
 
-       GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,ivgtyp,&
+       GRID_VEG,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VEG%ivgtyp,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,&
-       r_MeltEnergy,Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
+       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,TPack,TSurf,&
+       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,&
        SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
        Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
@@ -605,15 +605,15 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%extinct = extinct
       !GRID_VEG%i_und = i_und
       !GRID_VEG%i_moss = i_moss
-      GRID_VEG%ivgtyp = ivgtyp
+      !GRID_VEG%ivgtyp = ivgtyp
 
       !Snow Pack variables
-      GRID_VARS%PackWater = PackWater
-      GRID_VARS%SurfWater = SurfWater
-      GRID_VARS%Swq = Swq
-      GRID_VARS%VaporMassFlux = VaporMassFlux
-      GRID_VARS%r_MeltEnergy = r_MeltEnergy
-      GRID_VARS%Outflow = Outflow
+      !GRID_VARS%PackWater = PackWater
+      !GRID_VARS%SurfWater = SurfWater
+      !GRID_VARS%Swq = Swq
+      !GRID_VARS%VaporMassFlux = VaporMassFlux
+      !GRID_VARS%r_MeltEnergy = r_MeltEnergy
+      !GRID_VARS%Outflow = Outflow
       GRID_VARS%PackWater_us = PackWater_us
       GRID_VARS%SurfWater_us = SurfWater_us
       GRID_VARS%Swq_us = Swq_us

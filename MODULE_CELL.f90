@@ -347,12 +347,12 @@ xlamda = CAT%xlamda
 
 ! General vegetation parameters
 
-       GRID_VEG,ivgtyp,&
+       GRID_VEG,&
 
 ! Snow pack variables
 
-       PackWater,SurfWater,Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,&
-       Outflow,xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
+       TPack,TSurf,&
+       xleact_snow,hact_snow,rn_snow,PackWater_us,SurfWater_us,Swq_us,&
        VaporMassFlux_us,TPack_us,TSurf_us,r_MeltEnergy_us,&
        Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
 
