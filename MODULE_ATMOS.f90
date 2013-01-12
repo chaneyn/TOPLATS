@@ -257,7 +257,6 @@ tzsm = GRID_VARS%tzsm
 rzsm1 = GRID_VARS%rzsm1
 tzsm1 = GRID_VARS%tzsm1
 r_mossm = GRID_VARS%r_mossm
-r_mossm1 = GRID_VARS%r_mossm1
 zrz = GRID_VARS%zrz
 smold = GRID_VARS%smold
 rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
@@ -729,7 +728,6 @@ iopsmini = GLOBAL%iopsmini
       GRID_VARS%rzsm1 = rzsm1
       GRID_VARS%tzsm1 = tzsm1
       GRID_VARS%r_mossm = r_mossm
-      !GRID_VARS%r_mossm1 = r_mossm1
       GRID_VARS%zrz = zrz
       GRID_VARS%smold = smold
       GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
@@ -1795,7 +1793,7 @@ GLOBAL%iopsmini = iopsmini
 !       include "SNOW.h"
       include "help/peteb_bs.h"
 
-      if ( (Swq.le.(0.0002d0)).OR.(SNOW_RUN.eq.0) ) then
+      if ( (Swq.le.(0.0002d0))) then
 
 ! --------------------------------------------------------------------
 ! If there is no snow solve the energy balance for bare soil at
@@ -1907,7 +1905,7 @@ GLOBAL%iopsmini = iopsmini
 !       include "SNOW.h"
       include "help/peteb_dv.h"
 
-      if ( (Swq.le.(0.0002d0)).OR.(SNOW_RUN.eq.0) ) then
+      if ( (Swq.le.(0.0002d0))) then
 
 ! ....................................................................
 ! If the total snow water equivalent on top of the over story layer
@@ -2010,7 +2008,7 @@ GLOBAL%iopsmini = iopsmini
       include "help/peteb_wv.h"
       integer :: ipix
 
-      if ( (Swq.le.(0.0002d0)).OR.(SNOW_RUN.eq.0) ) then
+      if ( (Swq.le.(0.0002d0))) then
 
 ! ....................................................................
 ! If the total snow water equivalent on top of the over story layer

@@ -61,8 +61,9 @@ contains
   subroutine instep_catchment(ncatch,CAT)
 
       implicit none
-      include "help/instep.h"
       type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+      integer,intent(in) :: ncatch
+      integer :: kk
 
 ! ====================================================================
 ! Initialize variables for catchment average/total values
@@ -132,7 +133,11 @@ contains
 
       implicit none
       type (CATCHMENT_template),intent(inout) :: CAT
-      include "help/catflx.h"
+      real*8 area,pixsiz,r_lakearea,ettot,etstsum,etwtsum,etlakesum
+      real*8 etbssum,fbs,etdcsum,etwcsum,pptsum,pnetsum,contot
+      real*8 qsurf,sxrtot,xixtot,ranrun,conrun,gwtsum,capsum,tzpsum
+      real*8 rzpsum,fwcat
+      real*8 catpix,catlakpix,catvegpix
        area = CAT%area
        ettot = CAT%ettot
        etstsum = CAT%etstsum
@@ -288,7 +293,20 @@ contains
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
       type (CATCHMENT_template),intent(inout) :: CAT
-      include "help/upzbar.h"
+      integer :: ic,iopbf,npix,mm
+      integer :: ilandc(GLOBAL%nrow*GLOBAL%ncol),ivgtyp(GLOBAL%nrow*GLOBAL%ncol)
+      integer :: icatch(GLOBAL%nrow*GLOBAL%ncol),isoil(GLOBAL%nrow*GLOBAL%ncol)
+      real*8 q0,ff,zbar,dtil
+      real*8 basink,dd,xlength
+      real*8 gwtsum,capsum,area
+      real*8 r_lakearea,dt,etwtsum
+      real*8 rzpsum,tzpsum,psicav
+      real*8 zrzmax,zbar1,qbreg,zbar1rg
+      real*8 psic(GLOBAL%nrow*GLOBAL%ncol),tzsm1(GLOBAL%nrow*GLOBAL%ncol),rzsm1(GLOBAL%nrow*GLOBAL%ncol)
+      real*8 zw(GLOBAL%nrow*GLOBAL%ncol),thetas(GLOBAL%nrow*GLOBAL%ncol)
+      real*8 zero,one,two,three,four,five,six
+      real*8 pixsiz
+      real*8 qb,hbar,zbrflx,zbrpor,qzbar,dzbar
 
       iopbf = GLOBAL%iopbf
       q0 = CAT%q0
@@ -460,13 +478,46 @@ contains
 
       implicit none
     
-      include "help/sumflx.dif.h"
       type (GRID_VARS_template),intent(in) :: GRID_VARS
       type (GRID_VEG_template),intent(in) :: GRID_VEG
       type (GRID_SOIL_template),intent(in) :: GRID_SOIL
       type (GRID_MET_template),intent(in) :: GRID_MET
       type (CATCHMENT_template),intent(inout) :: CAT
       type (GLOBAL_template),intent(in) :: GLOBAL
+      integer ivgtyp,i_und,i_moss,i,ilandc,inc_frozen
+      real*8 f_und,f_moss,canclos,dc,fw,dc_us,fw_us,etpix
+      real*8 evtact,ettot,ettotrg,epwms,evtact_us,epwms_us
+      real*8 evtact_moss,etstore,etwt,etstsum,etstsumrg
+      real*8 etwtsumrg,etwtsum,etbssum,etbssumrg,etdcsum
+      real*8 etdcsumrg,etwcsum,etwcsumrg,etlakesumrg,etlakesum
+      real*8 bsdew,contot,contotrg,pptsum,pptms,pptsumrg
+      real*8 pnetsum,pnet,pnetsumrg,qsurf,runtot,qsurfrg
+      real*8 sxrtot,satxr,sxrtotrg,xixtot,xinfxr,xixtotrg
+      real*8 ranrun,ranrunrg,conrun,conrunrg,wcip1sum
+      real*8 wcip1,dswcsum,dswc,wcrhssum,wcrhs,dsrzsum,dsrz
+      real*8 rzrhssum,rzrhs,dstzsum,dstz,tzrhssum,tzrhs,zrz
+      real*8 gwt,grz,gtz,ztz,gwtsum,gwtsumrg,grzsumrg,gtzsumrg
+      real*8 capsum,capsumrg,difrzsumrg,diftz,difrz
+      real*8 dstore,dssum,svarhs,rzsm1_u,tzsm1_u,rzsm1,tzsm1
+      real*8 rzsmav,tzsmav,tzpsum,thetas,rzpsum,r_mossm,rzsm
+      real*8 tzsm,rnact_moss,xleact_moss,hact_moss,gact_moss
+      real*8 dshact_moss,tskinact_moss,tkact_moss,tkmid_moss
+      real*8 rnact_us,xleact_us,hact_us,gact_us,dshact_us
+      real*8 tkact_us,tkmid_us,rnact,xleact,hact,gact,dshact
+      real*8 tkact,tkmid,rnsum,xlesum,hsum,gsum,dshsum,tksum
+      real*8 tkmidsum,rnpet,rnpet_us,rnpet_moss,xlepet,xlepet_us
+      real*8 xlepet_moss,hpet,hpet_us,hpet_moss,gpet,gpet_us
+      real*8 gpet_moss,dspet,dspet_us,dspet_moss,tkpet,tkpet_us
+      real*8 tkpet_moss,tkmidpet,tkmidpet_us,tkmidpet_moss
+      real*8 rnpetsum,xlepetsum,hpetsum,gpetsum,dshpetsum
+      real*8 tkpetsum,tkmidpetsum,tkdeepsum,Tdeepstep,dt
+      real*8 svarhssum,Swqsum,Swq_ussum,Swq,Swq_us
+      real*8 rescale,etpixloc
+      real*8 conpix
+      real*8 difwt
+      real*8 tair,xlhv,dummy
+      real*8 Sdepthsum,Sdepth_ussum,Sdepth,Sdepth_us
+
 
 ! TEMPORARY
 !GRID
@@ -508,10 +559,6 @@ thetas = GRID_SOIL%thetas
 !Point Data
 zrz = GRID_VARS%zrz
 ztz = GRID_VARS%ztz
-smold = GRID_VARS%smold
-rzsmold = GRID_VARS%rzsmold
-tzsmold = GRID_VARS%tzsmold
-capflx = GRID_VARS%capflx
 difrz = GRID_VARS%difrz
 diftz = GRID_VARS%diftz
 grz = GRID_VARS%grz

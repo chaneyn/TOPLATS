@@ -121,6 +121,7 @@ type CATCHMENT_template
         real*8 :: fwcat
         !TOPMODEL PARAM
         real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
+        real*8 :: zbar0
         !Runoff
         real*8 :: qb
 end type
@@ -189,5 +190,10 @@ end type GLOBAL_template
 
 !General variables
 integer :: i,ipix
+
+!General constants
+real*8 zero,one,two,three,four,five,six
+data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
+     3.d0,4.d0,5.d0,6.d0/
 
 END MODULE MODULE_VARIABLES

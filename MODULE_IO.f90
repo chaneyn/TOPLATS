@@ -13,29 +13,6 @@ type IO_template
   integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
-type VegDataTemplate
-  real*8,dimension(:,:),allocatable :: ivgtyp
-  real*8,dimension(:,:),allocatable :: xlai
-  real*8,dimension(:,:),allocatable :: xlai_wsc
-  real*8,dimension(:,:),allocatable :: albd
-  real*8,dimension(:,:),allocatable :: albw
-  real*8,dimension(:,:),allocatable :: emiss
-  real*8,dimension(:,:),allocatable :: za
-  real*8,dimension(:,:),allocatable :: zww
-  real*8,dimension(:,:),allocatable :: z0m
-  real*8,dimension(:,:),allocatable :: z0h
-  real*8,dimension(:,:),allocatable :: zpd
-  real*8,dimension(:,:),allocatable :: rsmin
-  real*8,dimension(:,:),allocatable :: rsmax
-  real*8,dimension(:,:),allocatable :: Rpl
-  real*8,dimension(:,:),allocatable :: f3vpdpar
-  real*8,dimension(:,:),allocatable :: f4temppar
-  real*8,dimension(:,:),allocatable :: trefk
-  real*8,dimension(:,:),allocatable :: tcbeta
-  real*8,dimension(:,:),allocatable :: extinct
-  real*8,dimension(:,:),allocatable :: canclos
-end type VegDataTemplate
-
 contains
 
 !####################################################################
@@ -249,8 +226,7 @@ contains
       subroutine rdveg_update (GLOBAL,GRID)
 
       implicit none
-      !include "wgtpar.h"
-      include "help/rdveg_update.h"
+      integer :: kk,jj
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
       integer :: dvegnvars,ipos,jpos
@@ -400,8 +376,8 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 100 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,q0(kk),ff(kk),qb0(kk),dd(kk),&
-                       xlength(kk),basink(kk) 
+            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,CAT(kk)%qb0,CAT(kk)%dd,&
+                       CAT(kk)%xlength,CAT(kk)%basink
 
 100      continue
 
@@ -409,8 +385,8 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 200 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,q0(kk),ff(kk),zbar0(kk),dd(kk),&
-                       xlength(kk),basink(kk) 
+            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%dd,&
+                       CAT(kk)%xlength,CAT(kk)%basink 
 
 200      continue
 
@@ -418,7 +394,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 300 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,q0(kk),ff(kk),zbar0(kk)
+            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk)
 
 300      continue
 
@@ -438,7 +414,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       call rdimgr(ki,8,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
       do kk=1,GLOBAL%nrow*GLOBAL%ncol
         if (GRID(kk)%VARS%icatch .gt. 0)then
-          ti(kk) = ki(kk)/ff(GRID(kk)%VARS%icatch)
+          ti(kk) = ki(kk)/CAT(GRID(kk)%VARS%icatch)%ff
         else
           ti(kk) = 0.0
         endif
@@ -469,23 +445,23 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          if (icount(kk).eq.0) then
 
-            xlamda(kk) = 0
+            CAT(kk)%xlamda = 0
             lte(kk) = 0
 
          else
 
-            xlamda(kk) = sumatb(kk)/icount(kk)
+            CAT(kk)%xlamda = sumatb(kk)/icount(kk)
             lte(kk) = sumlti(kk)/icount(kk)
 
          endif
 
-         area(kk) = icount(kk)*GLOBAL%pixsiz*GLOBAL%pixsiz
+         CAT(kk)%area = icount(kk)*GLOBAL%pixsiz*GLOBAL%pixsiz
 
 600   continue
 
-      print*,'Area',area(1)
+      print*,'Area',CAT(1)%area
       print*,'ln Te',lte(1)
-      print*,'Lambda',xlamda(1)
+      print*,'Lambda',CAT(1)%xlamda
 
 ! ====================================================================
 ! Calculate soils-topographi! index for each pixel.
@@ -493,7 +469,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
       do 50 kk=1,GLOBAL%npix
 
-         atanb(kk) = atb(kk) + lte(GRID(kk)%VARS%icatch) - dlog(ti(kk))
+         GRID(kk)%VARS%atanb = atb(kk) + lte(GRID(kk)%VARS%icatch) - dlog(ti(kk))
 
 50    continue
 
@@ -505,12 +481,12 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 700 kk=1,GLOBAL%ncatch
 
-            dtil(kk) = sqrt(q0(kk)/(3.45*basink(kk)*dd(kk)*xlength(kk)))
+            CAT(kk)%dtil = sqrt(CAT(kk)%q0/(3.45*CAT(kk)%basink*CAT(kk)%dd*CAT(kk)%xlength))
 
             if (GLOBAL%iopwt0.eq.1) then
 
-               hbar0 = sqrt(qb0(kk)/(5.772*basink(kk)*dd(kk)*xlength(kk)))
-               zbar0(kk) = dtil(kk) - hbar0
+               hbar0 = sqrt(CAT(kk)%qb0/(5.772*CAT(kk)%basink*CAT(kk)%dd*CAT(kk)%xlength))
+               zbar0(kk) = CAT(kk)%dtil - hbar0
 
             endif
 
@@ -526,21 +502,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
       do 800 kk=1,GLOBAL%ncatch
 
-         zbar1(kk) = zbar0(kk)
+         CAT(kk)%zbar1 = zbar0(kk)
 
 800   continue
-
-      CAT%q0 = q0
-      CAT%ff = ff
-      CAT%dd = dd
-      CAT%area = area
-      CAT%dtil = dtil
-      CAT%xlength = xlength
-      CAT%basink = basink 
-      CAT%xlamda = xlamda
-      CAT%zbar1 = zbar1
-      GRID%VARS%atanb = atanb
-      CAT%qb0 = qb0
 
       return
 
@@ -721,7 +685,6 @@ end subroutine Write_Regional
       subroutine rdveg(GLOBAL,CAT,GRID,REG,IO)
 
       implicit none
-      include "help/rdveg.h"
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
       type (REGIONAL_template),intent(inout) :: REG
@@ -731,8 +694,8 @@ end subroutine Write_Regional
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
-      !real*8 :: frcov(GLOBAL%npix,GLOBAL%ncatch),wc0
-      !integer :: jj,kk
+      real*8 :: frcov(GLOBAL%nrow*GLOBAL%ncol,GLOBAL%ncatch+1),wc0
+      integer :: jj,kk
       vegnvars = 20
       dvegnvars = 2
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,vegnvars))
@@ -976,10 +939,10 @@ end subroutine Write_Regional
       subroutine inisim(GLOBAL,IO,GRID)
 
       implicit none
-      include "help/inisim.h"
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
       type (IO_template),intent(inout) :: IO
+      integer :: kk
 
 ! ====================================================================
 ! If initial root zone is not entered, then set the root
@@ -1194,15 +1157,18 @@ end subroutine Write_Regional
       subroutine rdsoil(GLOBAL,CAT,GRID,IO)
 
       implicit none
-      include "help/rdsoil.h"
+
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
       type (IO_template),intent(inout) :: IO
       type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%ncol,GLOBAL%nrow)
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
-      integer :: soilnvars,ipos,jpos
+      integer :: soilnvars,ipos,jpos,jj,kk,nn
+      integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       real,dimension(:,:,:),allocatable :: TempArray
+      real*8 :: psic(GLOBAL%ncol*GLOBAL%nrow),tempsum,dtaken
+      real*8 :: frsoil(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       soilnvars = 23
 
  allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,soilnvars))
@@ -1376,7 +1342,7 @@ end subroutine Write_Regional
 
       do 550 kk=1,GLOBAL%nsoil
 
-         do 540 jj=1,ncatch
+         do 540 jj=1,GLOBAL%ncatch
 
             frsoil(kk,jj) = icount(kk,jj)*GLOBAL%pixsiz*GLOBAL%pixsiz/CAT(jj)%area
 
@@ -1440,10 +1406,8 @@ end subroutine Write_Regional
       subroutine rdimgi(ia,iu,nrow,ncol,ipixnum)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      !include "sun_sgi.h"
-      include "help/rdimgi.h"
+      integer :: ia(nrow*ncol),ipixnum(nrow,ncol)
+      integer :: nrow,ncol,iu,irow,icol,itmpval
 
 ! ====================================================================
 ! Loop through the image and read each value.
@@ -1505,10 +1469,10 @@ end subroutine Write_Regional
 
       subroutine rdimgr(a,iu,nrow,ncol,ipixnum)
 
-      implicit real*8 (a-h,o-z)
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      include "help/rdimgr.h"
+      integer ipixnum(nrow,ncol)
+      integer nrow,ncol,iu,irow,icol
+      real*8 :: a(nrow*ncol)
+      real*4 :: tmpval
 
 ! ====================================================================
 ! Loop through the image and read each value.
@@ -1550,10 +1514,11 @@ end subroutine Write_Regional
       subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix)
 
       implicit none
-      !include "SNOW.h"
-      !include "wgtpar.h"
-      !include "sun_sgi.h"
-      include "help/rdatb.h"
+      integer :: ipixnum(nrow,ncol),ixpix(nrow*ncol),iypix(nrow*ncol)
+      integer :: nrow,ncol,npix
+      integer :: ip,irow,icol
+      real*8 :: atb(nrow*ncol)
+      real*4 :: tempatb
 
 ! ====================================================================
 ! Initialize pixel number counter.
@@ -1606,13 +1571,6 @@ end subroutine Write_Regional
 
       npix = ip - 1
 
-      if (npix.gt.MAX_PIX) then
-
-         write (*,*) 'rdatb : npix greater then MAX_PIX ',npix,MAX_PIX
-         stop
-
-      endif
-
       return
 
       end subroutine rdatb
@@ -1638,7 +1596,8 @@ end subroutine Write_Regional
 
       function factln(i)
       implicit none
-      include "help/factln.h"
+      integer :: i,jj
+      real*8 :: x,factln
 
 ! ====================================================================
 ! Calculate the log of factorial by adding all logs up

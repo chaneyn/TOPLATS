@@ -580,7 +580,7 @@ xlamda = CAT%xlamda
 ! Calculate the density and depth of the snow layers.
 ! ====================================================================
 
-         if ( (Swq.gt.0.d0).and.(SNOW_RUN.eq.1) ) then
+         if ( (Swq.gt.0.d0)) then
 
             call calcrain (tcel,snow,rain,precip_o,dt)
             call snow_density(dsty,snow,tcel,Swq,Sdepth,TSurf,dt)

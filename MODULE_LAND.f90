@@ -520,7 +520,7 @@ MODULE MODULE_LAND
 ! Option 1 : Bare soil surface.
 ! --------------------------------------------------------------------
 
-         if ( (Swq.le.(0.d0)).or.(SNOW_RUN.eq.0) ) then
+         if ( (Swq.le.(0.d0))) then
 
 ! --------------------------------------------------------------------
 ! In case of absence of a snow pack, solve the energy balance for
@@ -3287,8 +3287,7 @@ MODULE MODULE_LAND
       include "help/land_os.h"
 
       if (((Swq.gt.(0.0002d0)).or.&
-           ((tcel.le.(0.d0)).and.(dt*precip_o.gt.(0.0002d0)))).AND.&
-           (SNOW_RUN.eq.1) ) then
+           ((tcel.le.(0.d0)).and.(dt*precip_o.gt.(0.0002d0))))) then
 
 ! --------------------------------------------------------------------
 ! If the snow water equivalent on the overstory is higher than 0.2
@@ -3462,8 +3461,7 @@ MODULE MODULE_LAND
 
       if ( ( (Swq_us.gt.(0.0002d0)).or.&
                ((tcel_ic.le.(0.d0)).and.&
-               (dt*precip_u.gt.(0.0002d0)) ) ).AND.&
-           (SNOW_RUN.eq.1) )then
+               (dt*precip_u.gt.(0.0002d0)) ) ))then
 
 ! --------------------------------------------------------------------
 ! If the snow water equivalent for the under story is higher than 0.2

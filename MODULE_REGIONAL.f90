@@ -66,7 +66,6 @@ contains
   subroutine instep_regional(REG)
 
       implicit none
-      include "help/instep.h"
       type (REGIONAL_template),intent(inout) :: REG
 
 ! ====================================================================
@@ -208,13 +207,46 @@ contains
 
       implicit none
     
-      include "help/sumflx.dif.h"
       type (REGIONAL_template),intent(inout) :: REG
       type (GRID_VARS_template),intent(in) :: GRID_VARS
       type (GRID_VEG_template),intent(in) :: GRID_VEG
       type (GRID_SOIL_template),intent(in) :: GRID_SOIL
       type (GRID_MET_template),intent(in) :: GRID_MET
       type (GLOBAL_template),intent(in) :: GLOBAL
+      integer ivgtyp,i_und,i_moss,i,ilandc,inc_frozen
+      real*8 f_und,f_moss,canclos,dc,fw,dc_us,fw_us,etpix
+      real*8 evtact,ettot,ettotrg,epwms,evtact_us,epwms_us
+      real*8 evtact_moss,etstore,etwt,etstsum,etstsumrg
+      real*8 etwtsumrg,etwtsum,etbssum,etbssumrg,etdcsum
+      real*8 etdcsumrg,etwcsum,etwcsumrg,etlakesumrg,etlakesum
+      real*8 bsdew,contot,contotrg,pptsum,pptms,pptsumrg
+      real*8 pnetsum,pnet,pnetsumrg,qsurf,runtot,qsurfrg
+      real*8 sxrtot,satxr,sxrtotrg,xixtot,xinfxr,xixtotrg
+      real*8 ranrun,ranrunrg,conrun,conrunrg,wcip1sum
+      real*8 wcip1,dswcsum,dswc,wcrhssum,wcrhs,dsrzsum,dsrz
+      real*8 rzrhssum,rzrhs,dstzsum,dstz,tzrhssum,tzrhs,zrz
+      real*8 gwt,grz,gtz,ztz,gwtsum,gwtsumrg,grzsumrg,gtzsumrg
+      real*8 capsum,capsumrg,difrzsumrg,diftz,difrz
+      real*8 dstore,dssum,svarhs,rzsm1_u,tzsm1_u,rzsm1,tzsm1
+      real*8 rzsmav,tzsmav,tzpsum,thetas,rzpsum,r_mossm,rzsm
+      real*8 tzsm,rnact_moss,xleact_moss,hact_moss,gact_moss
+      real*8 dshact_moss,tskinact_moss,tkact_moss,tkmid_moss
+      real*8 rnact_us,xleact_us,hact_us,gact_us,dshact_us
+      real*8 tkact_us,tkmid_us,rnact,xleact,hact,gact,dshact
+      real*8 tkact,tkmid,rnsum,xlesum,hsum,gsum,dshsum,tksum
+      real*8 tkmidsum,rnpet,rnpet_us,rnpet_moss,xlepet,xlepet_us
+      real*8 xlepet_moss,hpet,hpet_us,hpet_moss,gpet,gpet_us
+      real*8 gpet_moss,dspet,dspet_us,dspet_moss,tkpet,tkpet_us
+      real*8 tkpet_moss,tkmidpet,tkmidpet_us,tkmidpet_moss
+      real*8 rnpetsum,xlepetsum,hpetsum,gpetsum,dshpetsum
+      real*8 tkpetsum,tkmidpetsum,tkdeepsum,Tdeepstep,dt
+      real*8 svarhssum,Swqsum,Swq_ussum,Swq,Swq_us
+      real*8 rescale,etpixloc
+      real*8 conpix
+      real*8 difwt
+      real*8 tair,xlhv,dummy
+      real*8 Sdepthsum,Sdepth_ussum,Sdepth,Sdepth_us
+
 
 ! TEMPORARY
 !GRID
@@ -256,10 +288,6 @@ thetas = GRID_SOIL%thetas
 !Point Data
 zrz = GRID_VARS%zrz
 ztz = GRID_VARS%ztz
-smold = GRID_VARS%smold
-rzsmold = GRID_VARS%rzsmold
-tzsmold = GRID_VARS%tzsmold
-capflx = GRID_VARS%capflx
 difrz = GRID_VARS%difrz
 diftz = GRID_VARS%diftz
 grz = GRID_VARS%grz
@@ -778,7 +806,6 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
       subroutine Compute_Regional(REG,GLOBAL,GRID,CAT)
 
       implicit none
-      include "help/lswb.h"
       type (REGIONAL_template),intent(inout) :: REG
       type (GLOBAL_template),intent(in) :: GLOBAL
       type (GRID_template),dimension(:),intent(in) :: GRID
@@ -786,6 +813,26 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
       real*8 rest
       real*8 :: tmp
       integer :: isoil,icatch
+      integer ncatch,npix,ic
+      integer ipix,landc,nlcs,ivgtyp(GLOBAL%nrow*GLOBAL%ncol)
+      integer count24
+      real*8 nlakpix,nvegpix
+      real*8 qb24sum
+      real*8 pixsiz,ettotrg,etlakesumrg
+      real*8 etstsumrg,etwtsumrg,fbsrg,etbssumrg,etdcsumrg
+      real*8 etwcsumrg,pptsumrg,pnetsumrg,qsurfrg,sxrtotrg
+      real*8 xixtotrg,contotrg,ranrunrg,conrunrg,qbreg,gwtsumrg
+      real*8 grzsumrg,gtzsumrg,capsumrg,difrzsumrg,dswcsum
+      real*8 wcrhssum,dsrzsum,rzrhssum,dstzsum,tzrhssum,dssum
+      real*8 svarhssum,rzsmav,tzsmav,rnpetsum,xlepetsum,hpetsum
+      real*8 gpetsum,dshpetsum,tkpetsum,tkmidpetsum,rnsum,xlesum
+      real*8 hsum,gsum,dshsum,tksum,tkmidsum,tkdeepsum,fwreg
+      real*8 wcip1sum,zbar1rg,pr3sat,perrg2,pr2sat,pr2uns,perrg1
+      real*8 pr1sat,pr1rzs,pr1tzs,pr1uns,persxr,perixr,persac
+      real*8 peruac,perusc,wcsum,zbarrg,tot
+      real*8 vegd,Swqsum,Swq_ussum
+      real*8 Sdepthsum,Sdepth_ussum
+
       ncatch = GLOBAL%ncatch
       pixsiz = GLOBAL%pixsiz
       npix = GLOBAL%npix
@@ -1276,9 +1323,12 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
        satxr,persxr,xinfxr,perixr,ievcon,persac,peruac,perusc,i,ipix)
 
       implicit none
-      include "help/sursat.h"
       integer :: i,ipix
-
+      integer ievcon
+      real*8 fwcat,fwreg,zw,psic,pr3sat,zrzmax,perrg2,rzsm1,thetas
+      real*8 pr2sat,pr2uns,perrg1,tzsm1,pr1sat,persac,peruac,perusc
+      real*8 pr1rzs,pr1tzs,pr1uns,satxr,persxr,xinfxr,perixr,tolsat
+      real*8 fw,mul_fac
       data tolsat / 0.0001d0 /
 
 ! ====================================================================
