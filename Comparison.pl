@@ -5,7 +5,9 @@ use strict;
 #LOCAL VARIABLES
 my $FLAG;
 my $i;
-my $GENERAL_FILE = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER_TEST.txt";
+my $GENERAL_FILE = "TEST_DATA/INPUT/GENERAL_PARAMETER.txt";
+my $NEW_REGIONAL_FILE = "TEST_DATA/OUTPUT/Regional_Variables.txt";
+my $OLD_REGIONAL_FILE = "TEST_DATA/OUTPUT_REFERENCE/Regional_Variables.txt";
 
 #EXECUTABLES
 my $TOPLATS_NEW = "./TOPLATS_3.0";
@@ -16,4 +18,4 @@ print "Running the model\n";
 system("$TOPLATS_NEW $GENERAL_FILE");
 
 print "Running the catchment tests\n";
-system("$CATCHMENT_TESTS");
+system("$CATCHMENT_TESTS $NEW_REGIONAL_FILE $OLD_REGIONAL_FILE");

@@ -208,18 +208,18 @@ USE MODULE_CATCHMENT_TEST
 
 implicit none
 integer :: t,nt
-character(len=200) :: filename
+character(len=200) :: filename(2)
 nt = 250
 
 !Open files
 
 !Regional Variables Output
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/NEW/Regional_Variables.txt"
-open(2000,file=trim(filename))
+call get_command_argument(1,filename(1))
+open(2000,file=trim(filename(1)))
 
 !Old Regional Variables Output
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/Regional_Variables.txt"
-open(2001,file=trim(filename))
+call get_command_argument(2,filename(2))
+open(2001,file=trim(filename(2)))
 
 !####################################################################
 ! Initialize unit testing
