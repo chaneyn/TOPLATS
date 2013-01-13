@@ -41,7 +41,6 @@ integer :: ic,isoil,ilandc,icatch
 ! Read the general filename
 !####################################################################
 
-!GLOBAL%GENERAL_FILE%fname = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER_TEST.txt"
 call Read_General_File(GLOBAL)
 
 !####################################################################

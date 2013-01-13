@@ -1534,6 +1534,10 @@ subroutine Read_General_File(GLOBAL)
 
   !Read the general filename from the command line argument
   call get_command_argument(1,GLOBAL%GENERAL_FILE%fname)
+  if (GLOBAL%GENERAL_FILE%fname .eq. '')then
+    print*,'Mising general parameter file. Exiting model.'
+    stop
+  endif
 
   !Define the pointer to the file
   GLOBAL%GENERAL_FILE%fp = 100
