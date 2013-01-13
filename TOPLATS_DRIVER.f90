@@ -18,7 +18,7 @@ USE MODULE_VARIABLES
 
 !Module containing all the I/O for the interface
 USE MODULE_IO,ONLY: IO_template,FILE_OPEN,rddata,rdveg_update,rdatmo,&
-                    file_close,Write_Regional,WRITE_BINARY
+                    file_close,Write_Regional,WRITE_BINARY,Read_General_File
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: instep_catchment,Update_Catchments
@@ -36,13 +36,19 @@ type (REGIONAL_template) :: REG
 type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
 integer :: ic,isoil,ilandc,icatch
-GLOBAL%nthreads = 8
+
+!####################################################################
+! Read the general filename
+!####################################################################
+
+!GLOBAL%GENERAL_FILE%fname = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER_TEST.txt"
+call Read_General_File(GLOBAL)
 
 !####################################################################
 ! Open all files
 !####################################################################
 
-call FILE_OPEN()
+call FILE_OPEN(GLOBAL)
 
 !####################################################################
 ! Call rddata to open files, read in time in-variant parameters,&
@@ -57,8 +63,7 @@ call rddata(GLOBAL,GRID,REG,CAT,IO)
 
 do i=1,GLOBAL%ndata
 
-  print*, "Time Step: ",i," Year: ",GLOBAL%iyear," Julian Day: ",&
-             GLOBAL%iday," Hour: ",GLOBAL%ihour
+  print*, "Time Step: ",i
 
 !#####################################################################
 ! Update the vegetation parameters if required.
@@ -106,13 +111,14 @@ do i=1,GLOBAL%ndata
 ! Output regional variables
 !#####################################################################
 
-  call Write_Regional(i,REG)
+  call Write_Regional(i,REG,GLOBAL)
 
 !#####################################################################
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,i)
+  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+                    IO%ipixnum,i,GLOBAL)
 
 
 enddo
@@ -121,6 +127,6 @@ enddo
 ! Close all files
 !#####################################################################
 
-call FILE_CLOSE()
+call FILE_CLOSE(GLOBAL)
 
 END PROGRAM

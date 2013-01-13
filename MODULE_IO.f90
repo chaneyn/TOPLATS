@@ -11,6 +11,13 @@ type IO_template
   integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
+interface Extract_Info_General_File
+  !====== begin of generated interface ======
+  module procedure Extract_Info_General_File_Int
+  module procedure Extract_Info_General_File_String
+  module procedure Extract_Info_General_File_Double
+end interface Extract_Info_General_File
+
 contains
 
 !####################################################################
@@ -30,17 +37,11 @@ contains
       forcingnvars = 7
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,forcingnvars))
 
-! ====================================================================
-! Read year, day and hour
-! ====================================================================
-
-      read(61,*) GLOBAL%iyear,GLOBAL%iday,GLOBAL%ihour
-
 ! ####################################################################
 ! Read all variables in at once for each time step
 ! ####################################################################
 
-      read(1004,rec=i) TempArray(:,:,:)
+      read(GLOBAL%FORCING_FILE%fp,rec=i) TempArray(:,:,:)
 
 ! Longwave Radiation
 
@@ -101,41 +102,12 @@ contains
       subroutine rddata(GLOBAL,GRID,REG,CAT,IO)
 
       implicit none
-      integer iophd
-      type (GLOBAL_template) :: GLOBAL
+      type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),allocatable :: GRID
       type (REGIONAL_template) :: REG
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
       type (IO_template),intent(inout) :: IO
       character(len=200) :: filename
-
-! ====================================================================
-! Open input/output files and set variable to control output file
-! printing.
-! ====================================================================
-
-      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/TI'
-      open(unit=9,file=filename,form='unformatted',access='direct',recl=4)
-      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/subbasin'
-      open(unit=10,file=filename,form='unformatted',access='direct',recl=4)
-      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/K_0.img'
-      open(unit=8,file=filename,form='unformatted',access='direct',recl=4)
-      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/dat.61.input'
-      open(unit=61,file=filename)
-      filename = '/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/CL_Table'
-      open(unit=71,file=filename)
-
-! ====================================================================
-! Read in simulation time constants and control variables.
-! ====================================================================
-
-      read(1000,*) GLOBAL%ndata
-      read(1000,*) GLOBAL%dt
-      read(1000,*) GLOBAL%endstm
-      read(1000,*) GLOBAL%iophd
-
-      print*, 'rddata:  Done reading time parameters'
-      print*, 'rddata:  Total time steps = ',GLOBAL%ndata
 
 ! ====================================================================
 ! Read and initialize topmodel parameters, atb distribution and
@@ -170,11 +142,6 @@ contains
       GLOBAL%ioppet = 0 !Always run in full water and energy balance
       GLOBAL%iopwv = 1 !Always read in water vapor using relative humidity
       GLOBAL%iopstab = 1 !Always perform stability correction on aero. resis.
-      read(1000,*) GLOBAL%iopgveg
-      read(1000,*) GLOBAL%iopthermc
-      read(1000,*) GLOBAL%iopthermc_v
-      read(1000,*) GLOBAL%maxnri
-      read(1000,*) GLOBAL%toleb
 
       print*,'rddata:  Done reading energy balance parameters'
 
@@ -190,8 +157,6 @@ contains
 ! ====================================================================
 
       call inisim(GLOBAL,IO,GRID)
-
-      read (1000,*) GLOBAL%dtveg
 
       print*,'rddata:  Done initializing simulation'
 
@@ -241,7 +206,7 @@ contains
 
       GLOBAL%ntdveg = GLOBAL%ntdveg + 1
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
-      read(1003,rec=GLOBAL%ntdveg)TempArray
+      read(GLOBAL%DVEG_FILE%fp,rec=GLOBAL%ntdveg)TempArray
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
@@ -325,20 +290,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   real*8,dimension(:),allocatable :: atb,ti,zbar0,sumatb,sumlti,qb0,lte
   real*8,dimension(:),allocatable :: ki
 
-  !###################################################################
-  ! Read the option for baseflow calculation, the option .or.&
-  ! initial water table entry, the number of basin in the area
-  ! of interest, and the dimensions of the soils-topographi!
-  ! index map.
-  !###################################################################
-
-  read(1000,*) GLOBAL%iopbf
-  read(1000,*) GLOBAL%iopwt0
-  read(1000,*) GLOBAL%ncatch
-  read(1000,*) GLOBAL%nrow
-  read(1000,*) GLOBAL%ncol
-  read(1000,*) GLOBAL%pixsiz
-
   !#####################################################################
   ! Allocate memory
   !#####################################################################
@@ -363,7 +314,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   ! transformation from pixel number to row/column.
   !####################################################################
 
-  call rdatb(atb,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,IO%ixpix,IO%iypix,GLOBAL%npix)
+  call rdatb(atb,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,IO%ixpix,IO%iypix,GLOBAL%npix,GLOBAL%TI_FILE%fp)
 
 ! ====================================================================
 ! Read in the catchment look-up table - read different values based
@@ -374,7 +325,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 100 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,CAT(kk)%qb0,CAT(kk)%dd,&
+            read(GLOBAL%CL_table_FILE%fp,*) jj,CAT(kk)%q0,CAT(kk)%ff,CAT(kk)%qb0,CAT(kk)%dd,&
                        CAT(kk)%xlength,CAT(kk)%basink
 
 100      continue
@@ -383,7 +334,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 200 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%dd,&
+            read(GLOBAL%CL_table_FILE%fp,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%dd,&
                        CAT(kk)%xlength,CAT(kk)%basink 
 
 200      continue
@@ -392,7 +343,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 300 kk=1,GLOBAL%ncatch
 
-            read(71,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk)
+            read(GLOBAL%CL_table_FILE%fp,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk)
 
 300      continue
 
@@ -402,14 +353,15 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 ! Read the catchment image.
 ! ====================================================================
 
-      call rdimgi(GRID%VARS%icatch,10,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+      GRID%VARS%icatch = 0
+      call rdimgi(GRID%VARS%icatch,GLOBAL%Subbasin_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
 
 ! ====================================================================
 ! Read image of transmissivities for use in calculating the 
 ! soils-topographi! index.
 ! ====================================================================
 
-      call rdimgr(ki,8,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+      call rdimgr(ki,GLOBAL%K0_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
       do kk=1,GLOBAL%nrow*GLOBAL%ncol
         if (GRID(kk)%VARS%icatch .gt. 0)then
           ti(kk) = ki(kk)/CAT(GRID(kk)%VARS%icatch)%ff
@@ -512,11 +464,10 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 !Subroutine to handle opening and closing the input files
 !##################################################################
 
-subroutine FILE_OPEN()
+subroutine FILE_OPEN(GLOBAL)
 
 implicit none
-
-character(len=200) :: filename
+type (GLOBAL_template),intent(inout) :: GLOBAL
 integer :: soilnvars,vegnvars,dvegnvars,nforcingvars,noutvars
 integer :: nrow,ncol
 soilnvars = 23
@@ -527,145 +478,103 @@ nforcingvars = 7;
 nrow = 60
 ncol = 66
 
-!Global Parameter File
+!Define the pointer number of each file
+GLOBAL%TI_FILE%fp = 101
+GLOBAL%Subbasin_FILE%fp = 102
+GLOBAL%K0_FILE%fp = 103
+GLOBAL%CL_Table_FILE%fp = 104
+GLOBAL%VEG_FILE%fp = 105
+GLOBAL%DVEG_FILE%fp = 106
+GLOBAL%FORCING_FILE%fp = 107
+GLOBAL%OUTPUT_FILE%fp = 108
+GLOBAL%SOIL_FILE%fp = 109
+GLOBAL%REGIONAL_FILE%fp = 110
 
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GLOBAL_PARAMETER_1.txt"
-open(1000,file=trim(filename))
+!Open the files
+
+!Topographic index file
+open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',access='direct',recl=4)
+
+!Subbasin distribution file
+open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',access='direct',recl=4)
+
+!Saturated hydraulic conductivity file
+open(unit=GLOBAL%K0_FILE%fp,file=GLOBAL%K0_FILE%fname,form='unformatted',access='direct',recl=4)
+
+!Catchment table parameters file
+open(unit=GLOBAL%CL_table_FILE%fp,file=GLOBAL%CL_table_FILE%fname)
 
 !Soil Parameter File
-
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/soil.bin"
-open(1001,file=trim(filename),status='old',access='direct',form='unformatted',recl=ncol*nrow*soilnvars*4)
+open(GLOBAL%SOIL_FILE%fp,file=trim(GLOBAL%SOIL_FILE%fname),status='old',access='direct',form='unformatted',&
+     recl=ncol*nrow*soilnvars*4)
 
 !Vegetation Static Parameter File
-
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/veg.bin"
-open(1002,file=trim(filename),status='old',access='direct',form='unformatted',recl=ncol*nrow*vegnvars*4)
+open(GLOBAL%VEG_FILE%fp,file=trim(GLOBAL%VEG_FILE%fname),status='old',access='direct',form='unformatted',&
+     recl=ncol*nrow*vegnvars*4)
 
 !Vegetation Dynamic Parameter File
-
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/dveg.bin"
-open(1003,file=trim(filename),status='old',access='direct',form='unformatted',recl=ncol*nrow*dvegnvars*4)
+open(GLOBAL%DVEG_FILE%fp,file=trim(GLOBAL%DVEG_FILE%fname),status='old',access='direct',form='unformatted',&
+     recl=ncol*nrow*dvegnvars*4)
 
 !Forcing Data Set
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/FORCING_01202005_10202005.bin"
-open(1004,file=trim(filename),status='old',access='direct',form='unformatted',recl=ncol*nrow*nforcingvars*4)
+open(GLOBAL%FORCING_FILE%fp,file=trim(GLOBAL%FORCING_FILE%fname),status='old',access='direct',&
+     form='unformatted',recl=ncol*nrow*nforcingvars*4)
 
 !Output Data Set
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/GRADS/OUTPUT.bin"
-open(1005,file=trim(filename),status='unknown',access='direct',form='unformatted',recl=ncol*nrow*noutvars*4)
-
-!Regional Actual Energy Fluxes (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/EF_fruit.txt"
-open(2091,file=trim(filename))
-
-!Regional Canopy water balance (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/CWB_fruit.txt"
-open(2092,file=trim(filename))
-
-!Regional Precipitation/Infiltration/Runoff (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/PRI_fruit.txt"
-open(2093,file=trim(filename))
-
-!Regional Evapotranspiration Rates (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/ET_fruit.txt"
-open(2094,file=trim(filename))
-
-!Regional Root and Transmission Zone Water Balance (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/STZB_fruit.txt"
-open(2095,file=trim(filename))
-
-!Regional Water Table Balance (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/WTB_fruit.txt"
-open(2096,file=trim(filename))
-
-!Regional Fractional Saturation States (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SSR_fruit.txt"
-open(2097,file=trim(filename))
-
-!Regional Evapotranspiration Controls and Infiltration Mechanisms (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/RMEC_fruit.txt"
-open(2098,file=trim(filename))
-
-!Regional Snow Cover (VALIDATION FILE)
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/SWE_fruit.txt"
-open(2099,file=trim(filename))
+open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',access='direct',&
+     form='unformatted',recl=ncol*nrow*noutvars*4)
 
 !Regional Variables Output
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/NEW/Regional_Variables.txt"
-open(2000,file=trim(filename))
-
-!Old Regional Variables Output
-filename = "/home/ice/nchaney/PROJECTS/TOPLATS_DEVELOPMENT/DATA/LittleRiver/OLD/Regional_Variables.txt"
-open(2001,file=trim(filename))
+open(GLOBAL%REGIONAL_FILE%fp,file=trim(GLOBAL%REGIONAL_FILE%fname))
 
 end subroutine FILE_OPEN
 
-subroutine FILE_CLOSE()
+subroutine FILE_CLOSE(GLOBAL)
 
 implicit none
-integer :: FILEUNIT
-
-!Global Parameter File
-close(1000)
+type(GLOBAL_template),intent(in) :: GLOBAL
 
 !Soil Parameter File
-close(1001)
+close(GLOBAL%SOIL_FILE%fp)
 
 !Vegetation Static Parameter File
-close(1002)
+close(GLOBAL%VEG_FILE%fp)
 
 !Vegetation Dynamic Parameter File
-close(1003)
+close(GLOBAL%DVEG_FILE%fp)
 
 !Forcing Data Set
-close(1004)
+close(GLOBAL%FORCING_FILE%fp)
 
 !Output Data Set
-close(1005)
-
-!Regional Actual Energy Fluxes (VALIDATION FILE)
-close(2091)
-
-!Regional Canopy water balance (VALIDATION FILE)
-close(2092)
-
-!Regional Precipitation/Infiltration/Runoff (VALIDATION FILE)
-close(2093)
-
-!Regional Evapotranspiration Rates (VALIDATION FILE)
-close(2094)
-
-!Regional Root and Transmission Zone Water Balance (VALIDATION FILE)
-close(2095)
-
-!Regional Water Table Balance (VALIDATION FILE)
-close(2096)
-
-!Regional Fractional Saturation States (VALIDATION FILE)
-close(2097)
-
-!Regional Evapotranspiration Controls and Infiltration Mechanisms (VALIDATION FILE)
-close(2098)
-
-!Regional Snow Cover (VALIDATION FILE)
-close(2099)
+close(GLOBAL%OUTPUT_FILE%fp)
 
 !Regional Variables Output
-close(2000)
+close(GLOBAL%REGIONAL_FILE%fp)
 
-!Regional Variables Output (OLD)
-close(2001)
+!Topographic index
+close(GLOBAL%TI_FILE%fp)
+
+!Subbasin distribution file
+close(GLOBAL%Subbasin_FILE%fp)
+
+!Saturated hydraulic conductivity file
+open(GLOBAL%K0_FILE%fp)
+
+!Catchment table parameters file
+open(GLOBAL%CL_table_FILE%fp)
+
 
 end subroutine FILE_CLOSE
 
-subroutine Write_Regional(i,REG)
+subroutine Write_Regional(i,REG,GLOBAL)
 
   type(REGIONAL_template),intent(in) :: REG
+  type(GLOBAL_template),intent(in) :: GLOBAL
   integer,intent(in) :: i
 
   !Write regional variables to file
-  write(2000,*)i,REG
+  write(GLOBAL%REGIONAL_FILE%fp,*)i,REG
 
 end subroutine Write_Regional
 
@@ -728,7 +637,7 @@ end subroutine Write_Regional
 
       print*,"rdveg:  Reading in all the vegetation properties at once"
 
-      read(1002,rec=1)TempArray(:,:,:)
+      read(GLOBAL%VEG_FILE%fp,rec=1)TempArray(:,:,:)
 
       GRID_VEG_2D%ivgtyp = dble(TempArray(:,:,1))
       GRID_VEG_2D%xlai = dble(TempArray(:,:,2))
@@ -760,7 +669,7 @@ end subroutine Write_Regional
 
       print*,"rdveg:  Reading in the dynamic vegetation properties"
 
-      read(1003,rec=1)TempArray(:,:,:)
+      read(GLOBAL%DVEG_FILE%fp,rec=1)TempArray(:,:,:)
 
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
@@ -852,11 +761,9 @@ end subroutine Write_Regional
 ! as requested.
 ! ====================================================================
 
-  read(1000,*) wc0
-
   do kk=1,GLOBAL%npix
 
-    GRID(kk)%VARS%wcip1 = wc0
+    GRID(kk)%VARS%wcip1 = GLOBAL%wc0
 
   enddo  
 
@@ -967,16 +874,12 @@ end subroutine Write_Regional
 ! and interstorm event flags and times.
 ! ====================================================================
 
-      read(1000,*) GLOBAL%iopflg
-
       if (GLOBAL%iopflg.eq.0) then
 
 ! --------------------------------------------------------------------
 ! If one event flag value is used then set all flags and times
 ! accordingly.
 ! --------------------------------------------------------------------
-
-         read(1000,*) GLOBAL%istflg
 
          if (GLOBAL%istflg.eq.1) then
 
@@ -1088,9 +991,10 @@ end subroutine Write_Regional
 !    rmult:     all image output to be multiplied by this amount
 ! ====================================================================
 
-      subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i)
+      subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i,GLOBAL)
 
       implicit none
+      type(GLOBAL_template),intent(in) :: GLOBAL
       real :: dummy 
       real :: rmult
       real*8 :: datain(nrow*ncol)
@@ -1136,7 +1040,7 @@ end subroutine Write_Regional
 
       enddo
 
-      write (1005,rec=i) dataout
+      write(GLOBAL%OUTPUT_FILE%fp,rec=i) dataout
 
       return
 
@@ -1178,13 +1082,6 @@ end subroutine Write_Regional
 
       GLOBAL%nsoil = GLOBAL%nrow*GLOBAL%ncol
 
-      read(1000,*)GLOBAL%irestype
-      read(1000,*)GLOBAL%ikopt
-      read(1000,*)GLOBAL%zrzmax
-      read(1000,*)GLOBAL%iopsmini
-
-      if (GLOBAL%iopsmini.eq.0) read(1000,*)GLOBAL%smpet0
-
       print*,"rdsoil:  Read spatially constant soil pars"
 
       if (GLOBAL%iopsmini.eq.1)&
@@ -1195,7 +1092,7 @@ end subroutine Write_Regional
 ! ====================================================================
 
       print*,"rdsoil:  Reading in all soil properties at once"
-      read(1001,rec=1)TempArray(:,:,:)
+      read(GLOBAL%SOIL_FILE%fp,rec=1)TempArray(:,:,:)
       GRID_SOIL_2D%bcbeta = dble(TempArray(:,:,1))
       GRID_SOIL_2D%psic = dble(TempArray(:,:,2))
       GRID_SOIL_2D%thetas = dble(TempArray(:,:,3))
@@ -1509,12 +1406,12 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-      subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix)
+      subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix,fp)
 
       implicit none
       integer :: ipixnum(nrow,ncol),ixpix(nrow*ncol),iypix(nrow*ncol)
       integer :: nrow,ncol,npix
-      integer :: ip,irow,icol
+      integer :: ip,irow,icol,fp
       real*8 :: atb(nrow*ncol)
       real*4 :: tempatb
 
@@ -1537,7 +1434,7 @@ end subroutine Write_Regional
 ! --------------------------------------------------------------------
 
 
-               read(9,rec=((irow-1)*ncol) + icol) tempatb
+               read(fp,rec=((irow-1)*ncol) + icol) tempatb
 
 ! --------------------------------------------------------------------
 ! Check for atb value at current location.  If there is
@@ -1629,5 +1526,181 @@ end subroutine Write_Regional
 !subroutine bilinear_interpolation()
 
 !end subroutine biliner_interpolation
+
+subroutine Read_General_File(GLOBAL)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+
+  !Read the general filename from the command line argument
+  call get_command_argument(1,GLOBAL%GENERAL_FILE%fname)
+
+  !Define the pointer to the file
+  GLOBAL%GENERAL_FILE%fp = 100
+
+  !Open the file
+  open(GLOBAL%GENERAL_FILE%fp,file=trim(GLOBAL%GENERAL_FILE%fname),status='old')
+
+  !Read through the file extracting the necessary information
+
+  !Number of time steps
+  call Extract_Info_General_File('ndata',GLOBAL,GLOBAL%ndata) 
+  !Time step (seconds)
+  call Extract_Info_General_File('dt',GLOBAL,GLOBAL%dt)
+  !Time between end of precip event and end of storm event
+  call Extract_Info_General_File('endstm',GLOBAL,GLOBAL%endstm)
+  !Option for calculation of baseflow 
+  call Extract_Info_General_File('iopbf',GLOBAL,GLOBAL%iopbf)
+  !Option for initial condition specification 
+  call Extract_Info_General_File('iopwt0',GLOBAL,GLOBAL%iopwt0)
+  !Number of catchments
+  call Extract_Info_General_File('ncatch',GLOBAL,GLOBAL%ncatch)
+  !Number of rows in soils-TI image 
+  call Extract_Info_General_File('nrow',GLOBAL,GLOBAL%nrow)
+  !Number of columns in soils-TI image 
+  call Extract_Info_General_File('ncol',GLOBAL,GLOBAL%ncol)
+  !Pixel resolution for soils-TI imagex (m) 
+  call Extract_Info_General_File('pixsiz',GLOBAL,GLOBAL%pixsiz)
+  !Initial canopy water storage (m)
+  call Extract_Info_General_File('wc0',GLOBAL,GLOBAL%wc0)
+  !Type of soil resistance parameterization 
+  call Extract_Info_General_File('irestype',GLOBAL,GLOBAL%irestype)
+  !Option for vertical Ks change with depth 
+  call Extract_Info_General_File('ikopt',GLOBAL,GLOBAL%ikopt)
+  !Maximum root depth 
+  call Extract_Info_General_File('zrzmax',GLOBAL,GLOBAL%zrzmax)
+  !Initial conditions (yes/no)
+  call Extract_Info_General_File('iopsmini',GLOBAL,GLOBAL%iopsmini)
+  !Soil moisture used to calculate the thermal cond for t1 
+  call Extract_Info_General_File('smpet0',GLOBAL,GLOBAL%smpet0)
+  !Option for ground heat flux under vegetation 
+  call Extract_Info_General_File('iopgveg',GLOBAL,GLOBAL%iopgveg)
+  !Option for thermal conductivity calculation 
+  call Extract_Info_General_File('iopthermc',GLOBAL,GLOBAL%iopthermc)
+  !Adjust soil thermal conductivity based on LAI 
+  call Extract_Info_General_File('iopthermc_v',GLOBAL,GLOBAL%iopthermc_v)
+  !Maximum number of iterations for energy balance solution 
+  call Extract_Info_General_File('maxnri',GLOBAL,GLOBAL%maxnri)
+  !Tolerance for skin temperature (K) 
+  call Extract_Info_General_File('toleb',GLOBAL,GLOBAL%toleb)
+  !Option for the initial input of storm/interstorm event status  
+  call Extract_Info_General_File('iopflg',GLOBAL,GLOBAL%iopflg)
+  !Initial storm/interstorm event flag 
+  call Extract_Info_General_File('istflg',GLOBAL,GLOBAL%istflg)
+  !Number of time steps between updating vegetation parameters 
+  call Extract_Info_General_File('dtveg',GLOBAL,GLOBAL%dtveg)
+  !Topographic index filename
+  call Extract_Info_General_File('TI_fname',GLOBAL,GLOBAL%TI_FILE%fname)
+  !Basin distribution filename
+  call Extract_Info_General_File('Subbasin_fname',GLOBAL,GLOBAL%Subbasin_FILE%fname)
+  !Saturated Hydraulic Conductivity filename
+  call Extract_Info_General_File('K_0_fname',GLOBAL,GLOBAL%K0_FILE%fname)
+  !Catchment parameter table
+  call Extract_Info_General_File('CL_Table_fname',GLOBAL,GLOBAL%CL_table_FILE%fname)
+  !Soil file
+  call Extract_Info_General_File('SOIL_fname',GLOBAL,GLOBAL%SOIL_FILE%fname)
+  !Vegetation file
+  call Extract_Info_General_File('VEG_fname',GLOBAL,GLOBAL%VEG_FILE%fname)
+  !Dynamic vegetation file
+  call Extract_Info_General_File('DVEG_fname',GLOBAL,GLOBAL%DVEG_FILE%fname)
+  !Forcing file
+  call Extract_Info_General_File('FORCING_fname',GLOBAL,GLOBAL%FORCING_FILE%fname)
+  !Output file
+  call Extract_Info_General_File('OUTPUT_fname',GLOBAL,GLOBAL%OUTPUT_FILE%fname)
+  !Output file
+  call Extract_Info_General_File('REGIONAL_fname',GLOBAL,GLOBAL%REGIONAL_FILE%fname)
+  !Number of threads used in openmp
+  call Extract_Info_General_File('nthreads',GLOBAL,GLOBAL%nthreads)
+  
+  !Close the file
+  close(GLOBAL%GENERAL_FILE%fp)
+  
+end subroutine
+
+subroutine Extract_Info_General_File_Int(strid,GLOBAL,read_arg)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  integer :: read_arg,flag
+  character(*) :: strid
+  character(len=200) :: string
+  !Read until we find what we need
+  do 
+    read(GLOBAL%GENERAL_FILE%fp,*,iostat=flag)string
+    if (string .eq. strid)then
+      !go back one record
+      backspace(GLOBAL%GENERAL_FILE%fp)
+      !read the desired parameter/file
+      read(GLOBAL%GENERAL_FILE%fp,*)string,read_arg
+      !Go back to the beginning of the file and exit
+      rewind(GLOBAL%GENERAL_FILE%fp)
+      exit
+    endif
+    if (flag .ne. 0)then
+      print*,'Missing the ',trim(strid),' input parameter. Check the',&
+             ' General Parameter file' 
+      stop
+    endif
+  enddo
+
+end subroutine Extract_Info_General_File_Int
+
+subroutine Extract_Info_General_File_String(strid,GLOBAL,read_arg)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  integer :: flag
+  character(len=*) :: strid
+  character(len=400) :: read_arg
+  character(len=200) :: string
+  !Read until we find what we need
+  do
+    read(GLOBAL%GENERAL_FILE%fp,*,iostat=flag)string
+    if (string .eq. strid)then
+      !go back one record
+      backspace(GLOBAL%GENERAL_FILE%fp)
+      !read the desired parameter/file
+      read(GLOBAL%GENERAL_FILE%fp,*)string,read_arg
+      !Go back to the beginning of the file and exit
+      rewind(GLOBAL%GENERAL_FILE%fp)
+      exit
+    endif
+    if (flag .ne. 0)then
+      print*,'Missing the ',trim(strid),' input parameter. Check the',& 
+             ' General Parameter file'
+      stop
+    endif
+  enddo
+
+end subroutine Extract_Info_General_File_String
+
+subroutine Extract_Info_General_File_Double(strid,GLOBAL,read_arg)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  integer :: flag
+  real*8 :: read_arg
+  character(len=*) :: strid
+  character(len=200) :: string
+  !Read until we find what we need
+  do
+    read(GLOBAL%GENERAL_FILE%fp,*,iostat=flag)string
+    if (string .eq. strid)then
+      !go back one record
+      backspace(GLOBAL%GENERAL_FILE%fp)
+      !read the desired parameter/file
+      read(GLOBAL%GENERAL_FILE%fp,*)string,read_arg
+      !Go back to the beginning of the file and exit
+      rewind(GLOBAL%GENERAL_FILE%fp)
+      exit
+    endif
+    if (flag .ne. 0)then
+      print*,'Missing the ',trim(strid),' input parameter. Check the',&
+             ' General Parameter file'
+      stop
+    endif
+  enddo
+
+end subroutine Extract_Info_General_File_Double
 
 END MODULE MODULE_IO

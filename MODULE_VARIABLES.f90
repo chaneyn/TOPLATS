@@ -1,5 +1,13 @@
 MODULE MODULE_VARIABLES
 
+!IO STRUCTURES
+type FILE_template
+        !Filename
+        character(len=400) :: fname
+        !pointer
+        integer :: fp
+end type FILE_template
+
 !GRID DATA
 
 type GRID_MET_template
@@ -177,15 +185,27 @@ type GLOBAL_template
         real*8 :: endstm,toleb,pixsiz,dt
         integer :: newstorm
         !Vegetation
-        integer :: ntdveg 
+        integer :: ntdveg
+        real*8 :: wc0 
         !Time
-        integer :: iyear,iday,ihour
         real*8 :: djday
         !Misc
         real*8 :: mul_fac
         !OpenMP parameters
         integer :: nthreads
-
+        !Files
+        type(FILE_template) :: GENERAL_FILE
+        type(FILE_template) :: TI_FILE
+        type(FILE_template) :: Subbasin_FILE
+        type(FILE_template) :: K0_FILE
+        type(FILE_template) :: CL_table_FILE
+        type(FILE_template) :: SOIL_FILE
+        type(FILE_template) :: VEG_FILE
+        type(FILE_template) :: DVEG_FILE
+        type(FILE_template) :: FORCING_FILE
+        type(FILE_template) :: OUTPUT_FILE
+        type(FILE_template) :: REGIONAL_FILE
+        
 end type GLOBAL_template
 
 !General variables
