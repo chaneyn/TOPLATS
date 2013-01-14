@@ -64,9 +64,7 @@ contains
 ! or moss.
 ! --------------------------------------------------------------------
 
-      ttt = (1.-f_moss-f_und)*tkmidpet+&
-            f_und*tkmidpet_us+&
-            f_moss*tkmidpet_moss
+      ttt = tkmidpet
 
 ! --------------------------------------------------------------------
 ! If the soil temperature is above 0C then there is no frozen soil
@@ -213,9 +211,7 @@ contains
 ! soil temperature.
 ! --------------------------------------------------------------------
 
-      ttt = (1.-f_moss-f_und)*tkmidpet+&
-            f_und*tkmidpet_us+&
-            f_moss*tkmidpet_moss
+      ttt = tkmidpet
 
       if (ttt.eq.tsoilold) then
 

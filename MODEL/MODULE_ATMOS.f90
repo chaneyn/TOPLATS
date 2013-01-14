@@ -355,7 +355,7 @@ iopsmini = GLOBAL%iopsmini
 
          twet_ic=twet
 
-         if (r_moss_depth.lt.0.d0) stop
+         !if (r_moss_depth.lt.0.d0) stop
 
       else
 
@@ -1329,8 +1329,7 @@ iopsmini = GLOBAL%iopsmini
 ! In case of understory of moss, initialize potential temperatures.
 ! --------------------------------------------------------------------
 
-      if ( (i_und.gt.0).or.&
-           (i_moss.gt.0) ) then
+      if ( (i_und.gt.0)) then
 
          tkd_us = tkact_us
          tkmidd_us = tkmid_us
@@ -1373,8 +1372,7 @@ iopsmini = GLOBAL%iopsmini
          call soiladapt (iopgveg,thermc,iopthermc_v,tcbeta,&
                          xlai,thermc1,heatcap,heatcap1,zero)
 
-         if ( (i_und.gt.0).or.&
-              (i_moss.gt.0) ) then
+         if(i_und.gt.0)then
 
             call soiladapt (iopgveg,thermc_us,iopthermc_v,tcbeta_us,&
                             xlai_us,thermc1,heatcap_us,heatcap1,zero)

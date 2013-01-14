@@ -573,7 +573,76 @@ subroutine Write_Regional(i,REG,GLOBAL)
   type(GLOBAL_template),intent(in) :: GLOBAL
   integer,intent(in) :: i
 
-  !Write regional variables to file
+  !print*,REG%fbsrg
+  !print*,REG%Swqsum
+  !print*,REG%Swq_ussum
+  !print*,REG%Sdepthsum
+  !print*,REG%Sdepth_ussum
+  !print*,REG%fwreg
+  !print*,REG%rzsmav
+  !print*,REG%tzsmav
+  !print*,REG%wcsum
+  !print*,REG%wcip1sum
+  !print*,REG%ettotrg
+  !print*,REG%etstsumrg
+  !print*,REG%etwtsumrg
+  !print*,REG%etbssumrg
+  !print*,REG%etdcsumrg
+  !print*,REG%etwcsumrg
+  !print*,REG%etlakesumrg
+  !print*,REG%pptsumrg
+  !print*,REG%pnetsumrg
+  !print*,REG%contotrg
+  !print*,REG%sxrtotrg
+  !print*,REG%xixtotrg
+  !print*,REG%qsurfrg
+  !print*,REG%ranrunrg
+  !print*,REG%conrunrg
+  !print*,REG%qbreg
+  !print*,REG%capsumrg
+  !print*,REG%difrzsumrg
+  !print*,REG%gwtsumrg
+  !print*,REG%grzsumrg
+  !print*,REG%gtzsumrg
+  !print*,REG%zbarrg
+  !print*,REG%zbar1rg
+  !print*,REG%dswcsum
+  !print*,REG%dsrzsum
+  !print*,REG%dstzsum
+  !print*,REG%dssum
+  !print*,REG%wcrhssum
+  !print*,REG%rzrhssum
+  !print*,REG%tzrhssum
+  !print*,REG%svarhssum
+  !print*,REG%rnsum
+  !print*,REG%xlesum
+  !print*,REG%hsum
+  !print*,REG%gsum
+  !print*,REG%tksum
+  !print*,REG%dshsum
+  !print*,REG%tkmidsum
+  !print*,REG%tkdeepsum
+  !print*,REG%rnpetsum
+  !print*,REG%xlepetsum
+  !print*,REG%hpetsum
+  !print*,REG%gpetsum
+  !print*,REG%tkpetsum
+  !print*,REG%tkmidpetsum
+  !print*,REG%dshpetsum
+  !print*,REG%perrg1
+  !print*,REG%perrg2
+  !print*,REG%pr3sat
+  !print*,REG%pr2sat
+  !print*,REG%pr2uns
+  !print*,REG%pr1sat
+  !print*,REG%pr1rzs
+  !print*,REG%pr1tzs
+  !print*,REG%pr1uns
+  !print*,REG%persac
+  !print*,REG%peruac
+  !print*,REG%perusc
+  !print*,REG%persxr
+  !print*,REG%perixr
   write(GLOBAL%REGIONAL_FILE%fp,*)i,REG
 
 end subroutine Write_Regional

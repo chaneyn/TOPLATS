@@ -769,40 +769,6 @@ MODULE MODULE_LAND
       include "help/states.h"
     
 ! ====================================================================
-! Calculate the frozen moss content.
-! ====================================================================
-
-      if (inc_frozen.eq.1) then
-
-         if (i_moss.eq.1) then
-
-            if (tkmid_moss.lt.(273.15d0)) then
-
-               r_mossm_u=0.d0
-               r_mossm_u=1000.d0*bulk_dens_moss*a_ice_moss*(273.15d0-tkmid_moss)**b_ice_moss/row
-
-               if (r_mossm_u.ge.r_mossm) then
-
-                  r_mossm_u=r_mossm
-
-               endif
-
-               r_mossm_f=r_mossm-r_mossm_u
-
-            endif
-
-            if (tkmid_moss.ge.(273.15d0)) then
-
-               r_mossm_f=0.d0
-               r_mossm_u=r_mossm
-
-            endif
-
-         endif
-
-      endif
-
-! ====================================================================
 ! Update local water table depth.
 ! ====================================================================
 
@@ -971,29 +937,6 @@ MODULE MODULE_LAND
             tzsm=tzsm_u+tzsm_f
 
          endif
-
-      
-  
-! ....................................................................
-! Update the values for moss moisture content of the old and new
-! timestep.
-! ....................................................................
-
-         r_mossm1_u=r_mossm_u
-         r_mossm=r_mossm_u+r_mossm_f
-!CVAL         zmoss=r_moss_depth*r_mossm/(thetas_moss-r_mossm_f)
-
-         if (thetas_moss.gt.0.d0) then
-
-            zmoss=r_moss_depth*r_mossm/(thetas_moss)
-
-         else
-
-            zmoss=0.d0
-
-         endif
-
-         r_mossm1_f=r_mossm_f
 
       endif
 
@@ -1250,7 +1193,7 @@ MODULE MODULE_LAND
 
       precipitation=pnet
 
-      if ( (i_moss+i_und) .gt.0) then
+      if ( (i_und) .gt.0) then
 
          if ((PackWater_us+SurfWater_us+Swq_us).gt.(0.d0))then
 
@@ -2259,7 +2202,6 @@ MODULE MODULE_LAND
 ! New surface zone created.
 ! ====================================================================
 
-
       if (zw0.le.zero.and.zrz.gt.zero.and.i.gt.1.and.newstorm.eq.0) then
 
         cor_flx_rz = -zrz*(thetas-thetar) 
@@ -3097,8 +3039,7 @@ MODULE MODULE_LAND
 
          if (ivgtyp.eq.1) then
 
-            if ( (i_und.eq.0).and.&
-                 (i_moss.eq.0) ) then
+            if (i_und.eq.0)then
 
 ! ....................................................................
 ! In case of vegetation with lower roots all the evaporative demand
@@ -3222,12 +3163,6 @@ MODULE MODULE_LAND
 
             endif
 
-            if (i_moss.gt.0) then
-
-               evrz=evrz+zero
-
-            endif
-
          endif
 
          dummy=evrz
@@ -3239,16 +3174,7 @@ MODULE MODULE_LAND
 ! from soil water and 50 % from water in the moss layer.
 ! ....................................................................
 
-      if (i_moss.eq.1) then
-
-         evrz_moss=0.5d0*evrz
-         evrz=0.5d0*evrz
-
-      else
-
-         evrz_moss=0.d0
-
-      endif
+      evrz_moss=0.d0
 
       return
 

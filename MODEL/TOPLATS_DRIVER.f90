@@ -55,6 +55,49 @@ call FILE_OPEN(GLOBAL)
 !####################################################################
 
 call rddata(GLOBAL,GRID,REG,CAT,IO)
+GRID%VARS%rzsm_f = 0.d0
+GRID%VARS%rzsm1_f = 0.d0
+GRID%VARS%tzsm_f = 0.d0
+GRID%VARS%tzsm1_f = 0.d0
+GRID%VARS%rzsm1 = zero
+GRID%VARS%tzsm1 = zero
+GRID%VARS%zw = 0.0d0
+GRID%VARS%Sdepth_us = 0.0d0
+GRID%VARS%Swq_us = 0.d0
+  GRID%VARS%rnpet = 0.d0
+  GRID%VARS%xlepet = 0.d0
+  GRID%VARS%hpet = 0.d0
+  GRID%VARS%gpet = 0.d0
+  GRID%VARS%fw = 0.d0
+  REG%zbar1rg = 0.d0
+  REG%wcip1sum = 0.d0
+  GRID%VEG%i_und = 0
+GRID%VARS%PackWater_us = zero
+GRID%VARS%SurfWater_us = zero
+GRID%VARS%VaporMassFlux_us = zero
+GRID%VARS%r_MeltEnergy_us = zero
+GRID%VARS%Outflow_us = zero
+GRID%VARS%alb_snow = zero
+GRID%VARS%TPack = zero
+GRID%VARS%TSurf = zero
+GRID%VARS%xleact_snow = zero
+GRID%VARS%hact_snow = zero
+GRID%VARS%rn_snow = zero
+GRID%VARS%TPack_us = zero
+GRID%VARS%TSurf_us = zero
+GRID%VARS%xleact_snow_us = zero
+GRID%VARS%hact_snow_us = zero
+GRID%VARS%rn_snow_us = zero
+GRID%VARS%dens = zero
+GRID%VARS%dens_us = zero
+GRID%VARS%dsty_us = zero
+GRID%VARS%Sdepth = zero
+GRID%VARS%PackWater = zero
+GRID%VARS%SurfWater = zero
+GRID%VARS%Swq = zero
+GRID%VARS%VaporMassFlux = zero
+GRID%VARS%r_MeltEnergy = zero
+GRID%VARS%Outflow = zero
 
 !####################################################################
 ! Loop through the simulation time.

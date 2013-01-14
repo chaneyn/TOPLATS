@@ -186,9 +186,9 @@ type GLOBAL_template
         integer :: newstorm
         !Vegetation
         integer :: ntdveg
-        real*8 :: wc0 
+        real*8 :: wc0
         !Time
-        real*8 :: djday
+        real*8 :: djday = 0.d0
         !Misc
         real*8 :: mul_fac
         !OpenMP parameters

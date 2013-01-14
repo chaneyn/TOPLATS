@@ -236,7 +236,7 @@ contains
 ! --------------------------------------------------------------------
 
       if (i_und.gt.0) refus=GRID_VEG%albd_us
-      if (i_moss.gt.0) refus=alb_moss
+      !if (i_moss.gt.0) refus=alb_moss
       if (Swq_us.gt.(0.d0)) refus=alb_snow
 
 ! --------------------------------------------------------------------
@@ -244,14 +244,14 @@ contains
 ! one reflection.
 ! --------------------------------------------------------------------
 
-      if ( (i_und.gt.0).or.(i_moss.gt.0) ) then
+      if ( (i_und.gt.0)) then
 
          rs_over=(1.d0+refus*thr)*rsd
          rs_under=rsd*(thr*ccc+1.d0-ccc)
 
       endif
 
-      if ( (i_und.eq.0).and.(i_moss.eq.0) ) then
+      if ( (i_und.eq.0)) then
 
          rs_over=rsd
          rs_under=rsd

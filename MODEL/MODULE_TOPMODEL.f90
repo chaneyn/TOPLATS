@@ -110,6 +110,12 @@ contains
 
          CAT(kk)%fwcat = zero
 
+! --------------------------------------------------------------------
+! Others.
+! --------------------------------------------------------------------
+
+        CAT(kk)%psicav = zero
+
         enddo
 
         return
@@ -165,7 +171,7 @@ contains
 
       catpix = area/pixsiz/pixsiz
       !catlakpix = r_lakearea/pixsiz/pixsiz
-      catvegpix = (area-r_lakearea)/pixsiz/pixsiz
+      catvegpix = (area)/pixsiz/pixsiz
 
 ! ====================================================================
 ! Find catchment average evapotranspiration rates.
@@ -365,7 +371,7 @@ contains
 
       zbrflx = (gwtsum - capsum - etwtsum - (qb/ area)) * dt
       zbrpor = (rzpsum+tzpsum) * (zbar-psicav)
-
+ 
       if (zbrflx.gt.zbrpor) then
 
 ! ====================================================================
@@ -550,6 +556,7 @@ Swq_us = GRID_VARS%Swq_us
 Sdepth = GRID_VARS%Sdepth
 Sdepth_us = GRID_VARS%Sdepth_us
 Tdeepstep = GRID_SOIL%Tdeepstep
+i_und = GRID_VEG%i_und
 
 !Soil Data
 thetas = GRID_SOIL%thetas
@@ -600,7 +607,7 @@ inc_frozen = GLOBAL%inc_frozen
 ! In case of vegetated or bare soil pixels.
 ! --------------------------------------------------------------------&
 
-         if ( (i_und.eq.0).and.(i_moss.eq.0) ) then
+         if ( (i_und.eq.0)) then
 
 ! ....................................................................
 ! If understory/moss is not represented.
@@ -641,21 +648,13 @@ inc_frozen = GLOBAL%inc_frozen
 ! is supplied from above the water table.
 ! --------------------------------------------------------------------&
 
-            if (i_moss+i_und.eq.0) then
+            if (i_und.eq.0) then
 
 ! ....................................................................
-! Understory/moss is not represented.
+! Understory is not represented.
 ! ....................................................................
 
                etstore = epwms*dc
-
-            else
-
-! ....................................................................
-! Add understory/moss in the totals.
-!....................................................................
-
-               etstore = (1.-f_moss-f_und)*epwms*dc+f_und*epwms_us*dc_us
 
             endif
 
@@ -694,7 +693,7 @@ inc_frozen = GLOBAL%inc_frozen
 ! Add up evaporation from dry and wet canopy for vegetated pixels.
 ! ====================================================================
 
-            if ( (i_und.eq.0).and.(i_moss.eq.0) ) then
+            if ( (i_und.eq.0)) then
 
 ! --------------------------------------------------------------------&
 ! Understory/moss is not represented.
@@ -849,7 +848,6 @@ inc_frozen = GLOBAL%inc_frozen
 ! root and transmission zone drainage terms.
 ! ====================================================================
 
-
          gwtsum = gwt*rescale
 
 ! ====================================================================
@@ -895,6 +893,9 @@ inc_frozen = GLOBAL%inc_frozen
 ! the porosity for the zone above the water table.
 ! ====================================================================
 
+         rzpsum = zero
+         tzpsum = zero
+
          if (ztz.gt.zero) then
 
 ! --------------------------------------------------------------------&
@@ -933,45 +934,9 @@ inc_frozen = GLOBAL%inc_frozen
 ! Compute pixel total energy fluxes at PET.
 ! ====================================================================
 
-      if (i_moss+i_und.gt.0) then
-
-! --------------------------------------------------------------------&
-! If understory/moss is represented than add their fluxes temperatures
-! in the total for the pixel.
-! --------------------------------------------------------------------&
-
-         rnpet = canclos*rnpet+ f_und*rnpet_us+ f_moss*rnpet_moss
-         xlepet = canclos*xlepet+ f_und*xlepet_us+ f_moss*xlepet_moss
-         hpet = canclos*hpet+ f_und*hpet_us+ f_moss*hpet_moss
-         gpet = canclos*gpet+ f_und*gpet_us+ f_moss*gpet_moss
-         dspet = canclos*dspet+ f_und*dspet_us+ f_moss*dspet_moss
-         tkpet = (1.-f_moss-f_und)* tkpet+ f_und*tkpet_us+ f_moss*tkpet_moss
-         tkmidpet = (1.-f_moss-f_und)* tkmidpet+ f_und*tkmidpet_us+&
-                    f_moss*tkmidpet_moss
-
-      endif
-
 ! ====================================================================
 ! Compute pixel total actual surface energy fluxes for the time step.
 ! ====================================================================
-
-      if (i_moss+i_und.gt.0) then
-
-! --------------------------------------------------------------------&
-! If understory/moss is represented than add their fluxes temperatures
-! in the total for the pixel.
-! --------------------------------------------------------------------&
-
-
-         rnact = canclos*rnact+ f_und*rnact_us+ f_moss*rnact_moss
-         xleact = canclos*xleact+ f_und*xleact_us+ f_moss*xleact_moss
-         hact = canclos*hact+ f_und*hact_us+ f_moss*hact_moss
-         gact = canclos*gact+ f_und*gact_us+ f_moss*gact_moss
-         dshact = canclos*dshact+ f_und*dshact_us+ f_moss*dshact_moss
-         tkact = (1.-f_moss-f_und)* tkact+ f_und*tkact_us+ f_moss*tkact_moss
-         tkmid = (1.-f_moss-f_und)* tkmid+ f_und*tkmid_us+ f_moss*tkmid_moss
-
-      endif
 
 ! ====================================================================
 ! Compute areal average actual surface energy fluxes for the time step.
@@ -984,8 +949,6 @@ inc_frozen = GLOBAL%inc_frozen
 
 125   format (1i5,9(f11.5," "))
 126   format (1i5,7(f11.5," "))
-
-!$OMP CRITICAL
 
 !Catchment Variables
 CAT%etstsum = CAT%etstsum + etstsum
@@ -1005,7 +968,6 @@ CAT%gwtsum = CAT%gwtsum + gwtsum
 CAT%capsum = CAT%capsum + capsum
 CAT%tzpsum = CAT%tzpsum + tzpsum
 CAT%rzpsum = CAT%rzpsum + rzpsum
-!$OMP END CRITICAL 
 
       return
 

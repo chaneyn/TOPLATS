@@ -122,6 +122,7 @@ Twsep = GRID_VEG%Twsep
 wsc = GRID_VEG%wsc
 tcbeta = GRID_VEG%tcbeta
 ivgtyp = GRID_VEG%ivgtyp
+i_und = GRID_VEG%i_und
 
 !SOIL PROPERTIES
 bcbeta = GRID_SOIL%bcbeta
