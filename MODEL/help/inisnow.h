@@ -1,0 +1,6 @@
+      real*8 pw(MAX_ATB,MAX_VST,MAX_PIX)
+      real*8 sw(MAX_ATB,MAX_VST,MAX_PIX)
+      real*8 swq(MAX_ATB,MAX_VST,MAX_PIX)
+      real*8 vm(MAX_ATB,MAX_VST,MAX_PIX)
+      real*8 me(MAX_ATB,MAX_VST,MAX_PIX)
+      real*8 o(MAX_ATB,MAX_VST,MAX_PIX)
