@@ -16,33 +16,38 @@ contains
 !
 ! ====================================================================
 
-  subroutine Update_Catchments(GLOBAL,CAT,GRID)
+subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
-    implicit none
-    type (GLOBAL_template),intent(in) :: GLOBAL
-    type (GRID_template),dimension(:),intent(inout) :: GRID
-    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
-    integer :: icatch,isoil,ilandc
+  implicit none
+  type (GLOBAL_template),intent(in) :: GLOBAL
+  type (GRID_template),dimension(:),intent(inout) :: GRID
+  type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+  integer :: icatch,isoil,ilandc
 
-    do ipix = 1,GLOBAL%npix
+!#####################################################################
+! Initialize water balance variables for the time step.
+!#####################################################################
 
-      isoil = GRID(ipix)%SOIL%isoil
-      ilandc = GRID(ipix)%VEG%ilandc
-      icatch = GRID(ipix)%VARS%icatch
+  call instep_catchment(GLOBAL%ncatch,CAT)
 
-      call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
-         GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-         ilandc)
+  do ipix = 1,GLOBAL%npix
 
-    enddo
+    isoil = GRID(ipix)%SOIL%isoil
+    ilandc = GRID(ipix)%VEG%ilandc
+    icatch = GRID(ipix)%VARS%icatch
 
-    do icatch = 1,GLOBAL%ncatch
+    call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
+       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
+       ilandc)
+  enddo
+ 
+  do icatch = 1,GLOBAL%ncatch
 
-      call catflx(GLOBAL%pixsiz,CAT(icatch))
+    call catflx(GLOBAL%pixsiz,CAT(icatch))
 
-      call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
+    call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
   
-    enddo 
+  enddo 
 
   end subroutine Update_Catchments
 
@@ -98,7 +103,7 @@ contains
 ! Vertical soil moisture fluxes and water table updating.
 ! --------------------------------------------------------------------
 
-         CAT(kk)%zbar = CAT(kk)%zbar1
+         !CAT(kk)%zbar = CAT(kk)%zbar1
          CAT(kk)%capsum = zero
          CAT(kk)%gwtsum = zero
          CAT(kk)%rzpsum = zero
