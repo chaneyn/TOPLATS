@@ -1050,7 +1050,7 @@ contains
          print*,'roa =             ',roa
          print*,'error =             ',deltnr
          print*,'tolerance =         ',toleb
-         print*,
+         print*,''
          print*,'dhdt =              ',dhdt
          print*,'dgdt =              ',dgdt
          print*,'ddsdt =             ',ddsdt
@@ -1059,7 +1059,7 @@ contains
          print*,'gtmp =              ',gtmp
          print*,'rsd =               ',rsd
          print*,'rld =               ',rld
-         print*,
+         print*,''
 
 	 stop
 

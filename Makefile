@@ -1,7 +1,7 @@
 #GFC = /home/ice/nchaney/UTILS/gcc-4.8/bin/gfortran
 GFC = gfortran
 IFC = /opt/intel/bin/ifort
-FFLAGS = -g -fbounds-check -finit-local-zero
+FFLAGS = -g -fbounds-check -finit-local-zero# -Wall
 LIBS = -fopenmp
 TOPLATS = TOPLATS_3.0
 TESTS = TESTS_DRIVER
