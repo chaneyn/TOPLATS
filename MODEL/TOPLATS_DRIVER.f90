@@ -17,9 +17,7 @@ PROGRAM TOPLATS_DRIVER
 USE MODULE_VARIABLES
 
 !Module containing all the I/O for the interface
-USE MODULE_IO,ONLY: IO_template,Read_Data,&
-                    Finalize_Model,Write_Data,&
-                    Read_Parameters_And_Initialize
+USE MODULE_IO,ONLY: IO_template,Read_Data,Finalize_Model,Write_Data,Initialize_Model
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: Update_Catchments
@@ -41,7 +39,7 @@ type (IO_template) :: IO
 ! Read the general filename
 !####################################################################
 
-call Read_Parameters_And_Initialize(GLOBAL,GRID,REG,CAT,IO)
+call Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
 
 !####################################################################
 ! Loop through the simulation time.

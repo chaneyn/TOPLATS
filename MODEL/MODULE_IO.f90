@@ -24,7 +24,7 @@ contains
 ! Subroutine to read in model parameters and initialize the variables
 !###################################################################
 
-subroutine Read_Parameters_and_Initialize(GLOBAL,GRID,REG,CAT,IO)
+subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
   
   implicit none
   type (GLOBAL_template),intent(inout) :: GLOBAL
@@ -96,7 +96,7 @@ GRID%VARS%VaporMassFlux = zero
 GRID%VARS%r_MeltEnergy = zero
 GRID%VARS%Outflow = zero
 
-end subroutine Read_Parameters_And_Initialize
+end subroutine Initialize_Model
 
 subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
 
