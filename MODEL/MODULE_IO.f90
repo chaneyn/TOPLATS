@@ -20,6 +20,164 @@ end interface Extract_Info_General_File
 
 contains
 
+!###################################################################
+! Subroutine to read in model parameters and initialize the variables
+!###################################################################
+
+subroutine Read_Parameters_and_Initialize(GLOBAL,GRID,REG,CAT,IO)
+  
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+  type (REGIONAL_template),intent(inout) :: REG
+  type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+  type (IO_template),intent(inout) :: IO
+
+!####################################################################
+! Read the general filename
+!####################################################################
+
+  call Read_General_File(GLOBAL)
+
+!####################################################################
+! Open all files
+!####################################################################
+
+  call FILE_OPEN(GLOBAL)
+
+!####################################################################
+! Call rddata to open files, read in time in-variant parameters,&
+! and initialize simulation sums.
+!####################################################################
+
+  call rddata(GLOBAL,GRID,REG,CAT,IO)
+
+GRID%VARS%rzsm_f = 0.d0
+GRID%VARS%rzsm1_f = 0.d0
+GRID%VARS%tzsm_f = 0.d0
+GRID%VARS%tzsm1_f = 0.d0
+GRID%VARS%rzsm1 = zero
+GRID%VARS%tzsm1 = zero
+GRID%VARS%zw = 0.0d0
+GRID%VARS%Sdepth_us = 0.0d0
+GRID%VARS%Swq_us = 0.d0
+  GRID%VARS%rnpet = 0.d0
+  GRID%VARS%xlepet = 0.d0
+  GRID%VARS%hpet = 0.d0
+  GRID%VARS%gpet = 0.d0
+  GRID%VARS%fw = 0.d0
+  REG%zbar1rg = 0.d0
+  REG%wcip1sum = 0.d0
+  GRID%VEG%i_und = 0
+GRID%VARS%PackWater_us = zero
+GRID%VARS%SurfWater_us = zero
+GRID%VARS%VaporMassFlux_us = zero
+GRID%VARS%r_MeltEnergy_us = zero
+GRID%VARS%Outflow_us = zero
+GRID%VARS%alb_snow = zero
+GRID%VARS%TPack = zero
+GRID%VARS%TSurf = zero
+GRID%VARS%xleact_snow = zero
+GRID%VARS%hact_snow = zero
+GRID%VARS%rn_snow = zero
+GRID%VARS%TPack_us = zero
+GRID%VARS%TSurf_us = zero
+GRID%VARS%xleact_snow_us = zero
+GRID%VARS%hact_snow_us = zero
+GRID%VARS%rn_snow_us = zero
+GRID%VARS%dens = zero
+GRID%VARS%dens_us = zero
+GRID%VARS%dsty_us = zero
+GRID%VARS%Sdepth = zero
+GRID%VARS%PackWater = zero
+GRID%VARS%SurfWater = zero
+GRID%VARS%Swq = zero
+GRID%VARS%VaporMassFlux = zero
+GRID%VARS%r_MeltEnergy = zero
+GRID%VARS%Outflow = zero
+
+end subroutine Read_Parameters_And_Initialize
+
+subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+  type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+  type (IO_template),intent(inout) :: IO
+  integer,intent(in) :: i
+
+!#####################################################################
+! Define the new water table
+!#####################################################################
+
+  CAT%zbar = CAT%zbar1
+
+!#####################################################################
+! Update the vegetation parameters if required.
+!#####################################################################
+
+  if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID)
+
+!#####################################################################
+! Update the decimal Julian day.
+!#####################################################################
+
+  GLOBAL%djday = GLOBAL%djday + 0.0416666667d0*2.777777777d-4*GLOBAL%dt
+
+!#####################################################################
+! Read meteorological data.
+!#####################################################################
+
+  call rdatmo(i,GRID%MET,GLOBAL,IO)
+
+end subroutine Read_Data
+
+!#####################################################################
+! Subroutine to output data to file
+!#####################################################################
+
+subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  type (GRID_template),dimension(:),intent(inout) :: GRID
+  type (REGIONAL_template),intent(inout) :: REG
+  type (IO_template),intent(inout) :: IO
+  integer,intent(inout) :: i
+
+!#####################################################################
+! Output regional variables
+!#####################################################################
+
+  call Write_Regional(i,REG,GLOBAL)
+
+!#####################################################################
+! Output spatial field
+!#####################################################################
+
+  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+                    IO%ipixnum,i,GLOBAL)
+
+end subroutine Write_Data
+
+!#####################################################################
+! Finalize model and close files
+!#####################################################################
+
+subroutine Finalize_Model(GLOBAL)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+
+!#####################################################################
+! Close all files
+!#####################################################################
+
+  call FILE_CLOSE(GLOBAL)
+
+end subroutine
+
 !####################################################################
 ! Subroutine to read in and pass meteorological data (e.g. rainfall).
 !####################################################################
