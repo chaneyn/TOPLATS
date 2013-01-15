@@ -50,8 +50,8 @@
       real*8 satxr,xinfxr,runtot,sesq,corr
       real*8 dc,fw,dc_us,fw_us,wcip1,par,smpet0
       real*8 wsc,dsrz,rzrhs,dstz,tzrhs,wcip1_us,wsc_us,dswc,wcrhs
-      real*8 dswc_us,wcrhs_us,ff,atanb,xlamda,fwcat,fwreg,pr3sat
-      real*8 perrg2,pr2sat,pr2uns,perrg1,pr1sat,pr1rzs,pr1tzs,pr1uns
+      real*8 dswc_us,wcrhs_us,ff,atanb,xlamda,fwcat,fwreg
+      real*8 pr1rzs,pr1tzs
       real*8 persxr,perixr,persac,peruac,perusc
       real*8 canclos,extinct,cp,cph2o,row,roi,toleb
 

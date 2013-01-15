@@ -48,9 +48,9 @@
       real*8 zmoss,capflx,difrz,diftz,grz,gtz,pnet,cuminf,sorp
       real*8 cc,deltrz,xinact,satxr,xinfxr,runtot,sesq
       real*8 corr,dc,fw,dc_us,fw_us,wcip1,par,dewrun
-      real*8 dsrz,rzrhs,ff,atanb,xlamda,fwcat,fwreg,pr3sat,dstz,tzrhs
-      real*8 perrg2,pr2sat,pr2uns,perrg1,pr1sat,pr1rzs,pr1tzs
-      real*8 pr1uns,persxr,perixr,persac,peruac,perusc
+      real*8 dsrz,rzrhs,ff,atanb,xlamda,fwcat,fwreg,dstz,tzrhs
+      real*8 pr1rzs,pr1tzs
+      real*8 persxr,perixr,persac,peruac,perusc
       real*8 zero,one,two,three,four,five,six,tolinf
       real*8 f_moss,f_und,ds_p_moss
       real*8 rain,snow,rs_over,rs_under,smtmp,thermc1,thermc2

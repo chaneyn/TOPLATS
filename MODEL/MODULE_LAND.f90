@@ -544,10 +544,6 @@ MODULE MODULE_LAND
 
       endif
 
-! Set the structure to the new value
-!GRID_VEG%wcip1 = wcip1
-  GRID_VARS%zw = zw
-
       return
     end subroutine land
 

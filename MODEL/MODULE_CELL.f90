@@ -269,28 +269,28 @@ mul_fac = GLOBAL%mul_fac
 
 !Point Data
 !Water Balance
-zrz = 0.d0
-ztz = 0.d0
-smold = 0.d0
-rzsmold = 0.d0
-tzsmold = 0.d0
-capflx = 0.d0
-difrz = 0.d0
-diftz = 0.d0
-grz = 0.d0
-gtz = 0.d0
-satxr = 0.d0
-xinfxr = 0.d0
-dc = 0.d0!d
-fw = 0.d0!fw
-dsrz = 0.d0!dsrz
-rzrhs = 0.d0!rzrhs
-dstz = 0.d0!dstz
-tzrhs = 0.d0!tzrhs
-dswc = 0.d0!dswc
-wcrhs = 0.d0!wcrhs
+GRID_VARS%zrz = 0.d0
+GRID_VARS%ztz = 0.d0
+GRID_VARS%smold = 0.d0
+GRID_VARS%rzsmold = 0.d0
+GRID_VARS%tzsmold = 0.d0
+GRID_VARS%capflx = 0.d0
+GRID_VARS%difrz = 0.d0
+GRID_VARS%diftz = 0.d0
+GRID_VARS%grz = 0.d0
+GRID_VARS%gtz = 0.d0
+GRID_VARS%satxr = 0.d0
+GRID_VARS%xinfxr = 0.d0
+GRID_VARS%dc = 0.d0!d
+GRID_VARS%fw = 0.d0!fw
+GRID_VARS%dsrz = 0.d0!dsrz
+GRID_VARS%rzrhs = 0.d0!rzrhs
+GRID_VARS%dstz = 0.d0!dstz
+GRID_VARS%tzrhs = 0.d0!tzrhs
+GRID_VARS%dswc = 0.d0!dswc
+GRID_VARS%wcrhs = 0.d0!wcrhs
 !Energy Fluxes
-epwms = 0.d0!epwms
+GRID_VARS%epwms = 0.d0!epwms
 !Constants
 row = GRID_VARS%row!row
 cph2o = GRID_VARS%cph2o!cph2o
@@ -314,21 +314,21 @@ xlamda = CAT%xlamda
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       GRID_VARS%PackWater = PackWater        
-       GRID_VARS%SurfWater = SurfWater
-       GRID_VARS%Swq = Swq
-       GRID_VARS%VaporMassFlux = VaporMassFlux
-       GRID_VARS%r_MeltEnergy = r_MeltEnergy
-       GRID_VARS%Outflow = Outflow
-       GRID_VARS%PackWater_us = PackWater_us
-       GRID_VARS%SurfWater_us = SurfWater_us
-       GRID_VARS%Swq_us = Swq_us
-       GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
-       GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
-       GRID_VARS%Outflow_us = Outflow_us
-       GRID_VARS%PackWater = PackWater        
-       GRID_VARS%SurfWater = SurfWater
-       GRID_VEG%i_und = i_und
+      ! GRID_VARS%PackWater = PackWater        
+      ! GRID_VARS%SurfWater = SurfWater
+       !GRID_VARS%Swq = Swq
+       !GRID_VARS%VaporMassFlux = VaporMassFlux
+       !GRID_VARS%r_MeltEnergy = r_MeltEnergy
+       !GRID_VARS%Outflow = Outflow
+       !GRID_VARS%PackWater_us = PackWater_us
+       !GRID_VARS%SurfWater_us = SurfWater_us
+       !GRID_VARS%Swq_us = Swq_us
+       !GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
+       !GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
+       !GRID_VARS%Outflow_us = Outflow_us
+       !GRID_VARS%PackWater = PackWater        
+       !GRID_VARS%SurfWater = SurfWater
+       !GRID_VEG%i_und = i_und
        GLOBAL%zrzmax = zrzmax
        GLOBAL%toleb = toleb
        GLOBAL%maxnri = maxnri
@@ -421,39 +421,39 @@ xlamda = CAT%xlamda
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
-         GRID_VARS%epetw = epetw
-         GRID_VEG%rnetd = rnetd
-         GRID_VEG%xled = xled
-         GRID_VEG%hd = hd
-         GRID_VEG%gd = gd
-         GRID_VEG%dshd = dshd
-         GRID_VEG%rnetw = rnetw
-         GRID_VEG%xlew = xlew
-         GRID_VEG%hw = hw
-         GRID_VEG%gw = gw
-         GRID_VEG%dshw = dshw
-         GRID_VEG%tkd = tkd
-         GRID_VEG%tkmidd = tkmidd
-         GRID_VEG%tkw = tkw
-         GRID_VEG%tkmidw = tkmidw 
+        ! GRID_VARS%epetw = epetw
+        ! GRID_VEG%rnetd = rnetd
+        ! GRID_VEG%xled = xled
+        ! GRID_VEG%hd = hd
+        ! GRID_VEG%gd = gd
+        ! GRID_VEG%dshd = dshd
+        ! GRID_VEG%rnetw = rnetw
+        ! GRID_VEG%xlew = xlew
+        ! GRID_VEG%hw = hw
+        ! GRID_VEG%gw = gw
+        ! GRID_VEG%dshw = dshw
+        ! GRID_VEG%tkd = tkd
+        ! GRID_VEG%tkmidd = tkmidd
+        ! GRID_VEG%tkw = tkw
+        ! GRID_VEG%tkmidw = tkmidw 
  
          call canopy(ipix,GRID_VARS,GRID_VEG,GRID_MET,GLOBAL)
 
-         epetw = GRID_VARS%epetw
-         rnetd = GRID_VEG%rnetd
-         xled = GRID_VEG%xled
-         hd = GRID_VEG%hd
-         gd = GRID_VEG%gd
-         dshd = GRID_VEG%dshd
-         rnetw = GRID_VEG%rnetw
-         xlew = GRID_VEG%xlew
-         hw = GRID_VEG%hw
-         gw = GRID_VEG%gw
-         dshw = GRID_VEG%dshw
-         tkd = GRID_VEG%tkd
-         tkmidd = GRID_VEG%tkmidd
-         tkw = GRID_VEG%tkw
-         tkmidw = GRID_VEG%tkmidw
+         !epetw = GRID_VARS%epetw
+         !rnetd = GRID_VEG%rnetd
+         !xled = GRID_VEG%xled
+         !hd = GRID_VEG%hd
+         !gd = GRID_VEG%gd
+         !dshd = GRID_VEG%dshd
+         !rnetw = GRID_VEG%rnetw
+         !xlew = GRID_VEG%xlew
+         !hw = GRID_VEG%hw
+         !gw = GRID_VEG%gw
+         !dshw = GRID_VEG%dshw
+         !tkd = GRID_VEG%tkd
+         !tkmidd = GRID_VEG%tkmidd
+         !tkw = GRID_VEG%tkw
+         !tkmidw = GRID_VEG%tkmidw
 ! ....................................................................
 ! Calculate the local land surface water/energy balance.
 ! ....................................................................
@@ -467,12 +467,12 @@ xlamda = CAT%xlamda
        
        !GRID_VARS%dc = dc
        !GRID_VARS%fw = fw
-       GRID_MET%uzw = uzw
+       !GRID_MET%uzw = uzw
        !GRID_VARS%precip_o = precip_o
-       GRID_VARS%tkmid = tkmid
+       !GRID_VARS%tkmid = tkmid
 
-       pnet = GRID_VARS%pnet
-       epwms = GRID_VARS%epwms
+       !pnet = GRID_VARS%pnet
+       !epwms = GRID_VARS%epwms
 
             call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
 ! Meteorological data
@@ -533,15 +533,15 @@ xlamda = CAT%xlamda
 ! Calculate the density and depth of the snow layers.
 ! ====================================================================
 
-         if ( (Swq.gt.0.d0)) then
+         if ( (GRID_VARS%Swq.gt.0.d0) ) then
 
-            call calcrain (tcel,snow,rain,precip_o,dt)
-            call snow_density(dsty,snow,tcel,Swq,Sdepth,TSurf,dt)
+            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,dt)
+            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,dt)
 
          else
 
-            Sdepth=0.d0
-            dsty=0.d0
+           GRID_VARS%Sdepth=0.d0
+           GRID_VARS%dsty=0.d0
 
          endif
 
@@ -552,23 +552,23 @@ xlamda = CAT%xlamda
 ! water energy and water balance.
 ! ====================================================================
 
-      if (ivgtyp.eq.(-1)) then
+      if (GRID_VEG%ivgtyp.eq.(-1)) then
 
 ! ....................................................................
 ! Calculate the deep soil temperature.
 ! ....................................................................
 
-         if ( (amp.eq.(0.d0)).and.&
-              (phase.eq.(0.d0)).and.&
-              (shift.eq.(0.d0)) ) then
+         if ( (GRID_SOIL%amp.eq.(0.d0)).and.&
+              (GRID_SOIL%phase.eq.(0.d0)).and.&
+              (GRID_SOIL%shift.eq.(0.d0)) ) then
 
-            Tdeepstep=tdeep
+            Tdeepstep=GRID_SOIL%tdeep
 
          else
 
             rrr=real(i)
 
-            Tdeepstep=tdeep + amp*cos ( rrr*phase - shift )
+            Tdeepstep=GRID_SOIL%tdeep + GRID_SOIL%amp*cos ( rrr*GRID_SOIL%phase - GRID_SOIL%shift )
 
          endif
 
@@ -576,98 +576,98 @@ xlamda = CAT%xlamda
 
 !TEMPORARY - Convert variables back to structure
 !GRID VARIABLES
-GRID_VARS%rzsm = rzsm
-GRID_VARS%tzsm = tzsm
-GRID_VARS%rzsm1 = rzsm1
-GRID_VARS%tzsm1 = tzsm1
-GRID_VARS%rzsm_f = rzsm_f
-GRID_VARS%tzsm_f = tzsm_f
-GRID_VARS%rzsm1_f = rzsm1_f
-GRID_VARS%tzsm1_f = tzsm1_f
-GRID_VARS%rzdthetaidt = rzdthetaidt
-GRID_VARS%tzdthetaidt = tzdthetaidt
-GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
-GRID_VARS%pnet = pnet
-GRID_VARS%xinact = xinact
-GRID_VARS%runtot = runtot
-GRID_VARS%irntyp = irntyp
+!GRID_VARS%rzsm = rzsm
+!GRID_VARS%tzsm = tzsm
+!GRID_VARS%rzsm1 = rzsm1
+!GRID_VARS%tzsm1 = tzsm1
+!GRID_VARS%rzsm_f = rzsm_f
+!GRID_VARS%tzsm_f = tzsm_f
+!GRID_VARS%rzsm1_f = rzsm1_f
+!GRID_VARS%tzsm1_f = tzsm1_f
+!GRID_VARS%rzdthetaidt = rzdthetaidt
+!GRID_VARS%tzdthetaidt = tzdthetaidt
+!GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
+!GRID_VARS%pnet = pnet
+!GRID_VARS%xinact = xinact
+!GRID_VARS%runtot = runtot
+!GRID_VARS%irntyp = irntyp
 !Meteorological Variables
-GRID_VARS%Tincan = Tincan
-GRID_VARS%rh_ic = rh_ic
-GRID_VARS%precip_o = precip_o
-GRID_VARS%precip_u = precip_u
+!GRID_VARS%Tincan = Tincan
+!GRID_VARS%rh_ic = rh_ic
+!GRID_VARS%precip_o = precip_o
+!GRID_VARS%precip_u = precip_u
 !Temperature Variables
-GRID_VARS%tkmid = tkmid
-GRID_VARS%tkact = tkact
-GRID_VARS%tkmidpet = tkmidpet
-GRID_VARS%tkpet = tkpet
+!GRID_VARS%tkmid = tkmid
+!GRID_VARS%tkact = tkact
+!GRID_VARS%tkmidpet = tkmidpet
+!GRID_VARS%tkpet = tkpet
 !Energy Fluxes
-GRID_VARS%dshact = dshact
-GRID_VARS%rnetpn = rnetpn
-GRID_VARS%gbspen = gbspen
-GRID_VARS%evtact = evtact
-GRID_VARS%ievcon = ievcon
-GRID_VARS%gact = gact
-GRID_VARS%rnact = rnact
-GRID_VARS%xleact = xleact
-GRID_VARS%hact = hact
-GRID_VARS%ebspot = ebspot
-GRID_VARS%dspet = dspet
-GRID_VARS%rnpet = rnpet
-GRID_VARS%xlepet = xlepet
-GRID_VARS%hpet = hpet
-GRID_VARS%gpet = gpet
+!GRID_VARS%dshact = dshact
+!GRID_VARS%rnetpn = rnetpn
+!GRID_VARS%gbspen = gbspen
+!GRID_VARS%evtact = evtact
+!GRID_VARS%ievcon = ievcon
+!GRID_VARS%gact = gact
+!GRID_VARS%rnact = rnact
+!GRID_VARS%xleact = xleact
+!GRID_VARS%hact = hact
+!GRID_VARS%ebspot = ebspot
+!GRID_VARS%dspet = dspet
+!GRID_VARS%rnpet = rnpet
+!GRID_VARS%xlepet = xlepet
+!GRID_VARS%hpet = hpet
+!GRID_VARS%gpet = gpet
 !Point Data
-GRID_VARS%zrz = zrz
-GRID_VARS%ztz = ztz
-GRID_VARS%smold = smold
-GRID_VARS%rzsmold = rzsmold
-GRID_VARS%tzsmold = tzsmold
-GRID_VARS%capflx = capflx
-GRID_VARS%difrz = difrz
-GRID_VARS%diftz = diftz
-GRID_VARS%grz = grz
-GRID_VARS%gtz = gtz
-GRID_VARS%satxr = satxr
-GRID_VARS%xinfxr = xinfxr
-GRID_VARS%dc = dc
-GRID_VARS%fw = fw
-GRID_VARS%dsrz = dsrz
-GRID_VARS%rzrhs = rzrhs
-GRID_VARS%dstz = dstz
-GRID_VARS%tzrhs = tzrhs
+!GRID_VARS%zrz = zrz
+!GRID_VARS%ztz = ztz
+!GRID_VARS%smold = smold
+!GRID_VARS%rzsmold = rzsmold
+!GRID_VARS%tzsmold = tzsmold
+!GRID_VARS%capflx = capflx
+!GRID_VARS%difrz = difrz
+!GRID_VARS%diftz = diftz
+!GRID_VARS%grz = grz
+!GRID_VARS%gtz = gtz
+!GRID_VARS%satxr = satxr
+!GRID_VARS%xinfxr = xinfxr
+!GRID_VARS%dc = dc
+!GRID_VARS%fw = fw
+!GRID_VARS%dsrz = dsrz
+!GRID_VARS%rzrhs = rzrhs
+!GRID_VARS%dstz = dstz
+!GRID_VARS%tzrhs = tzrhs
 !GRID_VARS%dswc = dswc
 !GRID_VARS%wcrhs = wcrhs
 !Energy Fluxes
-GRID_VARS%epwms = epwms
+!GRID_VARS%epwms = epwms
 !Constants
-GRID_VARS%row = row
-GRID_VARS%cph2o = cph2o
-GRID_VARS%cp = cp
-GRID_VARS%roi = roi
+!GRID_VARS%row = row
+!GRID_VARS%cph2o = cph2o
+!GRID_VARS%cp = cp
+!GRID_VARS%roi = roi
 !GRID_VARS%wcip1 = wcip1
 
 !SNOW
-GRID_VARS%SurfWater = SurfWater
-GRID_VARS%Outflow = Outflow
-GRID_VARS%Swq = Swq
-GRID_VARS%Tpack = Tpack
-GRID_VARS%TSurf = Tsurf
-GRID_VARS%xleact_snow = xleact_snow
-GRID_VARS%hact_snow = hact_snow
-GRID_VARS%rn_snow = rn_snow
-GRID_VARS%Swq_us = Swq_us
-GRID_VARS%TPack_us = TPack_us
-GRID_VARS%TSurf_us = TSurf_us
-GRID_VARS%xleact_snow_us = xleact_snow_us
-GRID_VARS%hact_snow_us = hact_snow_us
-GRID_VARS%rn_snow_us = rn_snow_us
-GRID_VARS%dens = dens
-GRID_VARS%dens_us = dens_us
-GRID_VARS%dsty = dsty
-GRID_VARS%dsty_us = dsty_us
-GRID_VARS%Sdepth = Sdepth
-GRID_VARS%Sdepth_us = Sdepth_us
+!GRID_VARS%SurfWater = SurfWater
+!GRID_VARS%Outflow = Outflow
+!GRID_VARS%Swq = Swq
+!GRID_VARS%Tpack = Tpack
+!GRID_VARS%TSurf = Tsurf
+!GRID_VARS%xleact_snow = xleact_snow
+!GRID_VARS%hact_snow = hact_snow
+!GRID_VARS%rn_snow = rn_snow
+!GRID_VARS%Swq_us = Swq_us
+!GRID_VARS%TPack_us = TPack_us
+!GRID_VARS%TSurf_us = TSurf_us
+!GRID_VARS%xleact_snow_us = xleact_snow_us
+!GRID_VARS%hact_snow_us = hact_snow_us
+!GRID_VARS%rn_snow_us = rn_snow_us
+!GRID_VARS%dens = dens
+!GRID_VARS%dens_us = dens_us
+!GRID_VARS%dsty = dsty
+!GRID_VARS%dsty_us = dsty_us
+!GRID_VARS%Sdepth = Sdepth
+!GRID_VARS%Sdepth_us = Sdepth_us
 
 !SOIL
 GRID_SOIL%Tdeepstep = Tdeepstep
