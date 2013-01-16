@@ -371,7 +371,7 @@ xlamda = CAT%xlamda
 
        epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
        tkd,tkmidd,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
@@ -403,7 +403,7 @@ xlamda = CAT%xlamda
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,rib,RaSnow,rib_us,&
+       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
        ravw,ravw_us,rahw,rahw_us,&
 
 ! Water balance variables
