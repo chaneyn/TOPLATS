@@ -61,8 +61,8 @@ contains
 
 ! Energy fluxes and states
 
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
@@ -556,8 +556,8 @@ tkmid = GRID_VARS%tkmid
 
 ! Energy fluxes and states
 
-       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,GRID_VEG%hd,&
+       GRID_VEG%gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
@@ -610,8 +610,9 @@ tkmid = GRID_VARS%tkmid
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        tkel,vppa,f3vpd,f3vpdpar,f4temp,GRID_VEG%trefk,&
-       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,GRID_VEG%rescan,ravd,xlhv,&
-       GRID_VARS%row,epetd,epetw,ravw,psychr,GRID_VEG%xled,xlew,hd,hw,GRID_VARS%cp,roa)
+       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,GRID_VEG%gd,gw,&
+       GRID_VEG%rescan,ravd,xlhv,&
+       GRID_VARS%row,epetd,epetw,ravw,psychr,GRID_VEG%xled,xlew,GRID_VEG%hd,hw,GRID_VARS%cp,roa)
  
       endif
 
