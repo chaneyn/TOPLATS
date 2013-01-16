@@ -67,10 +67,6 @@ MODULE MODULE_LAND
 ! Water balance variables
 
        rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun,&
-
-! Different option paramters
-
-       irestype,ioppet,&
        GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -168,8 +164,6 @@ MODULE MODULE_LAND
       !dewrun
                   
     !Different option parameters
-      !irestype = GLOBAL%irestype
-      !ioppet = GLOBAL%ioppet
 
 ! ====================================================================
 ! Initialize the rain and snowfall.
@@ -306,7 +300,7 @@ MODULE MODULE_LAND
 ! In case of absence of a snow pack, solve the energy balance for
 ! the bare soil.
 ! --------------------------------------------------------------------
-            call ebsres(GLOBAL%inc_frozen,irestype,rsoil,GRID_VARS%rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
+            call ebsres(GLOBAL%inc_frozen,GLOBAL%irestype,rsoil,GRID_VARS%rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
        GRID_SOIL%srespar2,rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
        GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,&
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
@@ -316,7 +310,7 @@ MODULE MODULE_LAND
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
-       bsdew,GRID_VEG%z0h,ioppet)
+       bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
 
          else
 
@@ -429,7 +423,7 @@ MODULE MODULE_LAND
 ! are used then skip this.
 ! ====================================================================
 
-      if (ioppet.ne.2) then
+      if (GLOBAL%ioppet.ne.2) then
 
 ! --------------------------------------------------------------------
 ! Calculate the incoming solar radiation for the overstory.
@@ -443,7 +437,7 @@ MODULE MODULE_LAND
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
-       bsdew,ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
+       bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
        GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,thermc1,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
        GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,&
