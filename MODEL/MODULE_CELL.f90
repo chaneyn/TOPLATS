@@ -47,7 +47,7 @@ contains
       icatch = GRID(ipix)%VARS%icatch
 
       call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-         GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
+         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
          CAT(icatch),GLOBAL)
 
     enddo
@@ -70,7 +70,7 @@ contains
 
 
       subroutine Update_Cell(ipix,i,GRID_MET,GRID_SOIL,GRID_VEG,&
-               GRID_VARS,wcip1,CAT,GLOBAL)
+               GRID_VARS,CAT,GLOBAL)
 
       implicit none
       include 'help/land_lake.h'
