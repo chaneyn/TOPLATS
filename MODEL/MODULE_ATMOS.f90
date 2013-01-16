@@ -84,7 +84,37 @@ contains
        GLOBAL)
 
     implicit none
-    include "help/atmos.h" !take this out when variables are fixed
+   ! include "help/atmos.h" !take this out when variables are fixed
+
+    integer ipix,i
+
+    real*8 tcel,vppa,psychr,xlhv,tkel
+    real*8 uzw,appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic
+    real*8 tkel_ic,vpsat_ic,twet_ic,twet
+    real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
+    real*8 tskinact_moss,tkact_moss,tkmid_moss
+    real*8 epetd,epetd_us,dshact_moss,xle_act_moss,rnetd
+    real*8 tkd,tkmidd,tskinactd_moss
+    real*8 tkactd_moss,tkmidactd_moss,ds_p_moss,dshact_us
+    real*8 rnetw_us,xlew_us,hw_us,gw_us,dshw_us,tkw_us,tkmidw_us
+    real*8 epetw_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us
+    real*8 rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss
+    real*8 tkmid_p_moss,tskin_p_moss,eact_moss,tsoilold
+    real*8 tkmidpet_us,tkmidpet_moss,dspet_us
+    real*8 dspet_moss
+    real*8 rib_moss,epet_moss
+    real*8 f1par
+    real*8 f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us
+    real*8 f1,f2,f3
+    real*8 f3vpdpar_us,f4temppar_us
+    real*8 roa,roa_ic,ravd,rahd,ravd_us
+    real*8 rahd_us,rav_moss,rah_moss,RaSnow,rib_us,ravw,ravw_us
+    real*8 rahw,rahw_us
+    real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
+
+    data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
+          3.d0,4.d0,5.d0,6.d0/
+
     type (GRID_MET_template) :: GRID_MET
     type (GRID_VEG_template) :: GRID_VEG
     type (GRID_VARS_template) :: GRID_VARS
