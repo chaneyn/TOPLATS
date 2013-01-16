@@ -1185,7 +1185,6 @@ MODULE MODULE_SNOW
 
       VaporMassFlux = AirDens * (EPS/Press) * (EactAir - EsSnow)/Ra
       VaporMassFlux = VaporMassFlux / WATER_DENSITY
-
       if ( (Vpd.eq.(zero)).and.(VaporMassFlux.lt.(zero)) ) then
 
          VaporMassFlux = zero
@@ -1204,21 +1203,19 @@ MODULE MODULE_SNOW
       endif
   
 ! Calculate latent heat flux
- 
+   
       if (TMean.ge.(zero)) then
 ! Melt conditions: use latent heat of vaporization
 
          LatentHeat = Lv * VaporMassFlux * WATER_DENSITY
 
-      else
-! Accumulation: use latent heat of sublimation (Eq. 3.19, Bras 1990) 
-
-         Ls = (677.d0 - 0.07d0 * TMean) * R_JOULESPCAL * GRAMSPKG
-
       endif
 
       if ( (LatentHeat.ge.-5000.d0).and.(LatentHeat.le.5000.d0) ) then
 
+        ! Accumulation: use latent heat of sublimation (Eq. 3.19, Bras 1990) 
+
+         Ls = (677.d0 - 0.07d0 * TMean) * R_JOULESPCAL * GRAMSPKG
          LatentHeat=LatentHeat
          LatentHeat = Ls * VaporMassFlux * WATER_DENSITY
 
@@ -1252,7 +1249,7 @@ MODULE MODULE_SNOW
       endif
 
 ! Calculate net energy exchange at the snow surface
-  
+
       RestTerm = NetRad + SensibleHeat + LatentHeat + AdvectedEnergy -&
                  DeltaColdContent
 
