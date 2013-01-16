@@ -62,7 +62,7 @@ contains
 ! Energy fluxes and states
 
        epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
+       tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
@@ -557,7 +557,7 @@ tkmid = GRID_VARS%tkmid
 ! Energy fluxes and states
 
        GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,GRID_VEG%hd,&
-       GRID_VEG%gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
+       GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
