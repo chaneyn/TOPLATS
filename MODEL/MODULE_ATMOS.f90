@@ -105,8 +105,8 @@ contains
 
 ! Water balance variables
 
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,&
-       smold,rzdthetaudtemp,smpet0,&
+       
+       smpet0,&
 
 ! Different option paramters
 
@@ -250,14 +250,14 @@ tkmid = GRID_VARS%tkmid
 !Energy balance variables
 
 !Water balance variables
-rzsm = GRID_VARS%rzsm
-tzsm = GRID_VARS%tzsm
-rzsm1 = GRID_VARS%rzsm1
-tzsm1 = GRID_VARS%tzsm1
-r_mossm = GRID_VARS%r_mossm
-zrz = GRID_VARS%zrz
-smold = GRID_VARS%smold
-rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
+!rzsm = GRID_VARS%rzsm
+!tzsm = GRID_VARS%tzsm
+!rzsm1 = GRID_VARS%rzsm1
+!tzsm1 = GRID_VARS%tzsm1
+!r_mossm = GRID_VARS%r_mossm
+!zrz = GRID_VARS%zrz
+!smold = GRID_VARS%smold
+!rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
 smpet0 = GLOBAL%smpet0
 
 !DIFF option parameters
@@ -591,7 +591,8 @@ iopsmini = GLOBAL%iopsmini
 
 ! Water balance variables
 
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
+       GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_VARS%r_mossm,&
+       GRID_VARS%zrz,GRID_VARS%smold,GRID_VARS%rzdthetaudtemp,smpet0,&
 
 ! Different option paramters
 
@@ -732,14 +733,14 @@ iopsmini = GLOBAL%iopsmini
       !Energy Balance variables
 
       !Water balance variables
-      GRID_VARS%rzsm = rzsm
-      GRID_VARS%tzsm = tzsm
-      GRID_VARS%rzsm1 = rzsm1
-      GRID_VARS%tzsm1 = tzsm1
-      GRID_VARS%r_mossm = r_mossm
-      GRID_VARS%zrz = zrz
-      GRID_VARS%smold = smold
-      GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
+      !GRID_VARS%rzsm = rzsm
+      !GRID_VARS%tzsm = tzsm
+      !GRID_VARS%rzsm1 = rzsm1
+      !GRID_VARS%tzsm1 = tzsm1
+      !GRID_VARS%r_mossm = r_mossm
+      !GRID_VARS%zrz = zrz
+      !GRID_VARS%smold = smold
+      !GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
       GLOBAL%smpet0 = smpet0
 
       !DIff option parameters
