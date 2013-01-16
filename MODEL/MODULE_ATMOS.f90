@@ -344,7 +344,6 @@ tkmid = GRID_VARS%tkmid
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
       GRID_MET%uzw = uzw
-      !GRID_VARS%alb_snow = alb_snow
 
       if(GLOBAL%ioppet.eq.0)then
 
