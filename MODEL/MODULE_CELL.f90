@@ -85,164 +85,10 @@ contains
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
 
 !VEGETATION
-xlai = GRID_VEG%xlai
-emiss = GRID_VEG%emiss
-zpd = GRID_VEG%zpd
-z0m = GRID_VEG%z0m
-z0h = GRID_VEG%z0h
-rescan = GRID_VEG%rescan
-tc = GRID_VEG%tc
-tw = GRID_VEG%tw
-rtact = GRID_VEG%rtact
-rtdens = GRID_VEG%rtdens
-psicri = GRID_VEG%psicri
-respla = GRID_VEG%respla
-rsmax = GRID_VEG%rsmax
-Rpl = GRID_VEG%Rpl
 f3vpdpar = GRID_VEG%f3vpdpar
-rsmin = GRID_VEG%rsmin
-trefk = GRID_VEG%trefk
 f4temppar = GRID_VEG%f4temppar
-canclos = GRID_VEG%canclos
-extinct = GRID_VEG%extinct
-albd = GRID_VEG%albd
-albw = GRID_VEG%albw
-zww = GRID_VEG%zww
-za = GRID_VEG%za
-Tslope1 = GRID_VEG%Tslope1
-Tint1 = GRID_VEG%Tint1
-Tslope2 = GRID_VEG%Tslope2
-Tint2 = GRID_VEG%Tint2
-Tsep = GRID_VEG%Tsep
-Twslope1 = GRID_VEG%Twslope1
-Twint1 = GRID_VEG%Twint1
-Twslope2 = GRID_VEG%Twslope2
-Twint2 = GRID_VEG%Twint2
-Twsep = GRID_VEG%Twsep
-wsc = GRID_VEG%wsc
-tcbeta = GRID_VEG%tcbeta
-ivgtyp = GRID_VEG%ivgtyp
-i_und = GRID_VEG%i_und
-
-!SOIL PROPERTIES
-bcbeta = GRID_SOIL%bcbeta
-psic = GRID_SOIL%psic
-thetas = GRID_SOIL%thetas
-thetar = GRID_SOIL%thetar
-xk0 = GRID_SOIL%xk0
-zdeep = GRID_SOIL%zdeep
-tdeep = GRID_SOIL%tdeep
-zmid = GRID_SOIL%zmid
-tmid0 = GRID_SOIL%tmid0
-rocpsoil = GRID_SOIL%rocpsoil
-quartz = GRID_SOIL%quartz
-srespar1 = GRID_SOIL%srespar1
-srespar2 = GRID_SOIL%srespar2
-srespar3 = GRID_SOIL%srespar3
-a_ice = GRID_SOIL%a_ice
-b_ice = GRID_SOIL%b_ice
-bulk_dens = GRID_SOIL%bulk_dens
-amp = GRID_SOIL%amp
-phase = GRID_SOIL%phase
-shift = GRID_SOIL%shift
-bcgamm = GRID_SOIL%bcgamm
-par = GRID_SOIL%par
-corr = GRID_SOIL%corr
-idifind = GRID_SOIL%idifind
-par = GRID_SOIL%par
-ifcoarse = GRID_SOIL%ifcoarse
-
-!METEOROLOGY
-rsd = GRID_MET%rsd
-rld = GRID_MET%rld
-tdry = GRID_MET%tdry
-rh = GRID_MET%rh
-uzw = GRID_MET%uzw
-press = GRID_MET%press
-pptms = GRID_MET%pptms
-
-!GRID VARIABLES
-!Water Balance Variables
-rzsm = GRID_VARS%rzsm
-tzsm = GRID_VARS%tzsm
-rzsm1 = GRID_VARS%rzsm1
-tzsm1 = GRID_VARS%tzsm1
-rzsm_f = GRID_VARS%rzsm_f
-tzsm_f = GRID_VARS%tzsm_f
-rzsm1_f = GRID_VARS%rzsm1_f
-tzsm1_f = GRID_VARS%tzsm1_f
-rzdthetaidt = GRID_VARS%rzdthetaidt
-tzdthetaidt = GRID_VARS%tzdthetaidt
-rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
-pnet = GRID_VARS%pnet
-xinact = GRID_VARS%xinact
-runtot = GRID_VARS%runtot
-irntyp = GRID_VARS%irntyp
-!Meteorological Variables
-Tincan = GRID_VARS%Tincan
-rh_ic = GRID_VARS%rh_ic
-precip_o = GRID_VARS%precip_o
-precip_u = GRID_VARS%precip_u
-!Temperature Variables
-tkmid = GRID_VARS%tkmid
-tkact = GRID_VARS%tkact
-tkmidpet = GRID_VARS%tkmidpet
-tkpet = GRID_VARS%tkpet
-!Energy Fluxes
-dshact = GRID_VARS%dshact
-rnetpn = GRID_VARS%rnetpn
-gbspen = GRID_VARS%gbspen
-evtact = GRID_VARS%evtact
-ievcon = GRID_VARS%ievcon
-gact = GRID_VARS%gact
-rnact = GRID_VARS%rnact
-xleact = GRID_VARS%xleact
-hact = GRID_VARS%hact
-ebspot = GRID_VARS%ebspot
-dspet = GRID_VARS%dspet
-rnpet = GRID_VARS%rnpet
-xlepet = GRID_VARS%xlepet
-hpet = GRID_VARS%hpet
-gpet = GRID_VARS%gpet
-rib = GRID_VARS%rib
-!Snow
-PackWater = GRID_VARS%Packwater
-SurfWater = GRID_VARS%SurfWater
-VaporMassFlux = GRID_VARS%VaporMassFlux
-r_MeltEnergy = GRID_VARS%r_MeltEnergy
-Outflow = GRID_VARS%Outflow
-PackWater_us = GRID_VARS%PackWater_us
-Swq = GRID_VARS%Swq
-TPack = GRID_VARS%Tpack
-TSurf = GRID_VARS%TSurf
-xleact_snow = GRID_VARS%xleact_snow
-hact_snow = GRID_VARS%hact_snow
-rn_snow = GRID_VARS%rn_snow
-Swq_us = GRID_VARS%Swq_us
-TPack_us = GRID_VARS%TPack_us
-TSurf_us = GRID_VARS%TSurf_us
-xleact_snow_us = GRID_VARS%xleact_snow_us
-hact_snow_us = GRID_VARS%hact_snow_us
-rn_snow_us = GRID_VARS%rn_snow_us
-dens = GRID_VARS%dens
-dens_us = GRID_VARS%dens_us
-dsty = GRID_VARS%dsty
-dsty_us = GRID_VARS%dsty_us
-Sdepth = GRID_VARS%Sdepth
-Sdepth_us = GRID_VARS%Sdepth_us
-
-!wcip1 = GRID_VARS%wcip1
-cuminf = GRID_VARS%cuminf
-sorp = GRID_VARS%sorp
-cc = GRID_VARS%cc
 sesq = GRID_VARS%sesq
-alb_snow = GRID_VARS%alb_snow
-istmst = GRID_VARS%istmst
-intstm = GRID_VARS%intstm
-intstp = GRID_VARS%intstp
-istorm = GRID_VARS%istorm
 xintst = GRID_VARS%xintst
-atanb = GRID_VARS%atanb
 
 !Global variables
 dt = GLOBAL%dt
@@ -266,7 +112,7 @@ i_2l = GLOBAL%i_2l
 newstorm = GLOBAL%newstorm
 mul_fac = GLOBAL%mul_fac
 
-!Point Data
+!Point Data Initializations
 !Water Balance
 GRID_VARS%zrz = 0.d0
 GRID_VARS%ztz = 0.d0
@@ -292,8 +138,6 @@ GRID_VARS%wcrhs = 0.d0!wcrhs
 GRID_VARS%epwms = 0.d0!epwms
 !Constants
 row = GRID_VARS%row!row
-cph2o = GRID_VARS%cph2o!cph2o
-cp = GRID_VARS%cp!cp
 roi = GRID_VARS%roi!roi
 
 !Catchment
