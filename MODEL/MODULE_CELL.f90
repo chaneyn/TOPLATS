@@ -91,7 +91,6 @@ sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 
 !Global variables
-inc_frozen = GLOBAL%inc_frozen
 zrzmax = GLOBAL%zrzmax
 toleb = GLOBAL%toleb
 maxnri = GLOBAL%maxnri
@@ -224,7 +223,7 @@ xlamda = CAT%xlamda
 ! ....................................................................
        
 
-       call land(newstorm,ipix,i,inc_frozen,i_2l,&
+       call land(newstorm,ipix,i,i_2l,&
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
