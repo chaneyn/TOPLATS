@@ -89,6 +89,8 @@ sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
 mul_fac = GLOBAL%mul_fac
+row = GRID_VARS%row!row
+roi = GRID_VARS%roi!roi
 
 !Point Data Initializations
 !Water Balance
@@ -114,9 +116,6 @@ GRID_VARS%dswc = 0.d0!dswc
 GRID_VARS%wcrhs = 0.d0!wcrhs
 !Energy Fluxes
 GRID_VARS%epwms = 0.d0!epwms
-!Constants
-row = GRID_VARS%row!row
-roi = GRID_VARS%roi!roi
 
 !Catchment
 zbar = CAT%zbar
