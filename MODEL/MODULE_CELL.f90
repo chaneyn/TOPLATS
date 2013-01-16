@@ -90,13 +90,9 @@ f4temppar = GRID_VEG%f4temppar
 sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
-
-!Global variables
-iopstab = GLOBAL%iopstab
-iopwv = GLOBAL%iopwv
-i_2l = GLOBAL%i_2l
-newstorm = GLOBAL%newstorm
 mul_fac = GLOBAL%mul_fac
+!Global variables
+i_2l = GLOBAL%i_2l
 
 !Point Data Initializations
 !Water Balance
@@ -211,7 +207,7 @@ xlamda = CAT%xlamda
 ! ....................................................................
        
 
-       call land(newstorm,ipix,i,i_2l,&
+       call land(ipix,i,&
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
