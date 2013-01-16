@@ -89,10 +89,10 @@ contains
 ! Vegetation parameters
 
        
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
-       rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
-       rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
-       trefk_us,f4temppar_us,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
+       f1,f2,f3,&
+       f3vpdpar,f3vpdpar_us,f4temppar,&
+       f4temppar_us,&
 
 ! Constants
 
@@ -225,17 +225,17 @@ tkmid = GRID_VARS%tkmid
 !z0h = GRID_VEG%z0h
 !z0m_us = GRID_VEG%z0m_us
 !z0h_us = GRID_VEG%z0h_us
-rescan = GRID_VEG%rescan
-rescan_us = GRID_VEG%rescan_us
-emiss_us = GRID_VEG%emiss_us
-rsmin = GRID_VEG%rsmin
-rsmax = GRID_VEG%rsmax
-rsmin_us = GRID_VEG%rsmin_us
-rsmax_us = GRID_VEG%rsmax_us
-Rpl = GRID_VEG%Rpl
-Rpl_us = GRID_VEG%Rpl_us
-trefk = GRID_VEG%trefk
-trefk_us = GRID_VEG%trefk_us
+!rescan = GRID_VEG%rescan
+!rescan_us = GRID_VEG%rescan_us
+!emiss_us = GRID_VEG%emiss_us
+!rsmin = GRID_VEG%rsmin
+!rsmax = GRID_VEG%rsmax
+!rsmin_us = GRID_VEG%rsmin_us
+!rsmax_us = GRID_VEG%rsmax_us
+!Rpl = GRID_VEG%Rpl
+!Rpl_us = GRID_VEG%Rpl_us
+!trefk = GRID_VEG%trefk
+!trefk_us = GRID_VEG%trefk_us
 
 !COnstants
 
@@ -573,10 +573,11 @@ iopsmini = GLOBAL%iopsmini
 
        GRID_VEG%xlai,GRID_VEG%xlai_us,GRID_VEG%emiss,GRID_VEG%zpd,GRID_VEG%zpd_us,GRID_VEG%z0m,&
        GRID_VEG%z0h,GRID_VEG%z0m_us,GRID_VEG%z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
-       rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
-       rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
-       trefk_us,f4temppar_us,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan,&
+       GRID_VEG%rescan_us,f1,f2,f3,GRID_VEG%emiss_us,GRID_VEG%rsmin,GRID_VEG%rsmax,&
+       GRID_VEG%rsmin_us,GRID_VEG%rsmax_us,GRID_VEG%Rpl,GRID_VEG%Rpl_us,f3vpdpar,f3vpdpar_us,&
+       GRID_VEG%trefk,f4temppar,&
+       GRID_VEG%trefk_us,f4temppar_us,&
 
 ! Constants
 
@@ -598,8 +599,9 @@ iopsmini = GLOBAL%iopsmini
       else if(ioppet.eq.1)then
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
-       GRID_VEG%xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
-       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
+       GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
+       tkel,vppa,f3vpd,f3vpdpar,f4temp,GRID_VEG%trefk,&
+       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,GRID_VEG%rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
  
       endif
@@ -706,17 +708,17 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%z0h = z0h
       !GRID_VEG%z0m_us = z0m_us
       !GRID_VEG%z0h_us = z0h_us
-      GRID_VEG%rescan = rescan
-      GRID_VEG%rescan_us = rescan_us
-      GRID_VEG%emiss_us = emiss_us
-      GRID_VEG%rsmin = rsmin
-      GRID_VEG%rsmax = rsmax
-      GRID_VEG%rsmin_us = rsmin_us
-      GRID_VEG%rsmax_us = rsmax_us
-      GRID_VEG%Rpl = Rpl
-      GRID_VEG%Rpl_us = Rpl_us
-      GRID_VEG%trefk = trefk
-      GRID_VEG%trefk_us = trefk_us
+      !GRID_VEG%rescan = rescan
+      !GRID_VEG%rescan_us = rescan_us
+      !GRID_VEG%emiss_us = emiss_us
+      !GRID_VEG%rsmin = rsmin
+      !GRID_VEG%rsmax = rsmax
+      !GRID_VEG%rsmin_us = rsmin_us
+      !GRID_VEG%rsmax_us = rsmax_us
+      !GRID_VEG%Rpl = Rpl
+      !GRID_VEG%Rpl_us = Rpl_us
+      !GRID_VEG%trefk = trefk
+      !GRID_VEG%trefk_us = trefk_us
 
       !Constants
       GLOBAL%toleb = toleb
