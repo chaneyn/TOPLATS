@@ -96,7 +96,7 @@ contains
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       roa,roa_ic,&
 
 ! Energy balance variables
 
@@ -239,12 +239,12 @@ tkmid = GRID_VARS%tkmid
 
 !COnstants
 
-toleb = GLOBAL%toleb
-maxnri = GLOBAL%maxnri
-row = GRID_VARS%row
-cph2o = GRID_VARS%cph2o
-cp = GRID_VARS%cp
-roi = GRID_VARS%roi
+!toleb = GLOBAL%toleb
+!maxnri = GLOBAL%maxnri
+!row = GRID_VARS%row
+!cph2o = GRID_VARS%cph2o
+!cp = GRID_VARS%cp
+!roi = GRID_VARS%roi
 
 
 !Energy balance variables
@@ -454,12 +454,12 @@ iopsmini = GLOBAL%iopsmini
       ra=287.d0*(one+0.608d0*qv)
       roa=appa/(ra*tkel)
       xlhv =2.501d6-2370.d0*tcel
-      psychr=(cp*appa)/(0.622d0*xlhv)
+      psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
       ra_ic=287.d0*(one+0.608d0*qv_ic)
       roa_ic=appa/(ra_ic*tkel_ic)
       xlhv_ic=2.501d6-2370.d0*tcel_ic
-      psychr_ic=(cp*appa)/(0.622d0*xlhv_ic)
+      psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
 
 
 
@@ -581,7 +581,8 @@ iopsmini = GLOBAL%iopsmini
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
+       GLOBAL%maxnri,roa_ic,&
 
 ! Energy balance variables
 
@@ -602,7 +603,7 @@ iopsmini = GLOBAL%iopsmini
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        tkel,vppa,f3vpd,f3vpdpar,f4temp,GRID_VEG%trefk,&
        f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,GRID_VEG%rescan,ravd,xlhv,&
-       row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
+       GRID_VARS%row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,GRID_VARS%cp,roa)
  
       endif
 
@@ -721,12 +722,12 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%trefk_us = trefk_us
 
       !Constants
-      GLOBAL%toleb = toleb
-      GLOBAL%maxnri = maxnri
-      GRID_VARS%row = row
-      GRID_VARS%cph2o = cph2o
-      GRID_VARS%cp = cp
-      GRID_VARS%roi = roi
+      !GLOBAL%toleb = toleb
+      !GLOBAL%maxnri = maxnri
+      !GRID_VARS%row = row
+      !GRID_VARS%cph2o = cph2o
+      !GRID_VARS%cp = cp
+      !GRID_VARS%roi = roi
 
       !Energy Balance variables
 
