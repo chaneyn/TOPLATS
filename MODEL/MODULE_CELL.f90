@@ -372,14 +372,14 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,ebspot,&
+       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
        tsoilold,tkmidpet,tkpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,rnetpn,gbspen,&
 

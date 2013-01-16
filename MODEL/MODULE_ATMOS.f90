@@ -65,7 +65,7 @@ contains
 
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
@@ -73,7 +73,7 @@ contains
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
        h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,ebspot,tsoilold,tkmidpet,tkpet,&
+       tskin_p_moss,eact_moss,tsoilold,tkmidpet,tkpet,&
        tkmidpet_us,tkmidpet_moss,dspet,dspet_us,dspet_moss,rnetpn,gbspen,&
 
 ! Soil parameters
@@ -185,9 +185,9 @@ tkmid = GRID_VARS%tkmid
 !tk0moss = GRID_VEG%tk0moss
 
 !Energy fluxes and states
-dshact = GRID_VARS%dshact
-gact = GRID_VARS%gact
-ebspot = GRID_VARS%ebspot
+!dshact = GRID_VARS%dshact
+!gact = GRID_VARS%gact
+!ebspot = GRID_VARS%ebspot
 tkmidpet = GRID_VARS%tkmidpet
 tkpet = GRID_VARS%tkpet
 dspet = GRID_VARS%dspet
@@ -399,7 +399,7 @@ iopsmini = GLOBAL%iopsmini
        GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
-       tskinact_moss,dshact,&
+       tskinact_moss,GRID_VARS%dshact,&
        dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
        dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
 
@@ -548,7 +548,7 @@ iopsmini = GLOBAL%iopsmini
 
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
@@ -663,9 +663,9 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%tk0moss = tk0moss
 
       !Energy Fluxes and states
-      GRID_VARS%dshact = dshact
-      GRID_VARS%gact = gact
-      GRID_VARS%ebspot = ebspot
+      !GRID_VARS%dshact = dshact
+      !GRID_VARS%gact = gact
+      !GRID_VARS%ebspot = ebspot
       GRID_VARS%tkmidpet = tkmidpet
       GRID_VARS%tkpet = tkpet
       GRID_VARS%dspet = dspet
