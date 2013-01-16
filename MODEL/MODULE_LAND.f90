@@ -32,7 +32,7 @@ MODULE MODULE_LAND
 ! Temperature variables
 
        tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,Tdeepstep,&
+       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,&
 
 ! Energy fluxes
 
@@ -116,7 +116,7 @@ MODULE MODULE_LAND
       !tkmidpet_us
       !tkmidpet_moss
       !tsoilold
-      !Tdeepstep
+
 
     !Energy fluxes and states
       !epetd
@@ -326,7 +326,7 @@ MODULE MODULE_LAND
        iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,&
        GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,rahd,ebscap,&
-       tcel,vppa,psychr,xlhv,GRID_SOIL%zdeep,Tdeepstep,GRID_MET%rsd,GRID_MET%rld,toleb,maxnri,dt,i,tkel,&
+       tcel,vppa,psychr,xlhv,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,toleb,maxnri,dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
        bsdew,GRID_VEG%z0h,ioppet)
@@ -358,7 +358,7 @@ MODULE MODULE_LAND
             if (GRID_VARS%Swq.lt.(0.d0)) tsnow=tcel+273.15d0
 
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
-       tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,Tdeepstep,GRID_SOIL%zmid,dt,dum)
+       tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_SOIL%zmid,dt,dum)
 
             GRID_VARS%rnact=GRID_VARS%rn_snow
             GRID_VARS%xleact=GRID_VARS%xleact_snow
@@ -463,7 +463,7 @@ MODULE MODULE_LAND
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,iopgveg,iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
        i_2l,f1,f2,f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
-       hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,Tdeepstep,&
+       hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,toleb,maxnri,dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
@@ -493,7 +493,7 @@ MODULE MODULE_LAND
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,inc_frozen,GRID_VARS%rzdthetaudtemp,iopgveg,thermc_us,iopthermc_v,GRID_VEG%tcbeta_us,&
        GRID_VEG%xlai,f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,GRID_VEG%rescan_us,tcel_ic,vppa_ic,&
-       roa_ic,psychr_ic,GRID_SOIL%zdeep,Tdeepstep,r_sdn,r_ldn,toleb,maxnri,dt,i,&
+       roa_ic,psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,toleb,maxnri,dt,i,&
        GRID_MET%rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
        ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
        GRID_VARS%r_mossm,tskinact_moss,tkact_moss,tkmid_moss,hactd_moss,gactd_moss,&
