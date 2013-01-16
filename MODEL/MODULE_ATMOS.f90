@@ -73,8 +73,8 @@ contains
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
        h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,tsoilold,tkmidpet,tkpet,&
-       tkmidpet_us,tkmidpet_moss,dspet,dspet_us,dspet_moss,rnetpn,gbspen,&
+       tskin_p_moss,eact_moss,tsoilold,&
+       tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss,&
 
 ! Soil parameters
 
@@ -188,11 +188,11 @@ tkmid = GRID_VARS%tkmid
 !dshact = GRID_VARS%dshact
 !gact = GRID_VARS%gact
 !ebspot = GRID_VARS%ebspot
-tkmidpet = GRID_VARS%tkmidpet
-tkpet = GRID_VARS%tkpet
-dspet = GRID_VARS%dspet
-rnetpn = GRID_VARS%rnetpn
-gbspen = GRID_VARS%gbspen
+!tkmidpet = GRID_VARS%tkmidpet
+!tkpet = GRID_VARS%tkpet
+!dspet = GRID_VARS%dspet
+!rnetpn = GRID_VARS%rnetpn
+!gbspen = GRID_VARS%gbspen
 
 !Soil Parameters
 thetar = GRID_SOIL%thetar
@@ -400,12 +400,12 @@ iopsmini = GLOBAL%iopsmini
        tkmid_us,tkmid_moss,tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
        tskinact_moss,GRID_VARS%dshact,&
-       dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
-       dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
+       dshact_us,dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,&
+       GRID_VARS%dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
 
       endif
 
-      tsoilold=tkmidpet
+      tsoilold=GRID_VARS%tkmidpet
 
 ! ====================================================================
 ! Vapor pressure variables -- use different method depending
@@ -596,7 +596,7 @@ iopsmini = GLOBAL%iopsmini
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
        xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
-       f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
+       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
  
       endif
@@ -666,11 +666,11 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%dshact = dshact
       !GRID_VARS%gact = gact
       !GRID_VARS%ebspot = ebspot
-      GRID_VARS%tkmidpet = tkmidpet
-      GRID_VARS%tkpet = tkpet
-      GRID_VARS%dspet = dspet
-      GRID_VARS%rnetpn = rnetpn
-      GRID_VARS%gbspen = gbspen
+      !GRID_VARS%tkmidpet = tkmidpet
+      !GRID_VARS%tkpet = tkpet
+      !GRID_VARS%dspet = dspet
+      !GRID_VARS%rnetpn = rnetpn
+      !GRID_VARS%gbspen = gbspen
 
       !Soil Parameters
       GRID_SOIL%thetar = thetar
