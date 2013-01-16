@@ -61,7 +61,7 @@ contains
 
 ! Energy fluxes and states
 
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
@@ -264,6 +264,12 @@ tkmid = GRID_VARS%tkmid
 !ioppet = GLOBAL%ioppet
 !iopwv = GLOBAL%iopwv
 !iopsmini = GLOBAL%iopsmini
+
+
+
+
+
+!Tdeepstep and rnetd are problems
 
 
 ! ====================================================================
@@ -550,7 +556,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Energy fluxes and states
 
-       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,hd,&
        gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
        tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
@@ -605,7 +611,7 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        tkel,vppa,f3vpd,f3vpdpar,f4temp,GRID_VEG%trefk,&
        f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,GRID_VEG%rescan,ravd,xlhv,&
-       GRID_VARS%row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,GRID_VARS%cp,roa)
+       GRID_VARS%row,epetd,epetw,ravw,psychr,GRID_VEG%xled,xlew,hd,hw,GRID_VARS%cp,roa)
  
       endif
 
