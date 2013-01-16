@@ -16,6 +16,8 @@ contains
 !
 ! ====================================================================
 
+!> run TOPMODEL in specified catchments
+
   subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
     implicit none
@@ -56,6 +58,7 @@ contains
 !
 ! ====================================================================
 
+!> Initialize regional scale water balance variables
   subroutine instep_catchment(ncatch,CAT)
 
       implicit none
@@ -132,6 +135,9 @@ contains
 !  runoff, surface energy fluxes and vertical soil-water fluxes.
 !
 ! ====================================================================
+
+!> Calculates the catchment time step totals of evapotranspiration, 
+!!  runoff, surface energy fluxes and vertical soil-water fluxes.
 
       subroutine catflx(pixsiz,CAT)
 
@@ -291,6 +297,7 @@ contains
 !
 ! ====================================================================
 
+!> Updates the average water table depth
       subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
       implicit none
@@ -476,6 +483,9 @@ contains
 ! surface energy fluxes and vertical soil-water fluxes.
 !
 ! ====================================================================
+
+!> Calculates the time step totals of evapotranspiration, runoff, 
+!! surface energy fluxes and vertical soil-water fluxes.
 
       subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
        GRID_VEG,GRID_SOIL,GRID_MET,ilandc)
