@@ -79,7 +79,7 @@ contains
 ! Soil parameters
 
        GRID_SOIL,ifcoarse,&
-       zrzmax,&
+       
 
 ! Moss parameters
 
@@ -205,7 +205,7 @@ tkmid = GRID_VARS%tkmid
 !tcbeta_us = GRID_VEG%tcbeta_us
 !zdeep = GRID_SOIL%zdeep
 !zmid = GRID_SOIL%zmid
-zrzmax = GLOBAL%zrzmax
+!zrzmax = GLOBAL%zrzmax
 
 !Moss Parameters
 r_moss_depth = GRID_VEG%r_moss_depth
@@ -561,7 +561,7 @@ iopsmini = GLOBAL%iopsmini
 
        GRID_SOIL,GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_SOIL%quartz,&
        ifcoarse,GRID_SOIL%rocpsoil,GRID_VEG%tcbeta,&
-       GRID_VEG%tcbeta_us,GRID_SOIL%zdeep,GRID_SOIL%zmid,zrzmax,&
+       GRID_VEG%tcbeta_us,GRID_SOIL%zdeep,GRID_SOIL%zmid,GLOBAL%zrzmax,&
 
 ! Moss parameters
 
@@ -684,7 +684,7 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%tcbeta_us = tcbeta_us
       !GRID_SOIL%zdeep = zdeep
       !GRID_SOIL%zmid = zmid
-      GLOBAL%zrzmax = zrzmax
+      !GLOBAL%zrzmax = zrzmax
 
       !Moss Parameters
       GRID_VEG%r_moss_depth = r_moss_depth
