@@ -92,8 +92,6 @@ xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
 
 !Global variables
-iopsmini = GLOBAL%iopsmini
-ikopt = GLOBAL%ikopt
 irestype = GLOBAL%irestype
 ioppet = GLOBAL%ioppet
 iopstab = GLOBAL%iopstab
@@ -264,7 +262,6 @@ xlamda = CAT%xlamda
 
 ! Different option paramters
 
-       iopsmini,ikopt,&
        irestype,ioppet,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================

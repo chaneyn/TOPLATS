@@ -70,7 +70,7 @@ MODULE MODULE_LAND
 
 ! Different option paramters
 
-       iopsmini,ikopt,irestype,ioppet,&
+       irestype,ioppet,&
        GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -168,8 +168,6 @@ MODULE MODULE_LAND
       !dewrun
                   
     !Different option parameters
-      !iopsmini = GLOBAL%iopsmini
-      !ikopt = GLOBAL%ikopt
       !irestype = GLOBAL%irestype
       !ioppet = GLOBAL%ioppet
 
@@ -267,9 +265,10 @@ MODULE MODULE_LAND
       call states(zw0,GLOBAL%inc_frozen,GRID_VEG%i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
        GRID_VARS%r_mossm_u,GRID_VARS%r_mossm_f,GRID_VARS%r_mossm,GRID_VARS%zw,CAT%zbar,&
        CAT%ff,GRID_VARS%atanb,CAT%xlamda,GRID_SOIL%psic,&
-       GRID_VARS%zrz,GRID_VARS%ztz,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_SOIL%thetas,GLOBAL%zrzmax,iopsmini,&
+       GRID_VARS%zrz,GRID_VARS%ztz,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_SOIL%thetas,GLOBAL%zrzmax,GLOBAL%iopsmini,&
        GRID_SOIL%thetar,GRID_SOIL%bcbeta,GRID_VARS%rzsm1_u,&
-       GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,tsoilold,GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
+       GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,tsoilold,&
+       GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
        GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
        GRID_VARS%r_mossm1,GRID_VARS%zmoss,r_moss_depth,&
        thetas_moss,rzsm_u,GRID_VARS%rzsm_f,tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
@@ -373,7 +372,7 @@ MODULE MODULE_LAND
        smcond,GRID_VARS%tzsm,tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
-       GRID_SOIL%psic,GRID_SOIL%bcbeta,ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
+       GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
        GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,ievcon_us,bsdew,i,ipix)
@@ -404,7 +403,7 @@ MODULE MODULE_LAND
 
       endif
 
-      call tz_and_rzbal(i,newstorm,GLOBAL%inc_frozen,ikopt,GRID_VEG%ivgtyp,&
+      call tz_and_rzbal(i,newstorm,GLOBAL%inc_frozen,GLOBAL%ikopt,GRID_VEG%ivgtyp,&
        GLOBAL%dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,GRID_VARS%rzsm1,GRID_VARS%tzsm1,&
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,GLOBAL%zrzmax,&
        GRID_VARS%evtact,evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
