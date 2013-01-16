@@ -78,7 +78,7 @@ contains
 
 ! Soil parameters
 
-       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
+       GRID_SOIL,ifcoarse,rocpsoil,&
        tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -195,11 +195,11 @@ tkmid = GRID_VARS%tkmid
 !gbspen = GRID_VARS%gbspen
 
 !Soil Parameters
-thetar = GRID_SOIL%thetar
-thetas = GRID_SOIL%thetas
-psic = GRID_SOIL%psic
-bcbeta = GRID_SOIL%bcbeta
-quartz = GRID_SOIL%quartz
+!thetar = GRID_SOIL%thetar
+!thetas = GRID_SOIL%thetas
+!psic = GRID_SOIL%psic
+!bcbeta = GRID_SOIL%bcbeta
+!quartz = GRID_SOIL%quartz
 rocpsoil = GRID_SOIL%rocpsoil
 tcbeta = GRID_VEG%tcbeta
 tcbeta_us = GRID_VEG%tcbeta_us
@@ -559,7 +559,8 @@ iopsmini = GLOBAL%iopsmini
 
 ! Soil parameters
 
-       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
+       GRID_SOIL,GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_SOIL%quartz,&
+       ifcoarse,rocpsoil,tcbeta,&
        tcbeta_us,zdeep,zmid,zrzmax,&
 
 ! Moss parameters
@@ -673,11 +674,11 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%gbspen = gbspen
 
       !Soil Parameters
-      GRID_SOIL%thetar = thetar
-      GRID_SOIL%thetas = thetas
-      GRID_SOIL%psic = psic
-      GRID_SOIL%bcbeta = bcbeta
-      GRID_SOIL%quartz = quartz
+      !GRID_SOIL%thetar = thetar
+      !GRID_SOIL%thetas = thetas
+      !GRID_SOIL%psic = psic
+      !GRID_SOIL%bcbeta = bcbeta
+      !GRID_SOIL%quartz = quartz
       GRID_SOIL%rocpsoil = rocpsoil
       GRID_VEG%tcbeta = tcbeta
       GRID_VEG%tcbeta_us = tcbeta_us
