@@ -85,14 +85,10 @@ contains
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
 
 !Removal Causes Failure
-f3vpdpar = GRID_VEG%f3vpdpar
-f4temppar = GRID_VEG%f4temppar
 sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
 mul_fac = GLOBAL%mul_fac
-!Global variables
-i_2l = GLOBAL%i_2l
 
 !Point Data Initializations
 !Water Balance
