@@ -390,8 +390,8 @@ xlamda = CAT%xlamda
 
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,&
-       z0m_moss,z0h_moss,epet_moss,&
+       rib_moss,&
+       epet_moss,&
 
 ! Vegetation parameters
 

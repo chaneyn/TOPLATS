@@ -83,7 +83,7 @@ contains
 
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,z0m_moss,z0h_moss,&
+       rib_moss,&
        epet_moss,&
 
 ! Vegetation parameters
@@ -208,12 +208,12 @@ tkmid = GRID_VARS%tkmid
 !zrzmax = GLOBAL%zrzmax
 
 !Moss Parameters
-r_moss_depth = GRID_VEG%r_moss_depth
-eps = GRID_VEG%eps
-emiss_moss = GRID_VEG%emiss_moss
-zpd_moss = GRID_VEG%zpd_moss
-z0m_moss = GRID_VEG%z0m_moss
-z0h_moss = GRID_VEG%z0h_moss
+!r_moss_depth = GRID_VEG%r_moss_depth
+!eps = GRID_VEG%eps
+!emiss_moss = GRID_VEG%emiss_moss
+!zpd_moss = GRID_VEG%zpd_moss
+!z0m_moss = GRID_VEG%z0m_moss
+!z0h_moss = GRID_VEG%z0h_moss
 
 !Vegetation parameters
 xlai = GRID_VEG%xlai
@@ -355,7 +355,7 @@ iopsmini = GLOBAL%iopsmini
 
          twet_ic=twet
 
-         !if (r_moss_depth.lt.0.d0) stop
+         !if (GRID_VEG%r_moss_depth.lt.0.d0) stop
 
       else
 
@@ -565,8 +565,8 @@ iopsmini = GLOBAL%iopsmini
 
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,&
-       z0m_moss,z0h_moss,epet_moss,&
+       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,rib_moss,&
+       GRID_VEG%z0m_moss,GRID_VEG%z0h_moss,epet_moss,&
 
 ! Vegetation parameters
 
@@ -687,12 +687,12 @@ iopsmini = GLOBAL%iopsmini
       !GLOBAL%zrzmax = zrzmax
 
       !Moss Parameters
-      GRID_VEG%r_moss_depth = r_moss_depth
-      GRID_VEG%eps = eps
-      GRID_VEG%emiss_moss = emiss_moss
-      GRID_VEG%zpd_moss = zpd_moss
-      GRID_VEG%z0m_moss = z0m_moss
-      GRID_VEG%z0h_moss = z0h_moss
+      !GRID_VEG%r_moss_depth = r_moss_depth
+      !GRID_VEG%eps = eps
+      !GRID_VEG%emiss_moss = emiss_moss
+      !GRID_VEG%zpd_moss = zpd_moss
+      !GRID_VEG%z0m_moss = z0m_moss
+      !GRID_VEG%z0h_moss = z0h_moss
 
       !Vegetation parameters
       GRID_VEG%xlai = xlai
