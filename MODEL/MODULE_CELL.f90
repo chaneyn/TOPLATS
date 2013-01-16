@@ -411,11 +411,11 @@ xlamda = CAT%xlamda
 
 ! Water balance variables
 
-       smpet0,&
+       
 
 ! Different option paramters
 
-       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL)
 
 ! ....................................................................
 ! Calculate local wet canopy water balance.

@@ -106,11 +106,11 @@ contains
 ! Water balance variables
 
        
-       smpet0,&
+       
 
 ! Different option paramters
 
-       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL)
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
@@ -258,16 +258,16 @@ tkmid = GRID_VARS%tkmid
 !zrz = GRID_VARS%zrz
 !smold = GRID_VARS%smold
 !rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
-smpet0 = GLOBAL%smpet0
+!smpet0 = GLOBAL%smpet0
 
 !DIFF option parameters
-iopthermc = GLOBAL%iopthermc
-iopgveg = GLOBAL%iopgveg
-iopthermc_v = GLOBAL%iopthermc_v
-iopstab = GLOBAL%iopstab
-ioppet = GLOBAL%ioppet
-iopwv = GLOBAL%iopwv
-iopsmini = GLOBAL%iopsmini
+!iopthermc = GLOBAL%iopthermc
+!iopgveg = GLOBAL%iopgveg
+!iopthermc_v = GLOBAL%iopthermc_v
+!iopstab = GLOBAL%iopstab
+!ioppet = GLOBAL%ioppet
+!iopwv = GLOBAL%iopwv
+!iopsmini = GLOBAL%iopsmini
 
 
 ! ====================================================================
@@ -419,7 +419,7 @@ iopsmini = GLOBAL%iopsmini
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
 
-      if (iopwv.eq.0) then
+      if (GLOBAL%iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
          GRID_MET%rh=100.*vppa/vpsat
@@ -469,12 +469,12 @@ iopsmini = GLOBAL%iopsmini
 ! correction or first time step then set the Richardson number to zero.
 !
 ! You can only use the stability correction if you are solving
-! for a skin temperature i.e. ioppet = 0
+! for a skin temperature i.e. GLOBAL%ioppet = 0
 ! 
 ! Do this for overstory, understory and moss.
 ! ====================================================================
 
-      if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
+      if (GLOBAL%iopstab.eq.1.and.i.gt.1.and.GLOBAL%ioppet.eq.0) then 
          
          call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
        tkel,GRID_MET%press,&
@@ -517,7 +517,7 @@ iopsmini = GLOBAL%iopsmini
       GRID_MET%uzw = uzw
       !GRID_VARS%alb_snow = alb_snow
 
-      if(ioppet.eq.0)then
+      if(GLOBAL%ioppet.eq.0)then
 
             call peteb(ipix,i,dt,inc_frozen,&
 
@@ -592,13 +592,13 @@ iopsmini = GLOBAL%iopsmini
 ! Water balance variables
 
        GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_VARS%r_mossm,&
-       GRID_VARS%zrz,GRID_VARS%smold,GRID_VARS%rzdthetaudtemp,smpet0,&
+       GRID_VARS%zrz,GRID_VARS%smold,GRID_VARS%rzdthetaudtemp,GLOBAL%smpet0,&
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini,GLOBAL)
+       GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopstab,GLOBAL%iopsmini,GLOBAL)
 
-      else if(ioppet.eq.1)then
+      else if(GLOBAL%ioppet.eq.1)then
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
@@ -741,16 +741,16 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VARS%zrz = zrz
       !GRID_VARS%smold = smold
       !GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
-      GLOBAL%smpet0 = smpet0
+      !GLOBAL%smpet0 = smpet0
 
       !DIff option parameters
-      GLOBAL%iopthermc = iopthermc
-      GLOBAL%iopgveg = iopgveg
-      GLOBAL%iopthermc_v = iopthermc_v
-      GLOBAL%iopstab = iopstab
-      GLOBAL%ioppet = ioppet
-      GLOBAL%iopwv = iopwv
-      GLOBAL%iopsmini = iopsmini
+      !GLOBAL%iopthermc = iopthermc
+      !GLOBAL%iopgveg = iopgveg
+      !GLOBAL%iopthermc_v = iopthermc_v
+      !GLOBAL%iopstab = iopstab
+      !GLOBAL%ioppet = ioppet
+      !GLOBAL%iopwv = iopwv
+      !GLOBAL%iopsmini = iopsmini
 
       return
 
