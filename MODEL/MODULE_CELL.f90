@@ -92,12 +92,10 @@ xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
 
 !Global variables
-iopgveg = GLOBAL%iopgveg
 iopsmini = GLOBAL%iopsmini
 ikopt = GLOBAL%ikopt
 irestype = GLOBAL%irestype
 ioppet = GLOBAL%ioppet
-iopveg = GLOBAL%iopveg
 iopstab = GLOBAL%iopstab
 iopwv = GLOBAL%iopwv
 i_2l = GLOBAL%i_2l
@@ -266,8 +264,8 @@ xlamda = CAT%xlamda
 
 ! Different option paramters
 
-       iopgveg,iopsmini,ikopt,&
-       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       iopsmini,ikopt,&
+       irestype,ioppet,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.
