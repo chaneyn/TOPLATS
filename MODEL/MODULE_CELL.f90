@@ -314,21 +314,6 @@ xlamda = CAT%xlamda
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-      ! GRID_VARS%PackWater = PackWater        
-      ! GRID_VARS%SurfWater = SurfWater
-       !GRID_VARS%Swq = Swq
-       !GRID_VARS%VaporMassFlux = VaporMassFlux
-       !GRID_VARS%r_MeltEnergy = r_MeltEnergy
-       !GRID_VARS%Outflow = Outflow
-       !GRID_VARS%PackWater_us = PackWater_us
-       !GRID_VARS%SurfWater_us = SurfWater_us
-       !GRID_VARS%Swq_us = Swq_us
-       !GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
-       !GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
-       !GRID_VARS%Outflow_us = Outflow_us
-       !GRID_VARS%PackWater = PackWater        
-       !GRID_VARS%SurfWater = SurfWater
-       !GRID_VEG%i_und = i_und
        GLOBAL%zrzmax = zrzmax
        GLOBAL%toleb = toleb
        GLOBAL%maxnri = maxnri
@@ -342,20 +327,7 @@ xlamda = CAT%xlamda
        GLOBAL%iopsmini = iopsmini 
 
 
-         call atmos(ipix,i,dt,inc_frozen,i_2l,&
-
-! General vegetation parameters
-
-       GRID_VEG,&
-
-! Snow pack variables
-
-       
-
-! Albedos of the over story, under story,&
-! and moss layer
-
-        
+         call atmos(ipix,i,i_2l,GRID_VEG,&
 
 ! Meteorological data
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
@@ -380,11 +352,8 @@ xlamda = CAT%xlamda
        tsoilold,tkmidpet_us,tkmidpet_moss,&
        dspet_us,dspet_moss,&
 
-! Soil parameters
-
        GRID_SOIL,&
        
-
 ! Moss parameters
 
        rib_moss,&
@@ -392,7 +361,6 @@ xlamda = CAT%xlamda
 
 ! Vegetation parameters
 
-       
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
        f1,f2,f3,&
        f3vpdpar,f3vpdpar_us,f4temppar,f4temppar_us,&
@@ -405,12 +373,6 @@ xlamda = CAT%xlamda
 
        ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
        ravw,ravw_us,rahw,rahw_us,&
-
-! Water balance variables
-
-       
-
-! Different option paramters
 
        GLOBAL)
 
