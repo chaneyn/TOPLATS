@@ -84,18 +84,15 @@ contains
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
 
-!VEGETATION
+!Removal Causes Failure
 f3vpdpar = GRID_VEG%f3vpdpar
 f4temppar = GRID_VEG%f4temppar
 sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
+smpet0 = GLOBAL%smpet0
 
 !Global variables
-smpet0 = GLOBAL%smpet0
-endstm = GLOBAL%endstm
-iopthermc = GLOBAL%iopthermc
 iopgveg = GLOBAL%iopgveg
-iopthermc_v = GLOBAL%iopthermc_v
 iopsmini = GLOBAL%iopsmini
 ikopt = GLOBAL%ikopt
 irestype = GLOBAL%irestype
@@ -269,7 +266,7 @@ xlamda = CAT%xlamda
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
+       iopgveg,iopsmini,ikopt,&
        irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================
