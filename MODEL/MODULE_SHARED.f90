@@ -14,7 +14,7 @@ contains
 !
 ! ====================================================================
 !
-! Adapt the thermal parameters for vegetated surfaces.
+!> Adapt the thermal parameters for vegetated surfaces.
 !
 ! ====================================================================
 
@@ -104,7 +104,7 @@ contains
 !
 ! ====================================================================
 !
-! Calculate the soil thermal parameters.
+!> Calculate the soil thermal parameters.
 !
 ! ====================================================================
 
@@ -171,8 +171,8 @@ contains
 !
 ! ====================================================================
 !
-! Initialize soil moisture for the calculation of the thermodynami!
-! parameters, as a centered difference.
+!> Initialize soil moisture for the calculation of the thermodynami
+!! parameters, as a centered difference.
 !
 ! ====================================================================
 
@@ -208,8 +208,8 @@ contains
 !
 ! ====================================================================
 !
-! Calculate the incoming solar radiation for the under and over story
-! under the assumption of only one reflection.
+!> Calculate the incoming solar radiation for the under and over story
+!! under the assumption of only one reflection.
 !
 ! ====================================================================
 
@@ -267,10 +267,10 @@ contains
 !
 ! ====================================================================
 !
-! Calculate the heat capacity of the soil using the input soil
-! moisture requested (theta), and saturated soil moisture or
-! porosity (thetasat).  Heat capacity found as density-weighted
-! combination of soil, water and air heat capacities.
+!> Calculate the heat capacity of the soil using the input soil
+!! moisture requested (theta), and saturated soil moisture or
+!! porosity (thetasat).  Heat capacity found as density-weighted
+!! combination of soil, water and air heat capacities.
 ! From: McCumber and Pielke (JGR vol 86, no c10,&
 ! pp.9929-9938, 1981
 !
@@ -408,8 +408,8 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to calculate all variables related to stability
-! correction and aerodynami! resistances.
+!> Subroutine to calculate all variables related to stability
+!! correction and aerodynami! resistances.
 !
 ! ====================================================================
 !
@@ -500,8 +500,8 @@ contains
 !
 !   ====================================================================
 !
-!   Calculate Bulk Richardson number based on input
-!   temperature, humidity, pressure, wind profile
+!>   Calculate Bulk Richardson number based on input
+!!   temperature, humidity, pressure, wind profile
 !
 !   tk2   temperature (K) at 2nd level
 !   q2    specifi!   humidity (kg/kg) at 2nd level

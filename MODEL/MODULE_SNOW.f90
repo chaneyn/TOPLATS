@@ -81,7 +81,8 @@ MODULE MODULE_SNOW
 !                             (W/m2)
 !   real*8 Density	    - Density of the snow pack (g/cm3)
 ! ********************************************************************
-
+!> Calculate snow accumulation and melt using an energy balance
+!! approach for a two layer snow model
       subroutine calcsnowmelt(y, x, Tstep, Z, Displacement, Z0,&
                                BaseRa, AirDens, EactAir, Lv,& 
                                ShortRad, LongRadIn, Press, RainFall,&
@@ -758,6 +759,7 @@ MODULE MODULE_SNOW
 
 !****************************************************************************
 
+!> Calculate the surface temperature in the absence of snow
       subroutine rootbrent(y, x, LowerBound, UpperBound, aaa,&
                             Tstep, BaseRa, Z, Displacement, Z0, Wind,&
                             ShortRad, LongRadIn, AirDens, Lv, Tair,& 
@@ -1082,6 +1084,7 @@ MODULE MODULE_SNOW
 !               science, Addisson Wesley, Inc., Reading, etc., 1990.
 !****************************************************************************
 
+!> Calculate the surface energy balance for the snow pack
       subroutine snowpackenergybalance(TSurf,Tstep,Ra,Z,Displacement,Z0,&
                                         Wind, ShortRad,LongRadIn,AirDens,&
                                         Lv,Tair, Press,Vpd,EactAir,Rain,&
@@ -1313,6 +1316,8 @@ MODULE MODULE_SNOW
 ! Modifies     : None
     
 !****************************************************************************
+
+!> Calculate atmospheri! stability correction for non-neutral conditions
       function  stabilitycorrection(Z,d,TSurf,Tair,Wind,Z0)
 
       parameter (G=9.81)
@@ -1434,6 +1439,7 @@ MODULE MODULE_SNOW
 !
 ! ====================================================================
 
+!> Calculate the density of the snow pack.
       subroutine snow_density(dens,snow_m,tcel,Swq_m,snow_depth,Tsurf,tstep)
 
       implicit none

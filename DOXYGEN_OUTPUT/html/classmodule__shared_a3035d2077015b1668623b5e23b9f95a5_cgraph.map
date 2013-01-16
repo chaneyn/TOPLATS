@@ -1,0 +1,5 @@
+<map id="module_shared::soiltherm" name="module_shared::soiltherm">
+<area shape="rect" id="node3" href="$classmodule__shared.html#a02e10c8f9775d8ec487b3755a6dc34f8" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="251,5,421,32"/>
+<area shape="rect" id="node5" href="$classmodule__shared.html#ab90d3b6a8f85d264da0c75fa30e7a84b" title="module_shared::calctc_j" alt="" coords="248,56,424,83"/>
+<area shape="rect" id="node7" href="$classmodule__shared.html#ad4f93ede919c67b8c268a4e96dee52ca" title="module_shared::calctc_m" alt="" coords="243,107,429,133"/>
+</map>
