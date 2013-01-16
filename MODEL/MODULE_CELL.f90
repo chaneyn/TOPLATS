@@ -350,10 +350,7 @@ xlamda = CAT%xlamda
 
 ! Snow pack variables
 
-       TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,&
-       TPack_us,TSurf_us,&
-       xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       
 
 ! Albedos of the over story, under story,&
 ! and moss layer

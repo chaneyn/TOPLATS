@@ -39,11 +39,7 @@ contains
 
 ! Snow pack variables
 
-       TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,&
-       TPack_us,&
-       TSurf_us,xleact_snow_us,&
-       hact_snow_us,rn_snow_us,dens,dens_us,&
+       
 
 ! Albedos of the over story, under story,&
 ! and moss layer
@@ -401,7 +397,8 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
        tskinact_moss,GRID_VARS%dshact,&
        dshact_us,dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,&
-       GRID_VARS%dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
+       GRID_VARS%dspet,dspet_us,dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
+       GRID_VARS%TSurf_us,GRID_VARS%TPack_us)
 
       endif
 
@@ -527,10 +524,14 @@ tkmid = GRID_VARS%tkmid
 
 ! Snow pack variables
 
-       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,TPack,TSurf,&
-       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,GRID_VARS%PackWater_us,&
-       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,TPack_us,TSurf_us,&
-       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,GRID_VARS%TPack,&
+       GRID_VARS%TSurf,&
+       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,&
+       GRID_VARS%rn_snow,GRID_VARS%PackWater_us,&
+       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,&
+       GRID_VARS%TSurf_us,&
+       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
+       GRID_VARS%rn_snow_us,GRID_VARS%dens,GRID_VARS%dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
