@@ -88,7 +88,7 @@ contains
 
 ! Vegetation parameters
 
-       xlai,xlai_us,emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,&
+       
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
        rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
        rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
@@ -216,15 +216,15 @@ tkmid = GRID_VARS%tkmid
 !z0h_moss = GRID_VEG%z0h_moss
 
 !Vegetation parameters
-xlai = GRID_VEG%xlai
-xlai_us = GRID_VEG%xlai_us
-emiss = GRID_VEG%emiss
-zpd = GRID_VEG%zpd
-zpd_us = GRID_VEG%zpd_us
-z0m = GRID_VEG%z0m
-z0h = GRID_VEG%z0h
-z0m_us = GRID_VEG%z0m_us
-z0h_us = GRID_VEG%z0h_us
+!xlai = GRID_VEG%xlai
+!xlai_us = GRID_VEG%xlai_us
+!emiss = GRID_VEG%emiss
+!zpd = GRID_VEG%zpd
+!zpd_us = GRID_VEG%zpd_us
+!z0m = GRID_VEG%z0m
+!z0h = GRID_VEG%z0h
+!z0m_us = GRID_VEG%z0m_us
+!z0h_us = GRID_VEG%z0h_us
 rescan = GRID_VEG%rescan
 rescan_us = GRID_VEG%rescan_us
 emiss_us = GRID_VEG%emiss_us
@@ -476,7 +476,8 @@ iopsmini = GLOBAL%iopsmini
 
       if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
          
-         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,zpd,z0m,tkel,GRID_MET%press,&
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
+       tkel,GRID_MET%press,&
        GRID_VARS%tkact,vppa,rib)
          
       else
@@ -494,13 +495,13 @@ iopsmini = GLOBAL%iopsmini
 ! Also do this for snow.
 ! ====================================================================
 
-      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
-      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
+      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,GRID_VEG%z0h,rib)
+      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,GRID_VEG%z0h,rib)
 
       ravd=rahd
       ravw=rahw
 
-      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,0.005d0,0.0005d0,1.d0)
+      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -570,7 +571,8 @@ iopsmini = GLOBAL%iopsmini
 
 ! Vegetation parameters
 
-       xlai,xlai_us,emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,&
+       GRID_VEG%xlai,GRID_VEG%xlai_us,GRID_VEG%emiss,GRID_VEG%zpd,GRID_VEG%zpd_us,GRID_VEG%z0m,&
+       GRID_VEG%z0h,GRID_VEG%z0m_us,GRID_VEG%z0h_us,&
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
        rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
        rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
@@ -596,7 +598,7 @@ iopsmini = GLOBAL%iopsmini
       else if(ioppet.eq.1)then
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
-       xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
+       GRID_VEG%xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
  
@@ -695,15 +697,15 @@ iopsmini = GLOBAL%iopsmini
       !GRID_VEG%z0h_moss = z0h_moss
 
       !Vegetation parameters
-      GRID_VEG%xlai = xlai
-      GRID_VEG%xlai_us = xlai_us
-      GRID_VEG%emiss = emiss
-      GRID_VEG%zpd = zpd
-      GRID_VEG%zpd_us = zpd_us
-      GRID_VEG%z0m = z0m
-      GRID_VEG%z0h = z0h
-      GRID_VEG%z0m_us = z0m_us
-      GRID_VEG%z0h_us = z0h_us
+      !GRID_VEG%xlai = xlai
+      !GRID_VEG%xlai_us = xlai_us
+      !GRID_VEG%emiss = emiss
+      !GRID_VEG%zpd = zpd
+      !GRID_VEG%zpd_us = zpd_us
+      !GRID_VEG%z0m = z0m
+      !GRID_VEG%z0h = z0h
+      !GRID_VEG%z0m_us = z0m_us
+      !GRID_VEG%z0h_us = z0h_us
       GRID_VEG%rescan = rescan
       GRID_VEG%rescan_us = rescan_us
       GRID_VEG%emiss_us = emiss_us
