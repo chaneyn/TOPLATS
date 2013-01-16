@@ -74,7 +74,7 @@ contains
 
 ! Soil parameters
 
-       GRID_SOIL,ifcoarse,&
+       GRID_SOIL,&
        
 
 ! Moss parameters
@@ -571,7 +571,7 @@ tkmid = GRID_VARS%tkmid
 ! Soil parameters
 
        GRID_SOIL,GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_SOIL%quartz,&
-       ifcoarse,GRID_SOIL%rocpsoil,GRID_VEG%tcbeta,&
+       GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VEG%tcbeta,&
        GRID_VEG%tcbeta_us,GRID_SOIL%zdeep,GRID_SOIL%zmid,GLOBAL%zrzmax,&
 
 ! Moss parameters
