@@ -91,7 +91,6 @@ sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 
 !Global variables
-toleb = GLOBAL%toleb
 maxnri = GLOBAL%maxnri
 smpet0 = GLOBAL%smpet0
 endstm = GLOBAL%endstm
@@ -258,7 +257,7 @@ xlamda = CAT%xlamda
 
 ! Constants
 
-       roa,toleb,maxnri,roa_ic,&
+       roa,maxnri,roa_ic,&
 
 ! Energy balance variables
 
