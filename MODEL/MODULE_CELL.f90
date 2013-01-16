@@ -314,19 +314,6 @@ xlamda = CAT%xlamda
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       GLOBAL%zrzmax = zrzmax
-       GLOBAL%toleb = toleb
-       GLOBAL%maxnri = maxnri
-       GLOBAL%smpet0 = smpet0
-       GLOBAL%iopthermc = iopthermc
-       GLOBAL%iopgveg = iopgveg
-       GLOBAL%iopthermc_v = iopthermc_v
-       GLOBAL%iopstab = iopstab
-       GLOBAL%ioppet = ioppet
-       GLOBAL%iopwv = iopwv
-       GLOBAL%iopsmini = iopsmini 
-
-
          call atmos(ipix,i,i_2l,GRID_VEG,&
 
 ! Meteorological data
