@@ -91,7 +91,6 @@ sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 
 !Global variables
-zrzmax = GLOBAL%zrzmax
 toleb = GLOBAL%toleb
 maxnri = GLOBAL%maxnri
 smpet0 = GLOBAL%smpet0
@@ -245,9 +244,6 @@ xlamda = CAT%xlamda
        xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
        tskin_p_moss,eact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss,&
        ds_p_moss,&
-
-! Soil parameters
-       zrzmax,&
 
 ! Moss parameters
 
