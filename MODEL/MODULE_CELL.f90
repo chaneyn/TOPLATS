@@ -313,36 +313,7 @@ xlamda = CAT%xlamda
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       GLOBAL%zrzmax = zrzmax
-       GLOBAL%toleb = toleb
-       GLOBAL%maxnri = maxnri
-       GLOBAL%smpet0 = smpet0
-       GLOBAL%iopthermc = iopthermc
-       GLOBAL%iopgveg = iopgveg
-       GLOBAL%iopthermc_v = iopthermc_v
-       GLOBAL%iopstab = iopstab
-       GLOBAL%ioppet = ioppet
-       GLOBAL%iopwv = iopwv
-       GLOBAL%iopsmini = iopsmini 
-
-
-         call atmos(ipix,i,dt,inc_frozen,i_2l,&
-
-! General vegetation parameters
-
-       GRID_VEG,&
-
-! Snow pack variables
-
-       TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,&
-       TPack_us,TSurf_us,&
-       xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
-
-! Albedos of the over story, under story,&
-! and moss layer
-
-        
+       call atmos(ipix,i,i_2l,GRID_VEG,&
 
 ! Meteorological data
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
@@ -356,50 +327,40 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
-       tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       tkd,tkmidd,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,ebspot,&
-       tsoilold,tkmidpet,tkpet,tkmidpet_us,tkmidpet_moss,&
-       dspet,dspet_us,dspet_moss,rnetpn,gbspen,&
+       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
+       tsoilold,tkmidpet_us,tkmidpet_moss,&
+       dspet_us,dspet_moss,&
 
-! Soil parameters
-
-       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
-       tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
-
+       GRID_SOIL,&
+       
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,&
-       z0m_moss,z0h_moss,epet_moss,&
+       rib_moss,&
+       epet_moss,&
 
 ! Vegetation parameters
 
-       xlai,xlai_us,emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
-       rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,rsmax_us,Rpl,&
-       Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,trefk_us,f4temppar_us,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
+       f1,f2,f3,&
+       f3vpdpar,f3vpdpar_us,f4temppar,f4temppar_us,&
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       roa,roa_ic,&
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,rib,RaSnow,rib_us,&
+       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
        ravw,ravw_us,rahw,rahw_us,&
 
-! Water balance variables
-
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
-
-! Different option paramters
-
-       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL)
 
 ! ....................................................................
 ! Calculate local wet canopy water balance.

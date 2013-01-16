@@ -31,24 +31,7 @@ contains
 
 
 
-  subroutine atmos(ipix,i,dt,inc_frozen,i_2l,&
-
-! General vegetation parameters
-
-       GRID_VEG,&
-
-! Snow pack variables
-
-       TPack,TSurf,&
-       xleact_snow,hact_snow,rn_snow,&
-       TPack_us,&
-       TSurf_us,xleact_snow_us,&
-       hact_snow_us,rn_snow_us,dens,dens_us,&
-
-! Albedos of the over story, under story,&
-! and moss layer
-
-       
+  subroutine atmos(ipix,i,i_2l,GRID_VEG,&
 
 ! Meteorological data
 
@@ -62,55 +45,43 @@ contains
        GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
        tkmid_moss,&
        
-
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
-       tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
+       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       tkd,tkmidd,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
        h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,ebspot,tsoilold,tkmidpet,tkpet,&
-       tkmidpet_us,tkmidpet_moss,dspet,dspet_us,dspet_moss,rnetpn,gbspen,&
+       tskin_p_moss,eact_moss,tsoilold,&
+       tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss,&
 
-! Soil parameters
-
-       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,&
-       tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
-
+       GRID_SOIL,&
+       
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,z0m_moss,z0h_moss,&
+       rib_moss,&
        epet_moss,&
 
 ! Vegetation parameters
 
-       xlai,xlai_us,emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
-       rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
-       rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
-       trefk_us,f4temppar_us,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
+       f1,f2,f3,&
+       f3vpdpar,f3vpdpar_us,f4temppar,&
+       f4temppar_us,&
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       roa,roa_ic,&
 
 ! Energy balance variables
 
        ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,&
-       rib,RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
+       RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
 
-! Water balance variables
-
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,&
-       smold,rzdthetaudtemp,smpet0,&
-
-! Different option paramters
-
-       GLOBAL,iopthermc,iopgveg,iopthermc_v,iopstab,ioppet,iopwv,iopsmini)
+       GLOBAL)
 
     implicit none
     include "help/atmos.h" !take this out when variables are fixed
@@ -121,153 +92,9 @@ contains
     type (GLOBAL_template) :: GLOBAL
 
 ! Temporarily changing over variables from old to new format
-
-!General Vegetation parameters
-!canclos = GRID_VEG%canclos
-!extinct = GRID_VEG%extinct
-!i_und = GRID_VEG%i_und
-!i_moss = GRID_VEG%i_moss
-!ivgtyp = GRID_VEG%ivgtyp
-
-!Snow Pack variables
-!PackWater = GRID_VARS%PackWater
-!SurfWater = GRID_VARS%SurfWater
-!Swq = GRID_VARS%Swq
-!VaporMassFlux = GRID_VARS%VaporMassFlux
-!r_MeltEnergy = GRID_VARS%r_MeltEnergy
-!Outflow = GRID_VARS%Outflow
-!PackWater_us = GRID_VARS%PackWater_us
-!SurfWater_us = GRID_VARS%SurfWater_us
-!Swq_us = GRID_VARS%Swq_us
-!VaporMassFlux_us = GRID_VARS%VaporMassFlux_us
-!r_MeltEnergy_us = GRID_VARS%r_MeltEnergy_us
-!Outflow_us = GRID_VARS%Outflow_us
-
-!Albedos of the over story, under story, and moss layer
-!albd_us = GRID_VEG%albd_us
-!alb_moss = GRID_VEG%alb_moss
-!albd = GRID_VEG%albd
-!albw = GRID_VEG%albw
-!albw_us = GRID_VEG%albw_us
-!alb_snow = GRID_VARS%alb_snow
-
-!Meteorological data
-!rsd = GRID_MET%rsd
-!rld = GRID_MET%rld
-!zww = GRID_VEG%zww
-!za = GRID_VEG%za
 uzw = GRID_MET%uzw
-!press = GRID_MET%press
-!Tslope1 = GRID_VEG%Tslope1
-!Tint1 = GRID_VEG%Tint1
-!Tslope2 = GRID_VEG%Tslope2
-!Tint2 = GRID_VEG%Tint2
-!Tsep = GRID_VEG%Tsep
-!Tincan = GRID_VARS%Tincan
-!tdry = GRID_MET%tdry
-!Twslope1 = GRID_VEG%Twslope1
-!Twslope2 = GRID_VEG%Twslope2
-!Twint1 = GRID_VEG%Twint1
-!Twint2 = GRID_VEG%Twint2
-!Twsep = GRID_VEG%Twsep
-!rh = GRID_MET%rh
-!rh_ic = GRID_VARS%rh_ic
-
-!Temperature variables
 tkmid = GRID_VARS%tkmid
-!tkact = GRID_VARS%tkact
-!amp = GRID_SOIL%amp
-!phase = GRID_SOIL%phase
-!shift = GRID_SOIL%shift
-!tdeep = GRID_SOIL%tdeep
-!tmid0 = GRID_SOIL%tmid0
-!tmid0_moss = GRID_VEG%tmid0_moss
-!tk0moss = GRID_VEG%tk0moss
-
-!Energy fluxes and states
-dshact = GRID_VARS%dshact
-gact = GRID_VARS%gact
-ebspot = GRID_VARS%ebspot
-tkmidpet = GRID_VARS%tkmidpet
-tkpet = GRID_VARS%tkpet
-dspet = GRID_VARS%dspet
-rnetpn = GRID_VARS%rnetpn
-gbspen = GRID_VARS%gbspen
-
-!Soil Parameters
-thetar = GRID_SOIL%thetar
-thetas = GRID_SOIL%thetas
-psic = GRID_SOIL%psic
-bcbeta = GRID_SOIL%bcbeta
-quartz = GRID_SOIL%quartz
-rocpsoil = GRID_SOIL%rocpsoil
-tcbeta = GRID_VEG%tcbeta
-tcbeta_us = GRID_VEG%tcbeta_us
-zdeep = GRID_SOIL%zdeep
-zmid = GRID_SOIL%zmid
-zrzmax = GLOBAL%zrzmax
-
-!Moss Parameters
-r_moss_depth = GRID_VEG%r_moss_depth
-eps = GRID_VEG%eps
-emiss_moss = GRID_VEG%emiss_moss
-zpd_moss = GRID_VEG%zpd_moss
-z0m_moss = GRID_VEG%z0m_moss
-z0h_moss = GRID_VEG%z0h_moss
-
-!Vegetation parameters
-xlai = GRID_VEG%xlai
-xlai_us = GRID_VEG%xlai_us
-emiss = GRID_VEG%emiss
-zpd = GRID_VEG%zpd
-zpd_us = GRID_VEG%zpd_us
-z0m = GRID_VEG%z0m
-z0h = GRID_VEG%z0h
-z0m_us = GRID_VEG%z0m_us
-z0h_us = GRID_VEG%z0h_us
-rescan = GRID_VEG%rescan
-rescan_us = GRID_VEG%rescan_us
-emiss_us = GRID_VEG%emiss_us
-rsmin = GRID_VEG%rsmin
-rsmax = GRID_VEG%rsmax
-rsmin_us = GRID_VEG%rsmin_us
-rsmax_us = GRID_VEG%rsmax_us
-Rpl = GRID_VEG%Rpl
-Rpl_us = GRID_VEG%Rpl_us
-trefk = GRID_VEG%trefk
-trefk_us = GRID_VEG%trefk_us
-
-!COnstants
-
-toleb = GLOBAL%toleb
-maxnri = GLOBAL%maxnri
-row = GRID_VARS%row
-cph2o = GRID_VARS%cph2o
-cp = GRID_VARS%cp
-roi = GRID_VARS%roi
-
-
-!Energy balance variables
-
-!Water balance variables
-rzsm = GRID_VARS%rzsm
-tzsm = GRID_VARS%tzsm
-rzsm1 = GRID_VARS%rzsm1
-tzsm1 = GRID_VARS%tzsm1
-r_mossm = GRID_VARS%r_mossm
-zrz = GRID_VARS%zrz
-smold = GRID_VARS%smold
-rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
-smpet0 = GLOBAL%smpet0
-
-!DIFF option parameters
-iopthermc = GLOBAL%iopthermc
-iopgveg = GLOBAL%iopgveg
-iopthermc_v = GLOBAL%iopthermc_v
-iopstab = GLOBAL%iopstab
-ioppet = GLOBAL%ioppet
-iopwv = GLOBAL%iopwv
-iopsmini = GLOBAL%iopsmini
+!Tdeepstep, rnetd, tkmidd, tkd are problems
 
 
 ! ====================================================================
@@ -276,7 +103,6 @@ iopsmini = GLOBAL%iopsmini
 
     GRID_VARS%alb_snow = 0.75
 
-   ! call calctempds(amp,phase,shift,Tdeepstep,tdeep) 
 ! ====================================================================
 ! Calculate the temperature of the deep soil layer.
 ! ====================================================================
@@ -355,7 +181,7 @@ iopsmini = GLOBAL%iopsmini
 
          twet_ic=twet
 
-         !if (r_moss_depth.lt.0.d0) stop
+         !if (GRID_VEG%r_moss_depth.lt.0.d0) stop
 
       else
 
@@ -399,13 +225,14 @@ iopsmini = GLOBAL%iopsmini
        GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
-       tskinact_moss,dshact,&
-       dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss,&
-       dspet,dspet_us,dspet_moss,TSurf,TPack,TSurf_us,TPack_us)
+       tskinact_moss,GRID_VARS%dshact,&
+       dshact_us,dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,&
+       GRID_VARS%dspet,dspet_us,dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
+       GRID_VARS%TSurf_us,GRID_VARS%TPack_us)
 
       endif
 
-      tsoilold=tkmidpet
+      tsoilold=GRID_VARS%tkmidpet
 
 ! ====================================================================
 ! Vapor pressure variables -- use different method depending
@@ -419,7 +246,7 @@ iopsmini = GLOBAL%iopsmini
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
 
-      if (iopwv.eq.0) then
+      if (GLOBAL%iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
          GRID_MET%rh=100.*vppa/vpsat
@@ -454,12 +281,12 @@ iopsmini = GLOBAL%iopsmini
       ra=287.d0*(one+0.608d0*qv)
       roa=appa/(ra*tkel)
       xlhv =2.501d6-2370.d0*tcel
-      psychr=(cp*appa)/(0.622d0*xlhv)
+      psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
       ra_ic=287.d0*(one+0.608d0*qv_ic)
       roa_ic=appa/(ra_ic*tkel_ic)
       xlhv_ic=2.501d6-2370.d0*tcel_ic
-      psychr_ic=(cp*appa)/(0.622d0*xlhv_ic)
+      psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
 
 
 
@@ -469,19 +296,20 @@ iopsmini = GLOBAL%iopsmini
 ! correction or first time step then set the Richardson number to zero.
 !
 ! You can only use the stability correction if you are solving
-! for a skin temperature i.e. ioppet = 0
+! for a skin temperature i.e. GLOBAL%ioppet = 0
 ! 
 ! Do this for overstory, understory and moss.
 ! ====================================================================
 
-      if (iopstab.eq.1.and.i.gt.1.and.ioppet.eq.0) then 
+      if (GLOBAL%iopstab.eq.1.and.i.gt.1.and.GLOBAL%ioppet.eq.0) then 
          
-         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,zpd,z0m,tkel,GRID_MET%press,&
-       GRID_VARS%tkact,vppa,rib)
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
+       tkel,GRID_MET%press,&
+       GRID_VARS%tkact,vppa,GRID_VARS%rib)
          
       else
 
-         rib= zero
+         GRID_VARS%rib= zero
 
       endif
 
@@ -494,13 +322,15 @@ iopsmini = GLOBAL%iopsmini
 ! Also do this for snow.
 ! ====================================================================
 
-      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
-      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,z0m,z0h,rib)
+      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,&
+      GRID_VEG%z0h,GRID_VARS%rib)
+      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,&
+      GRID_VEG%z0h,GRID_VARS%rib)
 
       ravd=rahd
       ravw=rahw
 
-      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,zpd,0.005d0,0.0005d0,1.d0)
+      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -516,9 +346,9 @@ iopsmini = GLOBAL%iopsmini
       GRID_MET%uzw = uzw
       !GRID_VARS%alb_snow = alb_snow
 
-      if(ioppet.eq.0)then
+      if(GLOBAL%ioppet.eq.0)then
 
-            call peteb(ipix,i,dt,inc_frozen,&
+            call peteb(ipix,i,GLOBAL%dt,GLOBAL%inc_frozen,&
 
 ! General vegetation parameters
 
@@ -526,10 +356,14 @@ iopsmini = GLOBAL%iopsmini
 
 ! Snow pack variables
 
-       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,TPack,TSurf,&
-       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,xleact_snow,hact_snow,rn_snow,GRID_VARS%PackWater_us,&
-       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,TPack_us,TSurf_us,&
-       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,xleact_snow_us,hact_snow_us,rn_snow_us,dens,dens_us,&
+       GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,GRID_VARS%TPack,&
+       GRID_VARS%TSurf,&
+       GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,&
+       GRID_VARS%rn_snow,GRID_VARS%PackWater_us,&
+       GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,&
+       GRID_VARS%TSurf_us,&
+       GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
+       GRID_VARS%rn_snow_us,GRID_VARS%dens,GRID_VARS%dens_us,&
 
 ! Albedos of the over story, under story,&
 ! and moss layer
@@ -548,9 +382,10 @@ iopsmini = GLOBAL%iopsmini
 
 ! Energy fluxes and states
 
-       dshact,epetd,gact,epetd_us,dshact_moss,xle_act_moss,rnetd,xled,hd,&
-       gd,dshd,tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,&
-       tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,epetw,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,GRID_VEG%hd,&
+       GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
+       GRID_VEG%dshw,GRID_VEG%tkw,&
+       GRID_VEG%tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,GRID_VARS%epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
@@ -559,191 +394,58 @@ iopsmini = GLOBAL%iopsmini
 
 ! Soil parameters
 
-       GRID_SOIL,thetar,thetas,psic,bcbeta,quartz,ifcoarse,rocpsoil,tcbeta,&
-       tcbeta_us,zdeep,zmid,zrzmax,&
+       GRID_SOIL,GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_SOIL%quartz,&
+       GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VEG%tcbeta,&
+       GRID_VEG%tcbeta_us,GRID_SOIL%zdeep,GRID_SOIL%zmid,GLOBAL%zrzmax,&
 
 ! Moss parameters
 
-       r_moss_depth,eps,emiss_moss,zpd_moss,rib_moss,&
-       z0m_moss,z0h_moss,epet_moss,&
+       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,rib_moss,&
+       GRID_VEG%z0m_moss,GRID_VEG%z0h_moss,epet_moss,&
 
 ! Vegetation parameters
 
-       xlai,xlai_us,emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,&
-       rescan_us,f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,&
-       rsmax_us,Rpl,Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,&
-       trefk_us,f4temppar_us,&
+       GRID_VEG%xlai,GRID_VEG%xlai_us,GRID_VEG%emiss,GRID_VEG%zpd,GRID_VEG%zpd_us,GRID_VEG%z0m,&
+       GRID_VEG%z0h,GRID_VEG%z0m_us,GRID_VEG%z0h_us,&
+       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan,&
+       GRID_VEG%rescan_us,f1,f2,f3,GRID_VEG%emiss_us,GRID_VEG%rsmin,GRID_VEG%rsmax,&
+       GRID_VEG%rsmin_us,GRID_VEG%rsmax_us,GRID_VEG%Rpl,GRID_VEG%Rpl_us,f3vpdpar,f3vpdpar_us,&
+       GRID_VEG%trefk,f4temppar,&
+       GRID_VEG%trefk_us,f4temppar_us,&
 
 ! Constants
 
-       row,cph2o,roa,cp,roi,toleb,maxnri,roa_ic,&
+       GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
+       GLOBAL%maxnri,roa_ic,&
 
 ! Energy balance variables
 
        ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,&
-       rib,RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
+       GRID_VARS%rib,RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
 
 ! Water balance variables
 
-       rzsm,tzsm,rzsm1,tzsm1,r_mossm,zrz,smold,rzdthetaudtemp,smpet0,&
+       GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_VARS%r_mossm,&
+       GRID_VARS%zrz,GRID_VARS%smold,GRID_VARS%rzdthetaudtemp,GLOBAL%smpet0,&
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini,GLOBAL)
+       GLOBAL%iopthermc,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GLOBAL%iopstab,GLOBAL%iopsmini,GLOBAL)
 
-      else if(ioppet.eq.1)then
+      else if(GLOBAL%ioppet.eq.1)then
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
-       xlai,GRID_MET%rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
-       f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
-       row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
+       GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
+       tkel,vppa,f3vpd,f3vpdpar,f4temp,GRID_VEG%trefk,&
+       f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
+       GRID_VEG%rescan,ravd,xlhv,&
+       GRID_VARS%row,epetd,GRID_VARS%epetw,ravw,psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
+       GRID_VEG%hw,GRID_VARS%cp,roa)
  
       endif
 
-      !General Vegetation Parameters
-      !GRID_VEG%canclos = canclos
-      !GRID_VEG%extinct = extinct
-      !GRID_VEG%i_und = i_und
-      !GRID_VEG%i_moss = i_moss
-      !GRID_VEG%ivgtyp = ivgtyp
-
-      !Snow Pack variables
-      !GRID_VARS%PackWater = PackWater
-      !GRID_VARS%SurfWater = SurfWater
-      !GRID_VARS%Swq = Swq
-      !GRID_VARS%VaporMassFlux = VaporMassFlux
-      !GRID_VARS%r_MeltEnergy = r_MeltEnergy
-      !GRID_VARS%Outflow = Outflow
-      !GRID_VARS%PackWater_us = PackWater_us
-      !GRID_VARS%SurfWater_us = SurfWater_us
-      !GRID_VARS%Swq_us = Swq_us
-      !GRID_VARS%VaporMassFlux_us = VaporMassFlux_us
-      !GRID_VARS%r_MeltEnergy_us = r_MeltEnergy_us
-      !GRID_VARS%Outflow_us = Outflow_us
-
-      !Albedos of the over story, under story, and moss layer
-     ! GRID_VEG%albd_us = albd_us
-      !GRID_VEG%alb_moss = alb_moss
-      !GRID_VEG%albd = albd
-      !GRID_VEG%albw = albw
-      !GRID_VEG%albw_us = albw_us
-      !GRID_VARS%alb_snow = alb_snow
-
-      !Meteorological Data
-      !GRID_MET%rsd = rsd
-      !GRID_MET%rld = rld
-      !GRID_VEG%zww = zww
-      !GRID_VEG%za = za
       GRID_MET%uzw = uzw
-      !GRID_MET%press = press 
-      !GRID_VEG%Tslope1 = Tslope1
-      !GRID_VEG%Tint1 = Tint1
-      !GRID_VEG%Tslope2 = Tslope2
-      !GRID_VEG%Tint2 = Tint2
-      !GRID_VEG%Tsep = Tsep
-      !GRID_VARS%Tincan = Tincan
-      !GRID_MET%tdry = tdry
-      !GRID_VEG%Twslope1 = Twslope1
-      !GRID_VEG%Twslope2 = Twslope2
-      !GRID_VEG%Twint1 = Twint1
-      !GRID_VEG%Twint2 = Twint2
-      !GRID_MET%rh = rh
-      !GRID_VARS%rh_ic = rh_ic
-
-      !Temperature variables
       GRID_VARS%tkmid = tkmid
-      !GRID_VARS%tkact = tkact
-      !GRID_SOIL%amp = amp
-      !GRID_SOIL%phase = phase
-      !GRID_SOIL%shift = shift
-      !GRID_SOIL%tdeep = tdeep
-      !GRID_SOIL%tmid0 = tmid0
-      !GRID_VEG%tmid0_moss = tmid0_moss
-      !GRID_VEG%tk0moss = tk0moss
-
-      !Energy Fluxes and states
-      GRID_VARS%dshact = dshact
-      GRID_VARS%gact = gact
-      GRID_VARS%ebspot = ebspot
-      GRID_VARS%tkmidpet = tkmidpet
-      GRID_VARS%tkpet = tkpet
-      GRID_VARS%dspet = dspet
-      GRID_VARS%rnetpn = rnetpn
-      GRID_VARS%gbspen = gbspen
-
-      !Soil Parameters
-      GRID_SOIL%thetar = thetar
-      GRID_SOIL%thetas = thetas
-      GRID_SOIL%psic = psic
-      GRID_SOIL%bcbeta = bcbeta
-      GRID_SOIL%quartz = quartz
-      GRID_SOIL%rocpsoil = rocpsoil
-      GRID_VEG%tcbeta = tcbeta
-      GRID_VEG%tcbeta_us = tcbeta_us
-      GRID_SOIL%zdeep = zdeep
-      GRID_SOIL%zmid = zmid
-      GLOBAL%zrzmax = zrzmax
-
-      !Moss Parameters
-      GRID_VEG%r_moss_depth = r_moss_depth
-      GRID_VEG%eps = eps
-      GRID_VEG%emiss_moss = emiss_moss
-      GRID_VEG%zpd_moss = zpd_moss
-      GRID_VEG%z0m_moss = z0m_moss
-      GRID_VEG%z0h_moss = z0h_moss
-
-      !Vegetation parameters
-      GRID_VEG%xlai = xlai
-      GRID_VEG%xlai_us = xlai_us
-      GRID_VEG%emiss = emiss
-      GRID_VEG%zpd = zpd
-      GRID_VEG%zpd_us = zpd_us
-      GRID_VEG%z0m = z0m
-      GRID_VEG%z0h = z0h
-      GRID_VEG%z0m_us = z0m_us
-      GRID_VEG%z0h_us = z0h_us
-      GRID_VEG%rescan = rescan
-      GRID_VEG%rescan_us = rescan_us
-      GRID_VEG%emiss_us = emiss_us
-      GRID_VEG%rsmin = rsmin
-      GRID_VEG%rsmax = rsmax
-      GRID_VEG%rsmin_us = rsmin_us
-      GRID_VEG%rsmax_us = rsmax_us
-      GRID_VEG%Rpl = Rpl
-      GRID_VEG%Rpl_us = Rpl_us
-      GRID_VEG%trefk = trefk
-      GRID_VEG%trefk_us = trefk_us
-
-      !Constants
-      GLOBAL%toleb = toleb
-      GLOBAL%maxnri = maxnri
-      GRID_VARS%row = row
-      GRID_VARS%cph2o = cph2o
-      GRID_VARS%cp = cp
-      GRID_VARS%roi = roi
-
-      !Energy Balance variables
-
-      !Water balance variables
-      GRID_VARS%rzsm = rzsm
-      GRID_VARS%tzsm = tzsm
-      GRID_VARS%rzsm1 = rzsm1
-      GRID_VARS%tzsm1 = tzsm1
-      GRID_VARS%r_mossm = r_mossm
-      GRID_VARS%zrz = zrz
-      GRID_VARS%smold = smold
-      GRID_VARS%rzdthetaudtemp = rzdthetaudtemp
-      GLOBAL%smpet0 = smpet0
-
-      !DIff option parameters
-      GLOBAL%iopthermc = iopthermc
-      GLOBAL%iopgveg = iopgveg
-      GLOBAL%iopthermc_v = iopthermc_v
-      GLOBAL%iopstab = iopstab
-      GLOBAL%ioppet = ioppet
-      GLOBAL%iopwv = iopwv
-      GLOBAL%iopsmini = iopsmini
 
       return
 
