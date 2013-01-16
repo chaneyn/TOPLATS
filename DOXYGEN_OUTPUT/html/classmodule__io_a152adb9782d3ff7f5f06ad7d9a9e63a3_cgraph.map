@@ -1,15 +1,5 @@
 <map id="module_io::rdtpmd" name="module_io::rdtpmd">
-<area shape="rect" id="node3" href="$rdstat_8h.html#affb622f7a48f4b950dd7fe226956c248" title="icount" alt="" coords="236,5,297,32"/>
-<area shape="rect" id="node5" href="$rdtpmd_8h.html#a4a4a8bf78ef3d0b318ffe04486492bb4" title="lte" alt="" coords="247,56,286,83"/>
-<area shape="rect" id="node7" href="$classmodule__io.html#af9f434c6fb64f230f2c10666364591c8" title="module_io::rdatb" alt="" coords="201,107,332,133"/>
-<area shape="rect" id="node15" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="module_io::rdimgi" alt="" coords="199,208,335,235"/>
-<area shape="rect" id="node20" href="$classmodule__io.html#a8e265957655046f7b58e82e40a41bb36" title="module_io::rdimgr" alt="" coords="197,157,336,184"/>
-<area shape="rect" id="node23" href="$rdtpmd_8h.html#a461a9aa4481ea15880cd7f1570b56dae" title="sumatb" alt="" coords="231,259,302,285"/>
-<area shape="rect" id="node25" href="$rdtpmd_8h.html#a859c7ee1358c03ac9e21b0cc884e5e4a" title="sumlti" alt="" coords="236,309,297,336"/>
-<area shape="rect" id="node27" href="$colavg_8h.html#a91cdbc123c682f35a84899184c9f1f9f" title="ti" alt="" coords="247,360,286,387"/>
-<area shape="rect" id="node29" href="$rdtpmd_8h.html#ab2085b5d2e90b4565834b9a6ada6d6bd" title="zbar0" alt="" coords="237,411,296,437"/>
-<area shape="rect" id="node9" href="$calc__frc_8h.html#a23e9f72cf55445a380b75431481b7d2f" title="ipixnum" alt="" coords="384,157,456,184"/>
-<area shape="rect" id="node11" href="$rdtpmd_8h.html#a7b5d8f1d40b0ac1538c6c6594571649f" title="ixpix" alt="" coords="395,107,445,133"/>
-<area shape="rect" id="node13" href="$rdtpmd_8h.html#a8a3268fb89127dc807e480d867573b8f" title="iypix" alt="" coords="395,56,445,83"/>
-<area shape="rect" id="node17" href="$wrimgi_8h.html#aeefac7517703318474d4e980a8123c6a" title="ia" alt="" coords="401,208,439,235"/>
+<area shape="rect" id="node3" href="$classmodule__io.html#af9f434c6fb64f230f2c10666364591c8" title="module_io::rdatb" alt="" coords="201,5,332,32"/>
+<area shape="rect" id="node5" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="module_io::rdimgi" alt="" coords="199,56,335,83"/>
+<area shape="rect" id="node7" href="$classmodule__io.html#a8e265957655046f7b58e82e40a41bb36" title="module_io::rdimgr" alt="" coords="197,107,336,133"/>
 </map>

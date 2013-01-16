@@ -1,7 +1,4 @@
 <map id="module_io::rdsoil" name="module_io::rdsoil">
 <area shape="rect" id="node3" href="$classmodule__io.html#a0a15e78dbc9e050da98d6813be4f3829" title="module_io::factln" alt="" coords="187,5,317,32"/>
-<area shape="rect" id="node5" href="$rdstat_8h.html#affb622f7a48f4b950dd7fe226956c248" title="icount" alt="" coords="221,56,283,83"/>
-<area shape="rect" id="node7" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="module_io::rdimgi" alt="" coords="184,107,320,133"/>
-<area shape="rect" id="node9" href="$wrimgi_8h.html#aeefac7517703318474d4e980a8123c6a" title="ia" alt="" coords="385,81,423,108"/>
-<area shape="rect" id="node11" href="$calc__frc_8h.html#a23e9f72cf55445a380b75431481b7d2f" title="ipixnum" alt="" coords="368,132,440,159"/>
+<area shape="rect" id="node5" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="module_io::rdimgi" alt="" coords="184,56,320,83"/>
 </map>
