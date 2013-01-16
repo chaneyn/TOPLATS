@@ -91,7 +91,6 @@ sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 
 !Global variables
-dt = GLOBAL%dt
 inc_frozen = GLOBAL%inc_frozen
 zrzmax = GLOBAL%zrzmax
 toleb = GLOBAL%toleb
@@ -225,7 +224,7 @@ xlamda = CAT%xlamda
 ! ....................................................................
        
 
-       call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
+       call land(newstorm,ipix,i,inc_frozen,i_2l,&
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
@@ -286,8 +285,8 @@ xlamda = CAT%xlamda
 
          if ( (GRID_VARS%Swq.gt.0.d0) ) then
 
-            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,dt)
-            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,dt)
+            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,GLOBAL%dt)
+            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,GLOBAL%dt)
 
          else
 
