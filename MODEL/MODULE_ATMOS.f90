@@ -31,7 +31,7 @@ contains
 
 
 
-  subroutine atmos(ipix,i,i_2l,GRID_VEG,&
+  subroutine atmos(ipix,i,GRID_VEG,&
 
 ! Meteorological data
 
