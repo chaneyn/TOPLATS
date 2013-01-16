@@ -139,7 +139,7 @@ xlamda = CAT%xlamda
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       call atmos(ipix,i,i_2l,GRID_VEG,&
+       call atmos(ipix,i,GRID_VEG,&
 
 ! Meteorological data
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
@@ -175,7 +175,7 @@ xlamda = CAT%xlamda
 
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
        f1,f2,f3,&
-       f3vpdpar,f3vpdpar_us,f4temppar,f4temppar_us,&
+       f3vpdpar_us,f4temppar_us,&
 
 ! Constants
 
