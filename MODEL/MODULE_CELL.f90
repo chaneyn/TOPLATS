@@ -349,7 +349,7 @@ xlamda = CAT%xlamda
 
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
        f1,f2,f3,&
-       f3vpdpar,f3vpdpar_us,f4temppar,f4temppar_us,&
+       f3vpdpar_us,f4temppar_us,&
 
 ! Constants
 
