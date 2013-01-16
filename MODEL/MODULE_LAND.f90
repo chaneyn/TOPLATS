@@ -3185,7 +3185,7 @@ MODULE MODULE_LAND
       if ( ( (Swq_us.gt.(0.0002d0)).or.&
                ((tcel_ic.le.(0.d0)).and.&
                (dt*precip_u.gt.(0.0002d0)) ) ))then
-!        if (1 .eq. 1)then
+
 ! --------------------------------------------------------------------
 ! If the snow water equivalent for the under story is higher than 0.2
 ! millimeter or if there is precipitation under freezing air

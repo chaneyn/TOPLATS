@@ -1,5 +1,7 @@
 ########################################################################################
 -The current development of the TOPLATS land surface model model was developed with 
-gfortran 4.46. Due to compatibility issues with prior gfortran versions (Fortran 2003),
-it is highly recommended that you only use that version or higher. 
+gfortran 4.46 on a Linux machine. Due to compatibility issues with prior gfortran 
+versions (Fortran 2003),it is highly recommended that you only use that version or higher. 
+-There are no assurances that it will run on MAC,PC or with other compilers. Ongoing 
+work is looking to address these problems.
 ########################################################################################

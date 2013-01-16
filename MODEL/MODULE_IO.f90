@@ -145,7 +145,7 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (REGIONAL_template),intent(inout) :: REG
   type (IO_template),intent(inout) :: IO
-  integer,intent(inout) :: i
+  integer,intent(in) :: i
 
 !#####################################################################
 ! Output regional variables
