@@ -313,7 +313,6 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
       real*8 zrzmax,zbar1,qbreg,zbar1rg
       real*8 psic(GLOBAL%nrow*GLOBAL%ncol),tzsm1(GLOBAL%nrow*GLOBAL%ncol),rzsm1(GLOBAL%nrow*GLOBAL%ncol)
       real*8 zw(GLOBAL%nrow*GLOBAL%ncol),thetas(GLOBAL%nrow*GLOBAL%ncol)
-      real*8 zero,one,two,three,four,five,six
       real*8 pixsiz
       real*8 qb,hbar,zbrflx,zbrpor,qzbar,dzbar
 

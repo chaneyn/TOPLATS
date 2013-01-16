@@ -38,4 +38,4 @@ OUTPUT_fname 'TEST_DATA/OUTPUT/OUTPUT.bin'
 REGIONAL_fname 'TEST_DATA/OUTPUT/Regional_Variables.txt'
 
 #PARALLELIZATION
-nthreads 8 #Number of threads per node (OpenMP)
+nthreads 1 #Number of threads per node (OpenMP)

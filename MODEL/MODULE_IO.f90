@@ -69,6 +69,7 @@ GRID%VARS%Swq_us = 0.d0
   REG%zbar1rg = 0.d0
   REG%wcip1sum = 0.d0
   GRID%VEG%i_und = 0
+GRID%VARS%precip_u = zero
 GRID%VARS%PackWater_us = zero
 GRID%VARS%SurfWater_us = zero
 GRID%VARS%VaporMassFlux_us = zero

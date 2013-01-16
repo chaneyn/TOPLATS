@@ -3181,9 +3181,6 @@ MODULE MODULE_LAND
       real*8 dens_us,heatcap_us,tkel_ic,eps,ds_p_moss
       real*8 tsnow,told0,told1,told2,hold0,hold1,hold2
       real*8 tcold0,tcold1,tcold2,dum
-      real*8 zero,one,two,three,four,five,six
-      data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
-             3.d0,4.d0,5.d0,6.d0/
 
       if ( ( (Swq_us.gt.(0.0002d0)).or.&
                ((tcel_ic.le.(0.d0)).and.&
