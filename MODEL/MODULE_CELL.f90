@@ -385,8 +385,8 @@ xlamda = CAT%xlamda
 
 ! Soil parameters
 
-       GRID_SOIL,ifcoarse,rocpsoil,&
-       tcbeta,tcbeta_us,zdeep,zmid,zrzmax,&
+       GRID_SOIL,ifcoarse,&
+       zrzmax,&
 
 ! Moss parameters
 
