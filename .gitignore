@@ -8,3 +8,5 @@
 Makefile~
 
 .DS_Store
+
+.gitignore~
