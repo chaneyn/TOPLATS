@@ -167,7 +167,7 @@ xlamda = CAT%xlamda
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
+       ravd,rahd,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
        ravw,ravw_us,rahw,rahw_us,&
 
        GLOBAL)
