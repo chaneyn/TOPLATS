@@ -66,7 +66,7 @@ contains
 
 ! Energy balance variables
 
-       ravd,rahd,rah_moss,&
+       ravd,rahd,&
        RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
 
        GLOBAL)
@@ -89,7 +89,7 @@ contains
     real*8 f1,f2,f3
     real*8 f3vpdpar_us,f4temppar_us
     real*8 roa,roa_ic,ravd,rahd
-    real*8 rah_moss,RaSnow,rib_us,ravw,ravw_us
+    real*8 RaSnow,rib_us,ravw,ravw_us
     real*8 rahw,rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
@@ -438,7 +438,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Energy balance variables
 
-       ravd,rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,rah_moss,&
+       ravd,rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,CELL_VARS%rah_moss,&
        GRID_VARS%rib,RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
 
 ! Water balance variables
