@@ -32,7 +32,6 @@ MODULE MODULE_LAND
 
        epetd,bsdew,&
        rnetd,&
-       tkmidd,&
 
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
@@ -334,7 +333,7 @@ MODULE MODULE_LAND
        GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,tkmidd,&
+       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,GRID_VEG%tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,GLOBAL%inc_frozen,&
