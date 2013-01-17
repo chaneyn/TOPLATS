@@ -151,10 +151,7 @@ xlamda = CAT%xlamda
 
        epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
-       tsoilold,tkmidpet_us,tkmidpet_moss,&
-       dspet_us,dspet_moss,&
+       tsoilold,&
 
        GRID_SOIL,&
 

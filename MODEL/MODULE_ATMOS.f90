@@ -49,10 +49,7 @@ contains
 
        epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,tsoilold,&
-       tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss,&
+       tsoilold,&
 
        GRID_SOIL,&
 
@@ -86,11 +83,7 @@ contains
     real*8 tskinact_moss,tkact_moss,tkmid_moss
     real*8 epetd,epetd_us,rnetd
     real*8 tkd,tkmidd
-    real*8 tkmidd_us
-    real*8 rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss
-    real*8 tkmid_p_moss,tskin_p_moss,eact_moss,tsoilold
-    real*8 tkmidpet_us,tkmidpet_moss,dspet_us
-    real*8 dspet_moss
+    real*8 tsoilold
     real*8 f1par
     real*8 f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us
     real*8 f1,f2,f3
@@ -246,8 +239,8 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
        tskinact_moss,GRID_VARS%dshact,&
        CELL_VARS%dshact_us,CELL_VARS%dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,&
-       tkmidpet_us,tkmidpet_moss,&
-       GRID_VARS%dspet,dspet_us,dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
+       CELL_VARS%tkmidpet_us,CELL_VARS%tkmidpet_moss,&
+       GRID_VARS%dspet,CELL_VARS%dspet_us,CELL_VARS%dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
        GRID_VARS%TSurf_us,GRID_VARS%TPack_us)
 
       endif
@@ -413,8 +406,9 @@ tkmid = GRID_VARS%tkmid
        CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,CELL_VARS%epetw_us,&
        CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,&
        CELL_VARS%dshd_us,CELL_VARS%tkd_us,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
+       CELL_VARS%tkmidd_us,CELL_VARS%rnet_pot_moss,CELL_VARS%xle_p_moss,&
+       CELL_VARS%h_p_moss,CELL_VARS%g_p_moss,CELL_VARS%tk_p_moss,CELL_VARS%tkmid_p_moss,&
+       CELL_VARS%tskin_p_moss,CELL_VARS%eact_moss,&
 
 ! Soil parameters
 
