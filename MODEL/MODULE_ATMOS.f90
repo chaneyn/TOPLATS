@@ -35,8 +35,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,tcel,vppa,xlhv,uzw,&
-       appa,&
+       GRID_MET,tcel,vppa,xlhv,uzw,appa,&
 
 ! Temperature variables
 
@@ -44,7 +43,7 @@ contains
        
 ! Energy fluxes and states
 
-       epetd,epetd_us,rnetd,&
+       epetd,rnetd,&
        tkd,tkmidd,&
        tsoilold,&
 
@@ -74,7 +73,7 @@ contains
     real*8 tcel,vppa,xlhv
     real*8 uzw,appa
     real*8 tkmid
-    real*8 epetd,epetd_us,rnetd
+    real*8 epetd,rnetd
     real*8 tkd,tkmidd
     real*8 tsoilold
     real*8 f1par
@@ -389,7 +388,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Energy fluxes and states
 
-       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,CELL_VARS%epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
        rnetd,GRID_VEG%xled,GRID_VEG%hd,&
        GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,&

@@ -147,7 +147,7 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes and states
 
-       epetd,epetd_us,rnetd,&
+       epetd,rnetd,&
        tkd,tkmidd,&
        tsoilold,&
 
