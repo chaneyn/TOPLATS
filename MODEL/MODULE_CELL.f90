@@ -10,36 +10,6 @@ USE MODULE_CANOPY
 
 USE MODULE_SNOW
 
-type LOCAL_VARS_template
-
-        real*8 tcel,vppa,psychr,xlhv,tkel,uzw,appa,vpsat,tcel_ic
-        real*8 vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,twet_ic
-        real*8 twet,qv,qv_ic,ra,ra_ic
-        
-        real*8 tkmid_us,tkact_us,tskinact_moss,tkact_moss,tkmid_moss
-        real*8 epetd,epetd_us,dshact_moss,xle_act_moss
-        real*8 tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss
-        real*8 dshact_us,rnetw_us,xlew_us,hw_us,gw_us
-        real*8 dshw_us,tkw_us,tkmidw_us,epetw_us
-        real*8 rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us
-        real*8 tkmidd_us,rnet_pot_moss,xle_p_moss
-        real*8 h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss
-        real*8 tsoilold,tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss
-        real*8 rib_moss,epet_moss
-        real*8 xleact_us,hact_us,gact_us,evtact_us,ievcon_moss,bsdew_moss
-        real*8 evtact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss
-        real*8 rnact_us,ievcon_us
-        real*8 f1par,f3vpd,f4temp,f1par_us,f3vpd_us
-        real*8 f4temp_us,f1,f2,f3,f3vpdpar_us,f4temppar_us,roa,roa_ic
-        
-        real*8 ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us
-        real*8 ravw,ravw_us,rahw,rahw_us
-        
-        real*8 rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun
-        
-
-end type LOCAL_VARS_template
-
 contains
 
 !#####################################################################
@@ -110,6 +80,7 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
+      type (CELL_VARS_template) :: CELL_VARS
       GLOBAL%mul_fac = 1.0d0
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
