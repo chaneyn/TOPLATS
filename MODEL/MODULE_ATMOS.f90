@@ -35,7 +35,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,tcel,vppa,xlhv,tkel,uzw,&
+       GRID_MET,tcel,vppa,xlhv,uzw,&
        appa,&
        twet,&
 
@@ -72,7 +72,7 @@ contains
 
     integer ipix,i
 
-    real*8 tcel,vppa,xlhv,tkel
+    real*8 tcel,vppa,xlhv
     real*8 uzw,appa
     real*8 twet
     real*8 tkmid
@@ -217,7 +217,7 @@ tkmid = GRID_VARS%tkmid
 ! ====================================================================
 
       tcel=GRID_MET%tdry
-      tkel=tcel+273.15d0
+      CELL_VARS%tkel=tcel+273.15d0
       CELL_VARS%tcel_ic=GRID_VARS%Tincan
       CELL_VARS%tkel_ic=CELL_VARS%tcel_ic+273.15d0
 
@@ -229,7 +229,7 @@ tkmid = GRID_VARS%tkmid
 
          call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
        GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
-       CELL_VARS%tkmid_us,CELL_VARS%tkmid_moss,tkel,&
+       CELL_VARS%tkmid_us,CELL_VARS%tkmid_moss,CELL_VARS%tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,CELL_VARS%tkact_us,CELL_VARS%tkact_moss,&
        CELL_VARS%tskinact_moss,GRID_VARS%dshact,&
        CELL_VARS%dshact_us,CELL_VARS%dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,&
@@ -287,7 +287,7 @@ tkmid = GRID_VARS%tkmid
 ! ====================================================================
 
       CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
-      roa=appa/(CELL_VARS%ra*tkel)
+      roa=appa/(CELL_VARS%ra*CELL_VARS%tkel)
       xlhv =2.501d6-2370.d0*tcel
       CELL_VARS%psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
@@ -312,7 +312,7 @@ tkmid = GRID_VARS%tkmid
       if (GLOBAL%iopstab.eq.1.and.i.gt.1.and.GLOBAL%ioppet.eq.0) then 
          
          call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
-       tkel,GRID_MET%press,&
+       CELL_VARS%tkel,GRID_MET%press,&
        GRID_VARS%tkact,vppa,GRID_VARS%rib)
          
       else
@@ -379,7 +379,8 @@ tkmid = GRID_VARS%tkmid
 
 ! Meteorological data
 
-       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,CELL_VARS%psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,CELL_VARS%psychr,xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
+       GRID_VEG%za,uzw,GRID_MET%press,&
        appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
        CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
@@ -448,7 +449,7 @@ tkmid = GRID_VARS%tkmid
 
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,CELL_VARS%vpsat,vpdef,f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
-       tkel,vppa,f3vpd,GRID_VEG%f3vpdpar,f4temp,GRID_VEG%trefk,&
+       CELL_VARS%tkel,vppa,f3vpd,GRID_VEG%f3vpdpar,f4temp,GRID_VEG%trefk,&
        GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
        GRID_VEG%rescan,ravd,xlhv,&
        GRID_VARS%row,epetd,GRID_VARS%epetw,CELL_VARS%ravw,CELL_VARS%psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
