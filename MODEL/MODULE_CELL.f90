@@ -82,8 +82,8 @@ contains
       type (GLOBAL_template) :: GLOBAL
       type (CELL_VARS_template) :: CELL_VARS
       GLOBAL%mul_fac = 1.0d0
-
-! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
+      !integer ipix,i
+      !real*8 snow,rain
 
 !Removal Causes Failure
 sesq = GRID_VARS%sesq
@@ -118,10 +118,6 @@ GRID_VARS%wcrhs = 0.d0!wcrhs
 !Energy Fluxes
 GRID_VARS%epwms = 0.d0!epwms
 
-!Catchment
-zbar = CAT%zbar
-ff = CAT%ff
-xlamda = CAT%xlamda
 
 ! ====================================================================
 ! If the vegetation type is greater than or equal to zero then
@@ -430,8 +426,8 @@ xlamda = CAT%xlamda
 
          if ( (GRID_VARS%Swq.gt.0.d0) ) then
 
-            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,GLOBAL%dt)
-            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,GLOBAL%dt)
+            call calcrain (CELL_VARS%tcel,snow,rain,GRID_VARS%precip_o,GLOBAL%dt)
+            call snow_density(GRID_VARS%dsty,snow,CELL_VARS%tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,GLOBAL%dt)
 
          else
 
