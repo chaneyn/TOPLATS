@@ -326,7 +326,7 @@ xlamda = CAT%xlamda
 
 ! Energy balance variables
 
-       ravd,rahd,rib,RaSnow,&
+       rib,RaSnow,&
 
 ! Water balance variables
 

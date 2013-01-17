@@ -36,7 +36,7 @@ MODULE MODULE_LAND
 
 ! Energy balance variables
 
-       ravd,rahd,rib,RaSnow,&
+       rib,RaSnow,&
 
 ! Water balance variables
 
@@ -260,12 +260,12 @@ MODULE MODULE_LAND
 ! the bare soil.
 ! --------------------------------------------------------------------
             call ebsres(GLOBAL%inc_frozen,GLOBAL%irestype,rsoil,GRID_VARS%rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
-       GRID_SOIL%srespar2,CELL_VARS%rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
+       GRID_SOIL%srespar2,CELL_VARS%rzsm_u,GRID_SOIL%srespar3,CELL_VARS%ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
        GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,&
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
        GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
-       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,rahd,ebscap,tcel,vppa,psychr,xlhv,&
+       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,tcel,vppa,psychr,xlhv,&
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
@@ -324,7 +324,7 @@ MODULE MODULE_LAND
        GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,CELL_VARS%rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
        smcond,GRID_VARS%tzsm,CELL_VARS%tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
-       vegcap,ravd,vegcap_us,CELL_VARS%ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
+       vegcap,CELL_VARS%ravd,vegcap_us,CELL_VARS%ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
@@ -403,7 +403,7 @@ MODULE MODULE_LAND
        GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,&
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
-       GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
+       GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
