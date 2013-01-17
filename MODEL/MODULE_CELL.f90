@@ -299,56 +299,7 @@ xlamda = CAT%xlamda
 
 
 
-       call land(ipix,i,&
-! Meteorological data
-
-       tcel,vppa,psychr,xlhv,tkel,appa,&
-       vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-
-! Temperature variables
-
-       tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,&
-
-! Energy fluxes
-
-       epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,ievcon_us,rnact_us,&
-       xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
-       dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,&
-       tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,evtact_moss,rnet_pot_moss,&
-       xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss,&
-       ds_p_moss,&
-
-! Moss parameters
-
-       r_moss_depth,thetas_moss,srespar1_moss,srespar2_moss,srespar3_moss,&
-       eps,emiss_moss,zpd_moss,rib_moss,z0m_moss,z0h_moss,epet_moss,&
-       a_ice_moss,b_ice_moss,bulk_dens_moss,&
-
-! Vegetation parameters
-
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
-       f1,f2,f3,&
-
-! Constants
-
-       roa,roa_ic,&
-
-! Energy balance variables
-
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,rib,RaSnow,&
-
-! Water balance variables
-
-       rzsm_u,tzsm_u,r_mossmold,&
-       deltrz,dc_us,fw_us,dewrun,&
-
-! Different option paramters
-
-       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
        tcel = CELL_VARS%tcel
        vppa = CELL_VARS%vppa

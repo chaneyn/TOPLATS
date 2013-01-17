@@ -224,9 +224,9 @@ type CELL_VARS_template
         real*8 h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss
         real*8 tsoilold,tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss
         real*8 rib_moss,epet_moss
-        real*8 xleact_us,hact_us,gact_us,evtact_us,ievcon_moss,bsdew_moss
+        real*8 xleact_us,hact_us,gact_us,evtact_us,bsdew_moss
         real*8 evtact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss
-        real*8 rnact_us,ievcon_us
+        real*8 rnact_us,bsdew
         real*8 f1par,f3vpd,f4temp,f1par_us,f3vpd_us
         real*8 f4temp_us,f1,f2,f3,f3vpdpar_us,f4temppar_us,roa,roa_ic
         
@@ -235,7 +235,7 @@ type CELL_VARS_template
         
         real*8 rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun
         
-
+        integer ievcon_us,ievcon_moss
 end type CELL_VARS_template
 
 !General variables
