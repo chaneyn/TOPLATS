@@ -54,7 +54,7 @@ contains
 
 ! Vegetation parameters
 
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
+       f1par,f3vpd,f4temp,f3vpd_us,f4temp_us,&
        f1,f2,f3,&
        f3vpdpar_us,&
        f4temppar_us,&
@@ -83,7 +83,7 @@ contains
     real*8 tkd,tkmidd
     real*8 tsoilold
     real*8 f1par
-    real*8 f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us
+    real*8 f3vpd,f4temp,f3vpd_us,f4temp_us
     real*8 f1,f2,f3
     real*8 f3vpdpar_us,f4temppar_us
     real*8 roa,roa_ic,ravd,rahd
@@ -104,7 +104,7 @@ contains
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
 tkmid = GRID_VARS%tkmid
-!rnetd, tkmidd, tkd, tcel, vppa, roa, are problems
+!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par,are problems
 
 
 ! ====================================================================
@@ -423,7 +423,7 @@ tkmid = GRID_VARS%tkmid
 
        GRID_VEG%xlai,GRID_VEG%xlai_us,GRID_VEG%emiss,GRID_VEG%zpd,GRID_VEG%zpd_us,GRID_VEG%z0m,&
        GRID_VEG%z0h,GRID_VEG%z0m_us,GRID_VEG%z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan,&
+       f1par,f3vpd,f4temp,CELL_VARS%f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan,&
        GRID_VEG%rescan_us,f1,f2,f3,GRID_VEG%emiss_us,GRID_VEG%rsmin,GRID_VEG%rsmax,&
        GRID_VEG%rsmin_us,GRID_VEG%rsmax_us,GRID_VEG%Rpl,GRID_VEG%Rpl_us,GRID_VEG%f3vpdpar,f3vpdpar_us,&
        GRID_VEG%trefk,GRID_VEG%f4temppar,&
