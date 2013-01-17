@@ -324,10 +324,6 @@ xlamda = CAT%xlamda
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
 
-! Energy balance variables
-
-       rib,RaSnow,&
-
 ! Water balance variables
 
        deltrz,dewrun,&
