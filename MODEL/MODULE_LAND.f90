@@ -32,7 +32,7 @@ MODULE MODULE_LAND
 
        epetd,bsdew,&
        rnetd,&
-       tkd,tkmidd,&
+       tkmidd,&
 
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
@@ -50,71 +50,6 @@ MODULE MODULE_LAND
 
       data tolinf/1.0d-09/
       initer=2
-! ====================================================================
-! Temporarily reassgin variables from old to new format
-    !Meteorological data
-      !tcel
-      !vppa
-      !psychr
-      !xlhv
-      !tkel
-      !appa
-      !vpsat
-      
-    !Energy fluxes and states
-      !epetd
-      !bsdew
-      !rnetd
-      !xled
-      !hd
-      !gd
-      !dshd
-      !tkd
-      !tkmidd
-      !rnetw
-      !xlew
-      !hw
-      !gw
-      !dshw
-      !tkw
-      !tkmidw
-      
-    !Vegetation parameters
-     
-      !f1par
-      !f3vpd
-      !f4temp
-      !f1par_us
-      !f3vpd_us
-      !f4temp_us
-      !f1
-      !f2
-      !f3
-    
-    !Constants
-      !roa
-      !roa_ic
-
-    !Energy balance variables
-      !ravd
-      !rahd
-      !ravd_us
-      !rahd_us
-      !rav_moss
-      !rah_moss
-      !rib
-      !RaSnow
-      
-    !Water balance variables
-      !rzsm_u
-      !tzsm_u
-      !r_mossold
-      !deltrz 
-      !dc_us
-      !fw_us
-      !dewrun
-                  
-    !Different option parameters
 
 ! ====================================================================
 ! Initialize the rain and snowfall.
@@ -399,7 +334,7 @@ MODULE MODULE_LAND
        GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
+       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,GRID_VEG%tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,GLOBAL%inc_frozen,&
