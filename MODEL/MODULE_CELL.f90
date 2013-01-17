@@ -324,12 +324,6 @@ xlamda = CAT%xlamda
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
 
-! Moss parameters
-
-       r_moss_depth,thetas_moss,srespar1_moss,srespar2_moss,srespar3_moss,&
-       eps,emiss_moss,zpd_moss,rib_moss,z0m_moss,z0h_moss,epet_moss,&
-       a_ice_moss,b_ice_moss,bulk_dens_moss,&
-
 ! Vegetation parameters
 
        f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
