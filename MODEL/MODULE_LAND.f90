@@ -44,7 +44,7 @@ MODULE MODULE_LAND
 
 ! Water balance variables
 
-       rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun,&
+       r_mossmold,deltrz,dc_us,fw_us,dewrun,&
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -227,7 +227,7 @@ MODULE MODULE_LAND
        GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
        GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
        GRID_VARS%r_mossm1,GRID_VARS%zmoss,GRID_VEG%r_moss_depth,&
-       GRID_VEG%thetas_moss,rzsm_u,GRID_VARS%rzsm_f,tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
+       GRID_VEG%thetas_moss,CELL_VARS%rzsm_u,GRID_VARS%rzsm_f,CELL_VARS%tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
        GRID_VARS%r_mossm1_f,i,GRID_VEG%a_ice_moss,GRID_VEG%b_ice_moss,GRID_VEG%bulk_dens_moss)
 
 ! ====================================================================
@@ -241,7 +241,8 @@ MODULE MODULE_LAND
 
          call infilt(GRID_VARS%pnet,GRID_VEG%i_moss,GRID_VEG%i_und,GRID_VARS%PackWater_us,GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,&
        GRID_VARS%Outflow_us,GLOBAL%dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%Outflow,&
-       GRID_VARS%istmst,GRID_VARS%cuminf,GLOBAL%inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
+       GRID_VARS%istmst,GRID_VARS%cuminf,GLOBAL%inc_frozen,rzsmst,GRID_VARS%rzsm,CELL_VARS%rzsm_u,&
+       GRID_SOIL%thetas,GRID_SOIL%thetar,&
        tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
        GRID_VARS%zw,GRID_VARS%xinact,GRID_VARS%satxr,GRID_VARS%xinfxr,&
        GRID_VARS%intstm,xinfcp,GRID_VARS%runtot,GRID_VARS%irntyp)
@@ -263,7 +264,7 @@ MODULE MODULE_LAND
 ! the bare soil.
 ! --------------------------------------------------------------------
             call ebsres(GLOBAL%inc_frozen,GLOBAL%irestype,rsoil,GRID_VARS%rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
-       GRID_SOIL%srespar2,rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
+       GRID_SOIL%srespar2,CELL_VARS%rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
        GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,&
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
@@ -324,8 +325,8 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call transv(epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,CELL_VARS%f1par,CELL_VARS%f3vpd,CELL_VARS%f4temp,&
-       GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
-       smcond,GRID_VARS%tzsm,tzsm_u,&
+       GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,CELL_VARS%rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
+       smcond,GRID_VARS%tzsm,CELL_VARS%tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
        vegcap,ravd,vegcap_us,CELL_VARS%ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
@@ -351,10 +352,10 @@ MODULE MODULE_LAND
 
       if (GLOBAL%inc_frozen.eq.1) then
 
-         rzsm_test=rzsm_u
-         tzsm_test=tzsm_u
-         rzsm_u_test=rzsm_u
-         tzsm_u_test=tzsm_u
+         rzsm_test=CELL_VARS%rzsm_u
+         tzsm_test=CELL_VARS%tzsm_u
+         rzsm_u_test=CELL_VARS%rzsm_u
+         tzsm_u_test=CELL_VARS%tzsm_u
          thetas_add=GRID_SOIL%thetas-GRID_VARS%rzsm_f
 
       endif
@@ -371,8 +372,8 @@ MODULE MODULE_LAND
 
       if (GLOBAL%inc_frozen.eq.1) then
 
-         rzsm_u=GRID_VARS%rzsm1
-         tzsm_u=GRID_VARS%tzsm1
+         CELL_VARS%rzsm_u=GRID_VARS%rzsm1
+         CELL_VARS%tzsm_u=GRID_VARS%tzsm1
          GRID_VARS%rzsm1_u=GRID_VARS%rzsm1
          GRID_VARS%tzsm1_u=GRID_VARS%tzsm1
          GRID_VARS%rzsm1=GRID_VARS%rzsm1_u+GRID_VARS%rzsm_f

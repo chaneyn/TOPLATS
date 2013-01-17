@@ -334,7 +334,7 @@ xlamda = CAT%xlamda
 
 ! Water balance variables
 
-       rzsm_u,tzsm_u,r_mossmold,&
+       r_mossmold,&
        deltrz,dc_us,fw_us,dewrun,&
 
 ! Different option paramters
