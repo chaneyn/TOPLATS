@@ -38,7 +38,6 @@ contains
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,&
        twet,&
-       ra,&
 
 ! Temperature variables
 
@@ -76,7 +75,7 @@ contains
     real*8 tcel,vppa,psychr,xlhv,tkel
     real*8 uzw,appa
     real*8 twet
-    real*8 ra,tkmid
+    real*8 tkmid
     real*8 epetd,epetd_us,rnetd
     real*8 tkd,tkmidd
     real*8 tsoilold
@@ -287,8 +286,8 @@ tkmid = GRID_VARS%tkmid
 ! Calculate thermodynamic values for air and water.
 ! ====================================================================
 
-      ra=287.d0*(one+0.608d0*CELL_VARS%qv)
-      roa=appa/(ra*tkel)
+      CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
+      roa=appa/(CELL_VARS%ra*tkel)
       xlhv =2.501d6-2370.d0*tcel
       psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
