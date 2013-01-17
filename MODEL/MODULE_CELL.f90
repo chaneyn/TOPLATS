@@ -321,7 +321,7 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes
 
-       epetd,bsdew,rnetd,&
+      bsdew,&
 
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 

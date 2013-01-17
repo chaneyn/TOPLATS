@@ -30,8 +30,7 @@ MODULE MODULE_LAND
 
 ! Energy fluxes
 
-       epetd,bsdew,&
-       rnetd,&
+       bsdew,&
 
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
@@ -195,7 +194,7 @@ MODULE MODULE_LAND
        GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,tcel,vppa,psychr,xlhv,&
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,GRID_VARS%rib,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
+       GRID_VARS%gbspen,CELL_VARS%epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
        bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
 
          else
@@ -205,7 +204,7 @@ MODULE MODULE_LAND
 ! the snow model.
 ! --------------------------------------------------------------------
 
-            ebscap=epetd
+            ebscap=CELL_VARS%epetd
             GRID_VARS%evtact = ebscap
             GRID_VARS%ievcon = 3
 
@@ -247,7 +246,8 @@ MODULE MODULE_LAND
 ! Calculate the transpiration from dry canopy for vegetated pixels.
 ! --------------------------------------------------------------------
 
-         call transv(epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,CELL_VARS%f1par,CELL_VARS%f3vpd,CELL_VARS%f4temp,&
+       call transv(CELL_VARS%epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,CELL_VARS%f1par,&
+       CELL_VARS%f3vpd,CELL_VARS%f4temp,&
        GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,CELL_VARS%rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
        smcond,GRID_VARS%tzsm,CELL_VARS%tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
@@ -333,7 +333,7 @@ MODULE MODULE_LAND
        GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,&
+       GRID_VARS%gbspen,GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,GRID_VEG%tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,GLOBAL%inc_frozen,&
