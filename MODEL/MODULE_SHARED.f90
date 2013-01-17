@@ -579,8 +579,8 @@ contains
 !
 ! ====================================================================
 !
-! Calculate the thermal conductivity (thermc) of
-! an unsaturated soil using Johansen's method
+!> Calculate the thermal conductivity (thermc) of
+!! an unsaturated soil using Johansen's method
 !
 ! INPUT:
 !
@@ -1076,7 +1076,7 @@ contains
          print*,'roa =             ',roa
          print*,'error =             ',deltnr
          print*,'tolerance =         ',toleb
-         print*,''
+         print*,
          print*,'dhdt =              ',dhdt
          print*,'dgdt =              ',dgdt
          print*,'ddsdt =             ',ddsdt
@@ -1085,7 +1085,7 @@ contains
          print*,'gtmp =              ',gtmp
          print*,'rsd =               ',rsd
          print*,'rld =               ',rld
-         print*,''
+         print*,
 
 	 stop
 
