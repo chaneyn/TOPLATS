@@ -138,7 +138,7 @@ xlamda = CAT%xlamda
        call atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
-       GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
+       GRID_MET,tcel,vppa,xlhv,tkel,uzw,&
        appa,&
        twet,&
 
