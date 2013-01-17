@@ -43,10 +43,7 @@ contains
        
 ! Energy fluxes and states
 
-       epetd,rnetd,&
-       tkd,tkmidd,&
-
-       GRID_SOIL,&
+       epetd,rnetd,tkd,tkmidd,GRID_SOIL,&
 
 ! Vegetation parameters
 
@@ -55,7 +52,7 @@ contains
 
 ! Constants
 
-       roa,roa_ic,&
+       roa,&
 
 ! Energy balance variables
 
@@ -76,7 +73,7 @@ contains
     real*8 tkd,tkmidd
     real*8 f1par
     real*8 f3vpd,f4temp
-    real*8 roa,roa_ic,ravd,rahd
+    real*8 roa,ravd,rahd
     real*8 RaSnow
     real*8 rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
@@ -95,7 +92,7 @@ contains
 uzw = GRID_MET%uzw
 tkmid = GRID_VARS%tkmid
 !rnetd, tkmidd, tkd, tcel, vppa, roa, f1par, rahw_us, ravd, rahd, f3vpd, f4temp,
-!appa, are problems
+!appa, epetd, are problems
 
 
 ! ====================================================================
@@ -287,7 +284,7 @@ tkmid = GRID_VARS%tkmid
       CELL_VARS%psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
       CELL_VARS%ra_ic=287.d0*(one+0.608d0*CELL_VARS%qv_ic)
-      roa_ic=appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
+      CELL_VARS%roa_ic=appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
       CELL_VARS%xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
       CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*CELL_VARS%xlhv_ic)
 
@@ -424,7 +421,7 @@ tkmid = GRID_VARS%tkmid
 ! Constants
 
        GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
-       GLOBAL%maxnri,roa_ic,&
+       GLOBAL%maxnri,CELL_VARS%roa_ic,&
 
 ! Energy balance variables
 

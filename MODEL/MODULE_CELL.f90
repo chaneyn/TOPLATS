@@ -138,8 +138,7 @@ xlamda = CAT%xlamda
        call atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
-       GRID_MET,tcel,vppa,xlhv,uzw,&
-       appa,&
+       GRID_MET,tcel,vppa,xlhv,uzw,appa,&
 
 ! Temperature variables
 
@@ -147,10 +146,7 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes and states
 
-       epetd,rnetd,&
-       tkd,tkmidd,&
-
-       GRID_SOIL,&
+       epetd,rnetd,tkd,tkmidd,GRID_SOIL,&
 
 ! Vegetation parameters
 
@@ -159,7 +155,7 @@ xlamda = CAT%xlamda
 
 ! Constants
 
-       roa,roa_ic,&
+       roa,&
 
 ! Energy balance variables
 
