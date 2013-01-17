@@ -44,7 +44,7 @@ MODULE MODULE_LAND
 
 ! Water balance variables
 
-       r_mossmold,deltrz,dc_us,fw_us,dewrun,&
+       deltrz,dewrun,&
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -225,7 +225,7 @@ MODULE MODULE_LAND
        GRID_SOIL%thetar,GRID_SOIL%bcbeta,GRID_VARS%rzsm1_u,&
        GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,CELL_VARS%tsoilold,&
        GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
-       GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
+       GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,CELL_VARS%r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
        GRID_VARS%r_mossm1,GRID_VARS%zmoss,GRID_VEG%r_moss_depth,&
        GRID_VEG%thetas_moss,CELL_VARS%rzsm_u,GRID_VARS%rzsm_f,CELL_VARS%tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
        GRID_VARS%r_mossm1_f,i,GRID_VEG%a_ice_moss,GRID_VEG%b_ice_moss,GRID_VEG%bulk_dens_moss)
@@ -367,7 +367,8 @@ MODULE MODULE_LAND
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
-       GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
+       GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,CELL_VARS%dc_us,CELL_VARS%fw_us,&
+       evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
        GRID_VARS%tzrhs,GRID_VARS%rzrhs)
 
       if (GLOBAL%inc_frozen.eq.1) then
@@ -431,7 +432,8 @@ MODULE MODULE_LAND
        CELL_VARS%rnact_us,CELL_VARS%xleact_us,CELL_VARS%hact_us,CELL_VARS%gact_us,CELL_VARS%dshact_us,CELL_VARS%tkact_us,&
        CELL_VARS%tkmid_us,rnactd_us,CELL_VARS%rnetw_us,xleactd_us,CELL_VARS%xlew_us,hactd_us,CELL_VARS%hw_us,&
        gactd_us,CELL_VARS%gw_us,dshactd_us,CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,GRID_VEG%xlai_us,&
-       dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,CELL_VARS%evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
+       CELL_VARS%dc_us,CELL_VARS%fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,CELL_VARS%evtact_us,&
+       iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
