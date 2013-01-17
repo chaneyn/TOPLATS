@@ -131,52 +131,32 @@ GRID_VARS%epwms = 0.d0!epwms
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       call atmos(ipix,i,GRID_VEG,&
+       call atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
-       GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       twet_ic,twet,qv,qv_ic,ra,ra_ic,&
+       GRID_MET,tcel,vppa,xlhv,uzw,appa,&
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,&
+       GRID_VARS,tkmid,&
 
 ! Energy fluxes and states
 
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
-       dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
-       dshw_us,tkw_us,tkmidw_us,epetw_us,&
-       rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
-       tsoilold,tkmidpet_us,tkmidpet_moss,&
-       dspet_us,dspet_moss,&
-
-       GRID_SOIL,&
-       
-! Moss parameters
-
-       rib_moss,&
-       epet_moss,&
+       epetd,rnetd,tkd,tkmidd,GRID_SOIL,&
 
 ! Vegetation parameters
 
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
-       f1,f2,f3,&
-       f3vpdpar_us,f4temppar_us,&
+       f1par,f3vpd,f4temp,&
+       
 
 ! Constants
 
-       roa,roa_ic,&
+       roa,&
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us,&
-       ravw,ravw_us,rahw,rahw_us,&
+       ravd,rahd,RaSnow,&
+       rahw_us,&
 
        GLOBAL)
 
