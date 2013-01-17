@@ -226,7 +226,7 @@ type CELL_VARS_template
         real*8 rib_moss,epet_moss
         real*8 xleact_us,hact_us,gact_us,evtact_us,bsdew_moss
         real*8 evtact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss
-        real*8 rnact_us
+        real*8 rnact_us,bsdew
         real*8 f1par,f3vpd,f4temp,f1par_us,f3vpd_us
         real*8 f4temp_us,f1,f2,f3,f3vpdpar_us,f4temppar_us,roa,roa_ic
         

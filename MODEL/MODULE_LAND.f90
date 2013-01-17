@@ -21,13 +21,7 @@ MODULE MODULE_LAND
 ! Subroutine land calculates the land surface water balance.
 !
 ! ====================================================================
-    subroutine land(ipix,i,&
-
-! Energy fluxes
-
-       bsdew,&
-
-       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+    subroutine land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
       include "help/land.h"!Remove when variables are changed
@@ -191,7 +185,7 @@ MODULE MODULE_LAND
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,CELL_VARS%tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,GRID_VARS%rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,CELL_VARS%epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
-       bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
+       CELL_VARS%bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
 
          else
 
@@ -253,7 +247,7 @@ MODULE MODULE_LAND
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
-       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,bsdew,i,ipix)
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,CELL_VARS%bsdew,i,ipix)
 
       endif
 
@@ -284,7 +278,8 @@ MODULE MODULE_LAND
       call tz_and_rzbal(i,GLOBAL%newstorm,GLOBAL%inc_frozen,GLOBAL%ikopt,GRID_VEG%ivgtyp,&
        GLOBAL%dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,GRID_VARS%rzsm1,GRID_VARS%tzsm1,&
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,GLOBAL%zrzmax,&
-       GRID_VARS%evtact,CELL_VARS%evtact_us,bsdew,CELL_VARS%dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
+       GRID_VARS%evtact,CELL_VARS%evtact_us,CELL_VARS%bsdew,CELL_VARS%dewrun,GRID_VARS%grz,&
+       GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
@@ -322,7 +317,7 @@ MODULE MODULE_LAND
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,CELL_VARS%xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
-       bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
+       CELL_VARS%bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
        GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,thermc1,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
        GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,&

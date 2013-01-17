@@ -313,12 +313,7 @@ xlamda = CAT%xlamda
 
 
 
-       call land(ipix,i,&
-! Energy fluxes
-
-      bsdew,&
-
-       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
        tcel = CELL_VARS%tcel
        vppa = CELL_VARS%vppa
