@@ -40,7 +40,7 @@ MODULE MODULE_LAND
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,rib,RaSnow,&
+       ravd,rahd,rib,RaSnow,&
 
 ! Water balance variables
 
@@ -327,7 +327,7 @@ MODULE MODULE_LAND
        GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
        smcond,GRID_VARS%tzsm,tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
-       vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
+       vegcap,ravd,vegcap_us,CELL_VARS%ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
@@ -435,14 +435,14 @@ MODULE MODULE_LAND
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,thermc_us,GLOBAL%iopthermc_v,GRID_VEG%tcbeta_us,&
-       GRID_VEG%xlai,CELL_VARS%f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,&
+       GRID_VEG%xlai,CELL_VARS%f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,CELL_VARS%ravd_us,CELL_VARS%rahd_us,&
        GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
        roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
        GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
        CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
        CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,CELL_VARS%evtact_moss,thermc_moss,&
        GRID_VARS%r_mossm,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,CELL_VARS%tkmid_moss,hactd_moss,gactd_moss,&
-       dshactd_moss,rav_moss,rah_moss,GRID_VEG%r_moss_depth,GRID_VEG%alb_moss,&
+       dshactd_moss,CELL_VARS%rav_moss,CELL_VARS%rah_moss,GRID_VEG%r_moss_depth,GRID_VEG%alb_moss,&
        rnactd_moss,GRID_VEG%emiss_moss,CELL_VARS%eact_moss,CELL_VARS%rnet_pot_moss,CELL_VARS%xle_p_moss,CELL_VARS%h_p_moss,&
        CELL_VARS%g_p_moss,CELL_VARS%tk_p_moss,CELL_VARS%tkmid_p_moss,CELL_VARS%tskin_p_moss,GRID_VARS%zmoss,&
        GRID_VEG%thetas_moss,CELL_VARS%rnact_moss,CELL_VARS%xleact_moss,CELL_VARS%hact_moss,&
