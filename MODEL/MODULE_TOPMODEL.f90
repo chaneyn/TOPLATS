@@ -16,8 +16,8 @@ contains
 !
 ! ====================================================================
 
-subroutine Update_Catchments(GLOBAL,CAT,GRID)
 !> run TOPMODEL in specified catchments
+subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   implicit none
   type (GLOBAL_template),intent(in) :: GLOBAL
@@ -50,7 +50,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
   
   enddo 
 
-  end subroutine Update_Catchments
+end subroutine Update_Catchments
 
 ! ====================================================================
 !
@@ -63,71 +63,68 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 ! ====================================================================
 
 !> Initialize regional scale water balance variables
-  subroutine instep_catchment(ncatch,CAT)
+subroutine instep_catchment(ncatch,CAT)
 
-      implicit none
-      type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
-      integer,intent(in) :: ncatch
-      integer :: kk
+  implicit none
+  type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+  integer,intent(in) :: ncatch
+  integer :: kk
 
 ! ====================================================================
 ! Initialize variables for catchment average/total values
 ! ====================================================================
 
-      do kk=1,ncatch
+  do kk=1,ncatch
 
 ! --------------------------------------------------------------------
 ! Evaporation and condensation.
 ! --------------------------------------------------------------------
 
-         CAT(kk)%ettot = zero
-         CAT(kk)%etstsum = zero
-         CAT(kk)%etwtsum = zero
-         CAT(kk)%etbssum = zero
-         CAT(kk)%etdcsum = zero
-         CAT(kk)%etwcsum = zero
-         CAT(kk)%etlakesum = zero
-         CAT(kk)%contot = zero
+    CAT(kk)%ettot = zero
+    CAT(kk)%etstsum = zero
+    CAT(kk)%etwtsum = zero
+    CAT(kk)%etbssum = zero
+    CAT(kk)%etdcsum = zero
+    CAT(kk)%etwcsum = zero
+    CAT(kk)%etlakesum = zero
+    CAT(kk)%contot = zero
 
 ! --------------------------------------------------------------------
 ! Infiltration/runoff/precipitation.
 ! --------------------------------------------------------------------
 
-         CAT(kk)%pptsum = zero
-         CAT(kk)%pnetsum = zero
-         CAT(kk)%sxrtot = zero
-         CAT(kk)%xixtot = zero
-         CAT(kk)%qsurf = zero
-         CAT(kk)%ranrun = zero
-         CAT(kk)%conrun = zero
+    CAT(kk)%pptsum = zero
+    CAT(kk)%pnetsum = zero
+    CAT(kk)%sxrtot = zero
+    CAT(kk)%xixtot = zero
+    CAT(kk)%qsurf = zero
+    CAT(kk)%ranrun = zero
+    CAT(kk)%conrun = zero
 
 ! --------------------------------------------------------------------
 ! Vertical soil moisture fluxes and water table updating.
 ! --------------------------------------------------------------------
 
-         !CAT(kk)%zbar = CAT(kk)%zbar1
-         CAT(kk)%capsum = zero
-         CAT(kk)%gwtsum = zero
-         CAT(kk)%rzpsum = zero
-         CAT(kk)%tzpsum = zero
+    CAT(kk)%capsum = zero
+    CAT(kk)%gwtsum = zero
+    CAT(kk)%rzpsum = zero
+    CAT(kk)%tzpsum = zero
 
 ! --------------------------------------------------------------------
 ! State variables.
 ! --------------------------------------------------------------------
 
-         CAT(kk)%fwcat = zero
+    CAT(kk)%fwcat = zero
 
 ! --------------------------------------------------------------------
 ! Others.
 ! --------------------------------------------------------------------
 
-        CAT(kk)%psicav = zero
+    CAT(kk)%psicav = zero
 
-        enddo
+  enddo
 
-        return
-      
-      end subroutine instep_catchment
+end subroutine instep_catchment
       
 ! ====================================================================
 !
@@ -143,153 +140,94 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 !> Calculates the catchment time step totals of evapotranspiration, 
 !!  runoff, surface energy fluxes and vertical soil-water fluxes.
 
-      subroutine catflx(pixsiz,CAT)
+subroutine catflx(pixsiz,CAT)
 
-      implicit none
-      type (CATCHMENT_template),intent(inout) :: CAT
-      real*8 area,pixsiz,r_lakearea,ettot,etstsum,etwtsum,etlakesum
-      real*8 etbssum,fbs,etdcsum,etwcsum,pptsum,pnetsum,contot
-      real*8 qsurf,sxrtot,xixtot,ranrun,conrun,gwtsum,capsum,tzpsum
-      real*8 rzpsum,fwcat
-      real*8 catpix,catlakpix,catvegpix
-       area = CAT%area
-       ettot = CAT%ettot
-       etstsum = CAT%etstsum
-       etwtsum = CAT%etwtsum
-       etlakesum = CAT%etlakesum
-       etbssum = CAT%etbssum
-       fbs = CAT%fbs
-       etdcsum = CAT%etdcsum
-       etwcsum = CAT%etwcsum
-       pptsum = CAT%pptsum 
-       pnetsum = CAT%pnetsum
-       contot = CAT%contot
-       qsurf = CAT%qsurf
-       sxrtot = CAT%sxrtot
-       xixtot = CAT%xixtot
-       ranrun = CAT%ranrun
-       conrun = CAT%conrun
-       gwtsum = CAT%gwtsum
-       capsum = CAT%capsum
-       tzpsum = CAT%tzpsum
-       rzpsum = CAT%rzpsum
-       fwcat = CAT%fwcat
+  implicit none
+  type (CATCHMENT_template),intent(inout) :: CAT
+  real*8 :: pixsiz,catpix,catlakpix,catvegpix
 
 ! ====================================================================
 ! Calculate the number of pixels in the current catchment.
 ! ====================================================================
 
-      catpix = area/pixsiz/pixsiz
-      !catlakpix = r_lakearea/pixsiz/pixsiz
-      catvegpix = (area)/pixsiz/pixsiz
+  catpix = CAT%area/pixsiz/pixsiz
+  catvegpix = CAT%area/pixsiz/pixsiz
 
 ! ====================================================================
 ! Find catchment average evapotranspiration rates.
 ! ====================================================================
 
-      ettot = ettot / catpix
-      etstsum = etstsum / catvegpix
-      etwtsum = etwtsum / catvegpix
-      etlakesum = etlakesum / catlakpix
+  CAT%ettot = CAT%ettot / catpix
+  CAT%etstsum = CAT%etstsum / catvegpix
+  CAT%etwtsum = CAT%etwtsum / catvegpix
+  CAT%etlakesum = CAT%etlakesum / catlakpix
 
-      if (fbs.gt.0.) then
+  if (CAT%fbs.gt.0.) then
 
-         etbssum = etbssum / fbs/catvegpix
+    CAT%etbssum = CAT%etbssum / CAT%fbs/catvegpix
 
-      else
+  else
 
-         etbssum = 0.
+    CAT%etbssum = 0.
 
-      endif
+  endif
 
-      if (fbs.lt.1.) then
+  if (CAT%fbs.lt.1.) then
 
-         etdcsum = etdcsum / (one-fbs)/catvegpix
-         etwcsum = etwcsum / (one-fbs)/catvegpix
+    CAT%etdcsum = CAT%etdcsum / (one-CAT%fbs)/catvegpix
+    CAT%etwcsum = CAT%etwcsum / (one-CAT%fbs)/catvegpix
 
-      else
+  else
 
-         etdcsum = 0.
-         etwcsum = 0.
+    CAT%etdcsum = 0.
+    CAT%etwcsum = 0.
 
-      endif
+  endif
 
 ! ====================================================================
 ! Find catchment precipitation and condensation rate.
 ! ====================================================================
 
-      pptsum = pptsum / catpix
-      pnetsum = pnetsum / catpix
-      contot = contot / catpix
+  CAT%pptsum = CAT%pptsum / catpix
+  CAT%pnetsum = CAT%pnetsum / catpix
+  CAT%contot = CAT%contot / catpix
 
 ! ====================================================================
 ! Compute total catchment runoff/infiltration rates.
 ! ====================================================================
 
-      qsurf = qsurf / catvegpix
-      sxrtot = sxrtot / catvegpix
-      xixtot = xixtot / catvegpix
+  CAT%qsurf = CAT%qsurf / catvegpix
+  CAT%sxrtot = CAT%sxrtot / catvegpix
+  CAT%xixtot = CAT%xixtot / catvegpix
 
 ! ====================================================================
 ! Compute total runoff due to rainfall and due to condensation.
 ! ====================================================================
 
-      ranrun = ranrun / catvegpix
-      conrun = conrun / catvegpix
+  CAT%ranrun = CAT%ranrun / catvegpix
+  CAT%conrun = CAT%conrun / catvegpix
 
 ! ====================================================================
 ! Compute water table fluxes.
 ! ====================================================================
 
-      gwtsum = gwtsum / catvegpix
-      capsum = capsum / catvegpix
+  CAT%gwtsum = CAT%gwtsum / catvegpix
+  CAT%capsum = CAT%capsum / catvegpix
 
 ! ====================================================================
 ! Compute average available porosity above the water table.
 ! ====================================================================
 
-      tzpsum = tzpsum / catvegpix 
-      rzpsum = rzpsum / catvegpix 
+  CAT%tzpsum = CAT%tzpsum / catvegpix 
+  CAT%rzpsum = CAT%rzpsum / catvegpix 
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.
 ! ====================================================================
 
-      fwcat = fwcat / catvegpix / (one-fbs)
+  CAT%fwcat = CAT%fwcat / catvegpix / (one-CAT%fbs)
 
-! ====================================================================
-! Format statements.
-! ====================================================================
-
-1000  format(2i5,4f10.5,2f7.3)
-1100  format(2i5,7f10.5)
-
-       CAT%area = area
-       CAT%ettot = ettot
-       CAT%etstsum = etstsum
-       CAT%etwtsum = etwtsum
-       CAT%etlakesum = etlakesum
-       CAT%etbssum = etbssum
-       CAT%fbs = fbs
-       CAT%etdcsum = etdcsum
-       CAT%etwcsum = etwcsum
-       CAT%pptsum = pptsum
-       CAT%pnetsum = pnetsum
-       CAT%contot = contot
-       CAT%qsurf = qsurf
-       CAT%sxrtot = sxrtot
-       CAT%xixtot = xixtot
-       CAT%ranrun = ranrun
-       CAT%conrun = conrun
-       CAT%gwtsum = gwtsum
-       CAT%capsum = capsum
-       CAT%tzpsum = tzpsum
-       CAT%rzpsum = rzpsum 
-       CAT%fwcat = fwcat
-
-      return
-
-      end subroutine catflx
+end subroutine catflx
 
 ! ====================================================================
 !
@@ -302,95 +240,54 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 ! ====================================================================
 
 !> Updates the average water table depth
-      subroutine upzbar(ic,CAT,GLOBAL,GRID)
+subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
-      implicit none
-      type (GLOBAL_template),intent(in) :: GLOBAL
-      type (GRID_template),dimension(:),intent(inout) :: GRID
-      type (CATCHMENT_template),intent(inout) :: CAT
-      integer :: ic,iopbf,npix,mm
-      integer :: ilandc(GLOBAL%nrow*GLOBAL%ncol),ivgtyp(GLOBAL%nrow*GLOBAL%ncol)
-      integer :: icatch(GLOBAL%nrow*GLOBAL%ncol),isoil(GLOBAL%nrow*GLOBAL%ncol)
-      real*8 q0,ff,zbar,dtil
-      real*8 basink,dd,xlength
-      real*8 gwtsum,capsum,area
-      real*8 r_lakearea,dt,etwtsum
-      real*8 rzpsum,tzpsum,psicav
-      real*8 zrzmax,zbar1,qbreg,zbar1rg
-      real*8 psic(GLOBAL%nrow*GLOBAL%ncol),tzsm1(GLOBAL%nrow*GLOBAL%ncol),rzsm1(GLOBAL%nrow*GLOBAL%ncol)
-      real*8 zw(GLOBAL%nrow*GLOBAL%ncol),thetas(GLOBAL%nrow*GLOBAL%ncol)
-      real*8 pixsiz
-      real*8 qb,hbar,zbrflx,zbrpor,qzbar,dzbar
-
-      iopbf = GLOBAL%iopbf
-      q0 = CAT%q0
-      ff = CAT%ff
-      zbar = CAT%zbar
-      dtil = CAT%dtil
-      basink = CAT%basink
-      dd = CAT%dd
-      xlength = CAT%xlength
-      gwtsum = CAT%gwtsum
-      capsum = CAT%capsum
-      area = CAT%area 
-      dt = GLOBAL%dt
-      etwtsum = CAT%etwtsum
-      rzpsum = CAT%rzpsum 
-      tzpsum = CAT%tzpsum
-      psicav = CAT%psicav 
-      ivgtyp = GRID%VEG%ivgtyp
-      ilandc = GRID%VEG%ilandc
-      npix = GLOBAL%npix
-      icatch = GRID%VARS%icatch
-      zw = GRID%VARS%zw
-      psic = GRID%SOIL%psic
-      isoil = GRID%SOIL%isoil
-      zrzmax = GLOBAL%zrzmax
-      tzsm1 = GRID%VARS%tzsm1
-      thetas = GRID%SOIL%thetas 
-      rzsm1 = GRID%VARS%rzsm1
-      zbar1 = CAT%zbar1
-      pixsiz = GLOBAL%pixsiz
+  implicit none
+  type (GLOBAL_template),intent(in) :: GLOBAL
+  type (GRID_template),dimension(:),intent(inout) :: GRID
+  type (CATCHMENT_template),intent(inout) :: CAT
+  integer :: ic,mm,ilandc,isoil,icatch
+  real*8 :: hbar,qzbar,zbrflx,zbrpor
 
 ! ====================================================================
 ! Chose option for calculating baseflow.
 ! ====================================================================
 
-      if (iopbf.eq.0) then
+  if (GLOBAL%iopbf.eq.0) then
 
 ! --------------------------------------------------------------------&
 ! Calculate baseflow according to Sivapalan et al.(1987).
 ! --------------------------------------------------------------------&
 
-         qb = q0 * dexp(-ff*zbar)
+    CAT%qb = CAT%q0 * dexp(-CAT%ff*CAT%zbar)
 
-      else
+  else
 ! --------------------------------------------------------------------&
 ! Calculate baseflow according to Troch et al.(1992).
 ! --------------------------------------------------------------------&
 
-         hbar = dtil - zbar
-         qb = 5.772*basink*hbar*hbar*dd*xlength
+    hbar = CAT%dtil - CAT%zbar
+    CAT%qb = 5.772*CAT%basink*hbar*hbar*CAT%dd*CAT%xlength
 
-      endif
+  endif
 
 ! ====================================================================
 ! Determine net recharge to water table and available soil 
 ! water storage.
 ! ====================================================================
 
-      zbrflx = (gwtsum - capsum - etwtsum - (qb/ area)) * dt
-      zbrpor = (rzpsum+tzpsum) * (zbar-psicav)
+  zbrflx = (CAT%gwtsum - CAT%capsum - CAT%etwtsum - (CAT%qb/ CAT%area)) * GLOBAL%dt
+  zbrpor = (CAT%rzpsum + CAT%tzpsum) * (CAT%zbar-CAT%psicav)
  
-      if (zbrflx.gt.zbrpor) then
+  if (zbrflx.gt.zbrpor) then
 
 ! ====================================================================
 ! If net recharge exceeds storage assign overflow to streamflow.
 ! ====================================================================
 
-         qzbar = (zbrflx - zbrpor)/dt
-         zbrflx = zbrpor
-         qb = qb + qzbar*area
+    qzbar = (zbrflx - zbrpor)/GLOBAL%dt
+    zbrflx = zbrpor
+    CAT%qb = CAT%qb + qzbar*CAT%area
 
 ! --------------------------------------------------------------------&
 ! If water table is falling but storage is full zbar1 will
@@ -398,38 +295,42 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 ! calculate storage so that it is > zero.
 ! --------------------------------------------------------------------&
 
-      else if ((zbrflx.le.zero).and.(zbrpor.le.zero)) then
+  else if ((zbrflx.le.zero).and.(zbrpor.le.zero)) then
 
 ! --------------------------------------------------------------------&
 ! Recalculate rzpsum and tzpsum with new soil moistures.
 ! --------------------------------------------------------------------&
 
-         rzpsum = zero
-         tzpsum = zero
+    CAT%rzpsum = zero
+    CAT%tzpsum = zero
 
-         do 100 mm=1,npix
+    do mm=1,GLOBAL%npix
 
-            if (ivgtyp(ilandc(mm)).ge.0) then
+      isoil = GRID(mm)%SOIL%isoil
+      ilandc = GRID(mm)%VEG%ilandc
+      icatch = GRID(mm)%VARS%icatch
 
-               if ((icatch(mm)).eq.ic) then
+      if (GRID(ilandc)%VEG%ivgtyp.ge.0) then
 
-                  if ((zw(mm)-psic(isoil(mm))).gt.zrzmax) then
+        if (icatch.eq.ic) then
 
-                     tzpsum = tzpsum+(thetas(isoil(mm))-tzsm1(mm))
+          if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
 
-                  else if ((zw(mm)-psic(isoil(mm)).gt.zero)) then
+            CAT%tzpsum = CAT%tzpsum+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%tzsm1)
 
-                     rzpsum = rzpsum+(thetas(isoil(mm))-rzsm1(mm))
+          else if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero)) then
 
-                  endif
+            CAT%rzpsum = CAT%rzpsum+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%rzsm1)
 
-               endif
+          endif
 
-            endif
-
-100      continue
+        endif
 
       endif
+
+    enddo
+
+  endif
 
 ! ====================================================================
 ! Update zbar by taking the total flux and dividing by
@@ -440,41 +341,20 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 ! If the available porosity is nonzero divide the flux by its value.
 ! --------------------------------------------------------------------&
 
-      if ( (rzpsum+tzpsum).gt.(0.001d0)) then
+  if ( (CAT%rzpsum+CAT%tzpsum).gt.(0.001d0)) then
 
-         zbar1 = zbar - zbrflx/(rzpsum+tzpsum)
+    CAT%zbar1 = CAT%zbar - zbrflx/(CAT%rzpsum+CAT%tzpsum)
 
-      endif
+  endif
 
-      if ( (rzpsum+tzpsum).le.(0.001d0)) then
+  if ( (CAT%rzpsum+CAT%tzpsum).le.(0.001d0)) then
 
-         zbar1=zbar
+    CAT%zbar1=CAT%zbar
 
-      endif
+  endif
 
-! ====================================================================
-! Find change in water table.
-! ====================================================================
 
-      dzbar = zbar1-zbar
-
-! ====================================================================
-! Find new average water table depth and baseflow for entire region.
-! ====================================================================
-
-      qbreg = qbreg + qb
-      zbar1rg = zbar1rg + zbar1*area/(pixsiz*pixsiz)
-
-! ====================================================================
-! Format statements.
-! ====================================================================
-
-      CAT%zbar1 = zbar1
-      CAT%qb = qb
-
-      return
-
-      end subroutine upzbar
+end subroutine upzbar
 
 ! ====================================================================
 !
