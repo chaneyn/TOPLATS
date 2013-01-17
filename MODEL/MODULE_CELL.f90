@@ -157,7 +157,7 @@ xlamda = CAT%xlamda
 ! Vegetation parameters
 
        f1par,f3vpd,f4temp,&
-       f1,f2,f3,&
+       f2,f3,&
 
 ! Constants
 
