@@ -28,11 +28,6 @@ MODULE MODULE_LAND
        tcel,vppa,psychr,xlhv,tkel,&
        appa,vpsat,&
 
-! Temperature variables
-
-       tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,&
-
 ! Energy fluxes
 
        epetd,bsdew,&
@@ -93,17 +88,6 @@ MODULE MODULE_LAND
       !appa
       !vpsat
       
-    !Temperature variables
-      !tkmid_us
-      !tkact_us
-      !tskinact_moss
-      !tkact_moss
-      !tkmid_moss
-      !tkmidpet_us
-      !tkmidpet_moss
-      !tsoilold
-
-
     !Energy fluxes and states
       !epetd
       !bsdew
@@ -218,11 +202,11 @@ MODULE MODULE_LAND
 
       tkactd = GRID_VARS%tkact
       tkmidactd = GRID_VARS%tkmid
-      tkactd_us = tkact_us
-      tkmidactd_us = tkmid_us
-      tskinactd_moss = tskinact_moss
-      tkactd_moss = tkact_moss
-      tkmidactd_moss = tkmid_moss
+      tkactd_us = CELL_VARS%tkact_us
+      tkmidactd_us = CELL_VARS%tkmid_us
+      tskinactd_moss = CELL_VARS%tskinact_moss
+      tkactd_moss = CELL_VARS%tkact_moss
+      tkmidactd_moss = CELL_VARS%tkmid_moss
 
 ! ====================================================================
 ! Determine the frozen and unfrozen part of the soil water if
@@ -235,10 +219,10 @@ MODULE MODULE_LAND
       if (GLOBAL%inc_frozen.eq.1) then
 
          call ice_change(ipix,GRID_VARS%rzdthetaidt,GRID_VARS%tzdthetaidt,GRID_VEG%f_moss,GRID_VEG%f_und,&
-       GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,GRID_SOIL%bulk_dens,&
+       GRID_VARS%tkmidpet,CELL_VARS%tkmidpet_us,CELL_VARS%tkmidpet_moss,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,GRID_SOIL%bulk_dens,&
        GRID_SOIL%a_ice,GRID_SOIL%b_ice,GRID_VARS%row,GRID_VARS%roi,GRID_VARS%rzsm1_u,GRID_VARS%rzsm1,&
        GRID_VARS%tzsm1_u,GRID_VARS%tzsm1,GRID_SOIL%thetas,GRID_SOIL%thetar,&
-       GRID_VARS%rzdthetaudtemp,GLOBAL%dt,GRID_VARS%rzsm_f,GRID_VARS%tzsm_f,tsoilold)
+       GRID_VARS%rzdthetaudtemp,GLOBAL%dt,GRID_VARS%rzsm_f,GRID_VARS%tzsm_f,CELL_VARS%tsoilold)
 
       endif
 
@@ -250,12 +234,12 @@ MODULE MODULE_LAND
 ! moisture.
 ! ====================================================================
 
-      call states(zw0,GLOBAL%inc_frozen,GRID_VEG%i_moss,0.5d0*(tskinact_moss+tskinact_moss),&
+      call states(zw0,GLOBAL%inc_frozen,GRID_VEG%i_moss,0.5d0*(CELL_VARS%tskinact_moss+CELL_VARS%tskinact_moss),&
        GRID_VARS%r_mossm_u,GRID_VARS%r_mossm_f,GRID_VARS%r_mossm,GRID_VARS%zw,CAT%zbar,&
        CAT%ff,GRID_VARS%atanb,CAT%xlamda,GRID_SOIL%psic,&
        GRID_VARS%zrz,GRID_VARS%ztz,GRID_VARS%rzsm1,GRID_VARS%tzsm1,GRID_SOIL%thetas,GLOBAL%zrzmax,GLOBAL%iopsmini,&
        GRID_SOIL%thetar,GRID_SOIL%bcbeta,GRID_VARS%rzsm1_u,&
-       GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,tsoilold,&
+       GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,CELL_VARS%tsoilold,&
        GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
        GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
        GRID_VARS%r_mossm1,GRID_VARS%zmoss,r_moss_depth,&
@@ -459,8 +443,8 @@ MODULE MODULE_LAND
          call land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
        tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,ievcon_us,&
-       rnact_us,xleact_us,hact_us,gact_us,dshact_us,tkact_us,&
-       tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
+       rnact_us,xleact_us,hact_us,gact_us,dshact_us,CELL_VARS%tkact_us,&
+       CELL_VARS%tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
        gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,GRID_VEG%xlai_us,&
        dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
@@ -471,7 +455,7 @@ MODULE MODULE_LAND
        roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
        GRID_MET%rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
        ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
-       GRID_VARS%r_mossm,tskinact_moss,tkact_moss,tkmid_moss,hactd_moss,gactd_moss,&
+       GRID_VARS%r_mossm,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,CELL_VARS%tkmid_moss,hactd_moss,gactd_moss,&
        dshactd_moss,rav_moss,rah_moss,r_moss_depth,GRID_VEG%alb_moss,&
        rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
        g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
