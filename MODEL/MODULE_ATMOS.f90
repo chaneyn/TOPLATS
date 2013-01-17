@@ -36,7 +36,7 @@ contains
 ! Meteorological data
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,&
+       appa,&
        twet,&
        qv,ra,&
 
@@ -74,7 +74,7 @@ contains
     integer ipix,i
 
     real*8 tcel,vppa,psychr,xlhv,tkel
-    real*8 uzw,appa,vpsat
+    real*8 uzw,appa
     real*8 twet
     real*8 qv,ra,tkmid
     real*8 epetd,epetd_us,rnetd
@@ -100,7 +100,8 @@ contains
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
 tkmid = GRID_VARS%tkmid
-!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par, rahw_us, ravdare problems
+!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par, rahw_us, ravd, rahd, f3vpd, f4temp,
+!appa, are problems
 
 
 ! ====================================================================
@@ -250,20 +251,20 @@ tkmid = GRID_VARS%tkmid
 ! ====================================================================
 
       appa=100.d0*GRID_MET%press
-      vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
+      CELL_VARS%vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       CELL_VARS%vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
 
       if (GLOBAL%iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
-         GRID_MET%rh=100.*vppa/vpsat
+         GRID_MET%rh=100.*vppa/CELL_VARS%vpsat
          CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(CELL_VARS%twet_ic))/&
          (237.3d0+(CELL_VARS%twet_ic)))
          GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/CELL_VARS%vpsat_ic
 
       else
 
-         vppa=0.01*GRID_MET%rh*vpsat
+         vppa=0.01*GRID_MET%rh*CELL_VARS%vpsat
          CELL_VARS%vppa_ic=0.01*GRID_VARS%rh_ic*CELL_VARS%vpsat_ic
 
       endif
@@ -380,7 +381,7 @@ tkmid = GRID_VARS%tkmid
 ! Meteorological data
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
+       appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
        CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
 ! Temperature variables
@@ -446,7 +447,7 @@ tkmid = GRID_VARS%tkmid
 
       else if(GLOBAL%ioppet.eq.1)then
 
-        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,CELL_VARS%vpsat,vpdef,f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        tkel,vppa,f3vpd,GRID_VEG%f3vpdpar,f4temp,GRID_VEG%trefk,&
        GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
