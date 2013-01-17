@@ -31,9 +31,8 @@ MODULE MODULE_LAND
 ! Energy fluxes
 
        epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,ievcon_us,rnact_us,&
-       xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
+       rnetd,&
+       tkd,tkmidd,&
        dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,&
        hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,&
        evtact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,&
@@ -339,7 +338,7 @@ MODULE MODULE_LAND
 ! Calculate the transpiration from dry canopy for vegetated pixels.
 ! --------------------------------------------------------------------
 
-         call transv(epetd,epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,f1par,f3vpd,f4temp,&
+         call transv(epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,f1par,f3vpd,f4temp,&
        GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
        smcond,GRID_VARS%tzsm,tzsm_u,&
        GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
@@ -347,7 +346,7 @@ MODULE MODULE_LAND
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
-       GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,ievcon_us,bsdew,i,ipix)
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,CELL_VARS%ievcon_us,bsdew,i,ipix)
 
       endif
 
@@ -442,10 +441,10 @@ MODULE MODULE_LAND
 
          call land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,ievcon_us,&
-       rnact_us,xleact_us,hact_us,gact_us,dshact_us,CELL_VARS%tkact_us,&
-       CELL_VARS%tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
-       gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,GRID_VEG%xlai_us,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,CELL_VARS%ievcon_us,&
+       CELL_VARS%rnact_us,CELL_VARS%xleact_us,CELL_VARS%hact_us,CELL_VARS%gact_us,CELL_VARS%dshact_us,CELL_VARS%tkact_us,&
+       CELL_VARS%tkmid_us,rnactd_us,CELL_VARS%rnetw_us,xleactd_us,CELL_VARS%xlew_us,hactd_us,CELL_VARS%hw_us,&
+       gactd_us,CELL_VARS%gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,GRID_VEG%xlai_us,&
        dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
@@ -460,7 +459,7 @@ MODULE MODULE_LAND
        rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
        g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
        thetas_moss,rnact_moss,xleact_moss,hact_moss,&
-       gact_moss,dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
+       gact_moss,CELL_VARS%dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
        GRID_VEG%z0h,RaSnow,GRID_VARS%alb_snow,appa,CELL_VARS%vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
        GRID_VARS%SurfWater_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,GRID_VARS%TSurf_us,&
        GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&

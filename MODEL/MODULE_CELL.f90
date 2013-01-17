@@ -321,10 +321,8 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes
 
-       epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,ievcon_us,rnact_us,&
-       xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
+       epetd,bsdew,rnetd,&
+       tkd,tkmidd,&
        dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,&
        tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,evtact_moss,rnet_pot_moss,&
        xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
