@@ -36,7 +36,7 @@ contains
 ! Meteorological data
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
        twet_ic,twet,&
        qv,qv_ic,ra,ra_ic,&
 
@@ -84,7 +84,7 @@ contains
     integer ipix,i
 
     real*8 tcel,vppa,psychr,xlhv,tkel
-    real*8 uzw,appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic
+    real*8 uzw,appa,vpsat,vppa_ic,psychr_ic,xlhv_ic
     real*8 tkel_ic,vpsat_ic,twet_ic,twet
     real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
     real*8 tskinact_moss,tkact_moss,tkmid_moss
@@ -237,8 +237,8 @@ tkmid = GRID_VARS%tkmid
 
       tcel=GRID_MET%tdry
       tkel=tcel+273.15d0
-      tcel_ic=GRID_VARS%Tincan
-      tkel_ic=tcel_ic+273.15d0
+      CELL_VARS%tcel_ic=GRID_VARS%Tincan
+      tkel_ic=CELL_VARS%tcel_ic+273.15d0
 
 ! ====================================================================
 ! If first time step, use air temperature to initialize mid soil temp.
@@ -269,7 +269,7 @@ tkmid = GRID_VARS%tkmid
 
       appa=100.d0*GRID_MET%press
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
-      vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
+      vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
 
       if (GLOBAL%iopwv.eq.0) then
 
@@ -310,7 +310,7 @@ tkmid = GRID_VARS%tkmid
 
       ra_ic=287.d0*(one+0.608d0*qv_ic)
       roa_ic=appa/(ra_ic*tkel_ic)
-      xlhv_ic=2.501d6-2370.d0*tcel_ic
+      xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
       psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
 
 
@@ -397,7 +397,7 @@ tkmid = GRID_VARS%tkmid
 ! Meteorological data
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,CELL_VARS%tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
