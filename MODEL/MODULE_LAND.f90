@@ -34,10 +34,6 @@ MODULE MODULE_LAND
        rnetd,&
        tkd,tkmidd,&
 
-! Constants
-
-       roa,roa_ic,&
-
 ! Energy balance variables
 
        ravd,rahd,rib,RaSnow,&
@@ -162,7 +158,7 @@ MODULE MODULE_LAND
       call soiltherm(GLOBAL%iopthermc,thermc1,thermc2,GRID_VARS%rzsm,smtmp,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_VARS%tkmid,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,&
-       heatcap1,heatcap2,heatcapold,GRID_SOIL%rocpsoil,GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
+       heatcap1,heatcap2,heatcapold,GRID_SOIL%rocpsoil,GRID_VARS%row,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,&
        GRID_VARS%smold,thermc,heatcap,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp)
 
 ! ====================================================================
@@ -268,7 +264,7 @@ MODULE MODULE_LAND
        GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,&
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
-       GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
+       GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
        GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,rahd,ebscap,tcel,vppa,psychr,xlhv,&
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
@@ -288,7 +284,7 @@ MODULE MODULE_LAND
 
             call calcrain (tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
 
-            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,roa,vppa,xlhv,&
+            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,CELL_VARS%roa,vppa,xlhv,&
             GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,appa,rain,snow,tcel,vpsat-vppa,GRID_MET%uzw,&
             GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
             GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
@@ -404,7 +400,7 @@ MODULE MODULE_LAND
        bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
        GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,thermc1,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
-       GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,&
+       GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,&
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
        GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
@@ -436,11 +432,11 @@ MODULE MODULE_LAND
        iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
-       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
+       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,thermc_us,GLOBAL%iopthermc_v,GRID_VEG%tcbeta_us,&
        GRID_VEG%xlai,CELL_VARS%f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,CELL_VARS%ravd_us,CELL_VARS%rahd_us,&
        GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
-       roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
+       CELL_VARS%roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
        GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
        CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
        CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,CELL_VARS%evtact_moss,thermc_moss,&

@@ -324,10 +324,6 @@ xlamda = CAT%xlamda
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
 
-! Constants
-
-       roa,roa_ic,&
-
 ! Energy balance variables
 
        ravd,rahd,rib,RaSnow,&
