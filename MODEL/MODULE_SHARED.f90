@@ -22,7 +22,8 @@ contains
                            xlai,thermc1,heatcap,heatcap1,zero)
 
       implicit none
-      include "help/soiladapt.h"
+      integer iopgveg,iopthermc_v
+      real*8 thermc,tcbeta,xlai,thermc1,heatcap,heatcap1,zero,tau
 
 ! ====================================================================
 ! Check the thermal conductivity inputs.
@@ -114,7 +115,11 @@ contains
        smold,thermc,heatcap,inc_frozen,rzdthetaudtemp)
 
       implicit none
-      include "help/soiltherm.h"
+      integer iopthermc,ifcoarse,inc_frozen,iffroz
+      real*8 thermc1,thermc2,rzsm,smtmp,thetar,thetas
+      real*8 psic,bcbeta,tkmid,quartz,heatcap1,heatcap2,heatcapold
+      real*8 rocpsoil,row,cph2o,roa,cp,roi,smold,thermc,heatcap
+      real*8 rzdthetaudtemp
 
 ! ====================================================================
 ! Calculate the termal conductivity.
@@ -180,7 +185,8 @@ contains
                             rzsmold,tzsmold)
 
       implicit none
-      include "help/sm_cen_dif.h"
+      integer iffroz
+      real*8 tkmid,zmid,zrzmax,smtmp,rzsm,tzsm,smold,rzsmold,tzsmold
 
       iffroz=0
       if (tkmid.lt.273.15) iffroz=1
@@ -217,7 +223,9 @@ contains
                          alb_moss,alb_snow,rsd,rs_over,rs_under)
 
       implicit none
-      include "help/calc_rs.h"
+      integer i_und,i_moss
+      real*8 canclos,extinct,Swq_us,albd_us,alb_moss,alb_snow
+      real*8 rsd,rs_over,rs_under,ccc,refus,thr
 
       type (GRID_VEG_template) :: GRID_VEG
 
@@ -280,7 +288,9 @@ contains
                       temperature,roi,inc_frozen,rzdthetaudtemp)
 
       implicit none
-      include "help/calchc.h"
+      integer inc_frozen
+      real*8 theta,thetasat,rocp,row,cph2o,roa,cp,calchc
+      real*8 temperature,roi,rzdthetaudtemp,ttt,heatcap,rlf
 
 ! --------------------------------------------------------------------
 ! Check the soil moisture input.
@@ -431,7 +441,8 @@ contains
                          t_skin,vappres,richn)
 
       implicit none
-      include "help/stabcor.h"
+      real*8 zwind,zhum,wind_s,zpdis,r_m,tair,airp
+      real*8 t_skin,vappres,richn,qskin,uza,appa,qv 
 
 ! ====================================================================
 ! Calculate the air pressure in Pascals and the absolute
@@ -516,7 +527,8 @@ contains
       real*8 function calcrib(tk2,q2,p2,u2,z2,tk1,q1)
 
       implicit none
-      include "help/calcrib.h"
+      real*8 tk2,q2,p2,u2,z2,tk1,q1,rdcp,GRAV
+      real*8 thta1,thta2,thta1v,thta2v,ribtmp
       data rdcp,GRAV/-0.286,9.81d0/
 
 !   --------------------------------------------------------------------
@@ -584,7 +596,10 @@ contains
       function calctc_j(theta,thetar,thetas,quartz,iffrozen,ifcoarse)
 
       implicit none
-      include "help/calctc_j.h"
+      integer iffrozen,ifcoarse
+      real*8 theta,thetar,thetas,quartz
+      real*8 soildens,ko,kq
+      real*8 satrel,bulkdens,kdry,Ke,ks,ksat,thermc,calctc_j
       data soildens/2700.d0/,ko/2.d0/,kq/7.7d0/
 
 ! --------------------------------------------------------------------
@@ -739,7 +754,8 @@ contains
 
       function calctc_m(soilm,thetar,thetas,psic,bcbeta)
       implicit none
-      include "help/calctc_m.h"
+      real*8 soilm,thetar,thetas,psic,bcbeta
+      real*8 satrel,psi,psicm,pf,tmpthermc,thermc,calctc_m
 
       satrel=(soilm-thetar)/(thetas-thetar)
       psi=psic/(satrel**(1.d0/bcbeta))
@@ -794,7 +810,17 @@ contains
        psychr,xlhv,zdeep,tdeep,zmid,rsd,rld,toleb,maxnri,dt,itime)
 
       implicit none
-      include "help/nreb.h"
+      integer ipetopt,itime,itmpflg,ihflg,ileflg,iconv,iter,maxnri
+      real*8 alb,emiss,thermc1,thermc2,heatcap1,heatcap2,heatcapold
+      real*8 rav,rah,tskink,tmidk,rn,xle,epot,h,g,ds
+      real*8 tairc,vppa,roa,psychr,xlhv,zdeep
+      real*8 tdeep,zmid,rsd,rld,toleb,dt
+      real*8 cp,row,vkc,sbc,astab,cph2o,HMIN,DTMAX,GRAV
+      real*8 deltnr,dftdt,dstmp,ft,tmidknew,gtmp,htmp
+      real*8 dxledt,xletmp,drndt,rntmp,dftfac,vpsat,vpdef
+      real*8 ddsdt,dgdt,gdenom,dzdeep,dhdt,dsold
+      real*8 tskinc,toldmidk,toldk
+      real*8 T0new,T1new,deltnew
      
       data cp,row,vkc,sbc,astab,cph2o,GRAV/1005.d0,&
            997.d0,0.4d0,5.6696d-8,1.d0,4186.d0,9.81d0/
@@ -1147,7 +1173,9 @@ contains
                           tskink,tmidknew,tairc,zdeep,tdeep,zmid,dt,gtmp)
 
       implicit none
-      include "help/nreb_snow.h"
+      real*8 thermc1,thermc2,heatcap1,heatcap2,heatcapold
+      real*8 tskink,tmidknew,tairc,zdeep,tdeep,zmid,dt,gtmp
+      real*8 tmidk,dzdeep,gdenom
 
 ! --------------------------------------------------------------------
 ! The skin temperature is assumed to be equal to the temperature
@@ -1221,7 +1249,8 @@ contains
       function calcra(uzw,zw,za,zpd,z0m,z0h,rib)
 
       implicit none
-      include "help/calcra.h"
+      real*8 uzw,zw,za,zpd,z0m,z0h,rib,vkc,astab
+      real*8 vkctwo,resist,stcorr,calcra
       data vkc,astab/0.4d0,1.d0/
 
 ! --------------------------------------------------------------------
