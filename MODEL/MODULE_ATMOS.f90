@@ -36,7 +36,7 @@ contains
 ! Meteorological data
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,xlhv_ic,tkel_ic,vpsat_ic,&
        twet_ic,twet,&
        qv,qv_ic,ra,ra_ic,&
 
@@ -84,7 +84,7 @@ contains
     integer ipix,i
 
     real*8 tcel,vppa,psychr,xlhv,tkel
-    real*8 uzw,appa,vpsat,vppa_ic,psychr_ic,xlhv_ic
+    real*8 uzw,appa,vpsat,xlhv_ic
     real*8 tkel_ic,vpsat_ic,twet_ic,twet
     real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
     real*8 tskinact_moss,tkact_moss,tkmid_moss
@@ -275,18 +275,18 @@ tkmid = GRID_VARS%tkmid
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
          GRID_MET%rh=100.*vppa/vpsat
-         vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
-         GRID_VARS%rh_ic=100.*vppa_ic/vpsat_ic
+         CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
+         GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/vpsat_ic
 
       else
 
          vppa=0.01*GRID_MET%rh*vpsat
-         vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
+         CELL_VARS%vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
 
       endif
 
       qv=0.622d0*(vppa/appa)
-      qv_ic=0.622d0*(vppa_ic/appa)
+      qv_ic=0.622d0*(CELL_VARS%vppa_ic/appa)
 
 ! ====================================================================
 ! Calculate wind if two components are input -- check to make sure
@@ -311,7 +311,7 @@ tkmid = GRID_VARS%tkmid
       ra_ic=287.d0*(one+0.608d0*qv_ic)
       roa_ic=appa/(ra_ic*tkel_ic)
       xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
-      psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
+      CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
 
 
 
@@ -397,7 +397,7 @@ tkmid = GRID_VARS%tkmid
 ! Meteorological data
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,vpsat,CELL_VARS%tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
 
 ! Temperature variables
 
