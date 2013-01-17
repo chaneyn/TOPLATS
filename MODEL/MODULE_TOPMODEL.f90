@@ -16,13 +16,8 @@ contains
 !
 ! ====================================================================
 
-<<<<<<< HEAD
 subroutine Update_Catchments(GLOBAL,CAT,GRID)
-=======
 !> run TOPMODEL in specified catchments
-
-  subroutine Update_Catchments(GLOBAL,CAT,GRID)
->>>>>>> Added doxygent comments
 
   implicit none
   type (GLOBAL_template),intent(in) :: GLOBAL

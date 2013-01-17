@@ -1,6 +1,6 @@
 PROGRAM TOPLATS_DRIVER
 
-/**
+!/**
 ! ====================================================================
 !
 !			TOPLATS Version 3.0
@@ -13,7 +13,8 @@ PROGRAM TOPLATS_DRIVER
 ! TOPographically-based Land-Atmosphere Transfer Scheme
 !
 ! ====================================================================
-*/
+!*/
+
 !Module containing all the variables used in the model
 USE MODULE_VARIABLES
 
