@@ -101,7 +101,7 @@ contains
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
 tkmid = GRID_VARS%tkmid
-!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par,are problems
+!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par, rahw_us, ravdare problems
 
 
 ! ====================================================================
