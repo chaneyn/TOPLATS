@@ -10,6 +10,36 @@ USE MODULE_CANOPY
 
 USE MODULE_SNOW
 
+type LOCAL_VARS_template
+
+        real*8 tcel,vppa,psychr,xlhv,tkel,uzw,appa,vpsat,tcel_ic
+        real*8 vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,twet_ic
+        real*8 twet,qv,qv_ic,ra,ra_ic
+        
+        real*8 tkmid_us,tkact_us,tskinact_moss,tkact_moss,tkmid_moss
+        real*8 epetd,epetd_us,dshact_moss,xle_act_moss
+        real*8 tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss
+        real*8 dshact_us,rnetw_us,xlew_us,hw_us,gw_us
+        real*8 dshw_us,tkw_us,tkmidw_us,epetw_us
+        real*8 rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us
+        real*8 tkmidd_us,rnet_pot_moss,xle_p_moss
+        real*8 h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss
+        real*8 tsoilold,tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss
+        real*8 rib_moss,epet_moss
+        real*8 xleact_us,hact_us,gact_us,evtact_us,ievcon_moss,bsdew_moss
+        real*8 evtact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss
+        real*8 rnact_us,ievcon_us
+        real*8 f1par,f3vpd,f4temp,f1par_us,f3vpd_us
+        real*8 f4temp_us,f1,f2,f3,f3vpdpar_us,f4temppar_us,roa,roa_ic
+        
+        real*8 ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us
+        real*8 ravw,ravw_us,rahw,rahw_us
+        
+        real*8 rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun
+        
+
+end type LOCAL_VARS_template
+
 contains
 
 !#####################################################################
@@ -47,7 +77,7 @@ contains
       icatch = GRID(ipix)%VARS%icatch
 
       call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-         GRID(ilandc)%VEG,GRID(ipix)%VARS,GRID(ipix)%VARS%wcip1,&
+         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
          CAT(icatch),GLOBAL)
 
     enddo
@@ -70,7 +100,7 @@ contains
 
 
       subroutine Update_Cell(ipix,i,GRID_MET,GRID_SOIL,GRID_VEG,&
-               GRID_VARS,wcip1,CAT,GLOBAL)
+               GRID_VARS,CAT,GLOBAL)
 
       implicit none
       include 'help/land_lake.h'
@@ -84,189 +114,15 @@ contains
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
 
-!VEGETATION
-xlai = GRID_VEG%xlai
-emiss = GRID_VEG%emiss
-zpd = GRID_VEG%zpd
-z0m = GRID_VEG%z0m
-z0h = GRID_VEG%z0h
-rescan = GRID_VEG%rescan
-tc = GRID_VEG%tc
-tw = GRID_VEG%tw
-rtact = GRID_VEG%rtact
-rtdens = GRID_VEG%rtdens
-psicri = GRID_VEG%psicri
-respla = GRID_VEG%respla
-rsmax = GRID_VEG%rsmax
-Rpl = GRID_VEG%Rpl
-f3vpdpar = GRID_VEG%f3vpdpar
-rsmin = GRID_VEG%rsmin
-trefk = GRID_VEG%trefk
-f4temppar = GRID_VEG%f4temppar
-canclos = GRID_VEG%canclos
-extinct = GRID_VEG%extinct
-albd = GRID_VEG%albd
-albw = GRID_VEG%albw
-zww = GRID_VEG%zww
-za = GRID_VEG%za
-Tslope1 = GRID_VEG%Tslope1
-Tint1 = GRID_VEG%Tint1
-Tslope2 = GRID_VEG%Tslope2
-Tint2 = GRID_VEG%Tint2
-Tsep = GRID_VEG%Tsep
-Twslope1 = GRID_VEG%Twslope1
-Twint1 = GRID_VEG%Twint1
-Twslope2 = GRID_VEG%Twslope2
-Twint2 = GRID_VEG%Twint2
-Twsep = GRID_VEG%Twsep
-wsc = GRID_VEG%wsc
-tcbeta = GRID_VEG%tcbeta
-ivgtyp = GRID_VEG%ivgtyp
-i_und = GRID_VEG%i_und
-
-!SOIL PROPERTIES
-bcbeta = GRID_SOIL%bcbeta
-psic = GRID_SOIL%psic
-thetas = GRID_SOIL%thetas
-thetar = GRID_SOIL%thetar
-xk0 = GRID_SOIL%xk0
-zdeep = GRID_SOIL%zdeep
-tdeep = GRID_SOIL%tdeep
-zmid = GRID_SOIL%zmid
-tmid0 = GRID_SOIL%tmid0
-rocpsoil = GRID_SOIL%rocpsoil
-quartz = GRID_SOIL%quartz
-srespar1 = GRID_SOIL%srespar1
-srespar2 = GRID_SOIL%srespar2
-srespar3 = GRID_SOIL%srespar3
-a_ice = GRID_SOIL%a_ice
-b_ice = GRID_SOIL%b_ice
-bulk_dens = GRID_SOIL%bulk_dens
-amp = GRID_SOIL%amp
-phase = GRID_SOIL%phase
-shift = GRID_SOIL%shift
-bcgamm = GRID_SOIL%bcgamm
-par = GRID_SOIL%par
-corr = GRID_SOIL%corr
-idifind = GRID_SOIL%idifind
-par = GRID_SOIL%par
-ifcoarse = GRID_SOIL%ifcoarse
-
-!METEOROLOGY
-rsd = GRID_MET%rsd
-rld = GRID_MET%rld
-tdry = GRID_MET%tdry
-rh = GRID_MET%rh
-uzw = GRID_MET%uzw
-press = GRID_MET%press
-pptms = GRID_MET%pptms
-
-!GRID VARIABLES
-!Water Balance Variables
-rzsm = GRID_VARS%rzsm
-tzsm = GRID_VARS%tzsm
-rzsm1 = GRID_VARS%rzsm1
-tzsm1 = GRID_VARS%tzsm1
-rzsm_f = GRID_VARS%rzsm_f
-tzsm_f = GRID_VARS%tzsm_f
-rzsm1_f = GRID_VARS%rzsm1_f
-tzsm1_f = GRID_VARS%tzsm1_f
-rzdthetaidt = GRID_VARS%rzdthetaidt
-tzdthetaidt = GRID_VARS%tzdthetaidt
-rzdthetaudtemp = GRID_VARS%rzdthetaudtemp
-pnet = GRID_VARS%pnet
-xinact = GRID_VARS%xinact
-runtot = GRID_VARS%runtot
-irntyp = GRID_VARS%irntyp
-!Meteorological Variables
-Tincan = GRID_VARS%Tincan
-rh_ic = GRID_VARS%rh_ic
-precip_o = GRID_VARS%precip_o
-precip_u = GRID_VARS%precip_u
-!Temperature Variables
-tkmid = GRID_VARS%tkmid
-tkact = GRID_VARS%tkact
-tkmidpet = GRID_VARS%tkmidpet
-tkpet = GRID_VARS%tkpet
-!Energy Fluxes
-dshact = GRID_VARS%dshact
-rnetpn = GRID_VARS%rnetpn
-gbspen = GRID_VARS%gbspen
-evtact = GRID_VARS%evtact
-ievcon = GRID_VARS%ievcon
-gact = GRID_VARS%gact
-rnact = GRID_VARS%rnact
-xleact = GRID_VARS%xleact
-hact = GRID_VARS%hact
-ebspot = GRID_VARS%ebspot
-dspet = GRID_VARS%dspet
-rnpet = GRID_VARS%rnpet
-xlepet = GRID_VARS%xlepet
-hpet = GRID_VARS%hpet
-gpet = GRID_VARS%gpet
-rib = GRID_VARS%rib
-!Snow
-PackWater = GRID_VARS%Packwater
-SurfWater = GRID_VARS%SurfWater
-VaporMassFlux = GRID_VARS%VaporMassFlux
-r_MeltEnergy = GRID_VARS%r_MeltEnergy
-Outflow = GRID_VARS%Outflow
-PackWater_us = GRID_VARS%PackWater_us
-Swq = GRID_VARS%Swq
-TPack = GRID_VARS%Tpack
-TSurf = GRID_VARS%TSurf
-xleact_snow = GRID_VARS%xleact_snow
-hact_snow = GRID_VARS%hact_snow
-rn_snow = GRID_VARS%rn_snow
-Swq_us = GRID_VARS%Swq_us
-TPack_us = GRID_VARS%TPack_us
-TSurf_us = GRID_VARS%TSurf_us
-xleact_snow_us = GRID_VARS%xleact_snow_us
-hact_snow_us = GRID_VARS%hact_snow_us
-rn_snow_us = GRID_VARS%rn_snow_us
-dens = GRID_VARS%dens
-dens_us = GRID_VARS%dens_us
-dsty = GRID_VARS%dsty
-dsty_us = GRID_VARS%dsty_us
-Sdepth = GRID_VARS%Sdepth
-Sdepth_us = GRID_VARS%Sdepth_us
-
-!wcip1 = GRID_VARS%wcip1
-cuminf = GRID_VARS%cuminf
-sorp = GRID_VARS%sorp
-cc = GRID_VARS%cc
+!Removal Causes Failure
 sesq = GRID_VARS%sesq
-alb_snow = GRID_VARS%alb_snow
-istmst = GRID_VARS%istmst
-intstm = GRID_VARS%intstm
-intstp = GRID_VARS%intstp
-istorm = GRID_VARS%istorm
 xintst = GRID_VARS%xintst
-atanb = GRID_VARS%atanb
-
-!Global variables
-dt = GLOBAL%dt
-inc_frozen = GLOBAL%inc_frozen
-zrzmax = GLOBAL%zrzmax
-toleb = GLOBAL%toleb
-maxnri = GLOBAL%maxnri
 smpet0 = GLOBAL%smpet0
-endstm = GLOBAL%endstm
-iopthermc = GLOBAL%iopthermc
-iopgveg = GLOBAL%iopgveg
-iopthermc_v = GLOBAL%iopthermc_v
-iopsmini = GLOBAL%iopsmini
-ikopt = GLOBAL%ikopt
-irestype = GLOBAL%irestype
-ioppet = GLOBAL%ioppet
-iopveg = GLOBAL%iopveg
-iopstab = GLOBAL%iopstab
-iopwv = GLOBAL%iopwv
-i_2l = GLOBAL%i_2l
-newstorm = GLOBAL%newstorm
 mul_fac = GLOBAL%mul_fac
+row = GRID_VARS%row!row
+roi = GRID_VARS%roi!roi
 
-!Point Data
+!Point Data Initializations
 !Water Balance
 GRID_VARS%zrz = 0.d0
 GRID_VARS%ztz = 0.d0
@@ -290,11 +146,6 @@ GRID_VARS%dswc = 0.d0!dswc
 GRID_VARS%wcrhs = 0.d0!wcrhs
 !Energy Fluxes
 GRID_VARS%epwms = 0.d0!epwms
-!Constants
-row = GRID_VARS%row!row
-cph2o = GRID_VARS%cph2o!cph2o
-cp = GRID_VARS%cp!cp
-roi = GRID_VARS%roi!roi
 
 !Catchment
 zbar = CAT%zbar
@@ -381,7 +232,7 @@ xlamda = CAT%xlamda
 ! ....................................................................
        
 
-       call land(newstorm,ipix,i,dt,inc_frozen,i_2l,&
+       call land(ipix,i,&
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
@@ -404,9 +255,6 @@ xlamda = CAT%xlamda
        tskin_p_moss,eact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss,&
        ds_p_moss,&
 
-! Soil parameters
-       zrzmax,&
-
 ! Moss parameters
 
        r_moss_depth,thetas_moss,srespar1_moss,srespar2_moss,srespar3_moss,&
@@ -420,7 +268,7 @@ xlamda = CAT%xlamda
 
 ! Constants
 
-       roa,toleb,maxnri,roa_ic,&
+       roa,roa_ic,&
 
 ! Energy balance variables
 
@@ -433,8 +281,7 @@ xlamda = CAT%xlamda
 
 ! Different option paramters
 
-       iopthermc,iopgveg,iopthermc_v,iopsmini,ikopt,&
-       irestype,ioppet,iopveg,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.
@@ -442,8 +289,8 @@ xlamda = CAT%xlamda
 
          if ( (GRID_VARS%Swq.gt.0.d0) ) then
 
-            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,dt)
-            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,dt)
+            call calcrain (tcel,snow,rain,GRID_VARS%precip_o,GLOBAL%dt)
+            call snow_density(GRID_VARS%dsty,snow,tcel,GRID_VARS%Swq,GRID_VARS%Sdepth,GRID_VARS%TSurf,GLOBAL%dt)
 
          else
 
