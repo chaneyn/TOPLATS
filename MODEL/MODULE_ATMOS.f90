@@ -64,7 +64,7 @@ contains
 ! Energy balance variables
 
        ravd,rahd,&
-       RaSnow,ravw,rahw,rahw_us,&
+       RaSnow,rahw,rahw_us,&
 
        GLOBAL)
 
@@ -84,7 +84,7 @@ contains
     real*8 f3vpd,f4temp
     real*8 f1,f2,f3
     real*8 roa,roa_ic,ravd,rahd
-    real*8 RaSnow,ravw
+    real*8 RaSnow
     real*8 rahw,rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
@@ -337,7 +337,7 @@ tkmid = GRID_VARS%tkmid
       GRID_VEG%z0h,GRID_VARS%rib)
 
       ravd=rahd
-      ravw=rahw
+      CELL_VARS%ravw=rahw
 
       RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
@@ -434,7 +434,7 @@ tkmid = GRID_VARS%tkmid
 ! Energy balance variables
 
        ravd,rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,CELL_VARS%rah_moss,&
-       GRID_VARS%rib,RaSnow,CELL_VARS%rib_us,ravw,CELL_VARS%ravw_us,rahw,rahw_us,&
+       GRID_VARS%rib,RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,rahw,rahw_us,&
 
 ! Water balance variables
 
@@ -452,7 +452,7 @@ tkmid = GRID_VARS%tkmid
        tkel,vppa,f3vpd,GRID_VEG%f3vpdpar,f4temp,GRID_VEG%trefk,&
        GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
        GRID_VEG%rescan,ravd,xlhv,&
-       GRID_VARS%row,epetd,GRID_VARS%epetw,ravw,psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
+       GRID_VARS%row,epetd,GRID_VARS%epetw,CELL_VARS%ravw,psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
        GRID_VEG%hw,GRID_VARS%cp,roa)
  
       endif
