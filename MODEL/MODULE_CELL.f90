@@ -324,12 +324,6 @@ xlamda = CAT%xlamda
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
 
-! Water balance variables
-
-       deltrz,dewrun,&
-
-! Different option paramters
-
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
        tcel = CELL_VARS%tcel

@@ -34,9 +34,6 @@ MODULE MODULE_LAND
        rnetd,&
        tkd,tkmidd,&
 
-! Water balance variables
-
-       deltrz,dewrun,&
        CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -235,7 +232,7 @@ MODULE MODULE_LAND
        GRID_VARS%Outflow_us,GLOBAL%dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%Outflow,&
        GRID_VARS%istmst,GRID_VARS%cuminf,GLOBAL%inc_frozen,rzsmst,GRID_VARS%rzsm,CELL_VARS%rzsm_u,&
        GRID_SOIL%thetas,GRID_SOIL%thetar,&
-       tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
+       tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,CELL_VARS%deltrz,GRID_VARS%cc,&
        GRID_VARS%zw,GRID_VARS%xinact,GRID_VARS%satxr,GRID_VARS%xinfxr,&
        GRID_VARS%intstm,xinfcp,GRID_VARS%runtot,GRID_VARS%irntyp)
 
@@ -355,7 +352,7 @@ MODULE MODULE_LAND
       call tz_and_rzbal(i,GLOBAL%newstorm,GLOBAL%inc_frozen,GLOBAL%ikopt,GRID_VEG%ivgtyp,&
        GLOBAL%dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,GRID_VARS%rzsm1,GRID_VARS%tzsm1,&
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,GLOBAL%zrzmax,&
-       GRID_VARS%evtact,CELL_VARS%evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
+       GRID_VARS%evtact,CELL_VARS%evtact_us,bsdew,CELL_VARS%dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
