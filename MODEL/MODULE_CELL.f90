@@ -10,36 +10,6 @@ USE MODULE_CANOPY
 
 USE MODULE_SNOW
 
-type LOCAL_VARS_template
-
-        real*8 tcel,vppa,psychr,xlhv,tkel,uzw,appa,vpsat,tcel_ic
-        real*8 vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,twet_ic
-        real*8 twet,qv,qv_ic,ra,ra_ic
-        
-        real*8 tkmid_us,tkact_us,tskinact_moss,tkact_moss,tkmid_moss
-        real*8 epetd,epetd_us,dshact_moss,xle_act_moss
-        real*8 tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss
-        real*8 dshact_us,rnetw_us,xlew_us,hw_us,gw_us
-        real*8 dshw_us,tkw_us,tkmidw_us,epetw_us
-        real*8 rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us
-        real*8 tkmidd_us,rnet_pot_moss,xle_p_moss
-        real*8 h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss
-        real*8 tsoilold,tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss
-        real*8 rib_moss,epet_moss
-        real*8 xleact_us,hact_us,gact_us,evtact_us,ievcon_moss,bsdew_moss
-        real*8 evtact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss
-        real*8 rnact_us,ievcon_us
-        real*8 f1par,f3vpd,f4temp,f1par_us,f3vpd_us
-        real*8 f4temp_us,f1,f2,f3,f3vpdpar_us,f4temppar_us,roa,roa_ic
-        
-        real*8 ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,RaSnow,rib_us
-        real*8 ravw,ravw_us,rahw,rahw_us
-        
-        real*8 rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun
-        
-
-end type LOCAL_VARS_template
-
 contains
 
 !#####################################################################
@@ -110,6 +80,7 @@ contains
       type (GRID_VARS_template) :: GRID_VARS
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
+      type (CELL_VARS_template) :: CELL_VARS
       GLOBAL%mul_fac = 1.0d0
 
 ! TEMPORARY LOCATION TO PASS STRUCTURE INFORMATION TO OLD FORMAT
@@ -231,6 +202,116 @@ xlamda = CAT%xlamda
 ! other.  This option is also used when under story is not represented.
 ! ....................................................................
        
+       CELL_VARS%tcel = tcel 
+       CELL_VARS%vppa = vppa
+       CELL_VARS%psychr = psychr
+       CELL_VARS%xlhv = xlhv
+       CELL_VARS%tkel = tkel
+       CELL_VARS%appa = appa
+       CELL_VARS%vpsat = vpsat
+       CELL_VARS%tcel_ic = tcel_ic
+       CELL_VARS%vppa_ic = vppa_ic
+       CELL_VARS%psychr_ic = psychr_ic
+       CELL_VARS%xlhv_ic = xlhv_ic
+       CELL_VARS%tkel_ic = tkel_ic
+       CELL_VARS%vpsat_ic = vpsat_ic
+       CELL_VARS%twet_ic = twet_ic
+       CELL_VARS%twet = twet
+       CELL_VARS%qv = qv
+       CELL_VARS%qv_ic = qv_ic
+       CELL_VARS%ra = ra
+       CELL_VARS%ra_ic = ra_ic
+       CELL_VARS%tkmid_us = tkmid_us
+       CELL_VARS%tkact_us = tkact_us
+       CELL_VARS%tskinact_moss = tskinact_moss
+       CELL_VARS%tkact_moss = tkact_moss
+       CELL_VARS%tkmid_moss = tkmid_moss
+       CELL_VARS%epetd = epetd
+       CELL_VARS%epetd_us = epetd_us
+       CELL_VARS%dshact_moss = dshact_moss
+       CELL_VARS%xle_act_moss = xle_act_moss
+       CELL_VARS%tskinact_moss = tskinact_moss
+       CELL_VARS%tkactd_moss = tkactd_moss
+       CELL_VARS%tkmidactd_moss = tkmidactd_moss
+       CELL_VARS%ds_p_moss = ds_p_moss
+       CELL_VARS%dshact_us = dshact_us
+       CELL_VARS%rnetw_us = rnetw_us
+       CELL_VARS%xlew_us = xlew_us
+       CELL_VARS%hw_us = hw_us
+       CELL_VARS%gw_us = gw_us
+       CELL_VARS%dshw_us = dshw_us
+       CELL_VARS%tkw_us = tkw_us
+       CELL_VARS%tkmidw_us = tkmidw_us
+       CELL_VARS%epetw_us = epetw_us
+       CELL_VARS%rnetd_us = rnetd_us
+       CELL_VARS%xled_us = xled_us
+       CELL_VARS%hd_us = hd_us
+       CELL_VARS%gd_us = gd_us
+       CELL_VARS%dshd_us = dshd_us
+       CELL_VARS%tkd_us = tkd_us
+       CELL_VARS%tkmidd_us = tkmidd_us
+       CELL_VARS%rnet_pot_moss = rnet_pot_moss
+       CELL_VARS%xle_p_moss = xle_p_moss
+       CELL_VARS%h_p_moss = h_p_moss
+       CELL_VARS%g_p_moss = g_p_moss
+       CELL_VARS%tk_p_moss = tk_p_moss
+       CELL_VARS%tkmid_p_moss = tkmid_p_moss
+       CELL_VARS%tskin_p_moss = tskin_p_moss
+       CELL_VARS%eact_moss = eact_moss
+       CELL_VARS%tsoilold = tsoilold
+       CELL_VARS%tkmidpet_us = tkmidpet_us
+       CELL_VARS%tkmidpet_moss = tkmidpet_moss
+       CELL_VARS%dspet_us = dspet_us
+       CELL_VARS%dspet_moss = dspet_moss
+       CELL_VARS%rib_moss = rib_moss
+       CELL_VARS%epet_moss = epet_moss
+       CELL_VARS%xleact_us = xleact_us
+       CELL_VARS%hact_us = hact_us
+       CELL_VARS%gact_us = gact_us
+       CELL_VARS%evtact_us = evtact_us
+       CELL_VARS%ievcon_moss = ievcon_moss
+       CELL_VARS%bsdew_moss = bsdew_moss
+       CELL_VARS%evtact_moss = evtact_moss
+       CELL_VARS%rnact_moss = rnact_moss
+       CELL_VARS%xleact_moss = xleact_moss
+       CELL_VARS%hact_moss = hact_moss
+       CELL_VARS%gact_moss = gact_moss
+       CELL_VARS%rnact_us = rnact_us
+       CELL_VARS%ievcon_us = ievcon_us
+       CELL_VARS%f1par = f1par
+       CELL_VARS%f3vpd = f3vpd
+       CELL_VARS%f4temp = f4temp
+       CELL_VARS%f1par_us = f1par_us
+       CELL_VARS%f3vpd_us = f3vpd_us
+       CELL_VARS%f4temp_us = f4temp_us
+       CELL_VARS%f1 = f1
+       CELL_VARS%f2 = f2
+       CELL_VARS%f3 = f3
+       CELL_VARS%f3vpdpar_us = f3vpdpar_us
+       CELL_VARS%f4temppar_us = f4temppar_us
+       CELL_VARS%roa = roa
+       CELL_VARS%roa_ic = roa_ic
+       CELL_VARS%ravd = ravd
+       CELL_VARS%rahd = rahd
+       CELL_VARS%ravd_us = ravd_us
+       CELL_VARS%rahd_us = rahd_us
+       CELL_VARS%rav_moss = rav_moss
+       CELL_VARS%rah_moss = rah_moss
+       CELL_VARS%RaSnow = RaSnow
+       CELL_VARS%rib_us = rib_us
+       CELL_VARS%ravw = ravw
+       CELL_VARS%ravw_us = ravw_us
+       CELL_VARS%rahw = rahw
+       CELL_VARS%rahw_us = rahw_us
+       CELL_VARS%rzsm_u = rzsm_u
+       CELL_VARS%tzsm_u = tzsm_u
+       CELL_VARS%r_mossmold = r_mossmold
+       CELL_VARS%deltrz = deltrz
+       CELL_VARS%dc_us = dc_us
+       CELL_VARS%fw_us = fw_us
+       CELL_VARS%dewrun = dewrun
+
+
 
        call land(ipix,i,&
 ! Meteorological data
@@ -281,8 +362,117 @@ xlamda = CAT%xlamda
 
 ! Different option paramters
 
-       GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
+       tcel = CELL_VARS%tcel
+       vppa = CELL_VARS%vppa
+       psychr = CELL_VARS%psychr
+       xlhv = CELL_VARS%xlhv
+       tkel = CELL_VARS%tkel
+       appa = CELL_VARS%appa
+       vpsat = CELL_VARS%vpsat
+       tcel_ic = CELL_VARS%tcel_ic
+       vppa_ic = CELL_VARS%vppa_ic
+       psychr_ic = CELL_VARS%psychr_ic
+       xlhv_ic = CELL_VARS%xlhv_ic
+       tkel_ic = CELL_VARS%tkel_ic
+       vpsat_ic = CELL_VARS%vpsat_ic
+       twet_ic = CELL_VARS%twet_ic
+       twet = CELL_VARS%twet
+       qv = CELL_VARS%qv
+       qv_ic = CELL_VARS%qv_ic
+       ra = CELL_VARS%ra
+       ra_ic = CELL_VARS%ra_ic
+       tkmid_us = CELL_VARS%tkmid_us
+       tkact_us = CELL_VARS%tkact_us
+       tskinact_moss = CELL_VARS%tskinact_moss
+       tkact_moss = CELL_VARS%tkact_moss
+       tkmid_moss = CELL_VARS%tkmid_moss
+       epetd = CELL_VARS%epetd
+       epetd_us = CELL_VARS%epetd_us
+       dshact_moss = CELL_VARS%dshact_moss
+       xle_act_moss = CELL_VARS%xle_act_moss
+       tskinactd_moss = CELL_VARS%tskinact_moss
+       tkactd_moss = CELL_VARS%tkactd_moss
+       tkmidactd_moss = CELL_VARS%tkmidactd_moss
+       ds_p_moss = CELL_VARS%ds_p_moss
+       dshact_us = CELL_VARS%dshact_us
+       rnetw_us = CELL_VARS%rnetw_us
+       xlew_us = CELL_VARS%xlew_us
+       hw_us = CELL_VARS%hw_us
+       gw_us = CELL_VARS%gw_us
+       dshw_us = CELL_VARS%dshw_us
+       tkw_us = CELL_VARS%tkw_us
+       tkmidw_us = CELL_VARS%tkmidw_us
+       epetw_us = CELL_VARS%epetw_us
+       rnetd_us = CELL_VARS%rnetd_us
+       xled_us = CELL_VARS%xled_us
+       hd_us = CELL_VARS%hd_us
+       gd_us = CELL_VARS%gd_us
+       dshd_us = CELL_VARS%dshd_us
+       tkd_us = CELL_VARS%tkd_us
+       tkmidd_us = CELL_VARS%tkmidd_us
+       rnet_pot_moss = CELL_VARS%rnet_pot_moss
+       xle_p_moss = CELL_VARS%xle_p_moss
+       h_p_moss = CELL_VARS%h_p_moss
+       g_p_moss = CELL_VARS%g_p_moss
+       tk_p_moss = CELL_VARS%tk_p_moss
+       tkmid_p_moss = CELL_VARS%tkmid_p_moss
+       tskin_p_moss = CELL_VARS%tskin_p_moss
+       eact_moss = CELL_VARS%eact_moss
+       tsoilold = CELL_VARS%tsoilold
+       tkmidpet_us = CELL_VARS%tkmidpet_us
+       tkmidpet_moss = CELL_VARS%tkmidpet_moss
+       dspet_us = CELL_VARS%dspet_us
+       dspet_moss = CELL_VARS%dspet_moss
+       rib_moss = CELL_VARS%rib_moss
+       epet_moss = CELL_VARS%epet_moss
+       xleact_us = CELL_VARS%xleact_us
+       hact_us = CELL_VARS%hact_us 
+       gact_us = CELL_VARS%gact_us  
+       evtact_us = CELL_VARS%evtact_us
+       ievcon_moss = CELL_VARS%ievcon_moss
+       bsdew_moss = CELL_VARS%bsdew_moss
+       evtact_moss = CELL_VARS%evtact_moss
+       rnact_moss = CELL_VARS%rnact_moss
+       xleact_moss = CELL_VARS%xleact_moss
+       hact_moss = CELL_VARS%hact_moss
+       gact_moss = CELL_VARS%gact_moss
+       rnact_us = CELL_VARS%rnact_us
+       ievcon_us = CELL_VARS%ievcon_us
+       f1par = CELL_VARS%f1par
+       f3vpd = CELL_VARS%f3vpd
+       f4temp = CELL_VARS%f4temp
+       f1par_us = CELL_VARS%f1par_us
+       f3vpd_us = CELL_VARS%f3vpd_us
+       f4temp_us = CELL_VARS%f4temp_us
+       f1 = CELL_VARS%f1
+       f2 = CELL_VARS%f2
+       f3 = CELL_VARS%f3
+       f3vpdpar_us = CELL_VARS%f3vpdpar_us
+       f4temppar_us = CELL_VARS%f4temppar_us
+       roa = CELL_VARS%roa
+       roa_ic = CELL_VARS%roa_ic
+       ravd = CELL_VARS%ravd
+       rahd = CELL_VARS%rahd
+       ravd_us = CELL_VARS%ravd_us
+       rahd_us = CELL_VARS%rahd_us
+       rav_moss = CELL_VARS%rav_moss
+       rah_moss = CELL_VARS%rah_moss
+       RaSnow = CELL_VARS%RaSnow
+       rib_us = CELL_VARS%rib_us
+       ravw = CELL_VARS%ravw
+       ravw_us = CELL_VARS%ravw_us
+       rahw = CELL_VARS%rahw
+       rahw_us = CELL_VARS%rahw_us
+       rzsm_u = CELL_VARS%rzsm_u
+       tzsm_u = CELL_VARS%tzsm_u
+       r_mossmold = CELL_VARS%r_mossmold
+       deltrz = CELL_VARS%deltrz
+       dc_us = CELL_VARS%dc_us
+       fw_us = CELL_VARS%fw_us
+       dewrun = CELL_VARS%dewrun
+       
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.
 ! ====================================================================

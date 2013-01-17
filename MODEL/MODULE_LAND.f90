@@ -67,7 +67,7 @@ MODULE MODULE_LAND
 ! Water balance variables
 
        rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun,&
-       GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
       include "help/land.h"!Remove when variables are changed
@@ -78,6 +78,7 @@ MODULE MODULE_LAND
       type (GRID_SOIL_template) :: GRID_SOIL
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
+      type (CELL_VARS_template) :: CELL_VARS
       real*8 gold
 
       data tolinf/1.0d-09/
