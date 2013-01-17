@@ -33,9 +33,6 @@ MODULE MODULE_LAND
        epetd,bsdew,&
        rnetd,&
        tkd,tkmidd,&
-       evtact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,&
-       tkmid_p_moss,tskin_p_moss,eact_moss,rnact_moss,&
-       xleact_moss,hact_moss,gact_moss,ds_p_moss,&
 
 ! Moss parameters
 
@@ -452,17 +449,18 @@ MODULE MODULE_LAND
        roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
        GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
        CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
-       CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,evtact_moss,thermc_moss,&
+       CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,CELL_VARS%evtact_moss,thermc_moss,&
        GRID_VARS%r_mossm,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,CELL_VARS%tkmid_moss,hactd_moss,gactd_moss,&
        dshactd_moss,rav_moss,rah_moss,r_moss_depth,GRID_VEG%alb_moss,&
-       rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
-       g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
-       thetas_moss,rnact_moss,xleact_moss,hact_moss,&
-       gact_moss,CELL_VARS%dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
+       rnactd_moss,emiss_moss,CELL_VARS%eact_moss,CELL_VARS%rnet_pot_moss,CELL_VARS%xle_p_moss,CELL_VARS%h_p_moss,&
+       CELL_VARS%g_p_moss,CELL_VARS%tk_p_moss,CELL_VARS%tkmid_p_moss,CELL_VARS%tskin_p_moss,GRID_VARS%zmoss,&
+       thetas_moss,CELL_VARS%rnact_moss,CELL_VARS%xleact_moss,CELL_VARS%hact_moss,&
+       CELL_VARS%gact_moss,CELL_VARS%dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
        GRID_VEG%z0h,RaSnow,GRID_VARS%alb_snow,appa,CELL_VARS%vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
        GRID_VARS%SurfWater_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,GRID_VARS%TSurf_us,&
        GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
-       GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,CELL_VARS%tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,GLOBAL%i_2l)
+       GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,CELL_VARS%tkel_ic,eps,CELL_VARS%ds_p_moss,&
+       GRID_VEG%i_und,GRID_VEG%i_moss,GLOBAL%i_2l)
 
       endif
 
