@@ -37,8 +37,8 @@ contains
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
        appa,vpsat,&
-       twet_ic,twet,&
-       qv,qv_ic,ra,ra_ic,&
+       twet,&
+       qv,ra,&
 
 ! Temperature variables
 
@@ -85,8 +85,8 @@ contains
 
     real*8 tcel,vppa,psychr,xlhv,tkel
     real*8 uzw,appa,vpsat
-    real*8 twet_ic,twet
-    real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
+    real*8 twet
+    real*8 qv,ra,tkmid,tkmid_us,tkact_us
     real*8 tskinact_moss,tkact_moss,tkmid_moss
     real*8 epetd,epetd_us,dshact_moss,xle_act_moss,rnetd
     real*8 tkd,tkmidd,tskinactd_moss
@@ -204,7 +204,7 @@ tkmid = GRID_VARS%tkmid
            (GRId_VEG%Twslope2.eq.(0.d0)).and.(GRID_VEG%Twint2.eq.(0.d0)).and.&
            (GRID_VEG%Twsep.eq.(0.d0)) ) then
 
-         twet_ic=twet
+         CELL_VARS%twet_ic=twet
 
          !if (GRID_VEG%r_moss_depth.lt.0.d0) stop
 
@@ -219,13 +219,13 @@ tkmid = GRID_VARS%tkmid
 
          if (rrrr.ge.GRID_VEG%Twsep) then
 
-            twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
+            CELL_VARS%twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
          if (rrrr.lt.GRID_VEG%Twsep) then
 
-            twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
+            CELL_VARS%twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -275,7 +275,8 @@ tkmid = GRID_VARS%tkmid
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
          GRID_MET%rh=100.*vppa/vpsat
-         CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
+         CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(CELL_VARS%twet_ic))/&
+         (237.3d0+(CELL_VARS%twet_ic)))
          GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/CELL_VARS%vpsat_ic
 
       else
@@ -286,7 +287,7 @@ tkmid = GRID_VARS%tkmid
       endif
 
       qv=0.622d0*(vppa/appa)
-      qv_ic=0.622d0*(CELL_VARS%vppa_ic/appa)
+      CELL_VARS%qv_ic=0.622d0*(CELL_VARS%vppa_ic/appa)
 
 ! ====================================================================
 ! Calculate wind if two components are input -- check to make sure
@@ -308,8 +309,8 @@ tkmid = GRID_VARS%tkmid
       xlhv =2.501d6-2370.d0*tcel
       psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
-      ra_ic=287.d0*(one+0.608d0*qv_ic)
-      roa_ic=appa/(ra_ic*CELL_VARS%tkel_ic)
+      CELL_VARS%ra_ic=287.d0*(one+0.608d0*CELL_VARS%qv_ic)
+      roa_ic=appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
       CELL_VARS%xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
       CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*CELL_VARS%xlhv_ic)
 
