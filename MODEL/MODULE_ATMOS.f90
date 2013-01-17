@@ -47,9 +47,8 @@ contains
        
 ! Energy fluxes and states
 
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
@@ -88,9 +87,9 @@ contains
     real*8 twet
     real*8 qv,ra,tkmid,tkmid_us,tkact_us
     real*8 tskinact_moss,tkact_moss,tkmid_moss
-    real*8 epetd,epetd_us,dshact_moss,xle_act_moss,rnetd
-    real*8 tkd,tkmidd,tskinactd_moss
-    real*8 tkactd_moss,tkmidactd_moss,ds_p_moss,dshact_us
+    real*8 epetd,epetd_us,rnetd
+    real*8 tkd,tkmidd
+    real*8 dshact_us
     real*8 rnetw_us,xlew_us,hw_us,gw_us,dshw_us,tkw_us,tkmidw_us
     real*8 epetw_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us
     real*8 rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss
@@ -251,7 +250,8 @@ tkmid = GRID_VARS%tkmid
        tkmid_us,tkmid_moss,tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
        tskinact_moss,GRID_VARS%dshact,&
-       dshact_us,dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,&
+       dshact_us,CELL_VARS%dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,&
+       tkmidpet_us,tkmidpet_moss,&
        GRID_VARS%dspet,dspet_us,dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
        GRID_VARS%TSurf_us,GRID_VARS%TPack_us)
 
@@ -408,10 +408,12 @@ tkmid = GRID_VARS%tkmid
 
 ! Energy fluxes and states
 
-       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,GRID_VEG%hd,&
+       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
+       rnetd,GRID_VEG%xled,GRID_VEG%hd,&
        GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,&
-       GRID_VEG%tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,GRID_VARS%epetw,&
+       GRID_VEG%tkmidw,CELL_VARS%tskinactd_moss,CELL_VARS%tkactd_moss,CELL_VARS%tkmidactd_moss,&
+       CELL_VARS%ds_p_moss,GRID_VARS%epetw,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&

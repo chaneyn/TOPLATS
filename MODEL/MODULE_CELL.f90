@@ -149,9 +149,8 @@ xlamda = CAT%xlamda
 
 ! Energy fluxes and states
 
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
+       epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
        dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
