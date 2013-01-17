@@ -49,8 +49,6 @@ contains
 
        epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       dshw_us,tkw_us,tkmidw_us,epetw_us,&
-       rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
        h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
        tskin_p_moss,eact_moss,tsoilold,&
@@ -88,8 +86,7 @@ contains
     real*8 tskinact_moss,tkact_moss,tkmid_moss
     real*8 epetd,epetd_us,rnetd
     real*8 tkd,tkmidd
-    real*8 dshw_us,tkw_us,tkmidw_us
-    real*8 epetw_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us
+    real*8 tkmidd_us
     real*8 rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss
     real*8 tkmid_p_moss,tskin_p_moss,eact_moss,tsoilold
     real*8 tkmidpet_us,tkmidpet_moss,dspet_us
@@ -413,8 +410,9 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%tkmidw,CELL_VARS%tskinactd_moss,CELL_VARS%tkactd_moss,CELL_VARS%tkmidactd_moss,&
        CELL_VARS%ds_p_moss,GRID_VARS%epetw,&
        CELL_VARS%dshact_us,CELL_VARS%rnetw_us,CELL_VARS%xlew_us,CELL_VARS%hw_us,CELL_VARS%gw_us,&
-       dshw_us,tkw_us,tkmidw_us,epetw_us,&
-       rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
+       CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,CELL_VARS%epetw_us,&
+       CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,&
+       CELL_VARS%dshd_us,CELL_VARS%tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
        h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
 
