@@ -447,7 +447,15 @@ MODULE MODULE_LAND
        r_mossm1_f,i,a_ice_moss,b_ice_moss,bulk_dens_moss)
 
       implicit none
-      include "help/states.h"
+      integer inc_frozen,i_moss,i,iopsmini
+      real*8 tkmid_moss,r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff
+      real*8 atanb,xlamda,psic,zrz,ztz,rzsm1,tzsm1,thetas
+      real*8 zrzmax,thetar,bcbeta,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f
+      real*8 tsoilold,bulk_dens,a_ice,b_ice,row,rzsmold,tzsmold,r_mossmold
+      real*8 rzsm,tzsm,r_mossm1,zmoss,r_moss_depth,thetas_moss,rzsm_u,rzsm_f
+      real*8 tzsm_u,tzsm_f,r_mossm1_u,r_mossm1_f
+      real*8 a_ice_moss,b_ice_moss,bulk_dens_moss
+      real*8 zw0
     
 ! ====================================================================
 ! Update local water table depth.
@@ -621,10 +629,6 @@ MODULE MODULE_LAND
 
       endif
 
-!CVAL      write (129,*)
-!real(r_mossm_f/r_mossm),real(rzsm_f/rzsm),real(tzsm_f/tzsm)
-!CVAL      write (130,*) real(zw-psic)
-
       return
 
     end subroutine states
@@ -646,7 +650,10 @@ MODULE MODULE_LAND
        inc_frozen,tsoilold,bulk_dens,a_ice,b_ice,row)
 
       implicit none
-      include "help/initsm.h"
+      integer iopsmini,inc_frozen
+      real*8 zw,psic,zrz,ztz,rzsm1,tzsm1,thetas,zrzmax
+      real*8 thetar,bcbeta,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f
+      real*8 tsoilold,bulk_dens,a_ice,b_ice,row,rtdif,ttt
 
 ! ====================================================================
 ! Update root and transmission zone depths and soil moisture.
@@ -864,9 +871,12 @@ MODULE MODULE_LAND
        zw,xinact,satxr,xinfxr,intstm,xinfcp,runtot,irntyp)
 
       implicit none
-      include "help/infilt.h"
-
-        
+      integer i_moss,i_und,istmst,inc_frozen,intstm,irntyp
+      real*8 pnet,PackWater_us,SurfWater_us,Swq_us,Outflow_us,dt
+      real*8 PackWater,SurfWater,Swq,Outflow,cuminf
+      real*8 rzsmst,rzsm,rzsm_u,thetas,thetar,tolinf,sorp,xk0
+      real*8 psic,bcgamm,bcbeta,deltrz,cc,zw,xinact,satxr,xinfxr
+      real*8 xinfcp,runtot,precipitation     
 
 ! ====================================================================
 ! Calculate the precipitation input to the soil column.
@@ -1045,7 +1055,8 @@ MODULE MODULE_LAND
        sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
 
       implicit none
-      include "help/reset_inf_pars.h"
+      real*8 cuminf,zero,rzsmst,rzsm,thetas,tolinf
+      real*8 sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one
 
 ! ====================================================================
 ! Calculate the root zone soil moisture
@@ -1101,8 +1112,20 @@ MODULE MODULE_LAND
        bsdew,z0h,ioppet)
 
       implicit none
-      include "help/ebsres.h"
-
+      integer inc_frozen,irestype,iffroz,iopthermc,ifcoarse,i
+      integer ievcon,ioppet,maxiter,iter,maxnri
+      real*8 srespar1,tkact,srespar2,rzsm_u,srespar3,ravd,rzsm
+      real*8 thetas,tkmid,zmid,zrzmax,smtmp,tzsm,smold,rzsmold
+      real*8 tzsmold,thermc1,thermc2,thetar,heatcapold,psic,bcbeta
+      real*8 quartz,heatcap1,heatcap2,rocpsoil,row,cph2o,roa,cp
+      real*8 roi,thermc,heatcap,rzdthetaudtemp,dshact,albd,emiss
+      real*8 rahd,ebscap,tcel,vppa,psychr,xlhv,zdeep,Tdeepstep,rsd
+      real*8 rld,toleb,dt,tkel,zww,za,uzw,zpd,z0m,press
+      real*8 rib,rnetpn,gbspen,epetd,evtact,bsdew,z0h
+      real*8 tolstab
+      real*8 ebsmf,pstar,dvpsdt,vpdef,vpsat,dumg,dumh,dumxle
+      real*8 dumrn,tmidtemp,ttemp,dumds,dumtkmid,dumtk
+      real*8 raveff,rsoil,tacttemp
       data TOLSTAB/0.1/
       data MAXITER/10/
 
@@ -1332,7 +1355,7 @@ MODULE MODULE_LAND
     subroutine calcrain (tcel,snow,rain,precip_o,dt)
 
       implicit none
-      include "help/calcrain.h"
+      real*8 tcel,snow,rain,precip_o,dt
 
       rain=0.d0
       snow=0.d0
@@ -1374,7 +1397,14 @@ MODULE MODULE_LAND
        ievcon_us,bsdew,i,ipix)
 
       implicit none
-      include "help/transv.h"
+      integer i_und,iopveg,inc_frozen,ivgtyp,ikopt,ievcon,ievcon_us
+      real*8 epetd,epetd_us,f1par,f3vpd,f4temp,rescan,rzsm,rzsm_u
+      real*8 tc,tw,smcond,tzsm,tzsm_u,tc_us,tw_us,smcond_us
+      real*8 f1par_us,f3vpd_us,f4temp_us,rescan_us,vegcap,ravd,vegcap_us
+      real*8 ravd_us,zrz,srzrel,thetas,thetar,psisoi,psic,bcbeta,xksrz
+      real*8 xk0,ff,ressoi,rtact,rtdens,psicri,respla,xkrz,ztz,stzrel
+      real*8 xkstz,xktz,Swq,evtact,Swq_us,evtact_us,bsdew
+      real*8 resist,resist_us
       integer :: i,ipix
 
 ! ====================================================================
@@ -1614,7 +1644,10 @@ MODULE MODULE_LAND
        two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
 
       implicit none
-      include "help/maxplevap.h"
+      integer inc_frozen,ikopt
+      real*8 zrz,ztz,epetd,srzrel,rzsm,thetas,thetar,rzsm_u
+      real*8 psisoi,psic,bcbeta,xksrz,xk0,ff,ressoi,rtact
+      real*8 rtdens,vegcap,psicri,respla,xkrz,zero,one,two,three
 
 ! --------------------------------------------------------------------
 ! If the soil is saturated than the maximum flux of the water is not
@@ -1763,9 +1796,26 @@ MODULE MODULE_LAND
        tzrhs,rzrhs)
 
       implicit none
-      include "help/tz_and_rzbal.h"
+      integer i,newstorm,inc_frozen,ikopt,ivgtyp,num
+      integer iter,max_iter,non_linear_flag
+      integer i_und,i_moss,num_exp_iter
+      real*8 rzsm,tzsm,tzsm_u,rzsm_u,rzsm1,tzsm1
+      real*8 zrz,ztz,zw0,zrzmax,dt
+      real*8 evtact,evtact_us,bsdew,dewrun,grz,gtz,diftz,difrz
+      real*8 satxr,runtot,xinact,cuminf
+      real*8 ff,thetar,thetas,bcbeta,xk0,psic
+      real*8 Swq,Swq_us,dc,fw,dc_us,fw_us,evrz_moss,f_und
+      real*8 rzsm0,tzsm0,rzsm1old,tzsm1new,tzsm1old,rzsm1new
+      real*8 evtran_rz,evtran_tz,cor_flx_tz,cor_flx_rz,ddifrzdth1
+      real*8 ddifrzdth2,dgrzdth1,dgrzdth2,dgtzdth1,dgtzdth2,ddiftzdth1
+      real*8 ddiftzdth2,explicit_weight,implicit_weight,tol
+      real*8 srzflx,dewrz,stzflx,F11,F22,dF1dtheta1,dF1dtheta2
+      real*8 dF2dtheta1,dF2dtheta2,del_rzsm,del_tzsm
+      real*8 grz_sum,difrz_sum,gtz_sum,diftz_sum
+      real*8 dummy,d2rzsmdt2,d2tzsmdt2
+      real*8 dtsrzflx,dtstzflx,case_flag,xksrz,xkstz
+      real*8 dstz,dsrz,rzrhs,tzrhs
       integer :: test_flag
-      
  
       rzsm0 = rzsm
       tzsm0 = tzsm
@@ -2361,7 +2411,10 @@ MODULE MODULE_LAND
        thetas,thetar,bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz)
 
       implicit none
-      include "help/new_difflx.h"
+      integer ikopt,inc_frozen
+      real*8 ff,zrz,ztz,rzsm,tzsm
+      real*8 thetas,thetar,bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz
+      real*8 tolsat,xksrz,xkstz
 
       data tolsat / 0.001d0 /
 
@@ -2504,7 +2557,9 @@ MODULE MODULE_LAND
                        xksat1,xksat2)
 
       implicit none
-      include "help/diffuse.noup.h"
+      real*8 dz1,dz2,theta1,theta2,thetas,thetar,bcbeta,psic
+      real*8 xksat1,xksat2,theta,xksat,F1,satrel,DF
+      real*8 dz,grad,difflx,diffuse
 
 ! ====================================================================
 ! Calculate diffusivity  using centered approx.
@@ -2573,7 +2628,11 @@ MODULE MODULE_LAND
        rzsm_u,grz,bcbeta,ztz,gtz,tzsm,tzsm_u)
 
       implicit none
-      include "help/new_dwnflx.h"
+      integer ikopt,inc_frozen
+
+      real*8 zrz,rzsm,ff,thetar,thetas,rzsm_u,grz,bcbeta
+      real*8 ztz,gtz,tzsm,tzsm_u
+      real*8 xksrz,relsrz,xkstz,relstz
 
 ! ====================================================================
 ! Calculate downward flux out of root and transmission zones using 
@@ -2704,7 +2763,9 @@ MODULE MODULE_LAND
        i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,dummy,f_und)
 
       implicit none
-      include "help/clc_evrz.h"
+      integer ivgtyp,i_und,i_moss
+      real*8 evrz,Swq,Swq_us,evtact,dc,fw,evtact_us,dc_us
+      real*8 fw_us,evrz_moss,dummy,f_und
 
       evrz=zero
 
@@ -2888,8 +2949,24 @@ MODULE MODULE_LAND
        zpd,z0h,RaSnow,appa,vpsat,uzw,rn_snow,alb_snow)
 
       implicit none
-!       include "SNOW.h"
-      include "help/land_os.h"
+      integer ievcon,ivgtyp,ioppet,iffroz,iopthermc,ifcoarse,iopgveg,i_2l
+      integer iopthermc_v,i,inc_frozen,ipix,initer,maxnri
+      real*8 rain,snow,thermc2,heatcap,heatcap2,heatcapold
+      real*8 tkactd,tkmidactd,canclos,xlhv,row,xleactd
+      real*8 evtact,bsdew,tkmid,zmid,zrzmax,smtmp,rzsm,tzsm
+      real*8 smold,rzsmold,tzsmold,thermc1,thetar,thetas
+      real*8 psic,bcbeta,quartz,heatcap1
+      real*8 rocpsoil,cph2o,roa,cp,roi,thermc,rzdthetaudtemp
+      real*8 tcbeta,xlai,tkact,f1,f2,f3,emiss
+      real*8 rescan,ravd,rahd,rnactd,hactd,gactd,dshactd,tcel
+      real*8 vppa,psychr,zdeep,Tdeepstep,rsd,r_lup,rld,toleb,dt
+      real*8 albd,r_sdn,rnetpn,gbspen,rnetd,xled,hd,gd,dshd,tkd
+      real*8 tkmidd,rnact,xleact,hact,gact,dshact,rnetw,xlew,hw
+      real*8 gw,dshw,tkw,tkmidw,dc,fw,tdiff,PackWater,SurfWater
+      real*8 Swq,VaporMassFlux,TPack,TSurf,r_MeltEnergy,Outflow
+      real*8 xleact_snow,hact_snow,dens,precip_o,za,zpd,z0h
+      real*8 RaSnow,appa,vpsat,uzw,rn_snow,alb_snow
+      real*8 tsnow
 
       if (((Swq.gt.(0.0002d0)).or.&
            ((tcel.le.(0.d0)).and.(dt*precip_o.gt.(0.0002d0))))) then
@@ -3029,7 +3106,6 @@ MODULE MODULE_LAND
        rn_snow_us,dens_us,heatcap_us,tkel_ic,eps,ds_p_moss,i_und,i_moss,i_2l)
 
       implicit none
-!       include "SNOW.h"
       integer ievcon_us,ipix,iffroz_us,iopthermc,ifcoarse,inc_frozen,i
       integer iopgveg,iopthermc_v,initer,ievcon_moss,i_und,i_moss,i_2l
       integer maxnri
@@ -3147,7 +3223,21 @@ MODULE MODULE_LAND
        dshw,tkw,tkmidw,dc,fw,tdiff,inc_frozen,ipix,initer)
 
       implicit none
-      include "help/engact.h"
+      integer ievcon,inc_frozen,ipix,initer,ivgtyp,ioppet,iffroz
+      integer iopthermc,ifcoarse,iopgveg,iopthermc_v,i_2l,i
+      integer maxnri
+      real*8 canclos,xlhv,row,xleactd,evtact,bsdew,tkmid,zmid
+      real*8 zrzmax,smtmp,rzsm,tzsm,smold,rzsmold,tzsmold
+      real*8 thermc1,thermc2,thetar,thetas,psic,bcbeta,quartz
+      real*8 heatcap1,heatcap2,heatcapold,rocpsoil,cph2o,roa,cp
+      real*8 roi,thermc,heatcap,rzdthetaudtemp,tcbeta,xlai
+      real*8 tkact,tkactd,tkmidactd,f1,f2,f3,emiss,rescan,ravd
+      real*8 rahd,rnactd,hactd,gactd,dshactd,tcel,vppa,psychr
+      real*8 zdeep,Tdeepstep,rsd,r_lup,rld,toleb,dt,albd
+      real*8 r_sdn,rnetpn,gbspen,rnetd,xled,hd,gd,dshd,tkd,tkmidd
+      real*8 rnact,xleact,hact,gact,dshact,rnetw,xlew,hw,gw,dshw
+      real*8 tkw,tkmidw,dc,fw,tdiff
+      real*8 ccc,tdum1,tdum2
 
       ccc=canclos
 
@@ -3377,7 +3467,9 @@ MODULE MODULE_LAND
                            thetas,rzsm,tkact)
 
       implicit none
-      include "help/calcrsoil.h"
+      integer irestype
+      real*8 rsoil,srespar1,srespar2,srespar3,thetas,rzsm,tkact
+      real*8 D0,Datm
 
       if (irestype.eq.2) then
 
@@ -3440,7 +3532,7 @@ MODULE MODULE_LAND
       subroutine calcsmcond(rzsm,tc,smcond,one,tw,zero)
 
       implicit none
-      include "help/calcsmcond.h"
+      real*8 rzsm,tc,smcond,one,tw,zero
 
       if (rzsm.ge.tc) then
 
@@ -3486,7 +3578,7 @@ MODULE MODULE_LAND
       subroutine calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
 
       implicit none
-      include "help/calcvegcap.h"
+      real*8 smcond,zero,vegcap,epetd,resist,ravd
 
       if (smcond.gt.zero) then
 
@@ -3516,7 +3608,8 @@ MODULE MODULE_LAND
       subroutine acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
 
       implicit none
-      include "help/acttrans.h"
+      integer ievcon
+      real*8 Swq,vegcap,epet,evtact,zrz
 
       if (Swq.le.(0.d0)) then
 
@@ -3576,7 +3669,9 @@ MODULE MODULE_LAND
        TPack,TSurf,r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens)
 
       implicit none
-      include "help/zero_snowvar.h"
+      real*8 PackWater,SurfWater,Swq,VaporMassFlux
+      real*8 TPack,TSurf,r_MeltEnergy,Outflow
+      real*8 xleact_snow,hact_snow,dens
 
       PackWater=0.d0
       SurfWater=0.d0
@@ -3610,7 +3705,9 @@ MODULE MODULE_LAND
          zrz,ztz,bcbeta,thetas,thetar,psic,tzsm)
         
       implicit none
-      include "help/clcddif.h"
+      integer ikopt
+      real*8 rzsm,ff,zrz,ztz,bcbeta,thetas,thetar,psic,tzsm
+      real*8 xksrz,ddifrzdth1,ddifrzdth2,xkstz,ddiftzdth2
 
 ! ====================================================================
 ! Calculate the derivatives of the diffusive flux with respect to
@@ -3669,7 +3766,9 @@ MODULE MODULE_LAND
       function clcdg(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)
 
       implicit none
-      include "help/clcdg.h"
+      integer ikopt
+      real*8 sm,ff,zrz,bcbeta,thetas,thetar
+      real*8 xksrz,dgrz,satrel,clcdg
 
 ! --------------------------------------------------------------------
 ! Calculate the derivative of the downward flux

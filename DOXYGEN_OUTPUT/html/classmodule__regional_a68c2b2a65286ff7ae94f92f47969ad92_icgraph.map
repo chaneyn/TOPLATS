@@ -1,5 +1,5 @@
 <map id="module_regional::sursat" name="module_regional::sursat">
-<area shape="rect" id="node3" href="$classmodule__regional.html#ac368c9469d8b1067ef4804201fc8db69" title="module_regional::compute\l_regional" alt="" coords="230,5,423,46"/>
-<area shape="rect" id="node5" href="$classmodule__regional.html#abf626651ee24fe7f145d36efac79d851" title="module_regional::update\l_regional" alt="" coords="472,5,653,46"/>
-<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="701,12,811,39"/>
+<area shape="rect" id="node3" href="$classmodule__regional.html#ac368c9469d8b1067ef4804201fc8db69" title="Check regional scale water balance and sum simulation totals." alt="" coords="239,5,439,51"/>
+<area shape="rect" id="node5" href="$classmodule__regional.html#abf626651ee24fe7f145d36efac79d851" title="Subroutine to update regional variables." alt="" coords="489,5,676,51"/>
+<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="725,13,840,43"/>
 </map>

@@ -67,7 +67,7 @@
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">real*8</span> :: f1par_result,f1par_true</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf1par_test1&#39;</span>)</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    f1par_result = <a class="code" href="classmodule__atmos.html#a0e3d96b3a71ba4e4d26b4617b92918f2">clcf1par</a>(0.3d0,5.0d0,500.0d0,100.0d0,5000.0d0,100.0d0)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    f1par_result = <a class="code" href="classmodule__atmos.html#a0ccd83fc7c711ad05ee1ee05f77fa0c8">clcf1par</a>(0.3d0,5.0d0,500.0d0,100.0d0,5000.0d0,100.0d0)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    f1par_true = 2.2405063029073640d0</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f1par_true,f1par_result)</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -76,7 +76,7 @@
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">real*8</span> :: f1par_result,f1par_true</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf1par_test2&#39;</span>)</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    f1par_result = <a class="code" href="classmodule__atmos.html#a0e3d96b3a71ba4e4d26b4617b92918f2">clcf1par</a>(0.1d0,1.0d0,100.0d0,200.0d0,3000.0d0,10.0d0)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    f1par_result = <a class="code" href="classmodule__atmos.html#a0ccd83fc7c711ad05ee1ee05f77fa0c8">clcf1par</a>(0.1d0,1.0d0,100.0d0,200.0d0,3000.0d0,10.0d0)</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    f1par_true = 1.0936454829336983d0</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f1par_true,f1par_result)</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -85,7 +85,7 @@
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordtype">real*8</span> :: f3vpd_result,f3vpd_true</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf3vpd_test1&#39;</span>)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    f3vpd_result = <a class="code" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0">clcf3vpd</a>(275.0d0,1.0d0,2.0d0)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    f3vpd_result = <a class="code" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad">clcf3vpd</a>(275.0d0,1.0d0,2.0d0)</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    f3vpd_true = 4.d0</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f3vpd_true,f3vpd_result)</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -94,7 +94,7 @@
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">real*8</span> :: f3vpd_result,f3vpd_true</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf3vpd_test2&#39;</span>)</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    f3vpd_result = <a class="code" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0">clcf3vpd</a>(1.0d0,1000.0d0,250.0d0)</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    f3vpd_result = <a class="code" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad">clcf3vpd</a>(1.0d0,1000.0d0,250.0d0)</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    f3vpd_true = 4.d0</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f3vpd_true,f3vpd_result)</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -103,7 +103,7 @@
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">real*8</span> :: f4temp_result,f4temp_true</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf4temp_test1&#39;</span>)</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    f4temp_result = <a class="code" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da">clcf4temp</a>(2.0d0,27.0d0,5.0d0)</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    f4temp_result = <a class="code" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06">clcf4temp</a>(2.0d0,27.0d0,5.0d0)</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    f4temp_true = -0.0097428548611568806d0</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f4temp_true,f4temp_result)</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -112,7 +112,7 @@
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">real*8</span> :: f4temp_result,f4temp_true</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcf4temp_test2&#39;</span>)</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    f4temp_result = <a class="code" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da">clcf4temp</a>(200.0d0,1.0d0,20.0d0)</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    f4temp_result = <a class="code" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06">clcf4temp</a>(200.0d0,1.0d0,20.0d0)</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    f4temp_true = -0.0021964570949596605d0</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    call <a class="code" href="interfacefruit_1_1assert__equals.html">assert_equals</a>(f4temp_true,f4temp_result)</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="keyword">  end subroutine</span></div>
@@ -311,7 +311,7 @@
 <div class="line"><a name="l00260"></a><span class="lineno"><a class="code" href="classmodule__unit__tests.html#a2300540e7c6ccb0def153c33b8c96236">  260</a></span>&#160;<span class="keyword">  subroutine </span><a class="code" href="classmodule__unit__tests.html#a2300540e7c6ccb0def153c33b8c96236">calcra_test1</a>()</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <span class="keywordtype">real*8</span> :: calcra_result,calcra_true</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    calcra_result = <a class="code" href="classmodule__shared.html#ab1e185f21ec0d6af8351afaa29b96c90">calcra</a>(0.5d0,5.0d0,8.0d0,4.2d0,10.0d0,&amp;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    calcra_result = <a class="code" href="classmodule__shared.html#a57fd8f76c675564f50596c4188b00485">calcra</a>(0.5d0,5.0d0,8.0d0,4.2d0,10.0d0,&amp;</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;      15.0d0,2.0d0)</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    calcra_true = 173.39747643603178d0</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;calcra_test1&#39;</span>)</div>
@@ -321,7 +321,7 @@
 <div class="line"><a name="l00270"></a><span class="lineno"><a class="code" href="classmodule__unit__tests.html#a341f76242d6fae4163ceb5884e2cf926">  270</a></span>&#160;<span class="keyword">  subroutine </span><a class="code" href="classmodule__unit__tests.html#a341f76242d6fae4163ceb5884e2cf926">calcra_test2</a>()</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordtype">real*8</span> :: calcra_result,calcra_true</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    calcra_result = <a class="code" href="classmodule__shared.html#ab1e185f21ec0d6af8351afaa29b96c90">calcra</a>(3.0d0,7.0d0,11.0d0,2.2d0,9.0d0,&amp;</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    calcra_result = <a class="code" href="classmodule__shared.html#a57fd8f76c675564f50596c4188b00485">calcra</a>(3.0d0,7.0d0,11.0d0,2.2d0,9.0d0,&amp;</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;      13.0d0,1.0d0)</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    calcra_true = 1.3890511481178962d0</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;calcra_test2&#39;</span>)</div>
@@ -995,7 +995,7 @@
 <div class="line"><a name="l00944"></a><span class="lineno">  944</span>&#160;    thetar = 0.05d0</div>
 <div class="line"><a name="l00945"></a><span class="lineno">  945</span>&#160;    clcdg_true = 0.021759640965924025d0</div>
 <div class="line"><a name="l00946"></a><span class="lineno">  946</span>&#160;</div>
-<div class="line"><a name="l00947"></a><span class="lineno">  947</span>&#160;    clcdg_ans = <a class="code" href="classmodule__land.html#af50bcdbff65810abe79450667b002416">clcdg</a>(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)</div>
+<div class="line"><a name="l00947"></a><span class="lineno">  947</span>&#160;    clcdg_ans = <a class="code" href="classmodule__land.html#ad181e8a0a5acd8cef948b7a0a09081a4">clcdg</a>(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)</div>
 <div class="line"><a name="l00948"></a><span class="lineno">  948</span>&#160;</div>
 <div class="line"><a name="l00949"></a><span class="lineno">  949</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcdg_test1&#39;</span>)</div>
 <div class="line"><a name="l00950"></a><span class="lineno">  950</span>&#160;    call <a class="code" href="interfacefruit_1_1assertequals.html">assertequals</a>(clcdg_true,clcdg_ans)</div>
@@ -1015,7 +1015,7 @@
 <div class="line"><a name="l00964"></a><span class="lineno">  964</span>&#160;    thetar = 0.05d0</div>
 <div class="line"><a name="l00965"></a><span class="lineno">  965</span>&#160;    clcdg_true = 1.2020423430979581d0</div>
 <div class="line"><a name="l00966"></a><span class="lineno">  966</span>&#160;</div>
-<div class="line"><a name="l00967"></a><span class="lineno">  967</span>&#160;    clcdg_ans = <a class="code" href="classmodule__land.html#af50bcdbff65810abe79450667b002416">clcdg</a>(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)</div>
+<div class="line"><a name="l00967"></a><span class="lineno">  967</span>&#160;    clcdg_ans = <a class="code" href="classmodule__land.html#ad181e8a0a5acd8cef948b7a0a09081a4">clcdg</a>(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)</div>
 <div class="line"><a name="l00968"></a><span class="lineno">  968</span>&#160;</div>
 <div class="line"><a name="l00969"></a><span class="lineno">  969</span>&#160;    call <a class="code" href="interfacefruit_1_1set__unit__name.html">set_unit_name</a>(<span class="stringliteral">&#39;clcdg_test2&#39;</span>)</div>
 <div class="line"><a name="l00970"></a><span class="lineno">  970</span>&#160;    call <a class="code" href="interfacefruit_1_1assertequals.html">assertequals</a>(clcdg_true,clcdg_ans)</div>

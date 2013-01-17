@@ -21,7 +21,7 @@ end interface Extract_Info_General_File
 contains
 
 !###################################################################
-! Subroutine to read in model parameters and initialize the variables
+!> Subroutine to read in model parameters and initialize the variables
 !###################################################################
 
 subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
@@ -77,6 +77,10 @@ subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
 
 end subroutine Initialize_Model
 
+!###################################################################
+!> Subroutine to read in the model parameters
+!###################################################################
+
 subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
 
   implicit none
@@ -113,7 +117,7 @@ subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
 end subroutine Read_Data
 
 !#####################################################################
-! Subroutine to output data to file
+!> Subroutine to output data to file
 !#####################################################################
 
 subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
@@ -141,7 +145,7 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
 end subroutine Write_Data
 
 !#####################################################################
-! Finalize model and close files
+!> Finalize model and close files
 !#####################################################################
 
 subroutine Finalize_Model(GLOBAL)
@@ -158,7 +162,7 @@ subroutine Finalize_Model(GLOBAL)
 end subroutine
 
 !####################################################################
-! Subroutine to read in and pass meteorological data (e.g. rainfall).
+!> Subroutine to read in and pass meteorological data (e.g. rainfall).
 !####################################################################
 
       subroutine rdatmo(i,MET,GLOBAL,IO)
@@ -211,7 +215,7 @@ end subroutine
       end subroutine
 
 ! ####################################################################
-! Subroutine to convert data to original setup
+!> Subroutine to convert data to original setup
 ! ####################################################################
 
       subroutine rdforc(pixdat,nrow,ncol,ipixnum,data_in)
@@ -232,8 +236,7 @@ end subroutine
       end subroutine rdforc
 
 ! ####################################################################
-! Subroutine to open input/output files, read and initialize time 
-! in-variant data.
+!> Subroutine to open input/output files, read and initialize time in-variant data.
 ! ####################################################################
 
       subroutine rddata(GLOBAL,GRID,REG,CAT,IO)
@@ -319,7 +322,7 @@ end subroutine
 !
 ! ====================================================================
 !
-! Subroutine to update the vegetation parameters.
+!>Subroutine to update the vegetation parameters.
 !
 ! ====================================================================
 
@@ -410,8 +413,7 @@ end subroutine
 !#####################################################################
 !			subroutine rdtpmd
 !#####################################################################
-! Subroutine to read in and initialize topmodel parameters and the
-! soils-topographic index map.
+!> Subroutine to read in and initialize topmodel parameters and the soils-topographic index map.
 !#####################################################################
 
 subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
@@ -598,7 +600,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       end subroutine rdtpmd
 
 !##################################################################
-!Subroutine to handle opening and closing the input files
+!> Subroutine to handle opening and closing the input files
 !##################################################################
 
 subroutine FILE_OPEN(GLOBAL)
@@ -666,6 +668,7 @@ open(GLOBAL%REGIONAL_FILE%fp,file=trim(GLOBAL%REGIONAL_FILE%fname))
 
 end subroutine FILE_OPEN
 
+!>Subroutine to close all open files
 subroutine FILE_CLOSE(GLOBAL)
 
 implicit none
@@ -696,14 +699,14 @@ close(GLOBAL%TI_FILE%fp)
 close(GLOBAL%Subbasin_FILE%fp)
 
 !Saturated hydraulic conductivity file
-open(GLOBAL%K0_FILE%fp)
+close(GLOBAL%K0_FILE%fp)
 
 !Catchment table parameters file
-open(GLOBAL%CL_table_FILE%fp)
-
+close(GLOBAL%CL_table_FILE%fp)
 
 end subroutine FILE_CLOSE
 
+!>subroutine to write regional variables to file
 subroutine Write_Regional(i,REG,GLOBAL)
 
   type(REGIONAL_template),intent(in) :: REG
@@ -720,8 +723,7 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to read and initiailize simulation constant vegetation
-!   and land cover parameters.
+!>Subroutine to read and initiailize simulation constant vegetation and land cover parameters.
 !
 ! ====================================================================
 
@@ -973,7 +975,7 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to initialize simulation total water balance variables.
+!>Subroutine to initialize simulation total water balance variables.
 !
 ! ====================================================================
 
@@ -1114,17 +1116,7 @@ end subroutine Write_Regional
       end subroutine inisim
 
 ! ====================================================================
-!
-!  Parameter definitions:
-!
-!    icol:      loop index for image column
-!    dummy:     dummy value to be writen to row-column location
-!                 with no pixel number
-!    ipixnum:   pixel number of image row/column location
-!    irow:      loop index for image row
-!    ncol:      number of columns in the image
-!    nrow:      number of rows in the image
-!    rmult:     all image output to be multiplied by this amount
+!> Subroutine to write raw binary data to the output file
 ! ====================================================================
 
       subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i,GLOBAL)
@@ -1188,7 +1180,7 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to read and initialize time in-variant soil parameters
+!>Subroutine to read and initialize time in-variant soil parameters
 !
 ! ====================================================================
 
@@ -1414,24 +1406,10 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to read in an image of integers and return an array
-!   of these values indexed by the soils-topographi! index
-!   pixel numbers.
+!>Subroutine to read in an image of integers and return an array
+!>of these values indexed by the soils-topographi! index
+!>pixel numbers.
 !
-! ====================================================================
-!
-!
-!  Parameter definitions:
-!
-!    ia:        values read from the image in an array indexed by 
-!                 pixel number
-!    icol:      loop index for image column
-!    ipixnum:   pixel number of image row/column location
-!    irow:      loop index for image row
-!    itmpval:   temporary 4 byte integer value read from the image
-!    iu:        unit number to read data
-!    ncol:      number of columns in the image
-!    nrow:      number of rows in the image
 ! ====================================================================
 
       subroutine rdimgi(ia,iu,nrow,ncol,ipixnum)
@@ -1478,9 +1456,9 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to read in an image of 4 byte reals and return an array
-!   of these values indexed by the soils-topographic index
-!   pixel numbers.
+!> Subroutine to read in an image of 4 byte reals and return an array
+!>   of these values indexed by the soils-topographic index
+!>   pixel numbers.
 !
 ! ====================================================================
 !
@@ -1536,9 +1514,9 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Subroutine to read in the topographi! index image and set up
-! at translation between the pixel number and the image row.and.&
-! column.
+!> Subroutine to read in the topographi! index image and set up
+!> at translation between the pixel number and the image row.and.&
+!> column.
 !
 ! ====================================================================
 
@@ -1612,7 +1590,7 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 !
-! Returns the natural log of the i factorial.
+!> Returns the natural log of the i factorial.
 !
 ! ====================================================================
 !
@@ -1648,21 +1626,7 @@ end subroutine Write_Regional
 
       end function factln
 
-
-! ====================================================================
-!
-!                   subroutine bilinear_interpolation
-!
-! ====================================================================
-!
-! Subroutine to downscale data using bilinear interpolation
-!
-! ====================================================================
-
-!subroutine bilinear_interpolation()
-
-!end subroutine biliner_interpolation
-
+!>Subroutine to read the general parameters file
 subroutine Read_General_File(GLOBAL)
 
   implicit none
@@ -1757,6 +1721,7 @@ subroutine Read_General_File(GLOBAL)
   
 end subroutine
 
+!>Subroutine to extract all integer variables from the general parameters file
 subroutine Extract_Info_General_File_Int(strid,GLOBAL,read_arg)
 
   implicit none
@@ -1785,6 +1750,7 @@ subroutine Extract_Info_General_File_Int(strid,GLOBAL,read_arg)
 
 end subroutine Extract_Info_General_File_Int
 
+!>Subroutine to extract all string variables from the general parameters file
 subroutine Extract_Info_General_File_String(strid,GLOBAL,read_arg)
 
   implicit none
@@ -1814,6 +1780,7 @@ subroutine Extract_Info_General_File_String(strid,GLOBAL,read_arg)
 
 end subroutine Extract_Info_General_File_String
 
+!>Subroutine to extract all double precision variables from the general parameters file
 subroutine Extract_Info_General_File_Double(strid,GLOBAL,read_arg)
 
   implicit none
