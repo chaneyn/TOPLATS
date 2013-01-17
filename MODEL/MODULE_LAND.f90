@@ -25,7 +25,7 @@ MODULE MODULE_LAND
 
 ! Meteorological data
 
-       tcel,vppa,psychr,xlhv,&
+       tcel,vppa,psychr,&
 
 ! Energy fluxes
 
@@ -190,7 +190,7 @@ MODULE MODULE_LAND
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
        GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
-       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,tcel,vppa,psychr,xlhv,&
+       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,tcel,vppa,psychr,CELL_VARS%xlhv,&
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,CELL_VARS%tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,GRID_VARS%rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,CELL_VARS%epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
@@ -209,7 +209,8 @@ MODULE MODULE_LAND
 
             call calcrain (tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
 
-            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,CELL_VARS%RaSnow,CELL_VARS%roa,vppa,xlhv,&
+            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,CELL_VARS%RaSnow,&
+            CELL_VARS%roa,vppa,CELL_VARS%xlhv,&
             GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,CELL_VARS%appa,rain,snow,tcel,CELL_VARS%vpsat-vppa,GRID_MET%uzw,&
             GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
             GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
@@ -322,7 +323,7 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
-       tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
+       tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,CELL_VARS%xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
        bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
        GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,thermc1,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
