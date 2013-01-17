@@ -1,6 +1,6 @@
 <map id="module_land::states" name="module_land::states">
-<area shape="rect" id="node3" href="$classmodule__land.html#a0a0cefd8a267d4937e12a54706be98c6" title="module_land::land" alt="" coords="205,12,344,39"/>
-<area shape="rect" id="node5" href="$classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="392,12,571,39"/>
-<area shape="rect" id="node7" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="619,5,770,46"/>
-<area shape="rect" id="node9" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="819,12,928,39"/>
+<area shape="rect" id="node3" href="$classmodule__land.html#aef9b3d1ad5692fae6d85807cb899d2b3" title="module_land::land" alt="" coords="215,13,356,43"/>
+<area shape="rect" id="node5" href="$classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="405,13,595,43"/>
+<area shape="rect" id="node7" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="644,5,801,51"/>
+<area shape="rect" id="node9" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="851,13,965,43"/>
 </map>
