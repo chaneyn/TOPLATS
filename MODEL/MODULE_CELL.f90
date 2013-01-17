@@ -149,7 +149,6 @@ xlamda = CAT%xlamda
 
        epetd,rnetd,&
        tkd,tkmidd,&
-       tsoilold,&
 
        GRID_SOIL,&
 

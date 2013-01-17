@@ -45,7 +45,6 @@ contains
 
        epetd,rnetd,&
        tkd,tkmidd,&
-       tsoilold,&
 
        GRID_SOIL,&
 
@@ -75,7 +74,6 @@ contains
     real*8 tkmid
     real*8 epetd,rnetd
     real*8 tkd,tkmidd
-    real*8 tsoilold
     real*8 f1par
     real*8 f3vpd,f4temp
     real*8 roa,roa_ic,ravd,rahd
@@ -236,7 +234,7 @@ tkmid = GRID_VARS%tkmid
 
       endif
 
-      tsoilold=GRID_VARS%tkmidpet
+      CELL_VARS%tsoilold=GRID_VARS%tkmidpet
 
 ! ====================================================================
 ! Vapor pressure variables -- use different method depending
