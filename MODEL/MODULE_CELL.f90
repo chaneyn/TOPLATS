@@ -324,11 +324,6 @@ xlamda = CAT%xlamda
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
 
-! Vegetation parameters
-
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
-       f1,f2,f3,&
-
 ! Constants
 
        roa,roa_ic,&

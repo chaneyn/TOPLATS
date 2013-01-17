@@ -34,10 +34,6 @@ MODULE MODULE_LAND
        rnetd,&
        tkd,tkmidd,&
 
-! Vegetation parameters
-
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,f1,f2,f3,&
-
 ! Constants
 
        roa,roa_ic,&
@@ -137,9 +133,9 @@ MODULE MODULE_LAND
 
       rain=0.d0
       snow=0.d0
-      f1=0.d0
-      f2=0.d0
-      f3=0.d0
+      CELL_VARS%f1=0.d0
+      CELL_VARS%f2=0.d0
+      CELL_VARS%f3=0.d0
 
       gold=GRID_VARS%gact
 
@@ -327,10 +323,10 @@ MODULE MODULE_LAND
 ! Calculate the transpiration from dry canopy for vegetated pixels.
 ! --------------------------------------------------------------------
 
-         call transv(epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,f1par,f3vpd,f4temp,&
+         call transv(epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,CELL_VARS%f1par,CELL_VARS%f3vpd,CELL_VARS%f4temp,&
        GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
        smcond,GRID_VARS%tzsm,tzsm_u,&
-       GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
+       GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
        vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
@@ -409,7 +405,7 @@ MODULE MODULE_LAND
        GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,&
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
-       GLOBAL%i_2l,f1,f2,f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
+       GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
        hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
@@ -439,7 +435,8 @@ MODULE MODULE_LAND
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,thermc_us,GLOBAL%iopthermc_v,GRID_VEG%tcbeta_us,&
-       GRID_VEG%xlai,f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
+       GRID_VEG%xlai,CELL_VARS%f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,&
+       GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
        roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
        GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
        CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
