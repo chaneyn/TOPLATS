@@ -161,11 +161,6 @@ xlamda = CAT%xlamda
        dspet_us,dspet_moss,&
 
        GRID_SOIL,&
-       
-! Moss parameters
-
-       
-       epet_moss,&
 
 ! Vegetation parameters
 
