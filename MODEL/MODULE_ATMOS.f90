@@ -62,7 +62,7 @@ contains
        
 ! Moss parameters
 
-       rib_moss,&
+       
        epet_moss,&
 
 ! Vegetation parameters
@@ -102,7 +102,7 @@ contains
     real*8 tkmid_p_moss,tskin_p_moss,eact_moss,tsoilold
     real*8 tkmidpet_us,tkmidpet_moss,dspet_us
     real*8 dspet_moss
-    real*8 rib_moss,epet_moss
+    real*8 epet_moss
     real*8 f1par
     real*8 f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us
     real*8 f1,f2,f3
@@ -430,7 +430,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Moss parameters
 
-       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,rib_moss,&
+       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,CELL_VARS%rib_moss,&
        GRID_VEG%z0m_moss,GRID_VEG%z0h_moss,epet_moss,&
 
 ! Vegetation parameters
