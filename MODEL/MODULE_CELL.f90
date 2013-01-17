@@ -317,12 +317,7 @@ xlamda = CAT%xlamda
 ! Meteorological data
 
        tcel,vppa,psychr,xlhv,tkel,appa,&
-       vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-
-! Temperature variables
-
-       tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,tkmidpet_us,tkmidpet_moss,tsoilold,&
+       vpsat,&
 
 ! Energy fluxes
 
