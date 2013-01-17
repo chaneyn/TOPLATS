@@ -36,7 +36,7 @@ contains
 ! Meteorological data
 
        GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,&
        twet_ic,twet,&
        qv,qv_ic,ra,ra_ic,&
 
@@ -84,8 +84,8 @@ contains
     integer ipix,i
 
     real*8 tcel,vppa,psychr,xlhv,tkel
-    real*8 uzw,appa,vpsat,xlhv_ic
-    real*8 tkel_ic,vpsat_ic,twet_ic,twet
+    real*8 uzw,appa,vpsat
+    real*8 twet_ic,twet
     real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
     real*8 tskinact_moss,tkact_moss,tkmid_moss
     real*8 epetd,epetd_us,dshact_moss,xle_act_moss,rnetd
@@ -119,7 +119,7 @@ contains
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
 tkmid = GRID_VARS%tkmid
-!Tdeepstep, rnetd, tkmidd, tkd are problems
+!rnetd, tkmidd, tkd, tcel, vppa, roa, are problems
 
 
 ! ====================================================================
@@ -238,7 +238,7 @@ tkmid = GRID_VARS%tkmid
       tcel=GRID_MET%tdry
       tkel=tcel+273.15d0
       CELL_VARS%tcel_ic=GRID_VARS%Tincan
-      tkel_ic=CELL_VARS%tcel_ic+273.15d0
+      CELL_VARS%tkel_ic=CELL_VARS%tcel_ic+273.15d0
 
 ! ====================================================================
 ! If first time step, use air temperature to initialize mid soil temp.
@@ -269,19 +269,19 @@ tkmid = GRID_VARS%tkmid
 
       appa=100.d0*GRID_MET%press
       vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
-      vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
+      CELL_VARS%vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
 
       if (GLOBAL%iopwv.eq.0) then
 
          vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
          GRID_MET%rh=100.*vppa/vpsat
          CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
-         GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/vpsat_ic
+         GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/CELL_VARS%vpsat_ic
 
       else
 
          vppa=0.01*GRID_MET%rh*vpsat
-         CELL_VARS%vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
+         CELL_VARS%vppa_ic=0.01*GRID_VARS%rh_ic*CELL_VARS%vpsat_ic
 
       endif
 
@@ -309,9 +309,9 @@ tkmid = GRID_VARS%tkmid
       psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
       ra_ic=287.d0*(one+0.608d0*qv_ic)
-      roa_ic=appa/(ra_ic*tkel_ic)
-      xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
-      CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
+      roa_ic=appa/(ra_ic*CELL_VARS%tkel_ic)
+      CELL_VARS%xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
+      CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*CELL_VARS%xlhv_ic)
 
 
 
@@ -397,7 +397,8 @@ tkmid = GRID_VARS%tkmid
 ! Meteorological data
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       appa,vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
+       CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
 ! Temperature variables
 
