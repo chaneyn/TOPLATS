@@ -37,7 +37,6 @@ contains
 
        GRID_MET,tcel,vppa,xlhv,uzw,&
        appa,&
-       twet,&
 
 ! Temperature variables
 
@@ -74,7 +73,6 @@ contains
 
     real*8 tcel,vppa,xlhv
     real*8 uzw,appa
-    real*8 twet
     real*8 tkmid
     real*8 epetd,epetd_us,rnetd
     real*8 tkd,tkmidd
@@ -185,7 +183,7 @@ tkmid = GRID_VARS%tkmid
            (GRId_VEG%Twslope2.eq.(0.d0)).and.(GRID_VEG%Twint2.eq.(0.d0)).and.&
            (GRID_VEG%Twsep.eq.(0.d0)) ) then
 
-         CELL_VARS%twet_ic=twet
+         CELL_VARS%twet_ic=CELL_VARS%twet
 
          !if (GRID_VEG%r_moss_depth.lt.0.d0) stop
 
@@ -200,13 +198,13 @@ tkmid = GRID_VARS%tkmid
 
          if (rrrr.ge.GRID_VEG%Twsep) then
 
-            CELL_VARS%twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
+            CELL_VARS%twet_ic=CELL_VARS%twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
          if (rrrr.lt.GRID_VEG%Twsep) then
 
-            CELL_VARS%twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
+            CELL_VARS%twet_ic=CELL_VARS%twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -255,7 +253,7 @@ tkmid = GRID_VARS%tkmid
 
       if (GLOBAL%iopwv.eq.0) then
 
-         vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
+         vppa=611.0d0*dexp((17.27d0*(CELL_VARS%twet))/(237.3d0+(CELL_VARS%twet)))
          GRID_MET%rh=100.*vppa/CELL_VARS%vpsat
          CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(CELL_VARS%twet_ic))/&
          (237.3d0+(CELL_VARS%twet_ic)))

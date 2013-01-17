@@ -140,7 +140,6 @@ xlamda = CAT%xlamda
 ! Meteorological data
        GRID_MET,tcel,vppa,xlhv,uzw,&
        appa,&
-       twet,&
 
 ! Temperature variables
 
