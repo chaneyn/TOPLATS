@@ -151,7 +151,6 @@ xlamda = CAT%xlamda
 
        epetd,epetd_us,rnetd,&
        tkd,tkmidd,&
-       dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
        dshw_us,tkw_us,tkmidw_us,epetw_us,&
        rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
        tkmidd_us,rnet_pot_moss,xle_p_moss,&
