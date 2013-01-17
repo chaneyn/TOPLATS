@@ -24,8 +24,8 @@ MODULE MODULE_LAND
     subroutine land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
-      include "help/land.h"!Remove when variables are changed
-
+      
+      integer ipix,i,initer,iffroz,iffroz_us
       type (GRID_MET_template) :: GRID_MET
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
@@ -33,7 +33,21 @@ MODULE MODULE_LAND
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
       type (CELL_VARS_template) :: CELL_VARS
-      real*8 gold
+      real*8 gold,rain,snow,dshactd,dshactd_moss,dshactd_us,dum
+      real*8 ebscap,evrz_moss,gactd,gactd_moss,gactd_us
+      real*8 hactd,hactd_us,hactd_moss,heatcap,heatcap1,heatcap2
+      real*8 heatcap_moss,heatcap_us,heatcapold
+      real*8 p1,p2,p3,tkactd_us,xkrz
+      real*8 psisoi,r_dens,r_ldn,r_lup,r_sdn,ressoi,rnactd,rnactd_moss
+      real*8 rnactd_us,rs_over,rs_under,rsoil,rzsm_test,rzsm_u_test
+      real*8 rzsmst,smcond,smcond_us,smtmp,srzrel,stzrel,tdiff
+      real*8 thermc,thermc1,thermc2,thermc_moss,thermc_us
+      real*8 thetas_add,tkactd,tkactd_moss
+      real*8 tkmidactd,tkmidactd_moss,tkmidactd_us
+      real*8 tolinf,trlup,tskinactd_moss,tsnow,tzsm_test
+      real*8 tzsm_u_test,vegcap,vegcap_us,xinfcp,xksrz
+      real*8 xkstz,xktz,xleactd,xleactd_us,xleactd_moss
+      real*8 zw0 
 
       data tolinf/1.0d-09/
       initer=2
