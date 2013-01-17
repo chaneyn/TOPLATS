@@ -314,10 +314,6 @@ xlamda = CAT%xlamda
 
 
        call land(ipix,i,&
-! Meteorological data
-
-       tcel,&
-
 ! Energy fluxes
 
       bsdew,&

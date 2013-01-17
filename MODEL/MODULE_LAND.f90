@@ -23,10 +23,6 @@ MODULE MODULE_LAND
 ! ====================================================================
     subroutine land(ipix,i,&
 
-! Meteorological data
-
-       tcel,&
-
 ! Energy fluxes
 
        bsdew,&
@@ -190,7 +186,8 @@ MODULE MODULE_LAND
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
        GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
-       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,tcel,CELL_VARS%vppa,CELL_VARS%psychr,CELL_VARS%xlhv,&
+       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,CELL_VARS%tcel,&
+       CELL_VARS%vppa,CELL_VARS%psychr,CELL_VARS%xlhv,&
        GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,CELL_VARS%tkel,&
        GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,GRID_VARS%rib,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,CELL_VARS%epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
@@ -207,11 +204,11 @@ MODULE MODULE_LAND
             GRID_VARS%evtact = ebscap
             GRID_VARS%ievcon = 3
 
-            call calcrain (tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
+            call calcrain (CELL_VARS%tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
 
             call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,CELL_VARS%RaSnow,&
             CELL_VARS%roa,CELL_VARS%vppa,CELL_VARS%xlhv,&
-            GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,CELL_VARS%appa,rain,snow,tcel,&
+            GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,CELL_VARS%appa,rain,snow,CELL_VARS%tcel,&
             CELL_VARS%vpsat-CELL_VARS%vppa,GRID_MET%uzw,&
             GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
             GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
@@ -222,7 +219,7 @@ MODULE MODULE_LAND
             tsnow=GRID_VARS%TPack+273.15d0
 
             if (GRID_VARS%Swq.lt.(0.005d0)) tsnow=GRID_VARS%TSurf+273.15d0
-            if (GRID_VARS%Swq.lt.(0.d0)) tsnow=tcel+273.15d0
+            if (GRID_VARS%Swq.lt.(0.d0)) tsnow=CELL_VARS%tcel+273.15d0
 
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_SOIL%zmid,GLOBAL%dt,dum)
@@ -332,7 +329,7 @@ MODULE MODULE_LAND
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
        GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
-       hactd,gactd,dshactd,tcel,CELL_VARS%vppa,CELL_VARS%psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
+       hactd,gactd,dshactd,CELL_VARS%tcel,CELL_VARS%vppa,CELL_VARS%psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
        GRID_VARS%gbspen,GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
