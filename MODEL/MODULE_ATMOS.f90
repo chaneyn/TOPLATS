@@ -31,7 +31,7 @@ contains
 
 
 
-  subroutine atmos(ipix,i,GRID_VEG,&
+  subroutine atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
 
@@ -120,6 +120,7 @@ contains
     type (GRID_VARS_template) :: GRID_VARS
     type (GRID_SOIL_template) :: GRID_SOIL
     type (GLOBAL_template) :: GLOBAL
+    type (CELL_VARS_template) :: CELL_VARS
 
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
