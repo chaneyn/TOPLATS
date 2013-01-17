@@ -144,8 +144,7 @@ xlamda = CAT%xlamda
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact_moss,&
-       tkmid_moss,&
+       GRID_VARS,tkmid,&
 
 ! Energy fluxes and states
 

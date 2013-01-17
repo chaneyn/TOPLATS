@@ -42,8 +42,7 @@ contains
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,tkact_moss,&
-       tkmid_moss,&
+       GRID_VARS,tkmid,&
        
 ! Energy fluxes and states
 
@@ -80,7 +79,6 @@ contains
     real*8 uzw,appa,vpsat
     real*8 twet
     real*8 qv,ra,tkmid
-    real*8 tkact_moss,tkmid_moss
     real*8 epetd,epetd_us,rnetd
     real*8 tkd,tkmidd
     real*8 tsoilold
@@ -235,8 +233,8 @@ tkmid = GRID_VARS%tkmid
 
          call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
        GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
-       CELL_VARS%tkmid_us,tkmid_moss,tkel,&
-       GRID_VEG%tk0moss,GRID_VARS%tkact,CELL_VARS%tkact_us,tkact_moss,&
+       CELL_VARS%tkmid_us,CELL_VARS%tkmid_moss,tkel,&
+       GRID_VEG%tk0moss,GRID_VARS%tkact,CELL_VARS%tkact_us,CELL_VARS%tkact_moss,&
        CELL_VARS%tskinact_moss,GRID_VARS%dshact,&
        CELL_VARS%dshact_us,CELL_VARS%dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,&
        CELL_VARS%tkmidpet_us,CELL_VARS%tkmidpet_moss,&
@@ -391,8 +389,8 @@ tkmid = GRID_VARS%tkmid
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,GRID_VARS%tkact,CELL_VARS%tkmid_us,CELL_VARS%tkact_us,CELL_VARS%tskinact_moss,tkact_moss,&
-       tkmid_moss,GRID_SOIL%Tdeepstep,&
+       GRID_VARS,tkmid,GRID_VARS%tkact,CELL_VARS%tkmid_us,CELL_VARS%tkact_us,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,&
+       CELL_VARS%tkmid_moss,GRID_SOIL%Tdeepstep,&
 
 ! Energy fluxes and states
 
