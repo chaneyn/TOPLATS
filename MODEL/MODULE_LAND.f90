@@ -33,8 +33,6 @@ MODULE MODULE_LAND
        epetd,bsdew,&
        rnetd,&
        tkd,tkmidd,&
-       dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,&
-       hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,&
        evtact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,&
        tkmid_p_moss,tskin_p_moss,eact_moss,rnact_moss,&
        xleact_moss,hact_moss,gact_moss,ds_p_moss,&
@@ -346,7 +344,7 @@ MODULE MODULE_LAND
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
-       GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,CELL_VARS%ievcon_us,bsdew,i,ipix)
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,bsdew,i,ipix)
 
       endif
 
@@ -377,7 +375,7 @@ MODULE MODULE_LAND
       call tz_and_rzbal(i,GLOBAL%newstorm,GLOBAL%inc_frozen,GLOBAL%ikopt,GRID_VEG%ivgtyp,&
        GLOBAL%dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,GRID_VARS%rzsm1,GRID_VARS%tzsm1,&
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,GLOBAL%zrzmax,&
-       GRID_VARS%evtact,evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
+       GRID_VARS%evtact,CELL_VARS%evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
@@ -444,16 +442,17 @@ MODULE MODULE_LAND
        tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,CELL_VARS%ievcon_us,&
        CELL_VARS%rnact_us,CELL_VARS%xleact_us,CELL_VARS%hact_us,CELL_VARS%gact_us,CELL_VARS%dshact_us,CELL_VARS%tkact_us,&
        CELL_VARS%tkmid_us,rnactd_us,CELL_VARS%rnetw_us,xleactd_us,CELL_VARS%xlew_us,hactd_us,CELL_VARS%hw_us,&
-       gactd_us,CELL_VARS%gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,GRID_VEG%xlai_us,&
-       dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
+       gactd_us,CELL_VARS%gw_us,dshactd_us,CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,GRID_VEG%xlai_us,&
+       dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,CELL_VARS%evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,thermc_us,GLOBAL%iopthermc_v,GRID_VEG%tcbeta_us,&
        GRID_VEG%xlai,f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
        roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
-       GRID_MET%rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
-       ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
+       GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
+       CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
+       CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,evtact_moss,thermc_moss,&
        GRID_VARS%r_mossm,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,CELL_VARS%tkmid_moss,hactd_moss,gactd_moss,&
        dshactd_moss,rav_moss,rah_moss,r_moss_depth,GRID_VEG%alb_moss,&
        rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&

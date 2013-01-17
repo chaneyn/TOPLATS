@@ -323,8 +323,7 @@ xlamda = CAT%xlamda
 
        epetd,bsdew,rnetd,&
        tkd,tkmidd,&
-       dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,&
-       tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,evtact_moss,rnet_pot_moss,&
+       evtact_moss,rnet_pot_moss,&
        xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
        tskin_p_moss,eact_moss,rnact_moss,xleact_moss,hact_moss,gact_moss,&
        ds_p_moss,&
