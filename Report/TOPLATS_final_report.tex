@@ -1,0 +1,55 @@
+\documentclass[pdftex,12pt,a4paper]{article}
+\usepackage[pdftex]{graphicx}
+
+\title{Updating TOPLATS with Fortran 2003}
+\author{\\ \\ Nathaniel Chaney\\ Colby Fisher\\ Amanda Siemann\\ Ruolan Xu\\ Wang Zhan \\ \\ Department of Civil and Environmental Engineering}
+\date{}
+%\date{January 14, 2013}                                           % Activate to display a given date or no date
+
+\begin{document}
+
+\maketitle
+\vfill
+\begin{center}
+{\large \today}
+\end{center}
+
+\newpage
+\section{Introduction}
+{(Effi)}
+{\\ Introduce TOPLATS, our motivation and goals (adapted from design document)}
+
+\section{Interface}
+{(Nate)}
+{\\ Driver}
+{\\ Separate I/O from actual model}
+{\\ Simplified input files}
+
+\section{Modularization}
+{(Wang)}
+{\\ Regroup subroutines into modules by their function}
+{\\ Establish shared routines}
+
+\section{Variables}
+{(Amanda)}
+{\\ Replace variables with structures}
+{\\ Remove redundant help files}
+{\\ Dynamic memory allocation}
+
+\section{Tests}
+{(Effi)}
+{\\ Catchment tests\\ Unit tests on subroutines}
+
+\section{Parralellization}
+{(Colby)}
+{\\ OpenMP}
+
+\section{Profiling}
+{(Colby)}
+{\\ Valgrind detects uninitialized variables}
+
+\section{Conclusion}
+{(Effi)}
+{Lessons learned e.g. version control and github helps collaboration}
+{ \\ Future developement}
+\end{document}

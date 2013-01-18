@@ -1,0 +1,12 @@
+
+*.f90~
+
+*.kate-swp
+
+*.txt~
+
+Makefile~
+
+.DS_Store
+
+.gitignore~
