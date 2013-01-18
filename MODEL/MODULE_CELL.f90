@@ -147,13 +147,6 @@ GRID_VARS%epwms = 0.d0!epwms
 ! Vegetation parameters
 
        f1par,f3vpd,f4temp,&
-       
-
-! Constants
-
-       roa,&
-
-! Energy balance variables
 
        GLOBAL)
 
@@ -183,7 +176,7 @@ GRID_VARS%epwms = 0.d0!epwms
        CELL_VARS%f1par = f1par
        CELL_VARS%f3vpd = f3vpd
        CELL_VARS%f4temp = f4temp
-       CELL_VARS%roa = roa
+       !CELL_VARS%roa = roa
 
        call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 

@@ -48,11 +48,6 @@ contains
 ! Vegetation parameters
 
        f1par,f3vpd,f4temp,&
-       
-
-! Constants
-
-       roa,&
 
        GLOBAL)
 
@@ -68,7 +63,6 @@ contains
     real*8 tkd,tkmidd
     real*8 f1par
     real*8 f3vpd,f4temp
-    real*8 roa
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -272,7 +266,7 @@ tkmid = GRID_VARS%tkmid
 ! ====================================================================
 
       CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
-      roa=appa/(CELL_VARS%ra*CELL_VARS%tkel)
+      CELL_VARS%roa=appa/(CELL_VARS%ra*CELL_VARS%tkel)
       xlhv =2.501d6-2370.d0*tcel
       CELL_VARS%psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
 
@@ -413,7 +407,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Constants
 
-       GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
+       GRID_VARS%row,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
        GLOBAL%maxnri,CELL_VARS%roa_ic,&
 
 ! Energy balance variables
@@ -438,7 +432,7 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
        GRID_VEG%rescan,CELL_VARS%ravd,xlhv,&
        GRID_VARS%row,epetd,GRID_VARS%epetw,CELL_VARS%ravw,CELL_VARS%psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
-       GRID_VEG%hw,GRID_VARS%cp,roa)
+       GRID_VEG%hw,GRID_VARS%cp,CELL_VARS%roa)
  
       endif
 
