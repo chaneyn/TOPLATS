@@ -43,7 +43,7 @@ contains
        
 ! Energy fluxes and states
 
-       tkd,tkmidd,GRID_SOIL,&
+       tkmidd,GRID_SOIL,&
 
        GLOBAL)
 
@@ -54,7 +54,7 @@ contains
 
     real*8 uzw
     real*8 tkmid
-    real*8 tkd,tkmidd
+    real*8 tkmidd
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -365,7 +365,7 @@ tkmid = GRID_VARS%tkmid
 
        GRID_VARS%dshact,CELL_VARS%epetd,GRID_VARS%gact,CELL_VARS%epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
        GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,&
-       GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
+       GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,&
        GRID_VEG%tkmidw,CELL_VARS%tskinactd_moss,CELL_VARS%tkactd_moss,CELL_VARS%tkmidactd_moss,&
        CELL_VARS%ds_p_moss,GRID_VARS%epetw,&
