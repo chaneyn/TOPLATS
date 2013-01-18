@@ -31,85 +31,11 @@ contains
 
 
 
-  subroutine atmos(ipix,i,GRID_VEG,&
-
-! Meteorological data
-
-       GRID_MET,tcel,vppa,psychr,xlhv,tkel,uzw,&
-       appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
-       twet_ic,twet,&
-       qv,qv_ic,ra,ra_ic,&
-
-! Temperature variables
-
-       GRID_VARS,tkmid,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,&
-       
-! Energy fluxes and states
-
-       epetd,epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,&
-       dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
-       dshw_us,tkw_us,tkmidw_us,epetw_us,&
-       rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,&
-       tskin_p_moss,eact_moss,tsoilold,&
-       tkmidpet_us,tkmidpet_moss,dspet_us,dspet_moss,&
-
-       GRID_SOIL,&
-       
-! Moss parameters
-
-       rib_moss,&
-       epet_moss,&
-
-! Vegetation parameters
-
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,&
-       f1,f2,f3,&
-       f3vpdpar_us,&
-       f4temppar_us,&
-
-! Constants
-
-       roa,roa_ic,&
-
-! Energy balance variables
-
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,&
-       RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
-
-       GLOBAL)
+  subroutine atmos(ipix,i,GRID_VEG,CELL_VARS,GRID_MET,GRID_VARS,GRID_SOIL,GLOBAL)
 
     implicit none
-   ! include "help/atmos.h" !take this out when variables are fixed
 
     integer ipix,i
-
-    real*8 tcel,vppa,psychr,xlhv,tkel
-    real*8 uzw,appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic
-    real*8 tkel_ic,vpsat_ic,twet_ic,twet
-    real*8 qv,qv_ic,ra,ra_ic,tkmid,tkmid_us,tkact_us
-    real*8 tskinact_moss,tkact_moss,tkmid_moss
-    real*8 epetd,epetd_us,dshact_moss,xle_act_moss,rnetd
-    real*8 tkd,tkmidd,tskinactd_moss
-    real*8 tkactd_moss,tkmidactd_moss,ds_p_moss,dshact_us
-    real*8 rnetw_us,xlew_us,hw_us,gw_us,dshw_us,tkw_us,tkmidw_us
-    real*8 epetw_us,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us
-    real*8 rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss
-    real*8 tkmid_p_moss,tskin_p_moss,eact_moss,tsoilold
-    real*8 tkmidpet_us,tkmidpet_moss,dspet_us
-    real*8 dspet_moss
-    real*8 rib_moss,epet_moss
-    real*8 f1par
-    real*8 f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us
-    real*8 f1,f2,f3
-    real*8 f3vpdpar_us,f4temppar_us
-    real*8 roa,roa_ic,ravd,rahd,ravd_us
-    real*8 rahd_us,rav_moss,rah_moss,RaSnow,rib_us,ravw,ravw_us
-    real*8 rahw,rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -120,12 +46,7 @@ contains
     type (GRID_VARS_template) :: GRID_VARS
     type (GRID_SOIL_template) :: GRID_SOIL
     type (GLOBAL_template) :: GLOBAL
-
-! Temporarily changing over variables from old to new format
-uzw = GRID_MET%uzw
-tkmid = GRID_VARS%tkmid
-!Tdeepstep, rnetd, tkmidd, tkd are problems
-
+    type (CELL_VARS_template) :: CELL_VARS
 
 ! ====================================================================
 ! Define the albedo for the snow layer.
@@ -209,7 +130,7 @@ tkmid = GRID_VARS%tkmid
            (GRId_VEG%Twslope2.eq.(0.d0)).and.(GRID_VEG%Twint2.eq.(0.d0)).and.&
            (GRID_VEG%Twsep.eq.(0.d0)) ) then
 
-         twet_ic=twet
+         CELL_VARS%twet_ic=CELL_VARS%twet
 
          !if (GRID_VEG%r_moss_depth.lt.0.d0) stop
 
@@ -224,13 +145,13 @@ tkmid = GRID_VARS%tkmid
 
          if (rrrr.ge.GRID_VEG%Twsep) then
 
-            twet_ic=twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
+            CELL_VARS%twet_ic=CELL_VARS%twet+GRId_VEG%Twint2+GRID_VEG%Twslope2*rrrr
 
          endif
 
          if (rrrr.lt.GRID_VEG%Twsep) then
 
-            twet_ic=twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
+            CELL_VARS%twet_ic=CELL_VARS%twet+GRID_VEG%Twint1+GRID_VEG%Twslope1*rrrr
 
          endif
 
@@ -240,10 +161,10 @@ tkmid = GRID_VARS%tkmid
 ! Initialize temperature variables.
 ! ====================================================================
 
-      tcel=GRID_MET%tdry
-      tkel=tcel+273.15d0
-      tcel_ic=GRID_VARS%Tincan
-      tkel_ic=tcel_ic+273.15d0
+      CELL_VARS%tcel=GRID_MET%tdry
+      CELL_VARS%tkel=CELL_VARS%tcel+273.15d0
+      CELL_VARS%tcel_ic=GRID_VARS%Tincan
+      CELL_VARS%tkel_ic=CELL_VARS%tcel_ic+273.15d0
 
 ! ====================================================================
 ! If first time step, use air temperature to initialize mid soil temp.
@@ -252,17 +173,18 @@ tkmid = GRID_VARS%tkmid
       if (i.eq.1) then
 
          call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
-       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
-       tkmid_us,tkmid_moss,tkel,&
-       GRID_VEG%tk0moss,GRID_VARS%tkact,tkact_us,tkact_moss,&
-       tskinact_moss,GRID_VARS%dshact,&
-       dshact_us,dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,tkmidpet_us,tkmidpet_moss,&
-       GRID_VARS%dspet,dspet_us,dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
+       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,GRID_VARS%tkmid,&
+       CELL_VARS%tkmid_us,CELL_VARS%tkmid_moss,CELL_VARS%tkel,&
+       GRID_VEG%tk0moss,GRID_VARS%tkact,CELL_VARS%tkact_us,CELL_VARS%tkact_moss,&
+       CELL_VARS%tskinact_moss,GRID_VARS%dshact,&
+       CELL_VARS%dshact_us,CELL_VARS%dshact_moss,GRID_VARS%tkpet,GRID_VARS%tkmidpet,&
+       CELL_VARS%tkmidpet_us,CELL_VARS%tkmidpet_moss,&
+       GRID_VARS%dspet,CELL_VARS%dspet_us,CELL_VARS%dspet_moss,GRID_VARS%TSurf,GRID_VARS%TPack,&
        GRID_VARS%TSurf_us,GRID_VARS%TPack_us)
 
       endif
 
-      tsoilold=GRID_VARS%tkmidpet
+      CELL_VARS%tsoilold=GRID_VARS%tkmidpet
 
 ! ====================================================================
 ! Vapor pressure variables -- use different method depending
@@ -272,33 +194,34 @@ tkmid = GRID_VARS%tkmid
 ! DEW POINT TEMPERATURES !
 ! ====================================================================
 
-      appa=100.d0*GRID_MET%press
-      vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
-      vpsat_ic=611.d0*dexp((17.27d0*tcel_ic)/(237.3d0+tcel_ic))
+      CELL_VARS%appa=100.d0*GRID_MET%press
+      CELL_VARS%vpsat=611.d0*dexp((17.27d0*CELL_VARS%tcel)/(237.3d0+CELL_VARS%tcel))
+      CELL_VARS%vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
 
       if (GLOBAL%iopwv.eq.0) then
 
-         vppa=611.0d0*dexp((17.27d0*(twet))/(237.3d0+(twet)))
-         GRID_MET%rh=100.*vppa/vpsat
-         vppa_ic=611.0d0*dexp((17.27d0*(twet_ic))/(237.3d0+(twet_ic)))
-         GRID_VARS%rh_ic=100.*vppa_ic/vpsat_ic
+         CELL_VARS%vppa=611.0d0*dexp((17.27d0*(CELL_VARS%twet))/(237.3d0+(CELL_VARS%twet)))
+         GRID_MET%rh=100.*CELL_VARS%vppa/CELL_VARS%vpsat
+         CELL_VARS%vppa_ic=611.0d0*dexp((17.27d0*(CELL_VARS%twet_ic))/&
+         (237.3d0+(CELL_VARS%twet_ic)))
+         GRID_VARS%rh_ic=100.*CELL_VARS%vppa_ic/CELL_VARS%vpsat_ic
 
       else
 
-         vppa=0.01*GRID_MET%rh*vpsat
-         vppa_ic=0.01*GRID_VARS%rh_ic*vpsat_ic
+         CELL_VARS%vppa=0.01*GRID_MET%rh*CELL_VARS%vpsat
+         CELL_VARS%vppa_ic=0.01*GRID_VARS%rh_ic*CELL_VARS%vpsat_ic
 
       endif
 
-      qv=0.622d0*(vppa/appa)
-      qv_ic=0.622d0*(vppa_ic/appa)
+      CELL_VARS%qv=0.622d0*(CELL_VARS%vppa/CELL_VARS%appa)
+      CELL_VARS%qv_ic=0.622d0*(CELL_VARS%vppa_ic/CELL_VARS%appa)
 
 ! ====================================================================
 ! Calculate wind if two components are input -- check to make sure
 ! wind is positive number.
 ! ====================================================================
 
-      if (uzw.lt.(0.)) then
+      if (GRID_MET%uzw.lt.(0.)) then
 
          write(*,*) 'uzw is negative - time step ',i,' pixel ',ipix
 
@@ -308,15 +231,15 @@ tkmid = GRID_VARS%tkmid
 ! Calculate thermodynamic values for air and water.
 ! ====================================================================
 
-      ra=287.d0*(one+0.608d0*qv)
-      roa=appa/(ra*tkel)
-      xlhv =2.501d6-2370.d0*tcel
-      psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
+      CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
+      CELL_VARS%roa=CELL_VARS%appa/(CELL_VARS%ra*CELL_VARS%tkel)
+      CELL_VARS%xlhv =2.501d6-2370.d0*CELL_VARS%tcel
+      CELL_VARS%psychr=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*CELL_VARS%xlhv)
 
-      ra_ic=287.d0*(one+0.608d0*qv_ic)
-      roa_ic=appa/(ra_ic*tkel_ic)
-      xlhv_ic=2.501d6-2370.d0*tcel_ic
-      psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*xlhv_ic)
+      CELL_VARS%ra_ic=287.d0*(one+0.608d0*CELL_VARS%qv_ic)
+      CELL_VARS%roa_ic=CELL_VARS%appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
+      CELL_VARS%xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
+      CELL_VARS%psychr_ic=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*CELL_VARS%xlhv_ic)
 
 
 
@@ -333,9 +256,9 @@ tkmid = GRID_VARS%tkmid
 
       if (GLOBAL%iopstab.eq.1.and.i.gt.1.and.GLOBAL%ioppet.eq.0) then 
          
-         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
-       tkel,GRID_MET%press,&
-       GRID_VARS%tkact,vppa,GRID_VARS%rib)
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
+       CELL_VARS%tkel,GRID_MET%press,&
+       GRID_VARS%tkact,CELL_VARS%vppa,GRID_VARS%rib)
          
       else
 
@@ -352,15 +275,15 @@ tkmid = GRID_VARS%tkmid
 ! Also do this for snow.
 ! ====================================================================
 
-      rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,&
+      CELL_VARS%rahd=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,&
       GRID_VEG%z0h,GRID_VARS%rib)
-      rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,&
+      CELL_VARS%rahw=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,&
       GRID_VEG%z0h,GRID_VARS%rib)
 
-      ravd=rahd
-      ravw=rahw
+      CELL_VARS%ravd=CELL_VARS%rahd
+      CELL_VARS%ravw=CELL_VARS%rahw
 
-      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
+      CELL_VARS%RaSnow=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -373,7 +296,6 @@ tkmid = GRID_VARS%tkmid
 ! NONLINEAR ENERGY BALANCE EQUATIONS.  The program has not been set
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
-      GRID_MET%uzw = uzw
 
       if(GLOBAL%ioppet.eq.0)then
 
@@ -401,25 +323,33 @@ tkmid = GRID_VARS%tkmid
 
 ! Meteorological data
 
-       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,psychr,xlhv,tkel,GRID_VEG%zww,GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,vpsat,tcel_ic,vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,CELL_VARS%tcel,CELL_VARS%vppa,CELL_VARS%psychr,&
+       CELL_VARS%xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
+       GRID_VEG%za,GRID_MET%uzw,GRID_MET%press,&
+       CELL_VARS%appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
+       CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,GRID_VARS%tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss,&
-       tkmid_moss,GRID_SOIL%Tdeepstep,&
+       GRID_VARS,GRID_VARS%tkmid,GRID_VARS%tkact,CELL_VARS%tkmid_us,CELL_VARS%tkact_us,&
+       CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,&
+       CELL_VARS%tkmid_moss,GRID_SOIL%Tdeepstep,&
 
 ! Energy fluxes and states
 
-       GRID_VARS%dshact,epetd,GRID_VARS%gact,epetd_us,dshact_moss,xle_act_moss,rnetd,GRID_VEG%xled,GRID_VEG%hd,&
-       GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
+       GRID_VARS%dshact,CELL_VARS%epetd,GRID_VARS%gact,CELL_VARS%epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
+       GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,&
+       GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,&
-       GRID_VEG%tkmidw,tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss,GRID_VARS%epetw,&
-       dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
-       dshw_us,tkw_us,tkmidw_us,epetw_us,&
-       rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,&
-       tkmidd_us,rnet_pot_moss,xle_p_moss,&
-       h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,eact_moss,&
+       GRID_VEG%tkmidw,CELL_VARS%tskinactd_moss,CELL_VARS%tkactd_moss,CELL_VARS%tkmidactd_moss,&
+       CELL_VARS%ds_p_moss,GRID_VARS%epetw,&
+       CELL_VARS%dshact_us,CELL_VARS%rnetw_us,CELL_VARS%xlew_us,CELL_VARS%hw_us,CELL_VARS%gw_us,&
+       CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,CELL_VARS%epetw_us,&
+       CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,&
+       CELL_VARS%dshd_us,CELL_VARS%tkd_us,&
+       CELL_VARS%tkmidd_us,CELL_VARS%rnet_pot_moss,CELL_VARS%xle_p_moss,&
+       CELL_VARS%h_p_moss,CELL_VARS%g_p_moss,CELL_VARS%tk_p_moss,CELL_VARS%tkmid_p_moss,&
+       CELL_VARS%tskin_p_moss,CELL_VARS%eact_moss,&
 
 ! Soil parameters
 
@@ -429,28 +359,28 @@ tkmid = GRID_VARS%tkmid
 
 ! Moss parameters
 
-       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,rib_moss,&
-       GRID_VEG%z0m_moss,GRID_VEG%z0h_moss,epet_moss,&
+       GRID_VEG%r_moss_depth,GRID_VEG%eps,GRID_VEG%emiss_moss,GRID_VEG%zpd_moss,CELL_VARS%rib_moss,&
+       GRID_VEG%z0m_moss,GRID_VEG%z0h_moss,CELL_VARS%epet_moss,&
 
 ! Vegetation parameters
 
        GRID_VEG%xlai,GRID_VEG%xlai_us,GRID_VEG%emiss,GRID_VEG%zpd,GRID_VEG%zpd_us,GRID_VEG%z0m,&
        GRID_VEG%z0h,GRID_VEG%z0m_us,GRID_VEG%z0h_us,&
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan,&
-       GRID_VEG%rescan_us,f1,f2,f3,GRID_VEG%emiss_us,GRID_VEG%rsmin,GRID_VEG%rsmax,&
-       GRID_VEG%rsmin_us,GRID_VEG%rsmax_us,GRID_VEG%Rpl,GRID_VEG%Rpl_us,GRID_VEG%f3vpdpar,f3vpdpar_us,&
+       CELL_VARS%f1par,CELL_VARS%f3vpd,CELL_VARS%f4temp,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan,&
+       GRID_VEG%rescan_us,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss_us,GRID_VEG%rsmin,GRID_VEG%rsmax,&
+       GRID_VEG%rsmin_us,GRID_VEG%rsmax_us,GRID_VEG%Rpl,GRID_VEG%Rpl_us,GRID_VEG%f3vpdpar,CELL_VARS%f3vpdpar_us,&
        GRID_VEG%trefk,GRID_VEG%f4temppar,&
-       GRID_VEG%trefk_us,f4temppar_us,&
+       GRID_VEG%trefk_us,CELL_VARS%f4temppar_us,&
 
 ! Constants
 
-       GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
-       GLOBAL%maxnri,roa_ic,&
+       GRID_VARS%row,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,GLOBAL%toleb,&
+       GLOBAL%maxnri,CELL_VARS%roa_ic,&
 
 ! Energy balance variables
 
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,&
-       GRID_VARS%rib,RaSnow,rib_us,ravw,ravw_us,rahw,rahw_us,&
+       CELL_VARS%ravd,CELL_VARS%rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,CELL_VARS%rah_moss,&
+       GRID_VARS%rib,CELL_VARS%RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,CELL_VARS%rahw,CELL_VARS%rahw_us,&
 
 ! Water balance variables
 
@@ -463,18 +393,15 @@ tkmid = GRID_VARS%tkmid
 
       else if(GLOBAL%ioppet.eq.1)then
 
-        call petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,GRID_VEG%albd,&
+        call petpen(GRID_VEG,GRID_MET,GRID_VARS,CELL_VARS%tcel,CELL_VARS%vpsat,vpdef,CELL_VARS%f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
-       tkel,vppa,f3vpd,GRID_VEG%f3vpdpar,f4temp,GRID_VEG%trefk,&
-       GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
-       GRID_VEG%rescan,ravd,xlhv,&
-       GRID_VARS%row,epetd,GRID_VARS%epetw,ravw,psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
-       GRID_VEG%hw,GRID_VARS%cp,roa)
+       CELL_VARS%tkel,CELL_VARS%vppa,CELL_VARS%f3vpd,GRID_VEG%f3vpdpar,CELL_VARS%f4temp,GRID_VEG%trefk,&
+       GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,GRID_VEG%rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
+       GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%xlhv,&
+       GRID_VARS%row,CELL_VARS%epetd,GRID_VARS%epetw,CELL_VARS%ravw,CELL_VARS%psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
+       GRID_VEG%hw,GRID_VARS%cp,CELL_VARS%roa)
  
       endif
-
-      GRID_MET%uzw = uzw
-      GRID_VARS%tkmid = tkmid
 
       return
 
@@ -494,6 +421,9 @@ tkmid = GRID_VARS%tkmid
 !
 ! ====================================================================
 
+!> Subroutine to assign initial soil temperatures
+!! and set heat storage variables for the first time step in the
+!! simulation.
   subroutine inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,tk0moss,tkact,tkact_us,&
        tkact_moss,tskinact_moss,dshact,dshact_us,dshact_moss,tkpet,&
@@ -621,6 +551,9 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
+!> Subroutine to calculate the potential evapotranspiration
+!! using penman's equation for bare soil and penman-monteith
+!! for vegetated areas.
   subroutine petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,&
        albd,xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
@@ -784,6 +717,15 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
+!> Subroutine to calculate the potential evapotranspiration
+!! using the combination method (i.e. solving the
+!! set of nonlinear energy balance equations iteratively).
+!! three energy balances are maintained: one for bare soil, one
+!! for wet vegetation and one for dry vegetation.
+!!
+!! This is the subroutine that solves the energy balance under the
+!! assumption that the incoming long wave radiation for both under
+!! and over story is equal.
       subroutine peteb(ipix,i,dt,inc_frozen,&
 
 ! General vegetation parameters
@@ -1364,6 +1306,8 @@ GLOBAL%iopsmini = iopsmini
 
       end subroutine peteb
 
+!> Compute saturation vapor pressure in Pa. given temperature
+!! in Kelvin.
       function esat(Tsk)
 
 ! ====================================================================
@@ -1409,6 +1353,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to Photosynthetically
+!! Active Radiation (PAR) for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
       real*8 alb,LAI,Rg,rsmin,rsmax,Rgl,par,f,f1par,clcf1par,a1,a2,a3
@@ -1447,6 +1394,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to vapor pressure
+!! for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function  clcf3vpd(Ts,ea,g)
       implicit none
       real*8 Ts,ea,g,rmax_vpd,rmin_vpd,vpd,f3vpd,clcf3vpd
@@ -1501,6 +1451,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to air temperature
+!! for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function clcf4temp(tair,tref,f4par)
 
       implicit none
@@ -1554,6 +1507,7 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for bare soil.
       subroutine peteb_bs(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        rain,snow,Swq,albd,emiss,ravd,rahd,tkd,tkmidd,rnetd,xled,epetd,hd,&
        gd,dshd,tcel,vppa,roa,psychr,xlhv,zdeep,Tdeepstep,zmid,rsd,rld,&
@@ -1676,6 +1630,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for dry vegetation, over
+!! story.
       subroutine peteb_dv(thermc2,vpsat,heatcap,heatcap2,heatcapold,&
        rs_over,rain,snow,Swq,albd,emiss,thermc,f1par,f3vpd,f4temp,rescan,&
        ravd,rahd,tkd,tkmidd,rnetd,xled,epetd,hd,gd,dshd,&
@@ -1786,6 +1742,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for wet vegetation, over
+!! story.
       subroutine peteb_wv(thermc2,heatcap,heatcap2,heatcapold,&
        rs_over,rain,snow,Swq,albw,emiss,&
        thermc,ravw,rahw,tkw,tkmidw,rnetw,xlew,epetw,hw,&
@@ -1917,6 +1875,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Initialize the snow model variables that will be used in the
+!! snow subroutine but that not will be altered in the main program.
       subroutine inidum(dum1,PackWater,dum2,SurfWater,dum3,Swq,dum4,&
        VaporMassFlux,dum5,TPack,dum6,TSurf,dum7,r_MeltEnergy,dum8,Outflow,&
        dum9,xleact_snow,dum10,hact_snow,dum11,rn_snow,dum12,dens)

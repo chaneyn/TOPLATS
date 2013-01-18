@@ -21,51 +21,13 @@ MODULE MODULE_LAND
 ! Subroutine land calculates the land surface water balance.
 !
 ! ====================================================================
-    subroutine land(ipix,i,&
 
-! Meteorological data
-
-       tcel,vppa,psychr,xlhv,tkel,&
-       appa,vpsat,&
-
-! Energy fluxes
-
-       epetd,bsdew,&
-       epetd_us,dshact_moss,xle_act_moss,rnetd,&
-       tkd,tkmidd,ievcon_us,rnact_us,&
-       xleact_us,hact_us,gact_us,dshact_us,rnetw_us,xlew_us,hw_us,gw_us,&
-       dshw_us,tkw_us,tkmidw_us,evtact_us,rnetd_us,xled_us,&
-       hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,ievcon_moss,bsdew_moss,&
-       evtact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,&
-       tkmid_p_moss,tskin_p_moss,eact_moss,rnact_moss,&
-       xleact_moss,hact_moss,gact_moss,ds_p_moss,&
-
-! Moss parameters
-
-       r_moss_depth,thetas_moss,srespar1_moss,srespar2_moss,srespar3_moss,&
-       eps,emiss_moss,zpd_moss,rib_moss,z0m_moss,z0h_moss,epet_moss,&
-       a_ice_moss,b_ice_moss,bulk_dens_moss,&
-
-! Vegetation parameters
-
-       f1par,f3vpd,f4temp,f1par_us,f3vpd_us,f4temp_us,f1,f2,f3,&
-
-! Constants
-
-       roa,roa_ic,&
-
-! Energy balance variables
-
-       ravd,rahd,ravd_us,rahd_us,rav_moss,rah_moss,rib,RaSnow,&
-
-! Water balance variables
-
-       rzsm_u,tzsm_u,r_mossmold,deltrz,dc_us,fw_us,dewrun,&
-       CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
+!> Subroutine land calculates the land surface water balance.
+    subroutine land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
-      include "help/land.h"!Remove when variables are changed
-
+      
+      integer ipix,i,initer,iffroz,iffroz_us
       type (GRID_MET_template) :: GRID_MET
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
@@ -73,75 +35,24 @@ MODULE MODULE_LAND
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
       type (CELL_VARS_template) :: CELL_VARS
-      real*8 gold
+      real*8 gold,rain,snow,dshactd,dshactd_moss,dshactd_us,dum
+      real*8 ebscap,evrz_moss,gactd,gactd_moss,gactd_us
+      real*8 hactd,hactd_us,hactd_moss,heatcap,heatcap1,heatcap2
+      real*8 heatcap_moss,heatcap_us,heatcapold
+      real*8 p1,p2,p3,tkactd_us,xkrz
+      real*8 psisoi,r_dens,r_ldn,r_lup,r_sdn,ressoi,rnactd,rnactd_moss
+      real*8 rnactd_us,rs_over,rs_under,rsoil,rzsm_test,rzsm_u_test
+      real*8 rzsmst,smcond,smcond_us,smtmp,srzrel,stzrel,tdiff
+      real*8 thermc,thermc1,thermc2,thermc_moss,thermc_us
+      real*8 thetas_add,tkactd,tkactd_moss
+      real*8 tkmidactd,tkmidactd_moss,tkmidactd_us
+      real*8 tolinf,trlup,tskinactd_moss,tsnow,tzsm_test
+      real*8 tzsm_u_test,vegcap,vegcap_us,xinfcp,xksrz
+      real*8 xkstz,xktz,xleactd,xleactd_us,xleactd_moss
+      real*8 zw0 
 
       data tolinf/1.0d-09/
       initer=2
-! ====================================================================
-! Temporarily reassgin variables from old to new format
-    !Meteorological data
-      !tcel
-      !vppa
-      !psychr
-      !xlhv
-      !tkel
-      !appa
-      !vpsat
-      
-    !Energy fluxes and states
-      !epetd
-      !bsdew
-      !rnetd
-      !xled
-      !hd
-      !gd
-      !dshd
-      !tkd
-      !tkmidd
-      !rnetw
-      !xlew
-      !hw
-      !gw
-      !dshw
-      !tkw
-      !tkmidw
-      
-    !Vegetation parameters
-     
-      !f1par
-      !f3vpd
-      !f4temp
-      !f1par_us
-      !f3vpd_us
-      !f4temp_us
-      !f1
-      !f2
-      !f3
-    
-    !Constants
-      !roa
-      !roa_ic
-
-    !Energy balance variables
-      !ravd
-      !rahd
-      !ravd_us
-      !rahd_us
-      !rav_moss
-      !rah_moss
-      !rib
-      !RaSnow
-      
-    !Water balance variables
-      !rzsm_u
-      !tzsm_u
-      !r_mossold
-      !deltrz 
-      !dc_us
-      !fw_us
-      !dewrun
-                  
-    !Different option parameters
 
 ! ====================================================================
 ! Initialize the rain and snowfall.
@@ -149,9 +60,9 @@ MODULE MODULE_LAND
 
       rain=0.d0
       snow=0.d0
-      f1=0.d0
-      f2=0.d0
-      f3=0.d0
+      CELL_VARS%f1=0.d0
+      CELL_VARS%f2=0.d0
+      CELL_VARS%f3=0.d0
 
       gold=GRID_VARS%gact
 
@@ -178,7 +89,7 @@ MODULE MODULE_LAND
       call soiltherm(GLOBAL%iopthermc,thermc1,thermc2,GRID_VARS%rzsm,smtmp,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,GRID_VARS%tkmid,&
        GRID_SOIL%quartz,GRID_SOIL%ifcoarse,&
-       heatcap1,heatcap2,heatcapold,GRID_SOIL%rocpsoil,GRID_VARS%row,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
+       heatcap1,heatcap2,heatcapold,GRID_SOIL%rocpsoil,GRID_VARS%row,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,&
        GRID_VARS%smold,thermc,heatcap,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp)
 
 ! ====================================================================
@@ -241,10 +152,10 @@ MODULE MODULE_LAND
        GRID_SOIL%thetar,GRID_SOIL%bcbeta,GRID_VARS%rzsm1_u,&
        GRID_VARS%tzsm1_u,GRID_VARS%rzsm1_f,GRID_VARS%tzsm1_f,CELL_VARS%tsoilold,&
        GRID_SOIL%bulk_dens,GRID_SOIL%a_ice,GRID_SOIL%b_ice,&
-       GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
-       GRID_VARS%r_mossm1,GRID_VARS%zmoss,r_moss_depth,&
-       thetas_moss,rzsm_u,GRID_VARS%rzsm_f,tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
-       GRID_VARS%r_mossm1_f,i,a_ice_moss,b_ice_moss,bulk_dens_moss)
+       GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,CELL_VARS%r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
+       GRID_VARS%r_mossm1,GRID_VARS%zmoss,GRID_VEG%r_moss_depth,&
+       GRID_VEG%thetas_moss,CELL_VARS%rzsm_u,GRID_VARS%rzsm_f,CELL_VARS%tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
+       GRID_VARS%r_mossm1_f,i,GRID_VEG%a_ice_moss,GRID_VEG%b_ice_moss,GRID_VEG%bulk_dens_moss)
 
 ! ====================================================================
 ! Calculate the infiltration.
@@ -257,8 +168,9 @@ MODULE MODULE_LAND
 
          call infilt(GRID_VARS%pnet,GRID_VEG%i_moss,GRID_VEG%i_und,GRID_VARS%PackWater_us,GRID_VARS%SurfWater_us,GRID_VARS%Swq_us,&
        GRID_VARS%Outflow_us,GLOBAL%dt,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%Outflow,&
-       GRID_VARS%istmst,GRID_VARS%cuminf,GLOBAL%inc_frozen,rzsmst,GRID_VARS%rzsm,rzsm_u,GRID_SOIL%thetas,GRID_SOIL%thetar,&
-       tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,deltrz,GRID_VARS%cc,&
+       GRID_VARS%istmst,GRID_VARS%cuminf,GLOBAL%inc_frozen,rzsmst,GRID_VARS%rzsm,CELL_VARS%rzsm_u,&
+       GRID_SOIL%thetas,GRID_SOIL%thetar,&
+       tolinf,GRID_VARS%sorp,GRID_SOIL%xk0,GRID_SOIL%psic,GRID_SOIL%bcgamm,GRID_SOIL%bcbeta,CELL_VARS%deltrz,GRID_VARS%cc,&
        GRID_VARS%zw,GRID_VARS%xinact,GRID_VARS%satxr,GRID_VARS%xinfxr,&
        GRID_VARS%intstm,xinfcp,GRID_VARS%runtot,GRID_VARS%irntyp)
 
@@ -279,16 +191,17 @@ MODULE MODULE_LAND
 ! the bare soil.
 ! --------------------------------------------------------------------
             call ebsres(GLOBAL%inc_frozen,GLOBAL%irestype,rsoil,GRID_VARS%rzsm,GRID_SOIL%srespar1,GRID_VARS%tkact,&
-       GRID_SOIL%srespar2,rzsm_u,GRID_SOIL%srespar3,ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
+       GRID_SOIL%srespar2,CELL_VARS%rzsm_u,GRID_SOIL%srespar3,CELL_VARS%ravd,iffroz,GRID_SOIL%thetas,GRID_VARS%tkmid,&
        GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,&
        GLOBAL%iopthermc,thermc1,thermc2,GRID_SOIL%thetar,heatcapold,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
        GRID_SOIL%quartz,heatcap1,GRID_SOIL%ifcoarse,heatcap2,GRID_SOIL%rocpsoil,GRID_VARS%row,&
-       GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
-       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,rahd,ebscap,tcel,vppa,psychr,xlhv,&
-       GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,tkel,&
-       GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,rib,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
-       bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
+       GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,thermc,heatcap,GRID_VARS%rzdthetaudtemp,&
+       GRID_VARS%dshact,GRID_VEG%albd,GRID_VEG%emiss,CELL_VARS%rahd,ebscap,CELL_VARS%tcel,&
+       CELL_VARS%vppa,CELL_VARS%psychr,CELL_VARS%xlhv,&
+       GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_MET%rsd,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,CELL_VARS%tkel,&
+       GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRID_VEG%z0m,GRID_MET%press,GRID_VARS%rib,GRID_VARS%rnetpn,&
+       GRID_VARS%gbspen,CELL_VARS%epetd,GRID_VARS%evtact,GRID_VARS%ievcon,&
+       CELL_VARS%bsdew,GRID_VEG%z0h,GLOBAL%ioppet)
 
          else
 
@@ -297,14 +210,16 @@ MODULE MODULE_LAND
 ! the snow model.
 ! --------------------------------------------------------------------
 
-            ebscap=epetd
+            ebscap=CELL_VARS%epetd
             GRID_VARS%evtact = ebscap
             GRID_VARS%ievcon = 3
 
-            call calcrain (tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
+            call calcrain (CELL_VARS%tcel,snow,rain,GRID_MET%pptms,GLOBAL%dt)
 
-            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,roa,vppa,xlhv,&
-            GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,appa,rain,snow,tcel,vpsat-vppa,GRID_MET%uzw,&
+            call calcsnowmelt(0,0,GLOBAL%dt/3600.d0,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0h,CELL_VARS%RaSnow,&
+            CELL_VARS%roa,CELL_VARS%vppa,CELL_VARS%xlhv,&
+            GRID_MET%rsd*(1.d0-GRID_VARS%alb_snow),GRID_MET%rld,CELL_VARS%appa,rain,snow,CELL_VARS%tcel,&
+            CELL_VARS%vpsat-CELL_VARS%vppa,GRID_MET%uzw,&
             GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,&
             GRID_VARS%TPack,GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,&
             GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,GRID_VARS%rn_snow,1.d0,GRID_VARS%dens,gold)
@@ -314,7 +229,7 @@ MODULE MODULE_LAND
             tsnow=GRID_VARS%TPack+273.15d0
 
             if (GRID_VARS%Swq.lt.(0.005d0)) tsnow=GRID_VARS%TSurf+273.15d0
-            if (GRID_VARS%Swq.lt.(0.d0)) tsnow=tcel+273.15d0
+            if (GRID_VARS%Swq.lt.(0.d0)) tsnow=CELL_VARS%tcel+273.15d0
 
             call nreb_snow(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        tkactd,tkmidactd,tsnow,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,GRID_SOIL%zmid,GLOBAL%dt,dum)
@@ -339,15 +254,16 @@ MODULE MODULE_LAND
 ! Calculate the transpiration from dry canopy for vegetated pixels.
 ! --------------------------------------------------------------------
 
-         call transv(epetd,epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,f1par,f3vpd,f4temp,&
-       GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
-       smcond,GRID_VARS%tzsm,tzsm_u,&
-       GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,GRID_VEG%rescan_us,&
-       vegcap,ravd,vegcap_us,ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
+       call transv(CELL_VARS%epetd,CELL_VARS%epetd_us,GRID_VEG%i_und,GLOBAL%iopveg,CELL_VARS%f1par,&
+       CELL_VARS%f3vpd,CELL_VARS%f4temp,&
+       GRID_VEG%rescan,GLOBAL%inc_frozen,GRID_VEG%ivgtyp,GRID_VARS%rzsm,CELL_VARS%rzsm_u,GRID_VEG%tc,GRID_VEG%tw,&
+       smcond,GRID_VARS%tzsm,CELL_VARS%tzsm_u,&
+       GRID_VEG%tc_us,GRID_VEG%tw_us,smcond_us,CELL_VARS%f1par_us,CELL_VARS%f3vpd_us,CELL_VARS%f4temp_us,GRID_VEG%rescan_us,&
+       vegcap,CELL_VARS%ravd,vegcap_us,CELL_VARS%ravd_us,GRID_VARS%zrz,srzrel,GRID_SOIL%thetas,GRID_SOIL%thetar,psisoi,&
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
-       GRID_VARS%ievcon,GRID_VARS%Swq_us,evtact_us,ievcon_us,bsdew,i,ipix)
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,CELL_VARS%bsdew,i,ipix)
 
       endif
 
@@ -367,10 +283,10 @@ MODULE MODULE_LAND
 
       if (GLOBAL%inc_frozen.eq.1) then
 
-         rzsm_test=rzsm_u
-         tzsm_test=tzsm_u
-         rzsm_u_test=rzsm_u
-         tzsm_u_test=tzsm_u
+         rzsm_test=CELL_VARS%rzsm_u
+         tzsm_test=CELL_VARS%tzsm_u
+         rzsm_u_test=CELL_VARS%rzsm_u
+         tzsm_u_test=CELL_VARS%tzsm_u
          thetas_add=GRID_SOIL%thetas-GRID_VARS%rzsm_f
 
       endif
@@ -378,17 +294,19 @@ MODULE MODULE_LAND
       call tz_and_rzbal(i,GLOBAL%newstorm,GLOBAL%inc_frozen,GLOBAL%ikopt,GRID_VEG%ivgtyp,&
        GLOBAL%dt,rzsm_test,tzsm_test,rzsm_u_test,tzsm_u_test,GRID_VARS%rzsm1,GRID_VARS%tzsm1,&
        GRID_VARS%zrz,GRID_VARS%ztz,zw0,GLOBAL%zrzmax,&
-       GRID_VARS%evtact,evtact_us,bsdew,dewrun,GRID_VARS%grz,GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
+       GRID_VARS%evtact,CELL_VARS%evtact_us,CELL_VARS%bsdew,CELL_VARS%dewrun,GRID_VARS%grz,&
+       GRID_VARS%gtz,GRID_VARS%diftz,GRID_VARS%difrz,&
        GRID_VARS%satxr,GRID_VARS%runtot,GRID_VARS%xinact,GRID_VARS%cuminf,&
        CAT%ff,GRID_SOIL%thetar,thetas_add,GRID_SOIL%bcbeta,GRID_SOIL%xk0,GRID_SOIL%psic,&
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
-       GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,dc_us,fw_us,evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
+       GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,CELL_VARS%dc_us,CELL_VARS%fw_us,&
+       evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
        GRID_VARS%tzrhs,GRID_VARS%rzrhs)
 
       if (GLOBAL%inc_frozen.eq.1) then
 
-         rzsm_u=GRID_VARS%rzsm1
-         tzsm_u=GRID_VARS%tzsm1
+         CELL_VARS%rzsm_u=GRID_VARS%rzsm1
+         CELL_VARS%tzsm_u=GRID_VARS%tzsm1
          GRID_VARS%rzsm1_u=GRID_VARS%rzsm1
          GRID_VARS%tzsm1_u=GRID_VARS%tzsm1
          GRID_VARS%rzsm1=GRID_VARS%rzsm1_u+GRID_VARS%rzsm_f
@@ -414,24 +332,24 @@ MODULE MODULE_LAND
 ! --------------------------------------------------------------------
 
          call land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
-       tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
-       bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
+       tkactd,tkmidactd,GRID_VEG%canclos,GRID_VARS%ievcon,CELL_VARS%xlhv,GRID_VARS%row,GRID_VEG%ivgtyp,xleactd,GRID_VARS%evtact,&
+       CELL_VARS%bsdew,GLOBAL%ioppet,iffroz,GRID_VARS%tkmid,GRID_SOIL%zmid,GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,&
        GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,thermc1,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,&
-       GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,&
+       GRID_SOIL%bcbeta,GRID_SOIL%quartz,GRID_SOIL%ifcoarse,heatcap1,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,&
        GRID_VARS%cp,GRID_VARS%roi,thermc,&
        GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,GLOBAL%iopthermc_v,GRID_VEG%tcbeta,GRID_VEG%xlai,GRID_VARS%tkact,&
-       GLOBAL%i_2l,f1,f2,f3,GRID_VEG%emiss,GRID_VEG%rescan,ravd,rahd,rnactd,&
-       hactd,gactd,dshactd,tcel,vppa,psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
+       GLOBAL%i_2l,CELL_VARS%f1,CELL_VARS%f2,CELL_VARS%f3,GRID_VEG%emiss,GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%rahd,rnactd,&
+       hactd,gactd,dshactd,CELL_VARS%tcel,CELL_VARS%vppa,CELL_VARS%psychr,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,&
        GRID_MET%rsd,r_lup,GRID_MET%rld,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,GRID_VEG%albd,r_sdn,GRID_VARS%rnetpn,&
-       GRID_VARS%gbspen,rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,&
+       GRID_VARS%gbspen,GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,GRID_VEG%gd,GRID_VEG%dshd,GRID_VEG%tkd,GRID_VEG%tkmidd,&
        GRID_VARS%rnact,GRID_VARS%xleact,GRID_VARS%hact,&
        GRID_VARS%gact,GRID_VARS%dshact,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,GRID_VEG%tkmidw,GRID_VARS%dc,GRID_VARS%fw,tdiff,GLOBAL%inc_frozen,&
        ipix,initer,GRID_VARS%PackWater,GRID_VARS%SurfWater,GRID_VARS%Swq,GRID_VARS%VaporMassFlux,GRID_VARS%TPack,&
        GRID_VARS%TSurf,GRID_VARS%r_MeltEnergy,GRID_VARS%Outflow,GRID_VARS%xleact_snow,GRID_VARS%hact_snow,&
        GRID_VARS%dens,GRID_VARS%precip_o,GRID_VEG%za,&
-       GRID_VEG%zpd,GRID_VEG%z0h,RaSnow,appa,vpsat,GRID_MET%uzw,GRID_VARS%rn_snow,GRID_VARS%alb_snow)
+       GRID_VEG%zpd,GRID_VEG%z0h,CELL_VARS%RaSnow,CELL_VARS%appa,CELL_VARS%vpsat,GRID_MET%uzw,GRID_VARS%rn_snow,GRID_VARS%alb_snow)
 
 ! --------------------------------------------------------------------
 ! Calculate the incoming solar radiation for the under story and
@@ -442,29 +360,33 @@ MODULE MODULE_LAND
 
          call land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
-       tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,ievcon_us,&
-       rnact_us,xleact_us,hact_us,gact_us,dshact_us,CELL_VARS%tkact_us,&
-       CELL_VARS%tkmid_us,rnactd_us,rnetw_us,xleactd_us,xlew_us,hactd_us,hw_us,&
-       gactd_us,gw_us,dshactd_us,dshw_us,tkw_us,tkmidw_us,GRID_VEG%xlai_us,&
-       dc_us,fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,evtact_us,iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
+       tskinactd_moss,tkactd_moss,tkmidactd_moss,GRID_VEG%canclos,CELL_VARS%ievcon_us,&
+       CELL_VARS%rnact_us,CELL_VARS%xleact_us,CELL_VARS%hact_us,CELL_VARS%gact_us,CELL_VARS%dshact_us,CELL_VARS%tkact_us,&
+       CELL_VARS%tkmid_us,rnactd_us,CELL_VARS%rnetw_us,xleactd_us,CELL_VARS%xlew_us,hactd_us,CELL_VARS%hw_us,&
+       gactd_us,CELL_VARS%gw_us,dshactd_us,CELL_VARS%dshw_us,CELL_VARS%tkw_us,CELL_VARS%tkmidw_us,GRID_VEG%xlai_us,&
+       CELL_VARS%dc_us,CELL_VARS%fw_us,trlup,ipix,CELL_VARS%xlhv_ic,GRID_VARS%row,CELL_VARS%evtact_us,&
+       iffroz_us,GRID_VARS%tkmid,GRID_SOIL%zmid,&
        GLOBAL%zrzmax,smtmp,GRID_VARS%rzsm,GRID_VARS%tzsm,GRID_VARS%smold,GRID_VARS%rzsmold,GRID_VARS%tzsmold,GLOBAL%iopthermc,&
        GRID_SOIL%thetar,GRID_SOIL%thetas,GRID_SOIL%psic,GRID_SOIL%bcbeta,&
-       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,roa,GRID_VARS%cp,GRID_VARS%roi,&
+       GRID_SOIL%quartz,GRID_SOIL%ifcoarse,GRID_SOIL%rocpsoil,GRID_VARS%cph2o,CELL_VARS%roa,GRID_VARS%cp,GRID_VARS%roi,&
        thermc,GLOBAL%inc_frozen,GRID_VARS%rzdthetaudtemp,GLOBAL%iopgveg,thermc_us,GLOBAL%iopthermc_v,GRID_VEG%tcbeta_us,&
-       GRID_VEG%xlai,f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,ravd_us,rahd_us,GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
-       roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
-       GRID_MET%rld,rnetd_us,xled_us,hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,initer,&
-       ievcon_moss,xleactd_moss,bsdew_moss,evtact_moss,thermc_moss,&
+       GRID_VEG%xlai,CELL_VARS%f3,GRID_VEG%albd_us,GRID_VEG%emiss_us,CELL_VARS%ravd_us,CELL_VARS%rahd_us,&
+       GRID_VEG%rescan_us,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,&
+       CELL_VARS%roa_ic,CELL_VARS%psychr_ic,GRID_SOIL%zdeep,GRID_SOIL%Tdeepstep,r_sdn,r_ldn,GLOBAL%toleb,GLOBAL%maxnri,GLOBAL%dt,i,&
+       GRID_MET%rld,CELL_VARS%rnetd_us,CELL_VARS%xled_us,CELL_VARS%hd_us,CELL_VARS%gd_us,CELL_VARS%dshd_us,&
+       CELL_VARS%tkd_us,CELL_VARS%tkmidd_us,initer,&
+       CELL_VARS%ievcon_moss,xleactd_moss,CELL_VARS%bsdew_moss,CELL_VARS%evtact_moss,thermc_moss,&
        GRID_VARS%r_mossm,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,CELL_VARS%tkmid_moss,hactd_moss,gactd_moss,&
-       dshactd_moss,rav_moss,rah_moss,r_moss_depth,GRID_VEG%alb_moss,&
-       rnactd_moss,emiss_moss,eact_moss,rnet_pot_moss,xle_p_moss,h_p_moss,&
-       g_p_moss,tk_p_moss,tkmid_p_moss,tskin_p_moss,GRID_VARS%zmoss,&
-       thetas_moss,rnact_moss,xleact_moss,hact_moss,&
-       gact_moss,dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
-       GRID_VEG%z0h,RaSnow,GRID_VARS%alb_snow,appa,CELL_VARS%vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
+       dshactd_moss,CELL_VARS%rav_moss,CELL_VARS%rah_moss,GRID_VEG%r_moss_depth,GRID_VEG%alb_moss,&
+       rnactd_moss,GRID_VEG%emiss_moss,CELL_VARS%eact_moss,CELL_VARS%rnet_pot_moss,CELL_VARS%xle_p_moss,CELL_VARS%h_p_moss,&
+       CELL_VARS%g_p_moss,CELL_VARS%tk_p_moss,CELL_VARS%tkmid_p_moss,CELL_VARS%tskin_p_moss,GRID_VARS%zmoss,&
+       GRID_VEG%thetas_moss,CELL_VARS%rnact_moss,CELL_VARS%xleact_moss,CELL_VARS%hact_moss,&
+       CELL_VARS%gact_moss,CELL_VARS%dshact_moss,gold,GRID_VARS%Swq_us,GRID_VARS%precip_u,GRID_VEG%za,GRID_VEG%zpd_us,&
+       GRID_VEG%z0h,CELL_VARS%RaSnow,GRID_VARS%alb_snow,CELL_VARS%appa,CELL_VARS%vpsat_ic,GRID_MET%uzw,GRID_VARS%PackWater_us,&
        GRID_VARS%SurfWater_us,GRID_VARS%VaporMassFlux_us,GRID_VARS%TPack_us,GRID_VARS%TSurf_us,&
        GRID_VARS%r_MeltEnergy_us,GRID_VARS%Outflow_us,GRID_VARS%xleact_snow_us,GRID_VARS%hact_snow_us,&
-       GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,CELL_VARS%tkel_ic,eps,ds_p_moss,GRID_VEG%i_und,GRID_VEG%i_moss,GLOBAL%i_2l)
+       GRID_VARS%rn_snow_us,GRID_VARS%dens_us,heatcap_us,CELL_VARS%tkel_ic,GRID_VEG%eps,CELL_VARS%ds_p_moss,&
+       GRID_VEG%i_und,GRID_VEG%i_moss,GLOBAL%i_2l)
 
       endif
 
@@ -518,6 +440,9 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to update water table depths and root and transmission
+!! zone soil moisture to the conditions at the end of the previous
+!! time step.
     subroutine states(zw0,inc_frozen,i_moss,tkmid_moss,&
        r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff,atanb,xlamda,psic,&
        zrz,ztz,rzsm1,tzsm1,thetas,zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,&
@@ -725,6 +650,9 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to assign spatially variable initial conditions in
+!! the root and transmission zones for the first time step in the
+!! storm.
       subroutine initsm(zw,psic,zrz,ztz,rzsm1,tzsm1,thetas,&
        zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f,&
        inc_frozen,tsoilold,bulk_dens,a_ice,b_ice,row)
@@ -944,6 +872,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================   
 
+!> Subroutine infilt calculates the actual rate of infiltration 
+!! and the rate of infiltration excess runoff.
     subroutine infilt(pnet,i_moss,i_und,PackWater_us,SurfWater_us,Swq_us,&
        Outflow_us,dt,PackWater,SurfWater,Swq,Outflow,&
        istmst,cuminf,inc_frozen,rzsmst,rzsm,rzsm_u,thetas,thetar,&
@@ -1131,6 +1061,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Reset cumulative infiltration, initial root zone soil moisture,&
+!! sorptivity and dimensionless gravity parameter, cc.
       subroutine reset_inf_pars(cuminf,zero,rzsmst,rzsm,thetas,tolinf,&
        sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
 
@@ -1181,6 +1113,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine ebares calculates the actual rate of evaporation 
+!! from bare soils using a soil resistance parameterization.
     subroutine ebsres(inc_frozen,irestype,rsoil,rzsm,srespar1,tkact,&
        srespar2,rzsm_u,srespar3,ravd,iffroz,thetas,tkmid,&
        zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
@@ -1432,6 +1366,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the partitioning of precipitation into rain and snow.
+!! Do this based on air temperature.
     subroutine calcrain (tcel,snow,rain,precip_o,dt)
 
       implicit none
@@ -1468,6 +1404,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to find actual transpiration from dry canopy.
     subroutine transv(epetd,epetd_us,i_und,iopveg,f1par,f3vpd,f4temp,&
        rescan,inc_frozen,ivgtyp,rzsm,rzsm_u,tc,tw,smcond,tzsm,tzsm_u,&
        tc_us,tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,rescan_us,&
@@ -1719,6 +1656,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the maximum plant evaporation.
       subroutine maxplevap(zrz,ztz,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
        two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
@@ -1841,6 +1779,8 @@ MODULE MODULE_LAND
 ! Created by Wade Crow 3/1/1999
 ! 
 ! ====================================================================
+
+!> Calculate the root zone and transmission zone water balances.
      subroutine tz_and_rzbal(i,newstorm,inc_frozen,ikopt,ivgtyp,dt,&
 
 ! Surface zone and transmission zone soil moistures 
@@ -2487,6 +2427,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine difflx calculates the diffusive fluxes out of the surface 
+!! and transmission zones (positive down).
       subroutine new_difflx(ikopt,xksrz,xkstz,ff,zrz,ztz,inc_frozen,rzsm,tzsm,&
        thetas,thetar,bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz)
 
@@ -2633,6 +2575,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine diffuse calculates the diffusive flux from layer 1 to layer 2
+!! in Richards' Equation using approach of Mahrt and Pan (1984).
       function diffuse(dz1,dz2,theta1,theta2,thetas,thetar,bcbeta,psic,&
                        xksat1,xksat2)
 
@@ -2703,6 +2647,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine dwnflx calculates the downward fluxes out of the root 
+!! and transmission zones.
       subroutine new_dwnflx(zrz,ikopt,xksrz,xkstz,rzsm,ff,&
        inc_frozen,thetar,thetas,&
        rzsm_u,grz,bcbeta,ztz,gtz,tzsm,tzsm_u)
@@ -2839,6 +2785,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the evaporation/condensation into the root zone.
       subroutine clc_evrz(evrz,Swq,Swq_us,ivgtyp,evtact,dc,i_und,&
        i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,dummy,f_und)
 
@@ -3013,6 +2960,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Solve the energy balance for the over story assuming the radiation
+!! balances of under and over story are not linked with each other.
     subroutine land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
        bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
@@ -3161,6 +3110,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Solve the energy balance for the under story assuming the radiation
+!! balances of under and over story are not linked with each other.
     subroutine land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
        tskinactd_moss,tkactd_moss,tkmidactd_moss,canclos,ievcon_us,&
@@ -3289,6 +3240,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to calculate the actual surface energy fluxes.
       subroutine engact(canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
        bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
        tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thermc2,thetar,&
@@ -3542,6 +3494,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the bare soil resistance to evaporation.
       subroutine calcrsoil(irestype,rsoil,&
                            srespar1,srespar2,srespar3,&
                            thetas,rzsm,tkact)
@@ -3609,6 +3562,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the soil moisture conductance.
       subroutine calcsmcond(rzsm,tc,smcond,one,tw,zero)
 
       implicit none
@@ -3655,6 +3609,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate vegetation capacity for the over story using linear
+!! interpolation for the canopy resistance.
       subroutine calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
 
       implicit none
@@ -3685,6 +3641,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Set actual transpiration to the minimum of potential
+!! transpiration or vegetation capacity.
       subroutine acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
 
       implicit none
@@ -3745,6 +3703,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> If there is no snow all the snow pack variablesa are set to zero.
       subroutine zero_snowvar(PackWater,SurfWater,Swq,VaporMassFlux,&
        TPack,TSurf,r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens)
 
@@ -3780,6 +3739,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the derivative of the diffusive flux out of the surface zone
+!! and transmission zone with respect to soil moisture.
       subroutine clcddif(ddifrzdth1,ddifrzdth2,ddiftzdth2,rzsm,&
          ikopt,xksrz,xkstz,ff,&
          zrz,ztz,bcbeta,thetas,thetar,psic,tzsm)
@@ -3843,6 +3804,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the derivative of gravity drainage out of the surface
+!! and transmission zone with respect to soil moisture.
       function clcdg(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)
 
       implicit none
