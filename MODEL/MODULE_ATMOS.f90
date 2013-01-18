@@ -31,6 +31,9 @@ contains
 
 
 
+!> Subroutine to read in and pass meteorological data (e.g.
+!! rainfall) and calculate the potential evaporation for bare
+!! soil and the unstressed (potential) transpiration for vegetation.
   subroutine atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
