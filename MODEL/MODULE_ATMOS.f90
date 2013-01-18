@@ -56,7 +56,7 @@ contains
 
 ! Energy balance variables
 
-       RaSnow,rahw_us,&
+       rahw_us,&
 
        GLOBAL)
 
@@ -73,7 +73,6 @@ contains
     real*8 f1par
     real*8 f3vpd,f4temp
     real*8 roa
-    real*8 RaSnow
     real*8 rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
@@ -329,7 +328,7 @@ tkmid = GRID_VARS%tkmid
       CELL_VARS%ravd=CELL_VARS%rahd
       CELL_VARS%ravw=CELL_VARS%rahw
 
-      RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
+      CELL_VARS%RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -425,7 +424,7 @@ tkmid = GRID_VARS%tkmid
 ! Energy balance variables
 
        CELL_VARS%ravd,CELL_VARS%rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,CELL_VARS%rah_moss,&
-       GRID_VARS%rib,RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,CELL_VARS%rahw,rahw_us,&
+       GRID_VARS%rib,CELL_VARS%RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,CELL_VARS%rahw,rahw_us,&
 
 ! Water balance variables
 
