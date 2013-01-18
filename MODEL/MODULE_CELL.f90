@@ -146,7 +146,7 @@ GRID_VARS%epwms = 0.d0!epwms
 
 ! Vegetation parameters
 
-       f1par,f3vpd,f4temp,&
+       f3vpd,f4temp,&
 
        GLOBAL)
 
@@ -173,7 +173,7 @@ GRID_VARS%epwms = 0.d0!epwms
        CELL_VARS%xlhv = xlhv
        CELL_VARS%appa = appa
        CELL_VARS%epetd = epetd
-       CELL_VARS%f1par = f1par
+       !CELL_VARS%f1par = f1par
        CELL_VARS%f3vpd = f3vpd
        CELL_VARS%f4temp = f4temp
        !CELL_VARS%roa = roa
