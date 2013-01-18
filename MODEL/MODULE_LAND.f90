@@ -21,6 +21,8 @@ MODULE MODULE_LAND
 ! Subroutine land calculates the land surface water balance.
 !
 ! ====================================================================
+
+!> Subroutine land calculates the land surface water balance.
     subroutine land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
       implicit none
@@ -424,6 +426,9 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to update water table depths and root and transmission
+!! zone soil moisture to the conditions at the end of the previous
+!! time step.
     subroutine states(zw0,inc_frozen,i_moss,tkmid_moss,&
        r_mossm_u,r_mossm_f,r_mossm,zw,zbar,ff,atanb,xlamda,psic,&
        zrz,ztz,rzsm1,tzsm1,thetas,zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,&
@@ -631,6 +636,9 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to assign spatially variable initial conditions in
+!! the root and transmission zones for the first time step in the
+!! storm.
       subroutine initsm(zw,psic,zrz,ztz,rzsm1,tzsm1,thetas,&
        zrzmax,iopsmini,thetar,bcbeta,rzsm1_u,tzsm1_u,rzsm1_f,tzsm1_f,&
        inc_frozen,tsoilold,bulk_dens,a_ice,b_ice,row)
@@ -850,6 +858,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================   
 
+!> Subroutine infilt calculates the actual rate of infiltration 
+!! and the rate of infiltration excess runoff.
     subroutine infilt(pnet,i_moss,i_und,PackWater_us,SurfWater_us,Swq_us,&
        Outflow_us,dt,PackWater,SurfWater,Swq,Outflow,&
        istmst,cuminf,inc_frozen,rzsmst,rzsm,rzsm_u,thetas,thetar,&
@@ -1037,6 +1047,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Reset cumulative infiltration, initial root zone soil moisture,&
+!! sorptivity and dimensionless gravity parameter, cc.
       subroutine reset_inf_pars(cuminf,zero,rzsmst,rzsm,thetas,tolinf,&
        sorp,two,xk0,psic,thetar,bcgamm,bcbeta,deltrz,cc,one)
 
@@ -1087,6 +1099,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine ebares calculates the actual rate of evaporation 
+!! from bare soils using a soil resistance parameterization.
     subroutine ebsres(inc_frozen,irestype,rsoil,rzsm,srespar1,tkact,&
        srespar2,rzsm_u,srespar3,ravd,iffroz,thetas,tkmid,&
        zmid,zrzmax,smtmp,tzsm,smold,rzsmold,tzsmold,&
@@ -1338,6 +1352,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the partitioning of precipitation into rain and snow.
+!! Do this based on air temperature.
     subroutine calcrain (tcel,snow,rain,precip_o,dt)
 
       implicit none
@@ -1374,6 +1390,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to find actual transpiration from dry canopy.
     subroutine transv(epetd,epetd_us,i_und,iopveg,f1par,f3vpd,f4temp,&
        rescan,inc_frozen,ivgtyp,rzsm,rzsm_u,tc,tw,smcond,tzsm,tzsm_u,&
        tc_us,tw_us,smcond_us,f1par_us,f3vpd_us,f4temp_us,rescan_us,&
@@ -1625,6 +1642,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the maximum plant evaporation.
       subroutine maxplevap(zrz,ztz,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
        two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
@@ -1747,6 +1765,8 @@ MODULE MODULE_LAND
 ! Created by Wade Crow 3/1/1999
 ! 
 ! ====================================================================
+
+!> Calculate the root zone and transmission zone water balances.
      subroutine tz_and_rzbal(i,newstorm,inc_frozen,ikopt,ivgtyp,dt,&
 
 ! Surface zone and transmission zone soil moistures 
@@ -2393,6 +2413,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine difflx calculates the diffusive fluxes out of the surface 
+!! and transmission zones (positive down).
       subroutine new_difflx(ikopt,xksrz,xkstz,ff,zrz,ztz,inc_frozen,rzsm,tzsm,&
        thetas,thetar,bcbeta,psic,difrz,rzsm_u,tzsm_u,diftz)
 
@@ -2539,6 +2561,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine diffuse calculates the diffusive flux from layer 1 to layer 2
+!! in Richards' Equation using approach of Mahrt and Pan (1984).
       function diffuse(dz1,dz2,theta1,theta2,thetas,thetar,bcbeta,psic,&
                        xksat1,xksat2)
 
@@ -2609,6 +2633,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine dwnflx calculates the downward fluxes out of the root 
+!! and transmission zones.
       subroutine new_dwnflx(zrz,ikopt,xksrz,xkstz,rzsm,ff,&
        inc_frozen,thetar,thetas,&
        rzsm_u,grz,bcbeta,ztz,gtz,tzsm,tzsm_u)
@@ -2745,6 +2771,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the evaporation/condensation into the root zone.
       subroutine clc_evrz(evrz,Swq,Swq_us,ivgtyp,evtact,dc,i_und,&
        i_moss,fw,evtact_us,dc_us,fw_us,evrz_moss,dummy,f_und)
 
@@ -2919,6 +2946,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Solve the energy balance for the over story assuming the radiation
+!! balances of under and over story are not linked with each other.
     subroutine land_os(rain,snow,thermc2,heatcap,heatcap2,heatcapold,&
        tkactd,tkmidactd,canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
        bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
@@ -3067,6 +3096,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Solve the energy balance for the under story assuming the radiation
+!! balances of under and over story are not linked with each other.
     subroutine land_us(rain,snow,thermc1,thermc2,heatcap_moss,heatcap,&
        heatcap1,heatcap2,heatcapold,tkactd_us,tkmidactd_us,&
        tskinactd_moss,tkactd_moss,tkmidactd_moss,canclos,ievcon_us,&
@@ -3195,6 +3226,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Subroutine to calculate the actual surface energy fluxes.
       subroutine engact(canclos,ievcon,xlhv,row,ivgtyp,xleactd,evtact,&
        bsdew,ioppet,iffroz,tkmid,zmid,zrzmax,smtmp,rzsm,&
        tzsm,smold,rzsmold,tzsmold,iopthermc,thermc1,thermc2,thetar,&
@@ -3448,6 +3480,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the bare soil resistance to evaporation.
       subroutine calcrsoil(irestype,rsoil,&
                            srespar1,srespar2,srespar3,&
                            thetas,rzsm,tkact)
@@ -3515,6 +3548,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the soil moisture conductance.
       subroutine calcsmcond(rzsm,tc,smcond,one,tw,zero)
 
       implicit none
@@ -3561,6 +3595,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate vegetation capacity for the over story using linear
+!! interpolation for the canopy resistance.
       subroutine calcvegcap(smcond,zero,vegcap,epetd,resist,ravd)
 
       implicit none
@@ -3591,6 +3627,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Set actual transpiration to the minimum of potential
+!! transpiration or vegetation capacity.
       subroutine acttrans(Swq,vegcap,epet,evtact,ievcon,zrz)
 
       implicit none
@@ -3651,6 +3689,7 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> If there is no snow all the snow pack variablesa are set to zero.
       subroutine zero_snowvar(PackWater,SurfWater,Swq,VaporMassFlux,&
        TPack,TSurf,r_MeltEnergy,Outflow,xleact_snow,hact_snow,dens)
 
@@ -3686,6 +3725,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the derivative of the diffusive flux out of the surface zone
+!! and transmission zone with respect to soil moisture.
       subroutine clcddif(ddifrzdth1,ddifrzdth2,ddiftzdth2,rzsm,&
          ikopt,xksrz,xkstz,ff,&
          zrz,ztz,bcbeta,thetas,thetar,psic,tzsm)
@@ -3749,6 +3790,8 @@ MODULE MODULE_LAND
 !
 ! ====================================================================
 
+!> Calculate the derivative of gravity drainage out of the surface
+!! and transmission zone with respect to soil moisture.
       function clcdg(sm,ikopt,xksrz,ff,zrz,bcbeta,thetas,thetar)
 
       implicit none
