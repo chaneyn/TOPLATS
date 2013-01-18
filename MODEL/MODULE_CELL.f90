@@ -88,12 +88,6 @@ contains
       real*8 roa,roa_ic,rrr,tcel,vppa,xlhv      
       GLOBAL%mul_fac = 1.0d0
       
-!Removal Causes Failure
-sesq = GRID_VARS%sesq
-xintst = GRID_VARS%xintst
-smpet0 = GLOBAL%smpet0
-mul_fac = GLOBAL%mul_fac
-
 !Point Data Initializations
 !Water Balance
 GRID_VARS%zrz = 0.d0
@@ -154,22 +148,6 @@ GRID_VARS%epwms = 0.d0!epwms
 
        call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
-       tcel = CELL_VARS%tcel
-       vppa = CELL_VARS%vppa
-       xlhv = CELL_VARS%xlhv
-       appa = CELL_VARS%appa
-       epetd = CELL_VARS%epetd
-       f1par = CELL_VARS%f1par
-       f3vpd = CELL_VARS%f3vpd
-       f4temp = CELL_VARS%f4temp
-       roa = CELL_VARS%roa
-       roa_ic = CELL_VARS%roa_ic
-       ravd = CELL_VARS%ravd
-       rahd = CELL_VARS%rahd
-       RaSnow = CELL_VARS%RaSnow
-       rahw = CELL_VARS%rahw
-       rahw_us = CELL_VARS%rahw_us
-       
 ! ====================================================================
 ! Calculate the density and depth of the snow layers.
 ! ====================================================================
