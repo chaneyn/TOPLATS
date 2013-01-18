@@ -155,7 +155,7 @@ GRID_VARS%epwms = 0.d0!epwms
 
 ! Energy balance variables
 
-       ravd,rahd,RaSnow,&
+       RaSnow,&
        rahw_us,&
 
        GLOBAL)
@@ -187,8 +187,6 @@ GRID_VARS%epwms = 0.d0!epwms
        CELL_VARS%f3vpd = f3vpd
        CELL_VARS%f4temp = f4temp
        CELL_VARS%roa = roa
-       CELL_VARS%ravd = ravd
-       CELL_VARS%rahd = rahd
        CELL_VARS%RaSnow = RaSnow
        CELL_VARS%rahw_us = rahw_us
 
