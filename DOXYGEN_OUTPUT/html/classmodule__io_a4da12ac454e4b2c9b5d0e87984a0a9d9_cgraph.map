@@ -1,5 +1,0 @@
-<map id="module_io::read_data" name="module_io::read_data">
-<area shape="rect" id="node3" href="$classmodule__io.html#ae799c25236054e6e184ab0cc59062843" title="Subroutine to read in and pass meteorological data (e.g. rainfall)." alt="" coords="237,5,379,32"/>
-<area shape="rect" id="node7" href="$classmodule__io.html#a01ac4d77b734eb79c8de2ac3cc633bba" title="Subroutine to update the vegetation parameters." alt="" coords="216,56,400,83"/>
-<area shape="rect" id="node5" href="$classmodule__io.html#abd46dc088e84c4a537fd3a81ef62a256" title="Subroutine to convert data to original setup." alt="" coords="448,5,581,32"/>
-</map>

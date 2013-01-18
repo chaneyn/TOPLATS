@@ -1,8 +1,0 @@
-<map id="module_canopy::canopy" name="module_canopy::canopy">
-<area shape="rect" id="node3" href="$classmodule__canopy.html#ae784bb4ebe9d55df227e68899509c697" title="If potential evaporation is negative, dew forms over the whole canopy." alt="" coords="252,5,431,35"/>
-<area shape="rect" id="node5" href="$classmodule__canopy.html#a6ad1a76381a211d514f2053d6d933749" title="Calculate evaporation from the wet canopy." alt="" coords="247,59,436,88"/>
-<area shape="rect" id="node7" href="$classmodule__canopy.html#a51545434db71bd9cfcf4359219ca84d9" title="Set fraction of wet canopy which is considered 100% if canopy is wet and 0% if canopy is dry..." alt="" coords="252,112,431,141"/>
-<area shape="rect" id="node9" href="$classmodule__canopy.html#a46a040f5b3a3e3e3053473aeb7902d5c" title="Add up pet terms of the over story to get average values." alt="" coords="248,165,435,195"/>
-<area shape="rect" id="node11" href="$classmodule__canopy.html#a23e5c87f00af051940901db10d2433d4" title="Calculate canopy rainfall and water balance." alt="" coords="252,219,431,248"/>
-<area shape="rect" id="node13" href="$classmodule__canopy.html#a21367805041d23dd9acda8890ff90a2b" title="This subroutine checks if the soil under snow is treated as * interstorm or storm period..." alt="" coords="239,272,444,301"/>
-</map>

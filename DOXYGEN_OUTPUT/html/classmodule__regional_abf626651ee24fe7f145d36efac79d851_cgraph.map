@@ -1,6 +1,0 @@
-<map id="module_regional::update_regional" name="module_regional::update_regional">
-<area shape="rect" id="node3" href="$classmodule__regional.html#ac368c9469d8b1067ef4804201fc8db69" title="Check regional scale water balance and sum simulation totals." alt="" coords="244,5,444,51"/>
-<area shape="rect" id="node7" href="$classmodule__regional.html#ab9265cb513ebbe4bec51bafdf456546d" title="Subroutine to initialize regional scale water balance variables." alt="" coords="253,74,435,121"/>
-<area shape="rect" id="node9" href="$classmodule__regional.html#a6a60029f619bf93c2c2d8167597ee77b" title="Calculates the time step totals of evapotranspiration, runoff, surface energy fluxes and vertical soi..." alt="" coords="252,143,436,190"/>
-<area shape="rect" id="node5" href="$classmodule__regional.html#a68c2b2a65286ff7ae94f92f47969ad92" title="Define land surface saturation states for the region." alt="" coords="495,13,676,43"/>
-</map>

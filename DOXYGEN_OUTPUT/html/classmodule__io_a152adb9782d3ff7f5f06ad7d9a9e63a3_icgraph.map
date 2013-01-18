@@ -1,5 +1,0 @@
-<map id="module_io::rdtpmd" name="module_io::rdtpmd">
-<area shape="rect" id="node3" href="$classmodule__io.html#a1e3af307cb5b52e2325730901faf020f" title="Subroutine to open input/output files, read and initialize time in&#45;variant data." alt="" coords="204,13,345,43"/>
-<area shape="rect" id="node5" href="$classmodule__io.html#ab86404c9f056ac1b2765bef85a58d2ef" title="Subroutine to read in model parameters and initialize the variables." alt="" coords="395,5,549,51"/>
-<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="597,13,712,43"/>
-</map>

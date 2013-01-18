@@ -1,6 +1,0 @@
-<map id="fruit::failed_assert_action" name="fruit::failed_assert_action">
-<area shape="rect" id="node3" href="$classfruit.html#a6e8087310ab4d58557680db9c26d6c63" title="fruit::failed_mark_" alt="" coords="223,5,364,35"/>
-<area shape="rect" id="node7" href="$classfruit.html#af1d1f2af6d17934b8baa2e504fdd970d" title="fruit::increase_message\l_stack_" alt="" coords="201,58,385,105"/>
-<area shape="rect" id="node9" href="$classfruit.html#a5cc16e454400eb24b3f5c40f88249b51" title="fruit::make_error_msg_" alt="" coords="204,128,383,157"/>
-<area shape="rect" id="node5" href="$classfruit.html#a1e9d8b41ab60f3b101d1ab34da2e7377" title="fruit::output_mark_" alt="" coords="436,5,588,35"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="module_topmodel::update_catchments" name="module_topmodel::update_catchments">
-<area shape="rect" id="node3" href="$classmodule__topmodel.html#a05117fd909a3645370708102588c2d45" title="Calculates the catchment time step totals of evapotranspiration, runoff, surface energy fluxes and ve..." alt="" coords="256,5,448,35"/>
-<area shape="rect" id="node5" href="$classmodule__topmodel.html#ae231e6577cbef44ab49b532ad79455b1" title="Initialize regional scale water balance variables." alt="" coords="255,58,449,105"/>
-<area shape="rect" id="node7" href="$classmodule__topmodel.html#a2a060f4fde6ba99d1db42f9709297cfc" title="Calculates the time step totals of evapotranspiration, runoff, surface energy fluxes and vertical soi..." alt="" coords="253,127,451,174"/>
-<area shape="rect" id="node9" href="$classmodule__topmodel.html#a9d1062e9738f7ff9420b989c84c2f650" title="Updates the average water table depth." alt="" coords="253,197,451,227"/>
-</map>

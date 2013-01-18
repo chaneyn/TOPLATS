@@ -1,5 +1,0 @@
-<map id="module_atmos::petpen" name="module_atmos::petpen">
-<area shape="rect" id="node3" href="$classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="Calculate the limiting factor due to vapor pressure for canopy resistance following Jarvis (1976)..." alt="" coords="229,5,408,32"/>
-<area shape="rect" id="node7" href="$classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06" title="Calculate the limiting factor due to air temperature for canopy resistance following Jarvis (1976)..." alt="" coords="224,56,413,83"/>
-<area shape="rect" id="node5" href="$classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="Compute saturation vapor pressure in Pa. given temperature in Kelvin." alt="" coords="461,5,616,32"/>
-</map>

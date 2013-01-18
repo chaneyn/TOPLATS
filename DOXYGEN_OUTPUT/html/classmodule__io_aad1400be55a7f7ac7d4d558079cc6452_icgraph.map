@@ -1,8 +1,0 @@
-<map id="module_io::rdimgi" name="module_io::rdimgi">
-<area shape="rect" id="node3" href="$classmodule__io.html#a6358f9a0141cb5fee13a83990f1caa6e" title="Subroutine to read and initialize time in&#45;variant soil parameters." alt="" coords="200,5,333,35"/>
-<area shape="rect" id="node11" href="$classmodule__io.html#a152adb9782d3ff7f5f06ad7d9a9e63a3" title="Subroutine to read in and initialize topmodel parameters and the soils&#45;topographic index map..." alt="" coords="193,59,340,88"/>
-<area shape="rect" id="node14" href="$classmodule__io.html#ae11bd674dbcfc77ca25e98134dccda32" title="Subroutine to read and initiailize simulation constant vegetation and land cover parameters." alt="" coords="199,112,335,141"/>
-<area shape="rect" id="node5" href="$classmodule__io.html#a1e3af307cb5b52e2325730901faf020f" title="Subroutine to open input/output files, read and initialize time in&#45;variant data." alt="" coords="391,59,532,88"/>
-<area shape="rect" id="node7" href="$classmodule__io.html#ab86404c9f056ac1b2765bef85a58d2ef" title="Subroutine to read in model parameters and initialize the variables." alt="" coords="581,50,736,97"/>
-<area shape="rect" id="node9" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="784,59,899,88"/>
-</map>

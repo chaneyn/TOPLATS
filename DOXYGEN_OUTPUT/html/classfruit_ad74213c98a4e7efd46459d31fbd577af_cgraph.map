@@ -1,9 +1,0 @@
-<map id="fruit::assert_eq_complex_" name="fruit::assert_eq_complex_">
-<area shape="rect" id="node3" href="$classfruit.html#ae64f3e1d3fdc86f945e98ff243bf4de7" title="fruit::add_success" alt="" coords="255,19,399,48"/>
-<area shape="rect" id="node9" href="$classfruit.html#a18c2ce12888a255eed956b991adb66d4" title="fruit::failed_assert\l_action" alt="" coords="253,98,400,145"/>
-<area shape="rect" id="node5" href="$classfruit.html#adc2ae7a11e3d7334cd1611f72cf34f4d" title="fruit::success_mark_" alt="" coords="461,5,621,35"/>
-<area shape="rect" id="node7" href="$classfruit.html#a1e9d8b41ab60f3b101d1ab34da2e7377" title="fruit::output_mark_" alt="" coords="684,93,836,123"/>
-<area shape="rect" id="node11" href="$classfruit.html#a5cc16e454400eb24b3f5c40f88249b51" title="fruit::make_error_msg_" alt="" coords="452,59,631,88"/>
-<area shape="rect" id="node13" href="$classfruit.html#af1d1f2af6d17934b8baa2e504fdd970d" title="fruit::increase_message\l_stack_" alt="" coords="449,111,633,158"/>
-<area shape="rect" id="node15" href="$classfruit.html#a6e8087310ab4d58557680db9c26d6c63" title="fruit::failed_mark_" alt="" coords="471,181,612,211"/>
-</map>

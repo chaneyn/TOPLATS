@@ -1,6 +1,0 @@
-<map id="module_variables::grid_template" name="module_variables::grid_template">
-<area shape="rect" id="node2" href="$structmodule__variables_1_1grid__soil__template.html" title="module_variables::grid\l_soil_template" alt="" coords="5,5,176,51"/>
-<area shape="rect" id="node4" href="$structmodule__variables_1_1grid__vars__template.html" title="module_variables::grid\l_vars_template" alt="" coords="5,74,176,121"/>
-<area shape="rect" id="node6" href="$structmodule__variables_1_1grid__veg__template.html" title="module_variables::grid\l_veg_template" alt="" coords="5,143,176,190"/>
-<area shape="rect" id="node8" href="$structmodule__variables_1_1grid__met__template.html" title="module_variables::grid\l_met_template" alt="" coords="5,213,176,259"/>
-</map>

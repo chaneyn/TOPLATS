@@ -1,5 +1,0 @@
-<map id="module_io::rdtpmd" name="module_io::rdtpmd">
-<area shape="rect" id="node3" href="$classmodule__io.html#af9f434c6fb64f230f2c10666364591c8" title="Subroutine to read in the topographi! index image and set up at translation between the pixel number ..." alt="" coords="207,5,340,35"/>
-<area shape="rect" id="node5" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="Subroutine to read in an image of integers and return an array of these values indexed by the soils&#45;t..." alt="" coords="204,59,343,88"/>
-<area shape="rect" id="node7" href="$classmodule__io.html#a8e265957655046f7b58e82e40a41bb36" title="Subroutine to read in an image of 4 byte reals and return an array of these values indexed by the soi..." alt="" coords="203,112,344,141"/>
-</map>
