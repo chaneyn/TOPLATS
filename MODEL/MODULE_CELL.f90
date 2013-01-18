@@ -131,27 +131,14 @@ GRID_VARS%epwms = 0.d0!epwms
 ! up the storm/interstorm event times and flags.
 ! ..................................................................
 
-       call atmos(ipix,i,GRID_VEG,CELL_VARS,&
-
-! Meteorological data
-       GRID_MET,&
-
-! Temperature variables
-
-       GRID_VARS,&
-
-! Energy fluxes and states
-
-       GRID_SOIL,&
-
-       GLOBAL)
+       call atmos(ipix,i,GRID_VEG,CELL_VARS,GRID_MET,GRID_VARS,GRID_SOIL,GLOBAL)
 
 ! ....................................................................
 ! Calculate local wet canopy water balance.
 ! ....................................................................
 
  
-         call canopy(ipix,GRID_VARS,GRID_VEG,GRID_MET,GLOBAL)
+        call canopy(ipix,GRID_VARS,GRID_VEG,GRID_MET,GLOBAL)
 
 ! ....................................................................
 ! Calculate the local land surface water/energy balance.

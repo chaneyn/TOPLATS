@@ -31,24 +31,9 @@ contains
 
 
 
-  subroutine atmos(ipix,i,GRID_VEG,CELL_VARS,&
-
-! Meteorological data
-
-       GRID_MET,&
-
-! Temperature variables
-
-       GRID_VARS,&
-       
-! Energy fluxes and states
-
-       GRID_SOIL,&
-
-       GLOBAL)
+  subroutine atmos(ipix,i,GRID_VEG,CELL_VARS,GRID_MET,GRID_VARS,GRID_SOIL,GLOBAL)
 
     implicit none
-   ! include "help/atmos.h" !take this out when variables are fixed
 
     integer ipix,i
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
