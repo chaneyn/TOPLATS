@@ -1,12 +1,12 @@
 <map id="module_land::ebsres" name="module_land::ebsres">
-<area shape="rect" id="node3" href="$classmodule__shared.html#a57fd8f76c675564f50596c4188b00485" title="module_shared::calcra" alt="" coords="231,5,404,35"/>
-<area shape="rect" id="node5" href="$classmodule__land.html#a9ebf46d22bb9d612cca3da1ba08bb765" title="module_land::calcrsoil" alt="" coords="233,59,401,88"/>
-<area shape="rect" id="node7" href="$classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="236,112,399,141"/>
-<area shape="rect" id="node9" href="$classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="213,165,421,195"/>
-<area shape="rect" id="node11" href="$classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="220,219,415,248"/>
-<area shape="rect" id="node19" href="$classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="225,285,409,315"/>
-<area shape="rect" id="node13" href="$classmodule__shared.html#ab612ad0ea7a26f361a65d9f726ca5a0e" title="module_shared::calctc_m" alt="" coords="469,152,664,181"/>
-<area shape="rect" id="node15" href="$classmodule__shared.html#a9d7b9c5c70ac25f2cfbf280981ef6301" title="module_shared::calctc_j" alt="" coords="473,205,660,235"/>
-<area shape="rect" id="node17" href="$classmodule__shared.html#abeb649a221f7f2002b81d5ada56ee6bc" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="479,259,655,288"/>
-<area shape="rect" id="node21" href="$classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="479,312,655,341"/>
+<area shape="rect" id="node3" href="$classmodule__shared.html#a57fd8f76c675564f50596c4188b00485" title="module_shared::calcra" alt="" coords="226,5,393,32"/>
+<area shape="rect" id="node5" href="$classmodule__land.html#a9ebf46d22bb9d612cca3da1ba08bb765" title="Calculate the bare soil resistance to evaporation." alt="" coords="228,56,391,83"/>
+<area shape="rect" id="node7" href="$classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="230,107,389,133"/>
+<area shape="rect" id="node9" href="$classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="209,157,410,184"/>
+<area shape="rect" id="node11" href="$classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="215,208,404,235"/>
+<area shape="rect" id="node19" href="$classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="221,271,398,297"/>
+<area shape="rect" id="node13" href="$classmodule__shared.html#ab612ad0ea7a26f361a65d9f726ca5a0e" title="module_shared::calctc_m" alt="" coords="459,144,645,171"/>
+<area shape="rect" id="node15" href="$classmodule__shared.html#a9d7b9c5c70ac25f2cfbf280981ef6301" title="Calculate the thermal conductivity (thermc) of an unsaturated soil using Johansen&#39;s method..." alt="" coords="464,195,640,221"/>
+<area shape="rect" id="node17" href="$classmodule__shared.html#abeb649a221f7f2002b81d5ada56ee6bc" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="467,245,637,272"/>
+<area shape="rect" id="node21" href="$classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="467,296,637,323"/>
 </map>

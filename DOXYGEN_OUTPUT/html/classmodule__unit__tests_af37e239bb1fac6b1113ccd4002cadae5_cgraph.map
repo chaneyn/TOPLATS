@@ -1,4 +1,4 @@
 <map id="module_unit_tests::new_difflx_test2" name="module_unit_tests::new_difflx_test2">
-<area shape="rect" id="node3" href="$classmodule__land.html#a010c0615b7057d0036056c91d3ce4eee" title="module_land::new_difflx" alt="" coords="215,13,396,43"/>
-<area shape="rect" id="node5" href="$classmodule__land.html#af4916bbdd71e3dced862672f136c8ed6" title="module_land::diffuse" alt="" coords="445,13,605,43"/>
+<area shape="rect" id="node3" href="$classmodule__land.html#a010c0615b7057d0036056c91d3ce4eee" title="Subroutine difflx calculates the diffusive fluxes out of the surface and transmission zones (positive..." alt="" coords="203,12,376,39"/>
+<area shape="rect" id="node5" href="$classmodule__land.html#af4916bbdd71e3dced862672f136c8ed6" title="Subroutine diffuse calculates the diffusive flux from layer 1 to layer 2 in Richards&#39; Equation using ..." alt="" coords="424,12,579,39"/>
 </map>

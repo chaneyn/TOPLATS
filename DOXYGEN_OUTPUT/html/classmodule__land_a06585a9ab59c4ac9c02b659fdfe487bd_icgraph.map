@@ -1,7 +1,7 @@
 <map id="module_land::initsm" name="module_land::initsm">
-<area shape="rect" id="node3" href="$classmodule__land.html#a2f04230e116d745a04ff2e7694d4e744" title="module_land::states" alt="" coords="211,13,371,43"/>
-<area shape="rect" id="node5" href="$classmodule__land.html#aef9b3d1ad5692fae6d85807cb899d2b3" title="module_land::land" alt="" coords="420,13,561,43"/>
-<area shape="rect" id="node7" href="$classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="611,13,800,43"/>
-<area shape="rect" id="node9" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="849,5,1007,51"/>
-<area shape="rect" id="node11" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1056,13,1171,43"/>
+<area shape="rect" id="node3" href="$classmodule__land.html#a2f04230e116d745a04ff2e7694d4e744" title="Subroutine to update water table depths and root and transmission zone soil moisture to the condition..." alt="" coords="205,12,357,39"/>
+<area shape="rect" id="node5" href="$classmodule__land.html#a43da5f7c79bdb6956fd250cecf3a2cd0" title="Subroutine land calculates the land surface water balance." alt="" coords="405,12,544,39"/>
+<area shape="rect" id="node7" href="$classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="592,12,771,39"/>
+<area shape="rect" id="node9" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="819,5,970,46"/>
+<area shape="rect" id="node11" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1019,12,1128,39"/>
 </map>

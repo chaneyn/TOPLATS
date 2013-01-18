@@ -5,9 +5,34 @@
 @section Introduction
  TOPographically-based Land-Atmosphere Transfer Scheme
     for regional and global atmosperic models and
-    studies of macroscale water and energy balance --
+    studies of macroscale water and energy balance
+    
+@section Operating System
+   The current version of the model was developed on linux machines using
+Centos    and Fedora. There are no assurances that it will compile or pass all
+the tests    on other operating systems. Ongoing development is addressing the
+portability    issue.
+    
+@section Compilers
+  The development of the model has focused on using gfortran 4.46 and up.
+Special care is being placed on including the object oriented features of
+Fortran 2003+. As a result, many features will not compile with previous
+versions of gfortran. As we continue development, it is recommended to use the
+most up to date gfortran. "Ready to use" binaries can be downloaded at
+http://gcc.gnu.org/wiki/GFortranBinaries. The model's portability to other
+compilers is currently unknown. In the near future, we will ensure it can be run
+on other compilers including ifortran and pgfortran.   
 
-@section Input
+@section InputOutput
+The model requires a number of inputs to simulate the hydrologic cycle over the
+region of interest. In the next section, we will try to give a thorough
+explanation of the input data and parameters to make your life that much easier.
+We will discuss the model output when discussing the filenames used for the
+output. Note that all image input/output files have the structure of GrADS
+binary files used for meteorological studies. This makes the model easily
+accesible to the hydrologic/meteorological scientific community.
 
-@section Output
+@section Manual
+For a complete manual, go to https://github.com/chaneyn/TOPLATS/wiki/Manual
+
 */

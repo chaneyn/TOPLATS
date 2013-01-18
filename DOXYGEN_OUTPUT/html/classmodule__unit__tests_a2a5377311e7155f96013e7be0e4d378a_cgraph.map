@@ -1,4 +1,4 @@
 <map id="module_unit_tests::clcf3vpd_test2" name="module_unit_tests::clcf3vpd_test2">
-<area shape="rect" id="node3" href="$classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="module_atmos::clcf3vpd" alt="" coords="213,13,400,43"/>
-<area shape="rect" id="node5" href="$classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="448,13,611,43"/>
+<area shape="rect" id="node3" href="$classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="Calculate the limiting factor due to vapor pressure for canopy resistance following Jarvis (1976)..." alt="" coords="203,12,381,39"/>
+<area shape="rect" id="node5" href="$classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="Compute saturation vapor pressure in Pa. given temperature in Kelvin." alt="" coords="429,12,584,39"/>
 </map>
