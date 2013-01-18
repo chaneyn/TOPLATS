@@ -421,6 +421,9 @@ contains
 !
 ! ====================================================================
 
+!> Subroutine to assign initial soil temperatures
+!! and set heat storage variables for the first time step in the
+!! simulation.
   subroutine inittk(GRID_SOIL,GRID_VEG,GRID_VARS,tdeep,tmid0,tmid0_moss,tkmid,&
        tkmid_us,tkmid_moss,tkel,tk0moss,tkact,tkact_us,&
        tkact_moss,tskinact_moss,dshact,dshact_us,dshact_moss,tkpet,&
@@ -548,6 +551,9 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
+!> Subroutine to calculate the potential evapotranspiration
+!! using penman's equation for bare soil and penman-monteith
+!! for vegetated areas.
   subroutine petpen(GRID_VEG,GRID_MET,GRID_VARS,tcel,vpsat,vpdef,f1par,&
        albd,xlai,rsd,rsmin,rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk,&
        f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv,&
@@ -711,6 +717,15 @@ dspet = GRID_VARS%dspet
 !
 ! ====================================================================
 
+!> Subroutine to calculate the potential evapotranspiration
+!! using the combination method (i.e. solving the
+!! set of nonlinear energy balance equations iteratively).
+!! three energy balances are maintained: one for bare soil, one
+!! for wet vegetation and one for dry vegetation.
+!!
+!! This is the subroutine that solves the energy balance under the
+!! assumption that the incoming long wave radiation for both under
+!! and over story is equal.
       subroutine peteb(ipix,i,dt,inc_frozen,&
 
 ! General vegetation parameters
@@ -1291,6 +1306,8 @@ GLOBAL%iopsmini = iopsmini
 
       end subroutine peteb
 
+!> Compute saturation vapor pressure in Pa. given temperature
+!! in Kelvin.
       function esat(Tsk)
 
 ! ====================================================================
@@ -1336,6 +1353,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to Photosynthetically
+!! Active Radiation (PAR) for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
       real*8 alb,LAI,Rg,rsmin,rsmax,Rgl,par,f,f1par,clcf1par,a1,a2,a3
@@ -1374,6 +1394,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to vapor pressure
+!! for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function  clcf3vpd(Ts,ea,g)
       implicit none
       real*8 Ts,ea,g,rmax_vpd,rmin_vpd,vpd,f3vpd,clcf3vpd
@@ -1428,6 +1451,9 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Calculate the limiting factor due to air temperature
+!! for canopy resistance following
+!! Jarvis (1976), Dickenson et al. (1986), Noilhan and Planton (1989)
       function clcf4temp(tair,tref,f4par)
 
       implicit none
@@ -1481,6 +1507,7 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for bare soil.
       subroutine peteb_bs(thermc1,thermc2,heatcap1,heatcap2,heatcapold,&
        rain,snow,Swq,albd,emiss,ravd,rahd,tkd,tkmidd,rnetd,xled,epetd,hd,&
        gd,dshd,tcel,vppa,roa,psychr,xlhv,zdeep,Tdeepstep,zmid,rsd,rld,&
@@ -1603,6 +1630,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for dry vegetation, over
+!! story.
       subroutine peteb_dv(thermc2,vpsat,heatcap,heatcap2,heatcapold,&
        rs_over,rain,snow,Swq,albd,emiss,thermc,f1par,f3vpd,f4temp,rescan,&
        ravd,rahd,tkd,tkmidd,rnetd,xled,epetd,hd,gd,dshd,&
@@ -1713,6 +1742,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Solve the energy balance at potential rate for wet vegetation, over
+!! story.
       subroutine peteb_wv(thermc2,heatcap,heatcap2,heatcapold,&
        rs_over,rain,snow,Swq,albw,emiss,&
        thermc,ravw,rahw,tkw,tkmidw,rnetw,xlew,epetw,hw,&
@@ -1844,6 +1875,8 @@ GLOBAL%iopsmini = iopsmini
 !
 ! ====================================================================
 
+!> Initialize the snow model variables that will be used in the
+!! snow subroutine but that not will be altered in the main program.
       subroutine inidum(dum1,PackWater,dum2,SurfWater,dum3,Swq,dum4,&
        VaporMassFlux,dum5,TPack,dum6,TSurf,dum7,r_MeltEnergy,dum8,Outflow,&
        dum9,xleact_snow,dum10,hact_snow,dum11,rn_snow,dum12,dens)
