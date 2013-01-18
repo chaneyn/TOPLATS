@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  18 JAN 2013 12:10
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  18 JAN 2013 12:13
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -66,6 +66,33 @@ Package: ltxcmds 2011/04/18 v1.20 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
+(/usr/local/texlive/2011/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Switches for detecting VTeX and its modes (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/local/texlive/2011/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count88
+\Gm@cntv=\count89
+\c@Gm@tempcnt=\count90
+\Gm@bindingoffset=\dimen105
+\Gm@wd@mp=\dimen106
+\Gm@odd@mp=\dimen107
+\Gm@even@mp=\dimen108
+\Gm@layoutwidth=\dimen109
+\Gm@layoutheight=\dimen110
+\Gm@layouthoffset=\dimen111
+\Gm@layoutvoffset=\dimen112
+\Gm@dimlist=\toks15
+)
 (/usr/local/texlive/2011/texmf-dist/tex/latex/tools/indentfirst.sty
 Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
 )
@@ -76,41 +103,37 @@ LaTeX Warning: Label `Tests1' multiply defined.
 )
 \openout1 = `TOPLATS_final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
  (/usr/local/texlive/2011/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count88
-\scratchdimen=\dimen105
+\scratchcounter=\count91
+\scratchdimen=\dimen113
 \scratchbox=\box26
-\nofMPsegments=\count89
-\nofMParguments=\count90
-\everyMPshowfont=\toks15
-\MPscratchCnt=\count91
-\MPscratchDim=\dimen106
-\MPnumerator=\count92
-\makeMPintoPDFobject=\count93
-\everyMPtoPDFconversion=\toks16
+\nofMPsegments=\count92
+\nofMParguments=\count93
+\everyMPshowfont=\toks16
+\MPscratchCnt=\count94
+\MPscratchDim=\dimen114
+\MPnumerator=\count95
+\makeMPintoPDFobject=\count96
+\everyMPtoPDFconversion=\toks17
 ) (/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/04/22 v0.16 Utilities of pdfTeX for LuaTeX (HO)
 
 (/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/local/texlive/2011/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -148,110 +171,120 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <14.4> on input line 12.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 12.
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(72.26999pt, 452.9679pt, 72.26999pt)
+* v-part:(T,H,B)=(144.54pt, 592.10185pt, 108.405pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=452.9679pt
+* \textheight=592.10185pt
+* \oddsidemargin=0.0pt
+* \evensidemargin=0.0pt
+* \topmargin=35.27pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=35.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 13.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 13.
 [1
 
 {/usr/local/texlive/2011/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 [2]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 31.
+(Font)              <12> on input line 32.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 31.
+(Font)              <8> on input line 32.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 31.
+(Font)              <6> on input line 32.
  [3]
-Overfull \hbox (61.89844pt too wide) in paragraph at lines 56--57
-[]\OT1/cmr/m/n/12 The model con-sists of three main parts: MOD-ULE[]CELL, MOD-U
-LE[]CATCHMENT,
- []
-
-
-Overfull \hbox (3.37782pt too wide) in paragraph at lines 56--57
-\OT1/cmr/m/n/12 and MOD-ULE[]REGIONAL. MOD-ULE[]CELL uses MOD-ULE[]LAND, MOD-
+Overfull \hbox (10.87949pt too wide) in paragraph at lines 57--58
+\OT1/cmr/m/n/12 and MOD-ULE[]REGIONAL. MOD-ULE[]CELL uses MOD-ULE[]LAND, MOD-UL
+E[]ATMOS,
  []
 
 <Figures/Modules1.png, id=15, 297.7524pt x 110.3322pt>
 File: Figures/Modules1.png Graphic file (type png)
 
 <use Figures/Modules1.png>
-Package pdftex.def Info: Figures/Modules1.png used on input line 60.
+Package pdftex.def Info: Figures/Modules1.png used on input line 61.
 (pdftex.def)             Requested size: 216.81pt x 80.3381pt.
 
 <Figures/Modules2.png, id=17, 279.9258pt x 244.2726pt>
 File: Figures/Modules2.png Graphic file (type png)
 
 <use Figures/Modules2.png>
-Package pdftex.def Info: Figures/Modules2.png used on input line 67.
+Package pdftex.def Info: Figures/Modules2.png used on input line 68.
 (pdftex.def)             Requested size: 216.81pt x 189.19748pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[4 <./Figures/Modules1.png>]
-Overfull \hbox (68.44235pt too wide) in paragraph at lines 83--84
-\OT1/cmr/m/n/12 have in-cluded two test pro-grams: CATCH-MENT[]TESTS[]DRIVER an
-d TESTS[]DRIVER,
- []
-
-[5 <./Figures/Modules2.png>]
+[4 <./Figures/Modules1.png>] [5 <./Figures/Modules2.png>]
 <Figures/Tests1.png, id=26, 698.1282pt x 262.581pt>
 File: Figures/Tests1.png Graphic file (type png)
  <use Figures/Tests1.png>
-Package pdftex.def Info: Figures/Tests1.png used on input line 89.
+Package pdftex.def Info: Figures/Tests1.png used on input line 90.
 (pdftex.def)             Requested size: 397.48499pt x 149.50043pt.
-
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 89--91
- [][] 
- []
 
 <Figures/Tests2.png, id=27, 725.5908pt x 279.444pt>
 File: Figures/Tests2.png Graphic file (type png)
  <use Figures/Tests2.png>
-Package pdftex.def Info: Figures/Tests2.png used on input line 98.
+Package pdftex.def Info: Figures/Tests2.png used on input line 99.
 (pdftex.def)             Requested size: 397.48499pt x 153.08492pt.
 
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 98--99
- [][] 
- []
+
+LaTeX Warning: `h' float specifier changed to `ht'.
 
 [6 <./Figures/Tests1.png>] [7 <./Figures/Tests2.png>]
 <Figures/CallGraph.png, id=37, 1129.21875pt x 1048.91875pt>
 File: Figures/CallGraph.png Graphic file (type png)
 
 <use Figures/CallGraph.png>
-Package pdftex.def Info: Figures/CallGraph.png used on input line 124.
+Package pdftex.def Info: Figures/CallGraph.png used on input line 125.
 (pdftex.def)             Requested size: 361.34999pt x 335.66086pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[8]
-Overfull \hbox (0.614pt too wide) in paragraph at lines 134--135
-[]\OT1/cmr/m/n/12 As de-scribed above, we have ac-com-plished our ma-jor goals 
-for this project.
- []
-
-[9 <./Figures/CallGraph.png>] [10] (./TOPLATS_final_report.aux)
+[8] [9 <./Figures/CallGraph.png>] [10] (./TOPLATS_final_report.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 1497 strings out of 493633
- 21920 string characters out of 3143378
- 77147 words of memory out of 3000000
- 4798 multiletter control sequences out of 15000+200000
+ 1975 strings out of 493633
+ 28977 string characters out of 3143378
+ 91830 words of memory out of 3000000
+ 5266 multiletter control sequences out of 15000+200000
  8194 words of font info for 29 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
- 37i,7n,23p,1063b,235s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,7n,23p,1078b,235s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on TOPLATS_final_report.pdf (10 pages, 853600 bytes).
+Output written on TOPLATS_final_report.pdf (10 pages, 853295 bytes).
 PDF statistics:
  60 PDF objects out of 1000 (max. 8388607)
  34 compressed objects within 1 object stream
