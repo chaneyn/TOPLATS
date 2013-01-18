@@ -1235,352 +1235,349 @@
 <div class="line"><a name="l01188"></a><span class="lineno"> 1188</span>&#160;</div>
 <div class="line"><a name="l01189"></a><span class="lineno"> 1189</span>&#160;      vapormassflux = airdens * (eps/press) * (eactair - essnow)/ra</div>
 <div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160;      vapormassflux = vapormassflux / water_density</div>
-<div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;</div>
-<div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;      <span class="keywordflow">if</span> ( (vpd.eq.(zero)).and.(vapormassflux.lt.(zero)) ) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;</div>
-<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;         vapormassflux = zero</div>
-<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;</div>
-<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;</div>
-<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;      <span class="keywordflow">if</span> ( (vapormassflux.ge.-5000.d0).and.(vapormassflux.le.5000.d0) ) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;</div>
-<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;         vapormassflux=vapormassflux</div>
-<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;</div>
-<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;</div>
-<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;         <span class="keyword">write</span> (*,*) <span class="stringliteral">&#39;CALCSNOWMELT : VaporMassFlux out of bounds &#39;</span>,vapormassflux</div>
-<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;         <span class="keyword">write</span> (*,*) airdens,eps,press,eactair,essnow,ra,water_density,tmean</div>
-<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;</div>
-<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;  </div>
-<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;<span class="comment">! Calculate latent heat flux</span></div>
-<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160; </div>
-<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;      <span class="keywordflow">if</span> (tmean.ge.(zero)) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;<span class="comment">! Melt conditions: use latent heat of vaporization</span></div>
-<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;</div>
-<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;         latentheat = lv * vapormassflux * water_density</div>
-<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;</div>
-<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;<span class="comment">! Accumulation: use latent heat of sublimation (Eq. 3.19, Bras 1990) </span></div>
+<div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;      <span class="keywordflow">if</span> ( (vpd.eq.(zero)).and.(vapormassflux.lt.(zero)) ) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;</div>
+<div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;         vapormassflux = zero</div>
+<div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;</div>
+<div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;</div>
+<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;      <span class="keywordflow">if</span> ( (vapormassflux.ge.-5000.d0).and.(vapormassflux.le.5000.d0) ) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;</div>
+<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;         vapormassflux=vapormassflux</div>
+<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;</div>
+<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;</div>
+<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;         <span class="keyword">write</span> (*,*) <span class="stringliteral">&#39;CALCSNOWMELT : VaporMassFlux out of bounds &#39;</span>,vapormassflux</div>
+<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;         <span class="keyword">write</span> (*,*) airdens,eps,press,eactair,essnow,ra,water_density,tmean</div>
+<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;</div>
+<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;  </div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;<span class="comment">! Calculate latent heat flux</span></div>
+<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;   </div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;      <span class="keywordflow">if</span> (tmean.ge.(zero)) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;<span class="comment">! Melt conditions: use latent heat of vaporization</span></div>
+<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;</div>
+<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;         latentheat = lv * vapormassflux * water_density</div>
+<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;</div>
+<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;</div>
+<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;      <span class="keywordflow">if</span> ( (latentheat.ge.-5000.d0).and.(latentheat.le.5000.d0) ) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;</div>
-<div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;         ls = (677.d0 - 0.07d0 * tmean) * r_joulespcal * gramspkg</div>
+<div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;        <span class="comment">! Accumulation: use latent heat of sublimation (Eq. 3.19, Bras 1990) </span></div>
 <div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;</div>
-<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;</div>
-<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;      <span class="keywordflow">if</span> ( (latentheat.ge.-5000.d0).and.(latentheat.le.5000.d0) ) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;         ls = (677.d0 - 0.07d0 * tmean) * r_joulespcal * gramspkg</div>
+<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;         latentheat=latentheat</div>
+<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;         latentheat = ls * vapormassflux * water_density</div>
 <div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;</div>
-<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;         latentheat=latentheat</div>
-<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;         latentheat = ls * vapormassflux * water_density</div>
-<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;</div>
-<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;</div>
-<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;         <span class="keyword">write</span> (*,*) <span class="stringliteral">&#39;CALCSNOWMELT : LatentHeat out of bounds &#39;</span>,latentheat</div>
-<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;         <span class="keyword">write</span> (*,*) tmean,vapormassflux,water_density</div>
-<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;         <span class="keyword">write</span> (*,*) r_joulespcal,gramspkg</div>
-<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;         <span class="keyword">write</span> (*,*) ls,lv</div>
-<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;         <span class="keyword">write</span> (*,*)</div>
-<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;</div>
-<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;</div>
+<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;         <span class="keyword">write</span> (*,*) <span class="stringliteral">&#39;CALCSNOWMELT : LatentHeat out of bounds &#39;</span>,latentheat</div>
+<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;         <span class="keyword">write</span> (*,*) tmean,vapormassflux,water_density</div>
+<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;         <span class="keyword">write</span> (*,*) r_joulespcal,gramspkg</div>
+<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;         <span class="keyword">write</span> (*,*) ls,lv</div>
+<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;         <span class="keyword">write</span> (*,*)</div>
+<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;</div>
+<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;  </div>
+<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;<span class="comment">! Calculate advected heat flux from rain </span></div>
+<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;<span class="comment">!     WORK IN PROGRESS:  Should the following read (Tair - Tsurf) ??</span></div>
 <div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;  </div>
-<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;<span class="comment">! Calculate advected heat flux from rain </span></div>
-<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;<span class="comment">!     WORK IN PROGRESS:  Should the following read (Tair - Tsurf) ??</span></div>
-<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;  </div>
-<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;      advectedenergy = (ch_water * tair * rain) / (tstep*secphour)</div>
-<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;  </div>
-<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;<span class="comment">! Calculate change in cold content</span></div>
+<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;      advectedenergy = (ch_water * tair * rain) / (tstep*secphour)</div>
+<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;  </div>
+<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;<span class="comment">! Calculate change in cold content</span></div>
+<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;</div>
+<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;      deltacoldcontent = ch_ice * swesurfacelayer * (tsurf - oldtsurf)/&amp;</div>
+<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;                         (tstep * secphour)</div>
 <div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;</div>
-<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;      deltacoldcontent = ch_ice * swesurfacelayer * (tsurf - oldtsurf)/&amp;</div>
-<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;                         (tstep * secphour)</div>
+<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;<span class="comment">!CVAL Add the ground heat flux to the change in cold content</span></div>
+<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;<span class="comment">!CVAL if the top layer is smaller than the maximum top layer depth.</span></div>
 <div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;</div>
-<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;<span class="comment">!CVAL Add the ground heat flux to the change in cold content</span></div>
-<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;<span class="comment">!CVAL if the top layer is smaller than the maximum top layer depth.</span></div>
-<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;</div>
-<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;      <span class="keywordflow">if</span> (swq.le.r_max_surface_swe) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;</div>
-<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;         deltacoldcontent = deltacoldcontent+gact</div>
-<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;</div>
-<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;</div>
-<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;<span class="comment">! Calculate net energy exchange at the snow surface</span></div>
-<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;  </div>
-<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;      restterm = netrad + sensibleheat + latentheat + advectedenergy -&amp;</div>
-<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;                 deltacoldcontent</div>
+<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;      <span class="keywordflow">if</span> (swq.le.r_max_surface_swe) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;</div>
+<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;         deltacoldcontent = deltacoldcontent+gact</div>
+<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;</div>
+<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;</div>
+<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;<span class="comment">! Calculate net energy exchange at the snow surface</span></div>
+<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;</div>
+<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;      restterm = netrad + sensibleheat + latentheat + advectedenergy -&amp;</div>
+<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;                 deltacoldcontent</div>
+<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;</div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;      refreezeenergy = (surfaceliquidwater * lf * water_density)/&amp;</div>
+<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;                       (tstep * secphour)</div>
 <div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;</div>
-<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;      refreezeenergy = (surfaceliquidwater * lf * water_density)/&amp;</div>
-<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;                       (tstep * secphour)</div>
-<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;</div>
-<div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;      <span class="keywordflow">if</span> ( (tsurf.eq.(zero)).and.(restterm.gt.(-refreezeenergy)) ) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;</div>
-<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;         refreezeenergy = -restterm </div>
-<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;<span class="comment">! available energy input over cold content</span></div>
-<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;<span class="comment">! used to melt, i.e. Qrf is negative value</span></div>
-<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;<span class="comment">! (energy out of pack)</span></div>
-<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;         restterm = zero</div>
-<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;</div>
-<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;</div>
-<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;         restterm = restterm + refreezeenergy</div>
-<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;<span class="comment">! add this positive value to the pack</span></div>
-<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;  </div>
-<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;</div>
-<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;      <span class="keywordflow">if</span> ( (tsurf.eq.(zero)).and.(restterm.gt.(-refreezeenergy)) ) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;</div>
+<div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;         refreezeenergy = -restterm </div>
+<div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;<span class="comment">! available energy input over cold content</span></div>
+<div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;<span class="comment">! used to melt, i.e. Qrf is negative value</span></div>
+<div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;<span class="comment">! (energy out of pack)</span></div>
+<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;         restterm = zero</div>
+<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;</div>
+<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;</div>
+<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;         restterm = restterm + refreezeenergy</div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;<span class="comment">! add this positive value to the pack</span></div>
+<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;  </div>
+<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;</div>
+<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;</div>
+<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab">snowpackenergybalance</a></div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;</div>
 <div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;</div>
-<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab">snowpackenergybalance</a></div>
-<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;</div>
-<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;</div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;<span class="comment">!*</span></div>
+<div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;<span class="comment">!* SUMMARY:      StabilityCorrection.! - Calculate the stability correction</span></div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;<span class="comment">!* USAGE:        Part of DHSVM</span></div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;<span class="comment">!*</span></div>
-<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;<span class="comment">!* SUMMARY:      StabilityCorrection.! - Calculate the stability correction</span></div>
-<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;<span class="comment">!* USAGE:        Part of DHSVM</span></div>
-<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;<span class="comment">!*</span></div>
-<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;<span class="comment">!* AUTHOR:       Bart Nijssen and Pascal Storck</span></div>
-<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;<span class="comment">!* ORG:          University of Washington, Department of Civil Engineering</span></div>
-<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;<span class="comment">!* E-MAIL:       nijssen@u.washington.edu, pstorck@u.washington.edu</span></div>
-<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;<span class="comment">!* ORIG-DATE:    Apr-1996</span></div>
-<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;<span class="comment">!* LAST-MOD:     Tue Mar 25 16:54:52 1997 by Bart Nijssen</span></div>
-<div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160;<span class="comment">!*               &lt;nijssen@meter.ce.washington.edu&gt;</span></div>
-<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;<span class="comment">!* DESCRIPTION:  Calculate the stability correction for exchange of sensible</span></div>
-<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;<span class="comment">!*               heat between the surface and the atmosphere </span></div>
-<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;<span class="comment">!* DESCRIP-END.</span></div>
-<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160;<span class="comment">!* FUNCTIONS:    StabilityCorrection()</span></div>
-<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;<span class="comment">!* COMMENTS:     </span></div>
-<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;<span class="comment">!*</span></div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;<span class="comment">!* AUTHOR:       Bart Nijssen and Pascal Storck</span></div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;<span class="comment">!* ORG:          University of Washington, Department of Civil Engineering</span></div>
+<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;<span class="comment">!* E-MAIL:       nijssen@u.washington.edu, pstorck@u.washington.edu</span></div>
+<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;<span class="comment">!* ORIG-DATE:    Apr-1996</span></div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;<span class="comment">!* LAST-MOD:     Tue Mar 25 16:54:52 1997 by Bart Nijssen</span></div>
+<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;<span class="comment">!*               &lt;nijssen@meter.ce.washington.edu&gt;</span></div>
+<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;<span class="comment">!* DESCRIPTION:  Calculate the stability correction for exchange of sensible</span></div>
+<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;<span class="comment">!*               heat between the surface and the atmosphere </span></div>
+<div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160;<span class="comment">!* DESCRIP-END.</span></div>
+<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;<span class="comment">!* FUNCTIONS:    StabilityCorrection()</span></div>
+<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;<span class="comment">!* COMMENTS:     </span></div>
+<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;<span class="comment">!*</span></div>
+<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160;</div>
+<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;<span class="comment">!*****************************************************************************</span></div>
+<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;<span class="comment">! Function name: StabilityCorrection()</span></div>
 <div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160;</div>
-<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;<span class="comment">!*****************************************************************************</span></div>
-<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;<span class="comment">! Function name: StabilityCorrection()</span></div>
+<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;<span class="comment">! Purpose      : Calculate atmospheri! stability correction for non-neutral</span></div>
+<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;<span class="comment">!                conditions</span></div>
 <div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;</div>
-<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;<span class="comment">! Purpose      : Calculate atmospheri! stability correction for non-neutral</span></div>
-<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160;<span class="comment">!                conditions</span></div>
-<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;</div>
-<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;<span class="comment">! Required     :</span></div>
-<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;<span class="comment">!   real*8 Z          - Reference height (m)</span></div>
-<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;<span class="comment">!   real*8 d          - Displacement height (m)</span></div>
-<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;<span class="comment">!   real*8 TSurf      - Surface temperature (C)</span></div>
-<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;<span class="comment">!   real*8 Tair       - Air temperature (C)</span></div>
-<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;<span class="comment">!   real*8 Wind       - Wind speed (m/s)</span></div>
-<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;<span class="comment">!   real*8 Z0         - Roughness length (m)</span></div>
+<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;<span class="comment">! Required     :</span></div>
+<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160;<span class="comment">!   real*8 Z          - Reference height (m)</span></div>
+<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;<span class="comment">!   real*8 d          - Displacement height (m)</span></div>
+<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;<span class="comment">!   real*8 TSurf      - Surface temperature (C)</span></div>
+<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;<span class="comment">!   real*8 Tair       - Air temperature (C)</span></div>
+<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;<span class="comment">!   real*8 Wind       - Wind speed (m/s)</span></div>
+<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;<span class="comment">!   real*8 Z0         - Roughness length (m)</span></div>
+<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;</div>
+<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;<span class="comment">! Returns      :</span></div>
+<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;<span class="comment">!   real*8 Correction - Multiplier for aerodynami! resistance</span></div>
 <div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160;</div>
-<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;<span class="comment">! Returns      :</span></div>
-<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160;<span class="comment">!   real*8 Correction - Multiplier for aerodynami! resistance</span></div>
-<div class="line"><a name="l01318"></a><span class="lineno"> 1318</span>&#160;</div>
-<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;<span class="comment">! Modifies     : None</span></div>
-<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160;    </div>
-<div class="line"><a name="l01321"></a><span class="lineno"> 1321</span>&#160;<span class="comment">!****************************************************************************</span></div>
+<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;<span class="comment">! Modifies     : None</span></div>
+<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160;    </div>
+<div class="line"><a name="l01318"></a><span class="lineno"> 1318</span>&#160;<span class="comment">!****************************************************************************</span></div>
+<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;</div>
+<div class="line"><a name="l01321"></a><span class="lineno"><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024"> 1321</a></span>&#160;<span class="keyword">      function  </span><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a>(Z,d,TSurf,Tair,Wind,Z0)</div>
 <div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160;</div>
-<div class="line"><a name="l01324"></a><span class="lineno"><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024"> 1324</a></span>&#160;<span class="keyword">      function  </span><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a>(Z,d,TSurf,Tair,Wind,Z0)</div>
+<div class="line"><a name="l01323"></a><span class="lineno"> 1323</span>&#160;      parameter(g=9.81)</div>
+<div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160;<span class="comment">!         gravitational accelleration (m/(s^2))</span></div>
 <div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;</div>
-<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;      parameter(g=9.81)</div>
-<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;<span class="comment">!         gravitational accelleration (m/(s^2))</span></div>
-<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;</div>
-<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;      <span class="keywordtype">real*8</span> z,d,tsurf,tair,wind,z0</div>
-<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;</div>
-<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;      <span class="keywordtype">real*8</span> correction         </div>
-<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;<span class="comment">!          Correction to aerodynami! resistance</span></div>
-<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160;      <span class="keywordtype">real*8</span> ri                     </div>
-<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;<span class="comment">!          Richardson&#39;s Number</span></div>
-<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;      <span class="keywordtype">real*8</span> ricr             </div>
-<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;<span class="comment">!          Critical Richardson&#39;s Number</span></div>
-<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;      <span class="keywordtype">real*8</span> rilimit                </div>
-<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160;<span class="comment">!          Upper limit for Richardson&#39;s Number</span></div>
-<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;      <span class="keywordtype">real*8</span> zero</div>
-<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;</div>
-<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;      correction = 1.0d0</div>
-<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;      ricr = 0.2d0</div>
-<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;      zero=0.0d0</div>
+<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;      <span class="keywordtype">real*8</span> z,d,tsurf,tair,wind,z0</div>
+<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;</div>
+<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;      <span class="keywordtype">real*8</span> correction         </div>
+<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;<span class="comment">!          Correction to aerodynami! resistance</span></div>
+<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;      <span class="keywordtype">real*8</span> ri                     </div>
+<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;<span class="comment">!          Richardson&#39;s Number</span></div>
+<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;      <span class="keywordtype">real*8</span> ricr             </div>
+<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160;<span class="comment">!          Critical Richardson&#39;s Number</span></div>
+<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;      <span class="keywordtype">real*8</span> rilimit                </div>
+<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;<span class="comment">!          Upper limit for Richardson&#39;s Number</span></div>
+<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;      <span class="keywordtype">real*8</span> zero</div>
+<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;</div>
+<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160;      correction = 1.0d0</div>
+<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;      ricr = 0.2d0</div>
+<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;      zero=0.0d0</div>
+<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;</div>
+<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;<span class="comment">! Calculate the effect of the atmospheri! stability using a Richardson </span></div>
+<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;<span class="comment">! Number approach</span></div>
 <div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;</div>
-<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;<span class="comment">! Calculate the effect of the atmospheri! stability using a Richardson </span></div>
-<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;<span class="comment">! Number approach</span></div>
-<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;</div>
-<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;      <span class="keywordflow">if</span> (tsurf.ne.tair) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;</div>
-<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;<span class="comment">! Non-neutral conditions</span></div>
+<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;      <span class="keywordflow">if</span> (tsurf.ne.tair) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;</div>
+<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;<span class="comment">! Non-neutral conditions</span></div>
+<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;    </div>
+<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;         ri = g * (tair - tsurf) * (z - d)/&amp;</div>
+<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;           (((tair+273.15d0)+(tsurf+273.15d0))/2.d0 * wind * wind)</div>
 <div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;    </div>
-<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;         ri = g * (tair - tsurf) * (z - d)/&amp;</div>
-<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;           (((tair+273.15d0)+(tsurf+273.15d0))/2.d0 * wind * wind)</div>
+<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;         rilimit = (tair+273.15d0)/&amp;</div>
+<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;           (((tair+273.15d0)+(tsurf+273.15d0))/2.d0 * (log((z-d)/z0) + 5.d0))</div>
 <div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;    </div>
-<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;         rilimit = (tair+273.15d0)/&amp;</div>
-<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;           (((tair+273.15d0)+(tsurf+273.15d0))/2.d0 * (log((z-d)/z0) + 5.d0))</div>
-<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;    </div>
-<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;         <span class="keywordflow">if</span> (ri.gt.rilimit) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;</div>
-<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;            ri = rilimit</div>
-<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;</div>
-<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;         <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;    </div>
-<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;         <span class="keywordflow">if</span> (ri.gt.(zero)) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;</div>
-<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;            correction = (1.d0 - ri/ricr) * (1.d0 - ri/ricr)</div>
-<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160;      </div>
-<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;         <span class="keywordflow">else</span> </div>
-<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;</div>
-<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;            <span class="keywordflow">if</span> (ri.lt.(-0.5d0)) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;</div>
-<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;               ri = -0.5d0</div>
-<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160;</div>
-<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160;            <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;</div>
-<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;            correction = sqrt(1.d0 - 16.d0 * ri)</div>
-<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;</div>
-<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160;         <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;</div>
-<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;</div>
-<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;      <a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a>=correction</div>
-<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;</div>
-<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;      <span class="keywordflow">return</span></div>
-<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;</div>
-<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;<span class="keyword">      end function </span><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a></div>
+<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;         <span class="keywordflow">if</span> (ri.gt.rilimit) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;</div>
+<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;            ri = rilimit</div>
+<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;</div>
+<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;         <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;    </div>
+<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;         <span class="keywordflow">if</span> (ri.gt.(zero)) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;</div>
+<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;            correction = (1.d0 - ri/ricr) * (1.d0 - ri/ricr)</div>
+<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;      </div>
+<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;         <span class="keywordflow">else</span> </div>
+<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;</div>
+<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160;            <span class="keywordflow">if</span> (ri.lt.(-0.5d0)) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;</div>
+<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;               ri = -0.5d0</div>
+<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;</div>
+<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;            <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;</div>
+<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160;            correction = sqrt(1.d0 - 16.d0 * ri)</div>
+<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160;</div>
+<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;         <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;</div>
+<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160;</div>
+<div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;      <a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a>=correction</div>
+<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;</div>
+<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;</div>
+<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;<span class="keyword">      end function </span><a class="code" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024">stabilitycorrection</a></div>
+<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;</div>
+<div class="line"><a name="l01386"></a><span class="lineno"><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112"> 1386</a></span>&#160;<span class="keyword">      subroutine </span><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112">satvaporpressure</a>(tair,satvap)</div>
 <div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;</div>
-<div class="line"><a name="l01388"></a><span class="lineno"><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112"> 1388</a></span>&#160;<span class="keyword">      subroutine </span><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112">satvaporpressure</a>(tair,satvap)</div>
+<div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160;      <span class="keywordtype">real*8</span> tair,satvap,zero</div>
 <div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;</div>
-<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;      <span class="keywordtype">real*8</span> tair,satvap,zero</div>
+<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;      zero=0.0d0</div>
 <div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;</div>
-<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;      zero=0.0d0</div>
+<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;      <span class="keywordflow">if</span> (tair.gt.(-10.d0)) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;</div>
-<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;      <span class="keywordflow">if</span> (tair.gt.(-10.d0)) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;         satvap= 610.78d0 * exp((17.269d0 * tair) / (237.3d0 + tair))</div>
 <div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160;</div>
-<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;         satvap= 610.78d0 * exp((17.269d0 * tair) / (237.3d0 + tair))</div>
+<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;         <span class="keywordflow">if</span> (tair.lt.zero) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160;</div>
-<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;         <span class="keywordflow">if</span> (tair.lt.zero) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;            satvap=satvap*(1.0d0+0.00972d0*tair+.000042d0*tair*tair)</div>
 <div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;</div>
-<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;            satvap=satvap*(1.0d0+0.00972d0*tair+.000042d0*tair*tair)</div>
+<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;         <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;</div>
-<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;         <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;      <span class="keywordflow">else</span></div>
 <div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;</div>
-<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;         satvap= 610.78d0 * exp((17.269d0 * (-10.d0)) / (237.3d0 + (-10.d0)))</div>
 <div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;</div>
-<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;         satvap= 610.78d0 * exp((17.269d0 * (-10.d0)) / (237.3d0 + (-10.d0)))</div>
+<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160;         <span class="keywordflow">if</span> ((-10.d0).lt.zero) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;</div>
-<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;         <span class="keywordflow">if</span> ((-10.d0).lt.zero) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;            satvap=satvap*(1.0d0+0.00972d0*(-10.d0)+.000042d0*(-10.d0)*(-10.d0))</div>
 <div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;</div>
-<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;            satvap=satvap*(1.0d0+0.00972d0*(-10.d0)+.000042d0*(-10.d0)*(-10.d0))</div>
+<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;         <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;</div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;         <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;      <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;</div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;      <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;      <span class="keywordflow">return</span></div>
 <div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;</div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112">satvaporpressure</a></div>
 <div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;</div>
-<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112">satvaporpressure</a></div>
-<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;</div>
-<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;<span class="comment">!</span></div>
+<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;<span class="comment">!             subroutine snow_density</span></div>
 <div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;<span class="comment">!             subroutine snow_density</span></div>
+<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;<span class="comment">! ====================================================================</span></div>
 <div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;<span class="comment">! Calculate the density of the snow pack.</span></div>
 <div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;<span class="comment">! Calculate the density of the snow pack.</span></div>
+<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;<span class="comment">! ====================================================================</span></div>
 <div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;<span class="comment">! Input variables:</span></div>
 <div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;<span class="comment">! Input variables:</span></div>
-<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;<span class="comment">! snow_m        New snow                        m</span></div>
-<div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160;<span class="comment">! tcel          Air temperature                 C</span></div>
-<div class="line"><a name="l01434"></a><span class="lineno"> 1434</span>&#160;<span class="comment">! Swq_m         Snow water equivalent           m</span></div>
-<div class="line"><a name="l01435"></a><span class="lineno"> 1435</span>&#160;<span class="comment">! snow_depth    Snow depth                      m</span></div>
-<div class="line"><a name="l01436"></a><span class="lineno"> 1436</span>&#160;<span class="comment">! Tsurf         Snow surface temperature        C</span></div>
-<div class="line"><a name="l01437"></a><span class="lineno"> 1437</span>&#160;<span class="comment">! tstep         Time step                       s</span></div>
+<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;<span class="comment">! snow_m        New snow                        m</span></div>
+<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;<span class="comment">! tcel          Air temperature                 C</span></div>
+<div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;<span class="comment">! Swq_m         Snow water equivalent           m</span></div>
+<div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160;<span class="comment">! snow_depth    Snow depth                      m</span></div>
+<div class="line"><a name="l01434"></a><span class="lineno"> 1434</span>&#160;<span class="comment">! Tsurf         Snow surface temperature        C</span></div>
+<div class="line"><a name="l01435"></a><span class="lineno"> 1435</span>&#160;<span class="comment">! tstep         Time step                       s</span></div>
+<div class="line"><a name="l01436"></a><span class="lineno"> 1436</span>&#160;<span class="comment">!</span></div>
+<div class="line"><a name="l01437"></a><span class="lineno"> 1437</span>&#160;<span class="comment">! Output variables:</span></div>
 <div class="line"><a name="l01438"></a><span class="lineno"> 1438</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01439"></a><span class="lineno"> 1439</span>&#160;<span class="comment">! Output variables:</span></div>
+<div class="line"><a name="l01439"></a><span class="lineno"> 1439</span>&#160;<span class="comment">! dens          Snow pack density               kg/m3</span></div>
 <div class="line"><a name="l01440"></a><span class="lineno"> 1440</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;<span class="comment">! dens          Snow pack density               kg/m3</span></div>
-<div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160;<span class="comment">!</span></div>
-<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160;</div>
-<div class="line"><a name="l01446"></a><span class="lineno"><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676"> 1446</a></span>&#160;<span class="keyword">      subroutine </span><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676">snow_density</a>(dens,snow_m,tcel,Swq_m,snow_depth,Tsurf,tstep)</div>
+<div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160;</div>
+<div class="line"><a name="l01444"></a><span class="lineno"><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676"> 1444</a></span>&#160;<span class="keyword">      subroutine </span><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676">snow_density</a>(dens,snow_m,tcel,Swq_m,snow_depth,Tsurf,tstep)</div>
+<div class="line"><a name="l01445"></a><span class="lineno"> 1445</span>&#160;</div>
+<div class="line"><a name="l01446"></a><span class="lineno"> 1446</span>&#160;      <span class="keywordtype">implicit none</span></div>
 <div class="line"><a name="l01447"></a><span class="lineno"> 1447</span>&#160;</div>
-<div class="line"><a name="l01448"></a><span class="lineno"> 1448</span>&#160;      <span class="keywordtype">implicit none</span></div>
-<div class="line"><a name="l01449"></a><span class="lineno"> 1449</span>&#160;</div>
-<div class="line"><a name="l01450"></a><span class="lineno"> 1450</span>&#160;      <span class="keywordtype">real*8</span> tstep</div>
-<div class="line"><a name="l01451"></a><span class="lineno"> 1451</span>&#160;      <span class="keywordtype">real*8</span> snow_mm,tfar,dens_new,delta_depth,depth_new,dt</div>
-<div class="line"><a name="l01452"></a><span class="lineno"> 1452</span>&#160;      <span class="keywordtype">real*8</span> dens,snow_m,tcel,swq_m,snow_depth,tsurf</div>
-<div class="line"><a name="l01453"></a><span class="lineno"> 1453</span>&#160;      <span class="keywordtype">real*8</span> overburden,viscosity,deltadepth</div>
-<div class="line"><a name="l01454"></a><span class="lineno"> 1454</span>&#160;      <span class="keywordtype">real*8</span> new_snow_density,max_change,eta0,g,c5,c6,rho_w,secphour</div>
-<div class="line"><a name="l01455"></a><span class="lineno"> 1455</span>&#160;</div>
-<div class="line"><a name="l01456"></a><span class="lineno"> 1456</span>&#160;      parameter(new_snow_density=50.d0)</div>
-<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;      parameter(max_change=0.9d0)</div>
-<div class="line"><a name="l01458"></a><span class="lineno"> 1458</span>&#160;      parameter(eta0=3600000.d0)</div>
-<div class="line"><a name="l01459"></a><span class="lineno"> 1459</span>&#160;      parameter(g=9.81)</div>
-<div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;      parameter(secphour=3600.d0)</div>
-<div class="line"><a name="l01461"></a><span class="lineno"> 1461</span>&#160;      parameter(c5=0.08d0)</div>
-<div class="line"><a name="l01462"></a><span class="lineno"> 1462</span>&#160;      parameter(c6=0.021d0)</div>
-<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;      parameter(rho_w=997.d0)</div>
-<div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160;</div>
-<div class="line"><a name="l01465"></a><span class="lineno"> 1465</span>&#160;      dt=tstep/secphour</div>
-<div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;      snow_mm=1000.*snow_m</div>
+<div class="line"><a name="l01448"></a><span class="lineno"> 1448</span>&#160;      <span class="keywordtype">real*8</span> tstep</div>
+<div class="line"><a name="l01449"></a><span class="lineno"> 1449</span>&#160;      <span class="keywordtype">real*8</span> snow_mm,tfar,dens_new,delta_depth,depth_new,dt</div>
+<div class="line"><a name="l01450"></a><span class="lineno"> 1450</span>&#160;      <span class="keywordtype">real*8</span> dens,snow_m,tcel,swq_m,snow_depth,tsurf</div>
+<div class="line"><a name="l01451"></a><span class="lineno"> 1451</span>&#160;      <span class="keywordtype">real*8</span> overburden,viscosity,deltadepth</div>
+<div class="line"><a name="l01452"></a><span class="lineno"> 1452</span>&#160;      <span class="keywordtype">real*8</span> new_snow_density,max_change,eta0,g,c5,c6,rho_w,secphour</div>
+<div class="line"><a name="l01453"></a><span class="lineno"> 1453</span>&#160;</div>
+<div class="line"><a name="l01454"></a><span class="lineno"> 1454</span>&#160;      parameter(new_snow_density=50.d0)</div>
+<div class="line"><a name="l01455"></a><span class="lineno"> 1455</span>&#160;      parameter(max_change=0.9d0)</div>
+<div class="line"><a name="l01456"></a><span class="lineno"> 1456</span>&#160;      parameter(eta0=3600000.d0)</div>
+<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;      parameter(g=9.81)</div>
+<div class="line"><a name="l01458"></a><span class="lineno"> 1458</span>&#160;      parameter(secphour=3600.d0)</div>
+<div class="line"><a name="l01459"></a><span class="lineno"> 1459</span>&#160;      parameter(c5=0.08d0)</div>
+<div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;      parameter(c6=0.021d0)</div>
+<div class="line"><a name="l01461"></a><span class="lineno"> 1461</span>&#160;      parameter(rho_w=997.d0)</div>
+<div class="line"><a name="l01462"></a><span class="lineno"> 1462</span>&#160;</div>
+<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;      dt=tstep/secphour</div>
+<div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160;      snow_mm=1000.*snow_m</div>
+<div class="line"><a name="l01465"></a><span class="lineno"> 1465</span>&#160;</div>
+<div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;      <span class="keywordflow">if</span> (snow_mm.gt.0.d0) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;</div>
-<div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160;      <span class="keywordflow">if</span> (snow_mm.gt.0.d0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;</div>
+<div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;<span class="comment">! Estimate density of new snow based on air temperature.</span></div>
 <div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;<span class="comment">! Estimate density of new snow based on air temperature.</span></div>
-<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;</div>
+<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;         tfar=32.+tcel*9./5.</div>
 <div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160;</div>
-<div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;         tfar=32.+tcel*9./5.</div>
+<div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;         <span class="keywordflow">if</span> (tfar.gt.0.d0) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;</div>
-<div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;         <span class="keywordflow">if</span> (tfar.gt.0.d0) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;            dens_new=new_snow_density+1000.d0*(tfar/100.)*(tfar/100.)</div>
 <div class="line"><a name="l01477"></a><span class="lineno"> 1477</span>&#160;</div>
-<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;            dens_new=new_snow_density+1000.d0*(tfar/100.)*(tfar/100.)</div>
+<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;         <span class="keywordflow">else</span></div>
 <div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;</div>
-<div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;         <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;            dens_new=new_snow_density</div>
 <div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;</div>
-<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;            dens_new=new_snow_density</div>
+<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;         <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01483"></a><span class="lineno"> 1483</span>&#160;</div>
-<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;         <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;</div>
+<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;<span class="comment">! Compact current snowpack by weight of new snowfall.</span></div>
 <div class="line"><a name="l01486"></a><span class="lineno"> 1486</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;<span class="comment">! Compact current snowpack by weight of new snowfall.</span></div>
-<div class="line"><a name="l01488"></a><span class="lineno"> 1488</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;</div>
+<div class="line"><a name="l01488"></a><span class="lineno"> 1488</span>&#160;         <span class="keywordflow">if</span> (snow_depth.gt.0.d0) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01489"></a><span class="lineno"> 1489</span>&#160;</div>
-<div class="line"><a name="l01490"></a><span class="lineno"> 1490</span>&#160;         <span class="keywordflow">if</span> (snow_depth.gt.0.d0) <span class="keywordflow">then</span></div>
-<div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160;</div>
-<div class="line"><a name="l01492"></a><span class="lineno"> 1492</span>&#160;            delta_depth=( ((snow_mm/25.4d0)*(snow_depth/0.0254d0))/&amp;</div>
-<div class="line"><a name="l01493"></a><span class="lineno"> 1493</span>&#160;                          (swq_m/0.0254d0)*&amp;</div>
-<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;                          ( ((snow_depth/0.0254d0)/10.d0)**(0.35d0) )&amp;</div>
-<div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;                        )*0.0254d0</div>
+<div class="line"><a name="l01490"></a><span class="lineno"> 1490</span>&#160;            delta_depth=( ((snow_mm/25.4d0)*(snow_depth/0.0254d0))/&amp;</div>
+<div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160;                          (swq_m/0.0254d0)*&amp;</div>
+<div class="line"><a name="l01492"></a><span class="lineno"> 1492</span>&#160;                          ( ((snow_depth/0.0254d0)/10.d0)**(0.35d0) )&amp;</div>
+<div class="line"><a name="l01493"></a><span class="lineno"> 1493</span>&#160;                        )*0.0254d0</div>
+<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;</div>
+<div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;            <span class="keywordflow">if</span> (delta_depth.ge.snow_depth) <span class="keywordflow">then</span></div>
 <div class="line"><a name="l01496"></a><span class="lineno"> 1496</span>&#160;</div>
-<div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;            <span class="keywordflow">if</span> (delta_depth.ge.snow_depth) <span class="keywordflow">then</span></div>
+<div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;               delta_depth=max_change*snow_depth</div>
 <div class="line"><a name="l01498"></a><span class="lineno"> 1498</span>&#160;</div>
-<div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160;               delta_depth=max_change*snow_depth</div>
+<div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160;            <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01500"></a><span class="lineno"> 1500</span>&#160;</div>
-<div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;            <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;</div>
-<div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160;            depth_new=snow_mm/dens_new</div>
-<div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;            snow_depth=snow_depth-delta_depth+depth_new</div>
-<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;            dens=1000.d0*swq_m/snow_depth</div>
-<div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;         <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;</div>
+<div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;            depth_new=snow_mm/dens_new</div>
+<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;            snow_depth=snow_depth-delta_depth+depth_new</div>
+<div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160;            dens=1000.d0*swq_m/snow_depth</div>
+<div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;         <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;</div>
+<div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;<span class="comment">! No snowpack present, so snow density equals that of new snow.</span></div>
 <div class="line"><a name="l01508"></a><span class="lineno"> 1508</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01509"></a><span class="lineno"> 1509</span>&#160;<span class="comment">! No snowpack present, so snow density equals that of new snow.</span></div>
-<div class="line"><a name="l01510"></a><span class="lineno"> 1510</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01511"></a><span class="lineno"> 1511</span>&#160;</div>
-<div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;            dens=dens_new</div>
-<div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;            snow_depth=1000.d0*swq_m/dens</div>
+<div class="line"><a name="l01509"></a><span class="lineno"> 1509</span>&#160;</div>
+<div class="line"><a name="l01510"></a><span class="lineno"> 1510</span>&#160;            dens=dens_new</div>
+<div class="line"><a name="l01511"></a><span class="lineno"> 1511</span>&#160;            snow_depth=1000.d0*swq_m/dens</div>
+<div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;</div>
+<div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;         <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;</div>
-<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;         <span class="keywordflow">endif</span></div>
+<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;      <span class="keywordflow">else</span></div>
 <div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;</div>
-<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;          dens=1000.d0*swq_m/snow_depth</div>
 <div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;</div>
-<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;          dens=1000.d0*swq_m/snow_depth</div>
+<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;      <span class="keywordflow">endif</span></div>
 <div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;</div>
-<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;      <span class="keywordflow">endif</span></div>
-<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;</div>
+<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;<span class="comment">! ====================================================================</span></div>
+<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;<span class="comment">! Densification of the snow pack due to aging.</span></div>
 <div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;<span class="comment">! Densification of the snow pack due to aging.</span></div>
-<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;<span class="comment">! ====================================================================</span></div>
-<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;</div>
-<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;      snow_depth=1000.d0*swq_m/dens</div>
-<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;      overburden=0.5d0*g*rho_w*swq_m</div>
-<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;      viscosity=eta0*exp(-c5*tsurf + c6*dens)</div>
-<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;      deltadepth=-overburden/viscosity*snow_depth*dt*secphour</div>
-<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;      snow_depth=snow_depth+deltadepth</div>
-<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160;      dens=1000.d0*swq_m/snow_depth</div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;</div>
+<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;      snow_depth=1000.d0*swq_m/dens</div>
+<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;      overburden=0.5d0*g*rho_w*swq_m</div>
+<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;      viscosity=eta0*exp(-c5*tsurf + c6*dens)</div>
+<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;      deltadepth=-overburden/viscosity*snow_depth*dt*secphour</div>
+<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;      snow_depth=snow_depth+deltadepth</div>
+<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;      dens=1000.d0*swq_m/snow_depth</div>
+<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;</div>
+<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160;      <span class="keywordflow">return</span></div>
 <div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;</div>
-<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;      <span class="keywordflow">return</span></div>
+<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676">snow_density</a></div>
 <div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;</div>
-<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;<span class="keyword">      end subroutine </span><a class="code" href="classmodule__snow.html#a5b775d1b723f2863615d96b063ef5676">snow_density</a></div>
-<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;</div>
-<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;<span class="keyword">END MODULE </span><a class="code" href="classmodule__snow.html">module_snow</a></div>
+<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;<span class="keyword">END MODULE </span><a class="code" href="classmodule__snow.html">module_snow</a></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

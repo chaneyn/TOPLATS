@@ -1382,6 +1382,7 @@ MODULE MODULE_SNOW
 
       end function stabilitycorrection
 
+!>Calculate the saturated vapor pressure in the snow pack
       subroutine satvaporpressure(tair,satvap)
 
       real*8 tair,satvap,zero

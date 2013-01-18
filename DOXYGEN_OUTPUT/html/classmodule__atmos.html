@@ -51,8 +51,8 @@
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a15aba1f068fdf137d98255450baa4b28"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28">atmos</a> (ipix, i, dt, inc_frozen, i_2l,</td></tr>
-<tr class="separator:a15aba1f068fdf137d98255450baa4b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e3d661317ef5cbc74fa08f1820f90ca"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca">atmos</a> (ipix, i, GRID_VEG,</td></tr>
+<tr class="separator:a8e3d661317ef5cbc74fa08f1820f90ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2a76462207d01141c5eda614aa2fbea"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#ac2a76462207d01141c5eda614aa2fbea">inittk</a> (GRID_SOIL, GRID_VEG, GRID_VARS, tdeep, tmid0, tmid0_moss, tkmid, tkmid_us, tkmid_moss, tkel, tk0moss, tkact, tkact_us, tkact_moss, tskinact_moss, dshact, dshact_us, dshact_moss, tkpet, tkmidpet, tkmidpet_us, tkmidpet_moss, dspet, dspet_us, dspet_moss, Tsurf, Tpack, Tsurf_us, Tpack_us)</td></tr>
 <tr class="separator:ac2a76462207d01141c5eda614aa2fbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37a213735f0eb4c1e3b7a6e495f8f84b"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b">petpen</a> (GRID_VEG, GRID_MET, GRID_VARS, tcel, vpsat, vpdef, f1par, albd, xlai, rsd, rsmin, rsmax, Rpl, tkel, vppa, f3vpd, f3vpdpar, f4temp, trefk, f4temppar, rnetpn, gbspen, rnetd, rnetw, gd, gw, rescan, ravd, xlhv, row, epetd, epetw, ravw, psychr, xled, xlew, hd, hw, cp, roa)</td></tr>
@@ -61,12 +61,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5b61eacddb768855ab7cc5e532a4a3cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0c98f0d3f8ccaee29fa3742461f8ffc"><td class="memItemLeft" align="right" valign="top">real *8 function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc">esat</a> (Tsk)</td></tr>
 <tr class="separator:af0c98f0d3f8ccaee29fa3742461f8ffc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0e3d96b3a71ba4e4d26b4617b92918f2"><td class="memItemLeft" align="right" valign="top">function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a0e3d96b3a71ba4e4d26b4617b92918f2">clcf1par</a> (alb, LAI, Rg, rsmin, rsmax, Rgl)</td></tr>
-<tr class="separator:a0e3d96b3a71ba4e4d26b4617b92918f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bc8d4fcc6bcd6aff7545bf7b02ecef0"><td class="memItemLeft" align="right" valign="top">function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0">clcf3vpd</a> (Ts, ea, g)</td></tr>
-<tr class="separator:a5bc8d4fcc6bcd6aff7545bf7b02ecef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3579a6c0e23bf02ad7dd3eef41652da"><td class="memItemLeft" align="right" valign="top">function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da">clcf4temp</a> (tair, tref, f4par)</td></tr>
-<tr class="separator:aa3579a6c0e23bf02ad7dd3eef41652da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ccd83fc7c711ad05ee1ee05f77fa0c8"><td class="memItemLeft" align="right" valign="top">real *8 function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a0ccd83fc7c711ad05ee1ee05f77fa0c8">clcf1par</a> (alb, LAI, Rg, rsmin, rsmax, Rgl)</td></tr>
+<tr class="separator:a0ccd83fc7c711ad05ee1ee05f77fa0c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bdd723bb1b1abc4d9177409c216d3ad"><td class="memItemLeft" align="right" valign="top">real *8 function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad">clcf3vpd</a> (Ts, ea, g)</td></tr>
+<tr class="separator:a3bdd723bb1b1abc4d9177409c216d3ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46811b0c944e97060dbc57b0ee132e06"><td class="memItemLeft" align="right" valign="top">real *8 function&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06">clcf4temp</a> (tair, tref, f4par)</td></tr>
+<tr class="separator:a46811b0c944e97060dbc57b0ee132e06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a256a2fff00e163f0ae8dcdcc8761592c"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c">peteb_bs</a> (thermc1, thermc2, heatcap1, heatcap2, heatcapold, rain, snow, Swq, albd, emiss, ravd, rahd, tkd, tkmidd, rnetd, xled, epetd, hd, gd, dshd, tcel, vppa, roa, psychr, xlhv, zdeep, Tdeepstep, zmid, rsd, rld, toleb, maxnri, dt, i, tkw, tkmidw, rnetw, xlew, epetw, hw, gw, dshw, ravw, rahw, PackWater, SurfWater, VaporMassFlux, TPack, TSurf, r_MeltEnergy, Outflow, xleact_snow, hact_snow, rn_snow, dens, za, zpd, albw, z0h, RaSnow, alb_snow, appa, vpsat, uzw, gact, row)</td></tr>
 <tr class="separator:a256a2fff00e163f0ae8dcdcc8761592c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad27d1fb1ddac9bbb1ea4699a18eba7df"><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df">peteb_dv</a> (thermc2, vpsat, heatcap, heatcap2, heatcapold, rs_over, rain, snow, Swq, albd, emiss, thermc, f1par, f3vpd, f4temp, rescan, ravd, rahd, tkd, tkmidd, rnetd, xled, epetd, hd, gd, dshd, tcel, vppa, roa, psychr, xlhv, zdeep, Tdeepstep, zmid, rld, toleb, maxnri, dt, i, PackWater, SurfWater, VaporMassFlux, TPack, TSurf, r_MeltEnergy, Outflow, xleact_snow, hact_snow, rn_snow, dens, za, zpd, z0h, RaSnow, appa, uzw, gact, alb_snow, row)</td></tr>
@@ -80,39 +80,27 @@ Public Member Functions</h2></td></tr>
 <div class="textblock">
 <p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00001">1</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 </div><h2 class="groupheader">Member Function/Subroutine Documentation</h2>
-<a class="anchor" id="a15aba1f068fdf137d98255450baa4b28"></a>
+<a class="anchor" id="a8e3d661317ef5cbc74fa08f1820f90ca"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">subroutine module_atmos::atmos </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>ipix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>dt</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>inc_frozen</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>i_2l</em>&#160;</td>
+          <td class="paramtype">type (grid_veg_template)&#160;</td>
+          <td class="paramname"><em>GRID_VEG</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -124,68 +112,68 @@ Public Member Functions</h2></td></tr>
 
 <p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00034">34</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l01221">module_shared::calcra()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00766">inittk()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00890">petpen()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00430">module_shared::stabcor()</a>.</p>
+<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l01249">module_shared::calcra()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00497">inittk()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00624">petpen()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00440">module_shared::stabcor()</a>.</p>
 
 <p>Referenced by <a class="el" href="MODULE__CELL_8f90_source.html#l00072">module_cell::update_cell()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_cgraph.png" border="0" usemap="#classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_cgraph" alt=""/></div>
-<map name="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_cgraph" id="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_cgraph">
-<area shape="rect" id="node3" href="classmodule__shared.html#ab1e185f21ec0d6af8351afaa29b96c90" title="module_shared::calcra" alt="" coords="709,5,875,32"/><area shape="rect" id="node5" href="classmodule__atmos.html#ac2a76462207d01141c5eda614aa2fbea" title="module_atmos::inittk" alt="" coords="228,473,385,500"/><area shape="rect" id="node7" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="225,321,388,348"/><area shape="rect" id="node59" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="703,107,881,133"/><area shape="rect" id="node67" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="221,423,392,449"/><area shape="rect" id="node9" href="classmodule__shared.html#a5853589e5ecabcd610401615791e1b1c" title="Calculate the incoming solar radiation for the under and over story under the assumption of only one ..." alt="" coords="455,448,628,475"/><area shape="rect" id="node11" href="classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="441,93,642,120"/><area shape="rect" id="node13" href="classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="447,397,636,424"/><area shape="rect" id="node21" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="449,347,634,373"/><area shape="rect" id="node40" href="classmodule__shared.html#af41c791600df378bb52d6b76fe3bec4e" title="Adapt the thermal parameters for vegetated surfaces." alt="" coords="448,144,635,171"/><area shape="rect" id="node42" href="classmodule__atmos.html#a0e3d96b3a71ba4e4d26b4617b92918f2" title="module_atmos::clcf1par" alt="" coords="453,195,629,221"/><area shape="rect" id="node44" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0" title="module_atmos::clcf3vpd" alt="" coords="452,499,631,525"/><area shape="rect" id="node48" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da" title="module_atmos::clcf4temp" alt="" coords="447,549,636,576"/><area shape="rect" id="node50" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="449,296,634,323"/><area shape="rect" id="node56" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="448,245,635,272"/><area shape="rect" id="node15" href="classmodule__shared.html#ad4f93ede919c67b8c268a4e96dee52ca" title="module_shared::calctc_m" alt="" coords="699,397,885,424"/><area shape="rect" id="node17" href="classmodule__shared.html#ab90d3b6a8f85d264da0c75fa30e7a84b" title="module_shared::calctc_j" alt="" coords="704,448,880,475"/><area shape="rect" id="node19" href="classmodule__shared.html#a02e10c8f9775d8ec487b3755a6dc34f8" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="707,499,877,525"/><area shape="rect" id="node23" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="713,296,871,323"/><area shape="rect" id="node25" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="707,347,877,373"/><area shape="rect" id="node27" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="691,195,893,221"/><area shape="rect" id="node38" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="693,245,891,272"/><area shape="rect" id="node29" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="1169,208,1442,235"/><area shape="rect" id="node35" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="942,183,1119,209"/><area shape="rect" id="node31" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1491,183,1722,209"/><area shape="rect" id="node33" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="module_snow::satvaporpressure" alt="" coords="1492,233,1721,260"/><area shape="rect" id="node46" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="715,549,869,576"/><area shape="rect" id="node61" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="945,107,1116,133"/></map>
+<div class="center"><img src="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_cgraph.png" border="0" usemap="#classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_cgraph" alt=""/></div>
+<map name="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_cgraph" id="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_cgraph">
+<area shape="rect" id="node3" href="classmodule__shared.html#a57fd8f76c675564f50596c4188b00485" title="module_shared::calcra" alt="" coords="736,5,909,35"/><area shape="rect" id="node5" href="classmodule__atmos.html#ac2a76462207d01141c5eda614aa2fbea" title="module_atmos::inittk" alt="" coords="237,495,403,524"/><area shape="rect" id="node7" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="235,335,405,364"/><area shape="rect" id="node59" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="731,109,915,139"/><area shape="rect" id="node67" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="231,441,409,471"/><area shape="rect" id="node9" href="classmodule__shared.html#a5853589e5ecabcd610401615791e1b1c" title="Calculate the incoming solar radiation for the under and over story under the assumption of only one ..." alt="" coords="473,468,652,497"/><area shape="rect" id="node11" href="classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="459,95,667,124"/><area shape="rect" id="node13" href="classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="465,415,660,444"/><area shape="rect" id="node21" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="465,361,660,391"/><area shape="rect" id="node40" href="classmodule__shared.html#af41c791600df378bb52d6b76fe3bec4e" title="Adapt the thermal parameters for vegetated surfaces." alt="" coords="467,148,659,177"/><area shape="rect" id="node42" href="classmodule__atmos.html#a0ccd83fc7c711ad05ee1ee05f77fa0c8" title="module_atmos::clcf1par" alt="" coords="471,201,655,231"/><area shape="rect" id="node44" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="module_atmos::clcf3vpd" alt="" coords="469,521,656,551"/><area shape="rect" id="node48" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06" title="module_atmos::clcf4temp" alt="" coords="463,575,663,604"/><area shape="rect" id="node50" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="465,308,660,337"/><area shape="rect" id="node56" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="464,255,661,284"/><area shape="rect" id="node15" href="classmodule__shared.html#ab612ad0ea7a26f361a65d9f726ca5a0e" title="module_shared::calctc_m" alt="" coords="725,415,920,444"/><area shape="rect" id="node17" href="classmodule__shared.html#a9d7b9c5c70ac25f2cfbf280981ef6301" title="module_shared::calctc_j" alt="" coords="729,468,916,497"/><area shape="rect" id="node19" href="classmodule__shared.html#abeb649a221f7f2002b81d5ada56ee6bc" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="735,521,911,551"/><area shape="rect" id="node23" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="741,308,904,337"/><area shape="rect" id="node25" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="736,361,909,391"/><area shape="rect" id="node27" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="716,201,929,231"/><area shape="rect" id="node38" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="721,255,924,284"/><area shape="rect" id="node29" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="1213,215,1499,244"/><area shape="rect" id="node35" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="979,188,1165,217"/><area shape="rect" id="node31" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1548,188,1791,217"/><area shape="rect" id="node33" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="Calculate the saturated vapor pressure in the snow pack." alt="" coords="1551,241,1788,271"/><area shape="rect" id="node46" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="741,575,904,604"/><area shape="rect" id="node61" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="984,109,1160,139"/></map>
 </div>
 </p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_icgraph.png" border="0" usemap="#classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_icgraph" alt=""/></div>
-<map name="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_icgraph" id="classmodule__atmos_a15aba1f068fdf137d98255450baa4b28_icgraph">
-<area shape="rect" id="node3" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="221,12,400,39"/><area shape="rect" id="node5" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="449,5,599,46"/><area shape="rect" id="node7" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="648,12,757,39"/></map>
+<div class="center"><img src="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_icgraph.png" border="0" usemap="#classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_icgraph" alt=""/></div>
+<map name="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_icgraph" id="classmodule__atmos_a8e3d661317ef5cbc74fa08f1820f90ca_icgraph">
+<area shape="rect" id="node3" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="229,13,419,43"/><area shape="rect" id="node5" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="468,5,625,51"/><area shape="rect" id="node7" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="675,13,789,43"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a0e3d96b3a71ba4e4d26b4617b92918f2"></a>
+<a class="anchor" id="a0ccd83fc7c711ad05ee1ee05f77fa0c8"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">function module_atmos::clcf1par </td>
+          <td class="memname">real*8 function module_atmos::clcf1par </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>alb</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>LAI</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Rg</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsmin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsmax</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Rgl</em>&#160;</td>
         </tr>
         <tr>
@@ -196,41 +184,41 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01640">1640</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01412">1412</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00015">module_unit_tests::clcf1par_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00024">module_unit_tests::clcf1par_test2()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>.</p>
+<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00015">module_unit_tests::clcf1par_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00024">module_unit_tests::clcf1par_test2()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_a0e3d96b3a71ba4e4d26b4617b92918f2_icgraph.png" border="0" usemap="#classmodule__atmos_a0e3d96b3a71ba4e4d26b4617b92918f2_icgraph" alt=""/></div>
-<map name="classmodule__atmos_a0e3d96b3a71ba4e4d26b4617b92918f2_icgraph" id="classmodule__atmos_a0e3d96b3a71ba4e4d26b4617b92918f2_icgraph">
-<area shape="rect" id="node3" href="classmodule__unit__tests.html#aab90ef123405f2a0ab168a7c471ef92a" title="module_unit_tests::\lclcf1par_test1" alt="" coords="237,5,385,46"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a4d12daa6bee935abec85578f898a5099" title="module_unit_tests::\lclcf1par_test2" alt="" coords="237,70,385,111"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="229,136,392,163"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="450,38,598,79"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="697,45,794,72"/><area shape="rect" id="node14" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="441,136,607,163"/><area shape="rect" id="node16" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="656,136,835,163"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="883,129,1034,170"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1083,136,1192,163"/></map>
+<div class="center"><img src="classmodule__atmos_a0ccd83fc7c711ad05ee1ee05f77fa0c8_icgraph.png" border="0" usemap="#classmodule__atmos_a0ccd83fc7c711ad05ee1ee05f77fa0c8_icgraph" alt=""/></div>
+<map name="classmodule__atmos_a0ccd83fc7c711ad05ee1ee05f77fa0c8_icgraph" id="classmodule__atmos_a0ccd83fc7c711ad05ee1ee05f77fa0c8_icgraph">
+<area shape="rect" id="node3" href="classmodule__unit__tests.html#aab90ef123405f2a0ab168a7c471ef92a" title="module_unit_tests::\lclcf1par_test1" alt="" coords="245,5,403,51"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a4d12daa6bee935abec85578f898a5099" title="module_unit_tests::\lclcf1par_test2" alt="" coords="245,74,403,121"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="239,144,409,173"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="468,39,625,86"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="725,48,829,77"/><area shape="rect" id="node14" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="460,144,633,173"/><area shape="rect" id="node16" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="683,144,872,173"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="921,135,1079,182"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1128,144,1243,173"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="a5bc8d4fcc6bcd6aff7545bf7b02ecef0"></a>
+<a class="anchor" id="a3bdd723bb1b1abc4d9177409c216d3ad"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">function module_atmos::clcf3vpd </td>
+          <td class="memname">real*8 function module_atmos::clcf3vpd </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Ts</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ea</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>g</em>&#160;</td>
         </tr>
         <tr>
@@ -241,52 +229,52 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">1679</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01450">1450</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__ATMOS_8f90_source.html#l01595">esat()</a>.</p>
+<p>References <a class="el" href="MODULE__ATMOS_8f90_source.html#l01367">esat()</a>.</p>
 
-<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00033">module_unit_tests::clcf3vpd_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00042">module_unit_tests::clcf3vpd_test2()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l00890">petpen()</a>.</p>
+<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00033">module_unit_tests::clcf3vpd_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00042">module_unit_tests::clcf3vpd_test2()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l00624">petpen()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_cgraph.png" border="0" usemap="#classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_cgraph" alt=""/></div>
-<map name="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_cgraph" id="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_cgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="232,5,387,32"/></map>
+<div class="center"><img src="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_cgraph.png" border="0" usemap="#classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_cgraph" alt=""/></div>
+<map name="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_cgraph" id="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_cgraph">
+<area shape="rect" id="node3" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="240,5,403,35"/></map>
 </div>
 </p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_icgraph.png" border="0" usemap="#classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_icgraph" alt=""/></div>
-<map name="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_icgraph" id="classmodule__atmos_a5bc8d4fcc6bcd6aff7545bf7b02ecef0_icgraph">
-<area shape="rect" id="node3" href="classmodule__unit__tests.html#aaf5b8145b11e85f16c42046cd10ddaae" title="module_unit_tests::\lclcf3vpd_test1" alt="" coords="243,5,391,46"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a2a5377311e7155f96013e7be0e4d378a" title="module_unit_tests::\lclcf3vpd_test2" alt="" coords="243,70,391,111"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="236,136,399,163"/><area shape="rect" id="node22" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="232,187,403,213"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="461,58,609,99"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="707,65,805,92"/><area shape="rect" id="node14" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="451,149,618,176"/><area shape="rect" id="node16" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="667,149,845,176"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="894,142,1045,183"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1093,149,1203,176"/></map>
+<div class="center"><img src="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_icgraph.png" border="0" usemap="#classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_icgraph" alt=""/></div>
+<map name="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_icgraph" id="classmodule__atmos_a3bdd723bb1b1abc4d9177409c216d3ad_icgraph">
+<area shape="rect" id="node3" href="classmodule__unit__tests.html#aaf5b8145b11e85f16c42046cd10ddaae" title="module_unit_tests::\lclcf3vpd_test1" alt="" coords="252,5,409,51"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a2a5377311e7155f96013e7be0e4d378a" title="module_unit_tests::\lclcf3vpd_test2" alt="" coords="252,74,409,121"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="245,144,416,173"/><area shape="rect" id="node22" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="241,197,420,227"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="479,61,636,107"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="736,69,840,99"/><area shape="rect" id="node14" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="471,157,644,187"/><area shape="rect" id="node16" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="693,157,883,187"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="932,149,1089,195"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1139,157,1253,187"/></map>
 </div>
 </p>
 
 </div>
 </div>
-<a class="anchor" id="aa3579a6c0e23bf02ad7dd3eef41652da"></a>
+<a class="anchor" id="a46811b0c944e97060dbc57b0ee132e06"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">function module_atmos::clcf4temp </td>
+          <td class="memname">real*8 function module_atmos::clcf4temp </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tair</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tref</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f4par</em>&#160;</td>
         </tr>
         <tr>
@@ -297,16 +285,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01733">1733</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01504">1504</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00051">module_unit_tests::clcf4temp_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00060">module_unit_tests::clcf4temp_test2()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l00890">petpen()</a>.</p>
+<p>Referenced by <a class="el" href="TESTS__DRIVER_8f90_source.html#l00051">module_unit_tests::clcf4temp_test1()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00060">module_unit_tests::clcf4temp_test2()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l00624">petpen()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classmodule__atmos_aa3579a6c0e23bf02ad7dd3eef41652da_icgraph.png" border="0" usemap="#classmodule__atmos_aa3579a6c0e23bf02ad7dd3eef41652da_icgraph" alt=""/></div>
-<map name="classmodule__atmos_aa3579a6c0e23bf02ad7dd3eef41652da_icgraph" id="classmodule__atmos_aa3579a6c0e23bf02ad7dd3eef41652da_icgraph">
-<area shape="rect" id="node3" href="classmodule__unit__tests.html#aad075e6fccb7beee4328e2f1db574d27" title="module_unit_tests::\lclcf4temp_test1" alt="" coords="254,5,402,46"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a61490b7a9ad1c428d8e898da55adefc6" title="module_unit_tests::\lclcf4temp_test2" alt="" coords="254,70,402,111"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="247,136,409,163"/><area shape="rect" id="node22" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="243,187,413,213"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="471,58,619,99"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="718,65,815,92"/><area shape="rect" id="node14" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="462,149,629,176"/><area shape="rect" id="node16" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="677,149,856,176"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="905,142,1055,183"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1104,149,1213,176"/></map>
+<div class="center"><img src="classmodule__atmos_a46811b0c944e97060dbc57b0ee132e06_icgraph.png" border="0" usemap="#classmodule__atmos_a46811b0c944e97060dbc57b0ee132e06_icgraph" alt=""/></div>
+<map name="classmodule__atmos_a46811b0c944e97060dbc57b0ee132e06_icgraph" id="classmodule__atmos_a46811b0c944e97060dbc57b0ee132e06_icgraph">
+<area shape="rect" id="node3" href="classmodule__unit__tests.html#aad075e6fccb7beee4328e2f1db574d27" title="module_unit_tests::\lclcf4temp_test1" alt="" coords="265,5,423,51"/><area shape="rect" id="node9" href="classmodule__unit__tests.html#a61490b7a9ad1c428d8e898da55adefc6" title="module_unit_tests::\lclcf4temp_test2" alt="" coords="265,74,423,121"/><area shape="rect" id="node12" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="259,144,429,173"/><area shape="rect" id="node22" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="255,197,433,227"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="492,61,649,107"/><area shape="rect" id="node7" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="749,69,853,99"/><area shape="rect" id="node14" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="484,157,657,187"/><area shape="rect" id="node16" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="707,157,896,187"/><area shape="rect" id="node18" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="945,149,1103,195"/><area shape="rect" id="node20" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1152,157,1267,187"/></map>
 </div>
 </p>
 
@@ -326,16 +314,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01595">1595</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01367">1367</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">clcf3vpd()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00144">module_unit_tests::esat_test1()</a>, and <a class="el" href="TESTS__DRIVER_8f90_source.html#l00153">module_unit_tests::esat_test2()</a>.</p>
+<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01450">clcf3vpd()</a>, <a class="el" href="TESTS__DRIVER_8f90_source.html#l00144">module_unit_tests::esat_test1()</a>, and <a class="el" href="TESTS__DRIVER_8f90_source.html#l00153">module_unit_tests::esat_test2()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_af0c98f0d3f8ccaee29fa3742461f8ffc_icgraph.png" border="0" usemap="#classmodule__atmos_af0c98f0d3f8ccaee29fa3742461f8ffc_icgraph" alt=""/></div>
 <map name="classmodule__atmos_af0c98f0d3f8ccaee29fa3742461f8ffc_icgraph" id="classmodule__atmos_af0c98f0d3f8ccaee29fa3742461f8ffc_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0" title="module_atmos::clcf3vpd" alt="" coords="208,115,387,141"/><area shape="rect" id="node27" href="classmodule__unit__tests.html#ac87ed3bbeef109edda2350cfc0a8ebec" title="module_unit_tests::\lesat_test1" alt="" coords="223,217,371,258"/><area shape="rect" id="node30" href="classmodule__unit__tests.html#aefaa44ce4c47cfc5e68f3db7782e7651" title="module_unit_tests::\lesat_test2" alt="" coords="223,282,371,323"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#aaf5b8145b11e85f16c42046cd10ddaae" title="module_unit_tests::\lclcf3vpd_test1" alt="" coords="446,107,594,149"/><area shape="rect" id="node11" href="classmodule__unit__tests.html#a2a5377311e7155f96013e7be0e4d378a" title="module_unit_tests::\lclcf3vpd_test2" alt="" coords="446,173,594,214"/><area shape="rect" id="node14" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="439,5,601,32"/><area shape="rect" id="node24" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="435,56,605,83"/><area shape="rect" id="node7" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="663,202,811,243"/><area shape="rect" id="node9" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="910,209,1007,236"/><area shape="rect" id="node16" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="654,31,821,57"/><area shape="rect" id="node18" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="869,31,1048,57"/><area shape="rect" id="node20" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="1097,23,1247,65"/><area shape="rect" id="node22" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1296,31,1405,57"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="module_atmos::clcf3vpd" alt="" coords="216,120,403,149"/><area shape="rect" id="node27" href="classmodule__unit__tests.html#ac87ed3bbeef109edda2350cfc0a8ebec" title="module_unit_tests::\lesat_test1" alt="" coords="231,222,388,269"/><area shape="rect" id="node30" href="classmodule__unit__tests.html#aefaa44ce4c47cfc5e68f3db7782e7651" title="module_unit_tests::\lesat_test2" alt="" coords="231,291,388,338"/><area shape="rect" id="node5" href="classmodule__unit__tests.html#aaf5b8145b11e85f16c42046cd10ddaae" title="module_unit_tests::\lclcf3vpd_test1" alt="" coords="463,111,620,158"/><area shape="rect" id="node11" href="classmodule__unit__tests.html#a2a5377311e7155f96013e7be0e4d378a" title="module_unit_tests::\lclcf3vpd_test2" alt="" coords="463,181,620,227"/><area shape="rect" id="node14" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="456,5,627,35"/><area shape="rect" id="node24" href="classmodule__atmos.html#a37a213735f0eb4c1e3b7a6e495f8f84b" title="module_atmos::petpen" alt="" coords="452,59,631,88"/><area shape="rect" id="node7" href="classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="689,210,847,257"/><area shape="rect" id="node9" href="TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="947,219,1051,248"/><area shape="rect" id="node16" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="681,32,855,61"/><area shape="rect" id="node18" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="904,32,1093,61"/><area shape="rect" id="node20" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="1143,23,1300,70"/><area shape="rect" id="node22" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1349,32,1464,61"/></map>
 </div>
 </p>
 
@@ -348,145 +336,145 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">subroutine module_atmos::inidum </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>PackWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>SurfWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum3</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Swq</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum4</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>VaporMassFlux</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum5</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TPack</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum6</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TSurf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum7</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>r_MeltEnergy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum8</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Outflow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum9</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xleact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum10</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum11</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rn_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dum12</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dens</em>&#160;</td>
         </tr>
         <tr>
@@ -497,16 +485,16 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l02119">2119</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01920">1920</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01785">peteb_bs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01897">peteb_dv()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l01998">peteb_wv()</a>.</p>
+<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01557">peteb_bs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">peteb_dv()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l01789">peteb_wv()</a>.</p>
 
 <p><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a006b822a8fc84cc2657a18e0bddaeac3_icgraph.png" border="0" usemap="#classmodule__atmos_a006b822a8fc84cc2657a18e0bddaeac3_icgraph" alt=""/></div>
 <map name="classmodule__atmos_a006b822a8fc84cc2657a18e0bddaeac3_icgraph" id="classmodule__atmos_a006b822a8fc84cc2657a18e0bddaeac3_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="225,5,410,32"/><area shape="rect" id="node15" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="225,56,410,83"/><area shape="rect" id="node18" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="224,107,411,133"/><area shape="rect" id="node5" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="459,56,621,83"/><area shape="rect" id="node7" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="670,56,837,83"/><area shape="rect" id="node9" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="885,56,1064,83"/><area shape="rect" id="node11" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="1113,49,1263,90"/><area shape="rect" id="node13" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1312,56,1421,83"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="232,5,427,35"/><area shape="rect" id="node15" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="232,59,427,88"/><area shape="rect" id="node18" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="231,112,428,141"/><area shape="rect" id="node5" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="479,59,649,88"/><area shape="rect" id="node7" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="700,59,873,88"/><area shape="rect" id="node9" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="923,59,1112,88"/><area shape="rect" id="node11" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="1161,50,1319,97"/><area shape="rect" id="node13" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1368,59,1483,88"/></map>
 </div>
 </p>
 
@@ -537,157 +525,157 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tdeep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tmid0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tmid0_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmid</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmid_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmid_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tk0moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkact_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkact_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tskinact_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshact_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshact_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkpet</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidpet</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidpet_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidpet_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dspet</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dspet_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dspet_moss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tsurf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tpack</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tsurf_us</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tpack_us</em>&#160;</td>
         </tr>
         <tr>
@@ -698,7 +686,7 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00766">766</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00497">497</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
 <p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00034">atmos()</a>.</p>
 
@@ -707,7 +695,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_ac2a76462207d01141c5eda614aa2fbea_icgraph.png" border="0" usemap="#classmodule__atmos_ac2a76462207d01141c5eda614aa2fbea_icgraph" alt=""/></div>
 <map name="classmodule__atmos_ac2a76462207d01141c5eda614aa2fbea_icgraph" id="classmodule__atmos_ac2a76462207d01141c5eda614aa2fbea_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="211,12,378,39"/><area shape="rect" id="node5" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="427,12,605,39"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="654,5,805,46"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="853,12,963,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="223,13,396,43"/><area shape="rect" id="node5" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="445,13,635,43"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="684,5,841,51"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="891,13,1005,43"/></map>
 </div>
 </p>
 
@@ -720,25 +708,25 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">subroutine module_atmos::peteb </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>ipix</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>inc_frozen</em>&#160;</td>
         </tr>
         <tr>
@@ -749,9 +737,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">1050</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">787</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l00216">module_shared::calc_rs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01640">clcf1par()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">clcf3vpd()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01733">clcf4temp()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01785">peteb_bs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01897">peteb_dv()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01998">peteb_wv()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00179">module_shared::sm_cen_dif()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00021">module_shared::soiladapt()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00111">module_shared::soiltherm()</a>.</p>
+<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l00222">module_shared::calc_rs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01412">clcf1par()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01450">clcf3vpd()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01504">clcf4temp()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01557">peteb_bs()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">peteb_dv()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01789">peteb_wv()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00184">module_shared::sm_cen_dif()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00021">module_shared::soiladapt()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00112">module_shared::soiltherm()</a>.</p>
 
 <p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00034">atmos()</a>.</p>
 
@@ -760,7 +748,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_cgraph.png" border="0" usemap="#classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_cgraph" alt=""/></div>
 <map name="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_cgraph" id="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_cgraph">
-<area shape="rect" id="node3" href="classmodule__shared.html#a5853589e5ecabcd610401615791e1b1c" title="Calculate the incoming solar radiation for the under and over story under the assumption of only one ..." alt="" coords="231,5,404,32"/><area shape="rect" id="node5" href="classmodule__atmos.html#a0e3d96b3a71ba4e4d26b4617b92918f2" title="module_atmos::clcf1par" alt="" coords="229,56,405,83"/><area shape="rect" id="node7" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0" title="module_atmos::clcf3vpd" alt="" coords="228,107,407,133"/><area shape="rect" id="node11" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da" title="module_atmos::clcf4temp" alt="" coords="223,157,412,184"/><area shape="rect" id="node13" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="225,208,410,235"/><area shape="rect" id="node32" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="225,259,410,285"/><area shape="rect" id="node38" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="224,309,411,336"/><area shape="rect" id="node50" href="classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="217,360,418,387"/><area shape="rect" id="node52" href="classmodule__shared.html#af41c791600df378bb52d6b76fe3bec4e" title="Adapt the thermal parameters for vegetated surfaces." alt="" coords="224,411,411,437"/><area shape="rect" id="node54" href="classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="223,487,412,513"/><area shape="rect" id="node9" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="491,107,645,133"/><area shape="rect" id="node15" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="489,157,647,184"/><area shape="rect" id="node17" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="483,208,653,235"/><area shape="rect" id="node19" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="467,259,669,285"/><area shape="rect" id="node30" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="469,309,667,336"/><area shape="rect" id="node21" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="945,259,1218,285"/><area shape="rect" id="node27" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="718,284,895,311"/><area shape="rect" id="node23" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1267,233,1498,260"/><area shape="rect" id="node25" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="module_snow::satvaporpressure" alt="" coords="1268,284,1497,311"/><area shape="rect" id="node41" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="479,360,657,387"/><area shape="rect" id="node45" href="classmodule__shared.html#ab1e185f21ec0d6af8351afaa29b96c90" title="module_shared::calcra" alt="" coords="485,411,651,437"/><area shape="rect" id="node43" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="721,360,892,387"/><area shape="rect" id="node56" href="classmodule__shared.html#ad4f93ede919c67b8c268a4e96dee52ca" title="module_shared::calctc_m" alt="" coords="475,461,661,488"/><area shape="rect" id="node58" href="classmodule__shared.html#ab90d3b6a8f85d264da0c75fa30e7a84b" title="module_shared::calctc_j" alt="" coords="480,512,656,539"/><area shape="rect" id="node60" href="classmodule__shared.html#a02e10c8f9775d8ec487b3755a6dc34f8" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="483,563,653,589"/></map>
+<area shape="rect" id="node3" href="classmodule__shared.html#a5853589e5ecabcd610401615791e1b1c" title="Calculate the incoming solar radiation for the under and over story under the assumption of only one ..." alt="" coords="241,5,420,35"/><area shape="rect" id="node5" href="classmodule__atmos.html#a0ccd83fc7c711ad05ee1ee05f77fa0c8" title="module_atmos::clcf1par" alt="" coords="239,59,423,88"/><area shape="rect" id="node7" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="module_atmos::clcf3vpd" alt="" coords="237,112,424,141"/><area shape="rect" id="node11" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06" title="module_atmos::clcf4temp" alt="" coords="231,165,431,195"/><area shape="rect" id="node13" href="classmodule__atmos.html#a256a2fff00e163f0ae8dcdcc8761592c" title="module_atmos::peteb_bs" alt="" coords="233,219,428,248"/><area shape="rect" id="node32" href="classmodule__atmos.html#ad27d1fb1ddac9bbb1ea4699a18eba7df" title="module_atmos::peteb_dv" alt="" coords="233,272,428,301"/><area shape="rect" id="node38" href="classmodule__atmos.html#ab1d70ea42fba682b775505cb9d8ffcde" title="module_atmos::peteb_wv" alt="" coords="232,325,429,355"/><area shape="rect" id="node50" href="classmodule__shared.html#ab1e0fcd7b943d6d47ec1467b04295c57" title="Initialize soil moisture for the calculation of the thermodynami parameters, as a centered difference..." alt="" coords="227,379,435,408"/><area shape="rect" id="node52" href="classmodule__shared.html#af41c791600df378bb52d6b76fe3bec4e" title="Adapt the thermal parameters for vegetated surfaces." alt="" coords="235,432,427,461"/><area shape="rect" id="node54" href="classmodule__shared.html#a3035d2077015b1668623b5e23b9f95a5" title="Calculate the soil thermal parameters." alt="" coords="233,512,428,541"/><area shape="rect" id="node9" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="509,112,672,141"/><area shape="rect" id="node15" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="509,165,672,195"/><area shape="rect" id="node17" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="504,219,677,248"/><area shape="rect" id="node19" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="484,272,697,301"/><area shape="rect" id="node30" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="489,325,692,355"/><area shape="rect" id="node21" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="981,273,1267,303"/><area shape="rect" id="node27" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="747,299,933,328"/><area shape="rect" id="node23" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1316,247,1559,276"/><area shape="rect" id="node25" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="Calculate the saturated vapor pressure in the snow pack." alt="" coords="1319,300,1556,329"/><area shape="rect" id="node41" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="499,379,683,408"/><area shape="rect" id="node45" href="classmodule__shared.html#a57fd8f76c675564f50596c4188b00485" title="module_shared::calcra" alt="" coords="504,432,677,461"/><area shape="rect" id="node43" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="752,379,928,408"/><area shape="rect" id="node56" href="classmodule__shared.html#ab612ad0ea7a26f361a65d9f726ca5a0e" title="module_shared::calctc_m" alt="" coords="493,485,688,515"/><area shape="rect" id="node58" href="classmodule__shared.html#a9d7b9c5c70ac25f2cfbf280981ef6301" title="module_shared::calctc_j" alt="" coords="497,539,684,568"/><area shape="rect" id="node60" href="classmodule__shared.html#abeb649a221f7f2002b81d5ada56ee6bc" title="Calculate the heat capacity of the soil using the input soil moisture requested (theta), and saturated soil moisture or porosity (thetasat). Heat capacity found as density&#45;weighted combination of soil, water and air heat capacities." alt="" coords="503,592,679,621"/></map>
 </div>
 </p>
 
@@ -769,7 +757,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_icgraph.png" border="0" usemap="#classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_icgraph" alt=""/></div>
 <map name="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_icgraph" id="classmodule__atmos_a5b61eacddb768855ab7cc5e532a4a3cd_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="217,12,383,39"/><area shape="rect" id="node5" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="432,12,611,39"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="659,5,810,46"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="859,12,968,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="228,13,401,43"/><area shape="rect" id="node5" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="451,13,640,43"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="689,5,847,51"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="896,13,1011,43"/></map>
 </div>
 </p>
 
@@ -782,397 +770,397 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">subroutine module_atmos::peteb_bs </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap1</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcapold</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Swq</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>albd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>emiss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rahd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xled</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tcel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vppa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>roa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>psychr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlhv</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zdeep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tdeepstep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zmid</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rld</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>toleb</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>maxnri</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlew</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rahw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>PackWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>SurfWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>VaporMassFlux</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TPack</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TSurf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>r_MeltEnergy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Outflow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xleact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rn_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dens</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>za</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>albw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>z0h</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>RaSnow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>alb_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>appa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vpsat</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>uzw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>row</em>&#160;</td>
         </tr>
         <tr>
@@ -1183,18 +1171,18 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01785">1785</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01557">1557</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l02119">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00792">module_shared::nreb()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l01146">module_shared::nreb_snow()</a>.</p>
+<p>References <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01920">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00808">module_shared::nreb()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l01172">module_shared::nreb_snow()</a>.</p>
 
-<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>.</p>
+<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_cgraph.png" border="0" usemap="#classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_cgraph" alt=""/></div>
 <map name="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_cgraph" id="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_cgraph">
-<area shape="rect" id="node3" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="240,31,443,57"/><area shape="rect" id="node14" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="257,81,426,108"/><area shape="rect" id="node16" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="262,132,421,159"/><area shape="rect" id="node18" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="243,183,440,209"/><area shape="rect" id="node5" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="718,31,991,57"/><area shape="rect" id="node11" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="491,56,669,83"/><area shape="rect" id="node7" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1041,5,1271,32"/><area shape="rect" id="node9" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="module_snow::satvaporpressure" alt="" coords="1041,56,1271,83"/></map>
+<area shape="rect" id="node3" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="249,31,463,60"/><area shape="rect" id="node14" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="269,84,443,113"/><area shape="rect" id="node16" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="275,137,437,167"/><area shape="rect" id="node18" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="255,191,457,220"/><area shape="rect" id="node5" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="747,32,1032,61"/><area shape="rect" id="node11" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="512,57,699,87"/><area shape="rect" id="node7" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1081,5,1324,35"/><area shape="rect" id="node9" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="Calculate the saturated vapor pressure in the snow pack." alt="" coords="1084,59,1321,88"/></map>
 </div>
 </p>
 
@@ -1203,7 +1191,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_icgraph.png" border="0" usemap="#classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_icgraph" alt=""/></div>
 <map name="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_icgraph" id="classmodule__atmos_a256a2fff00e163f0ae8dcdcc8761592c_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="240,12,403,39"/><area shape="rect" id="node5" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="451,12,618,39"/><area shape="rect" id="node7" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="667,12,845,39"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="894,5,1045,46"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1093,12,1203,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="249,13,420,43"/><area shape="rect" id="node5" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="471,13,644,43"/><area shape="rect" id="node7" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="693,13,883,43"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="932,5,1089,51"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1139,13,1253,43"/></map>
 </div>
 </p>
 
@@ -1216,355 +1204,355 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">subroutine module_atmos::peteb_dv </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vpsat</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcapold</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rs_over</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Swq</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>albd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>emiss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f1par</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f3vpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f4temp</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rescan</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rahd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xled</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tcel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vppa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>roa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>psychr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlhv</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zdeep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tdeepstep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zmid</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rld</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>toleb</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>maxnri</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>PackWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>SurfWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>VaporMassFlux</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TPack</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TSurf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>r_MeltEnergy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Outflow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xleact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rn_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dens</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>za</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>z0h</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>RaSnow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>appa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>uzw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>alb_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>row</em>&#160;</td>
         </tr>
         <tr>
@@ -1575,18 +1563,18 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01897">1897</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">1679</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l02119">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00792">module_shared::nreb()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l01146">module_shared::nreb_snow()</a>.</p>
+<p>References <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01920">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00808">module_shared::nreb()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l01172">module_shared::nreb_snow()</a>.</p>
 
-<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>.</p>
+<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_cgraph.png" border="0" usemap="#classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_cgraph" alt=""/></div>
 <map name="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_cgraph" id="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_cgraph">
-<area shape="rect" id="node3" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="240,31,443,57"/><area shape="rect" id="node14" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="257,81,426,108"/><area shape="rect" id="node16" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="262,132,421,159"/><area shape="rect" id="node18" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="243,183,440,209"/><area shape="rect" id="node5" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="718,31,991,57"/><area shape="rect" id="node11" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="491,56,669,83"/><area shape="rect" id="node7" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1041,5,1271,32"/><area shape="rect" id="node9" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="module_snow::satvaporpressure" alt="" coords="1041,56,1271,83"/></map>
+<area shape="rect" id="node3" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="249,31,463,60"/><area shape="rect" id="node14" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="269,84,443,113"/><area shape="rect" id="node16" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="275,137,437,167"/><area shape="rect" id="node18" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="255,191,457,220"/><area shape="rect" id="node5" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="747,32,1032,61"/><area shape="rect" id="node11" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="512,57,699,87"/><area shape="rect" id="node7" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1081,5,1324,35"/><area shape="rect" id="node9" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="Calculate the saturated vapor pressure in the snow pack." alt="" coords="1084,59,1321,88"/></map>
 </div>
 </p>
 
@@ -1595,7 +1583,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_icgraph.png" border="0" usemap="#classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_icgraph" alt=""/></div>
 <map name="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_icgraph" id="classmodule__atmos_ad27d1fb1ddac9bbb1ea4699a18eba7df_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="240,12,403,39"/><area shape="rect" id="node5" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="451,12,618,39"/><area shape="rect" id="node7" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="667,12,845,39"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="894,5,1045,46"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1093,12,1203,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="249,13,420,43"/><area shape="rect" id="node5" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="471,13,644,43"/><area shape="rect" id="node7" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="693,13,883,43"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="932,5,1089,51"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1139,13,1253,43"/></map>
 </div>
 </p>
 
@@ -1608,373 +1596,373 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">subroutine module_atmos::peteb_wv </td>
           <td>(</td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcap2</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>heatcapold</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rs_over</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rain</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Swq</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>albw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>emiss</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>thermc</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rahw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkmidw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlew</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dshw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tcel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vppa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>roa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>psychr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlhv</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zdeep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Tdeepstep</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zmid</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rld</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>toleb</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>maxnri</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>i</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">integer&#160;</td>
           <td class="paramname"><em>iopstab</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zww</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>za</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>uzw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>zpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>z0m</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>press</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rib</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>z0h</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>PackWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>SurfWater</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>VaporMassFlux</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TPack</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>TSurf</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>r_MeltEnergy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Outflow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xleact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hact_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rn_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>dens</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>RaSnow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>alb_snow</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>appa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vpsat</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gact</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>row</em>, </td>
         </tr>
         <tr>
@@ -1991,18 +1979,18 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01998">1998</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l01789">1789</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l01221">module_shared::calcra()</a>, <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l02119">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00792">module_shared::nreb()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l01146">module_shared::nreb_snow()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00430">module_shared::stabcor()</a>.</p>
+<p>References <a class="el" href="MODULE__SHARED_8f90_source.html#l01249">module_shared::calcra()</a>, <a class="el" href="MODULE__SNOW_8f90_source.html#l00086">module_snow::calcsnowmelt()</a>, <a class="el" href="MODULE__ATMOS_8f90_source.html#l01920">inidum()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l00808">module_shared::nreb()</a>, <a class="el" href="MODULE__SHARED_8f90_source.html#l01172">module_shared::nreb_snow()</a>, and <a class="el" href="MODULE__SHARED_8f90_source.html#l00440">module_shared::stabcor()</a>.</p>
 
-<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l01050">peteb()</a>.</p>
+<p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00787">peteb()</a>.</p>
 
 <p><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_cgraph.png" border="0" usemap="#classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_cgraph" alt=""/></div>
 <map name="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_cgraph" id="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_cgraph">
-<area shape="rect" id="node3" href="classmodule__shared.html#ab1e185f21ec0d6af8351afaa29b96c90" title="module_shared::calcra" alt="" coords="258,5,425,32"/><area shape="rect" id="node5" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="240,56,443,83"/><area shape="rect" id="node16" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="257,107,426,133"/><area shape="rect" id="node18" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="262,157,421,184"/><area shape="rect" id="node20" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="243,208,440,235"/><area shape="rect" id="node22" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="253,259,430,285"/><area shape="rect" id="node7" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="718,56,991,83"/><area shape="rect" id="node13" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="491,81,669,108"/><area shape="rect" id="node9" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1041,31,1271,57"/><area shape="rect" id="node11" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="module_snow::satvaporpressure" alt="" coords="1041,81,1271,108"/><area shape="rect" id="node24" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="495,259,665,285"/></map>
+<area shape="rect" id="node3" href="classmodule__shared.html#a57fd8f76c675564f50596c4188b00485" title="module_shared::calcra" alt="" coords="275,5,448,35"/><area shape="rect" id="node5" href="classmodule__snow.html#a7384dfa1b5cc4f948970cd65bcea94c8" title="Calculate snow accumulation and melt using an energy balance approach for a two layer snow model..." alt="" coords="255,59,468,88"/><area shape="rect" id="node16" href="classmodule__atmos.html#a006b822a8fc84cc2657a18e0bddaeac3" title="module_atmos::inidum" alt="" coords="275,112,448,141"/><area shape="rect" id="node18" href="classmodule__shared.html#af8d6172a7faee4205abe3a393491e55e" title="module_shared::nreb" alt="" coords="280,165,443,195"/><area shape="rect" id="node20" href="classmodule__shared.html#a46957caed7b9b6c216cb9d3d3da2d34a" title="module_shared::nreb_snow" alt="" coords="260,219,463,248"/><area shape="rect" id="node22" href="classmodule__shared.html#a2a0724bfbc1d78552bf96b93956b08ca" title="Subroutine to calculate all variables related to stability correction and aerodynami! resistances..." alt="" coords="269,272,453,301"/><area shape="rect" id="node7" href="classmodule__snow.html#aba96f18deffc8a88948404c04b964aab" title="Calculate the surface energy balance for the snow pack." alt="" coords="752,60,1037,89"/><area shape="rect" id="node13" href="classmodule__snow.html#a01052a35c199bd967c88f505f5a9ea0e" title="Calculate the surface temperature in the absence of snow." alt="" coords="517,85,704,115"/><area shape="rect" id="node9" href="classmodule__snow.html#ab071adc15b6a3d9eeec011e963c7f024" title="Calculate atmospheri! stability correction for non&#45;neutral conditions." alt="" coords="1087,33,1329,63"/><area shape="rect" id="node11" href="classmodule__snow.html#a906b9ae113669804289e3ead4ea25112" title="Calculate the saturated vapor pressure in the snow pack." alt="" coords="1089,87,1327,116"/><area shape="rect" id="node24" href="classmodule__shared.html#a50955cdddd2ff32a49f43ac35f1f41a2" title="Calculate Bulk Richardson number based on input temperature, humidity, pressure, wind profile..." alt="" coords="523,272,699,301"/></map>
 </div>
 </p>
 
@@ -2011,7 +1999,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_icgraph.png" border="0" usemap="#classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_icgraph" alt=""/></div>
 <map name="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_icgraph" id="classmodule__atmos_ab1d70ea42fba682b775505cb9d8ffcde_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="240,12,403,39"/><area shape="rect" id="node5" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="451,12,618,39"/><area shape="rect" id="node7" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="667,12,845,39"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="894,5,1045,46"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="1093,12,1203,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a5b61eacddb768855ab7cc5e532a4a3cd" title="module_atmos::peteb" alt="" coords="255,13,425,43"/><area shape="rect" id="node5" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="476,13,649,43"/><area shape="rect" id="node7" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="699,13,888,43"/><area shape="rect" id="node9" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="937,5,1095,51"/><area shape="rect" id="node11" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="1144,13,1259,43"/></map>
 </div>
 </p>
 
@@ -2042,223 +2030,223 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tcel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vpsat</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vpdef</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f1par</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>albd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlai</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsmin</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rsmax</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>Rpl</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>tkel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>vppa</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f3vpd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f3vpdpar</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f4temp</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>trefk</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>f4temppar</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetpn</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gbspen</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rnetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>gw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>rescan</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlhv</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>row</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>epetw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>ravw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>psychr</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xled</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>xlew</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hd</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>hw</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>cp</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">&#160;</td>
+          <td class="paramtype">real*8&#160;</td>
           <td class="paramname"><em>roa</em>&#160;</td>
         </tr>
         <tr>
@@ -2269,9 +2257,9 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00890">890</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
+<p>Definition at line <a class="el" href="MODULE__ATMOS_8f90_source.html#l00624">624</a> of file <a class="el" href="MODULE__ATMOS_8f90_source.html">MODULE_ATMOS.f90</a>.</p>
 
-<p>References <a class="el" href="MODULE__ATMOS_8f90_source.html#l01679">clcf3vpd()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l01733">clcf4temp()</a>.</p>
+<p>References <a class="el" href="MODULE__ATMOS_8f90_source.html#l01450">clcf3vpd()</a>, and <a class="el" href="MODULE__ATMOS_8f90_source.html#l01504">clcf4temp()</a>.</p>
 
 <p>Referenced by <a class="el" href="MODULE__ATMOS_8f90_source.html#l00034">atmos()</a>.</p>
 
@@ -2280,7 +2268,7 @@ Here is the call graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_cgraph.png" border="0" usemap="#classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_cgraph" alt=""/></div>
 <map name="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_cgraph" id="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_cgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a5bc8d4fcc6bcd6aff7545bf7b02ecef0" title="module_atmos::clcf3vpd" alt="" coords="229,5,408,32"/><area shape="rect" id="node7" href="classmodule__atmos.html#aa3579a6c0e23bf02ad7dd3eef41652da" title="module_atmos::clcf4temp" alt="" coords="224,56,413,83"/><area shape="rect" id="node5" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="461,5,616,32"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a3bdd723bb1b1abc4d9177409c216d3ad" title="module_atmos::clcf3vpd" alt="" coords="241,5,428,35"/><area shape="rect" id="node7" href="classmodule__atmos.html#a46811b0c944e97060dbc57b0ee132e06" title="module_atmos::clcf4temp" alt="" coords="235,59,435,88"/><area shape="rect" id="node5" href="classmodule__atmos.html#af0c98f0d3f8ccaee29fa3742461f8ffc" title="module_atmos::esat" alt="" coords="483,5,645,35"/></map>
 </div>
 </p>
 
@@ -2289,7 +2277,7 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><img src="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_icgraph.png" border="0" usemap="#classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_icgraph" alt=""/></div>
 <map name="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_icgraph" id="classmodule__atmos_a37a213735f0eb4c1e3b7a6e495f8f84b_icgraph">
-<area shape="rect" id="node3" href="classmodule__atmos.html#a15aba1f068fdf137d98255450baa4b28" title="module_atmos::atmos" alt="" coords="225,12,391,39"/><area shape="rect" id="node5" href="classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="440,12,619,39"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="667,5,818,46"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="867,12,976,39"/></map>
+<area shape="rect" id="node3" href="classmodule__atmos.html#a8e3d661317ef5cbc74fa08f1820f90ca" title="module_atmos::atmos" alt="" coords="236,13,409,43"/><area shape="rect" id="node5" href="classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="459,13,648,43"/><area shape="rect" id="node7" href="classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="697,5,855,51"/><area shape="rect" id="node9" href="TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="904,13,1019,43"/></map>
 </div>
 </p>
 

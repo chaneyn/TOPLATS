@@ -1,5 +1,5 @@
 <map id="module_canopy::canopy" name="module_canopy::canopy">
-<area shape="rect" id="node3" href="$classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="232,12,411,39"/>
-<area shape="rect" id="node5" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="459,5,610,46"/>
-<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="659,12,768,39"/>
+<area shape="rect" id="node3" href="$classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="237,13,427,43"/>
+<area shape="rect" id="node5" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="476,5,633,51"/>
+<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="TOPLATS interface." alt="" coords="683,13,797,43"/>
 </map>

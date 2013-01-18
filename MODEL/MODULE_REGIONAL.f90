@@ -12,7 +12,7 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to update regional variables
+!> Subroutine to update regional variables
 !
 ! ====================================================================
 
@@ -57,7 +57,7 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to initialize regional scale water balance variables.
+!> Subroutine to initialize regional scale water balance variables.
 !
 ! ====================================================================
 
@@ -195,8 +195,8 @@ contains
 !
 ! ====================================================================
 !
-! Calculates the time step totals of evapotranspiration, runoff, 
-! surface energy fluxes and vertical soil-water fluxes.
+!> Calculates the time step totals of evapotranspiration, runoff, 
+!> surface energy fluxes and vertical soil-water fluxes.
 !
 ! ====================================================================
 
@@ -738,11 +738,11 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
 
 ! ====================================================================
 !
-!                       subroutine lswb
+!                       subroutine Compute_Regional
 !
 ! ====================================================================
 !
-!  Check regional scale water balance and sum simulation totals.
+!>  Check regional scale water balance and sum simulation totals.
 !
 ! ====================================================================
 
@@ -1249,7 +1249,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
 !
 ! ====================================================================
 !
-! Define land surface saturation states for the region.
+!> Define land surface saturation states for the region.
 !
 ! ====================================================================
 

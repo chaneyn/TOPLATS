@@ -477,8 +477,11 @@ tkmid = GRID_VARS%tkmid
        Tsurf,Tpack,Tsurf_us,Tpack_us)
 
       implicit none
-      include "help/inittk.h" 
-      
+      real*8 tdeep,tmid0,tmid0_moss,tkmid,tkmid_us,tkmid_moss,tkel
+      real*8 tk0moss,tkact,tkact_us,tkact_moss,tskinact_moss,dshact
+      real*8 dshact_us,dshact_moss,tkpet,tkmidpet,tkmidpet_us,tkmidpet_moss
+      real*8 dspet,dspet_us,dspet_moss,Tsurf,Tpack,Tsurf_us,Tpack_us
+      real*8 ttemp,tkmidtmp,tkmidtmp_us,tkmidtmp_moss
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
@@ -600,8 +603,11 @@ dspet = GRID_VARS%dspet
        row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa)
 
       implicit none
-      include "help/petpen.h"
-
+      real*8 tcel,vpsat,vpdef,f1par,albd,xlai,rsd,rsmin
+      real*8 rsmax,Rpl,tkel,vppa,f3vpd,f3vpdpar,f4temp,trefk
+      real*8 f4temppar,rnetpn,gbspen,rnetd,rnetw,gd,gw,rescan,ravd,xlhv
+      real*8 row,epetd,epetw,ravw,psychr,xled,xlew,hd,hw,cp,roa
+      real*8 pstar,epetdmf,dvpsdt,epetwmf
       type (GRID_MET_template) :: GRID_MET
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_VARS_template) :: GRID_VARS
@@ -828,9 +834,44 @@ dspet = GRID_VARS%dspet
        iopthermc,iopgveg,iopthermc_v,iopstab,iopsmini,GLOBAL)
 
       implicit none
-      include "help/peteb.h"
-
-
+      integer ipix,i,inc_frozen,i_und,i_moss,ivgtyp,iffroz
+      integer ifcoarse,iopthermc,iopgveg,iopthermc_v,iopstab
+      integer maxnri,iopsmini
+      real*8 dt,canclos,extinct,PackWater,SurfWater,Swq
+      real*8 VaporMassFlux,TPack,TSurf,r_MeltEnergy,Outflow
+      real*8 xleact_snow,hact_snow,rn_snow,PackWater_us
+      real*8 SurfWater_us,Swq_us,VaporMassFlux_us,TPack_us
+      real*8 TSurf_us,r_MeltEnergy_us,Outflow_us,xleact_snow_us
+      real*8 hact_snow_us,rn_snow_us,dens,dens_us,albd_us,alb_moss
+      real*8 alb_snow,albd,albw,albw_us,rsd,rld,tcel,vppa,psychr
+      real*8 xlhv,tkel,zww,za,uzw,press,appa,vpsat,tcel_ic
+      real*8 vppa_ic,psychr_ic,xlhv_ic,tkel_ic,vpsat_ic,tkmid
+      real*8 tkact,tkmid_us,tkact_us,tskinact_moss,tkact_moss
+      real*8 tkmid_moss,Tdeepstep,dshact,epetd,gact,epetd_us
+      real*8 dshact_moss,xle_act_moss,rnetd,xled,hd,gd,dshd
+      real*8 tkd,tkmidd,rnetw,xlew,hw,gw,dshw,tkw,tkmidw
+      real*8 tskinactd_moss,tkactd_moss,tkmidactd_moss,ds_p_moss
+      real*8 epetw,dshact_us,rnetw_us,xlew_us,hw_us,gw_us
+      real*8 dshw_us,tkw_us,tkmidw_us,epetw_us,rnetd_us,xled_us
+      real*8 hd_us,gd_us,dshd_us,tkd_us,tkmidd_us,rnet_pot_moss
+      real*8 xle_p_moss,h_p_moss,g_p_moss,tk_p_moss,tkmid_p_moss
+      real*8 tskin_p_moss,eact_moss,thetar,thetas
+      real*8 psic,bcbeta,quartz,rocpsoil,tcbeta,tcbeta_us,zdeep
+      real*8 zmid,zrzmax,r_moss_depth,eps,emiss_moss,zpd_moss
+      real*8 rib_moss,z0m_moss,z0h_moss,epet_moss,xlai,xlai_us
+      real*8 emiss,zpd,zpd_us,z0m,z0h,z0m_us,z0h_us,f1par,f3vpd
+      real*8 f4temp,f1par_us,f3vpd_us,f4temp_us,rescan,rescan_us
+      real*8 f1,f2,f3,emiss_us,rsmin,rsmax,rsmin_us,rsmax_us,Rpl
+      real*8 Rpl_us,f3vpdpar,f3vpdpar_us,trefk,f4temppar,trefk_us
+      real*8 f4temppar_us,row,cph2o,roa,cp,roi,toleb
+      real*8 roa_ic,ravd,rahd,ravd_us,rahd_us,rav_moss
+      real*8 rah_moss,rib,RaSnow,rib_us,rzsm,tzsm,rzsm1,tzsm1
+      real*8 r_mossm,zrz,smold,rzdthetaudtemp,smpet0
+      real*8 zero,one,two,three,four,five,six
+      real*8 rs_over,rs_under,snow,rain,smtmp,thermc1,thermc2
+      real*8 heatcap1,heatcap2,heatcapold,thermc,heatcap
+      real*8 thermc_moss,heatcap_moss,thermc_us,heatcap_us
+      real*8 ravw,ravw_us,rahw,rahw_us
       type (GRID_MET_template),intent(inout) :: GRID_MET
       type (GRID_VEG_template),intent(inout) :: GRID_VEG
       type (GRID_VARS_template),intent(inout) :: GRID_VARS
@@ -1346,8 +1387,7 @@ GLOBAL%iopsmini = iopsmini
 
       function  clcf1par(alb,LAI,Rg,rsmin,rsmax,Rgl)
       implicit none
-      include "help/clcf1par.h"
-      !type (GRID_VEG_template) :: GRID_VEG
+      real*8 alb,LAI,Rg,rsmin,rsmax,Rgl,par,f,f1par,clcf1par,a1,a2,a3
       data a1/0.19/,a2/1128/,a3/30.8/
 
       par = 0.55 * (1.d0 - alb)*Rg
@@ -1385,7 +1425,7 @@ GLOBAL%iopsmini = iopsmini
 
       function  clcf3vpd(Ts,ea,g)
       implicit none
-      include "help/clcf3vpd.h"
+      real*8 Ts,ea,g,rmax_vpd,rmin_vpd,vpd,f3vpd,clcf3vpd
 
       rmax_vpd = (1.d0/g) - 0.1
       rmin_vpd = 0.0
@@ -1440,7 +1480,8 @@ GLOBAL%iopsmini = iopsmini
       function clcf4temp(tair,tref,f4par)
 
       implicit none
-      include "help/clcf4temp.h"
+      real*8 tair,tref,f4par,rmin_tair,rmax_tair,tair_calc
+      real*8 f4temp,clcf4temp
 
 ! ====================================================================
 ! Set maximum and minimum values for air temperature so
@@ -1498,8 +1539,18 @@ GLOBAL%iopsmini = iopsmini
        z0h,RaSnow,alb_snow,appa,vpsat,uzw,gact,row)
 
       implicit none
-!       include "SNOW.h"
-      include "help/peteb_bs.h"
+      integer maxnri,i
+      real*8 thermc1,thermc2,heatcap1,heatcap2,heatcapold,rain
+      real*8 snow,Swq,albd,emiss,ravd,rahd,tkd,tkmidd,rnetd
+      real*8 xled,epetd,hd,gd,dshd,tcel,vppa,roa,psychr,xlhv
+      real*8 zdeep,Tdeepstep,zmid,rsd,rld,toleb,dt,tkw,tkmidw
+      real*8 rnetw,xlew,epetw,hw,gw,dshw,ravw,rahw,PackWater
+      real*8 SurfWater,VaporMassFlux,TPack,TSurf,r_MeltEnergy
+      real*8 Outflow,xleact_snow,hact_snow,rn_snow,dens,za,zpd
+      real*8 albw,z0h,RaSnow,alb_snow,appa,vpsat,uzw,gact,row
+      real*8 zero,one,two,three,four,five,six
+      real*8 dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8,dum9
+      real*8 dum10,dum11,dum12,tsnow,dum
 
       if ( (Swq.le.(0.0002d0))) then
 
@@ -1610,8 +1661,17 @@ GLOBAL%iopsmini = iopsmini
        dens,za,zpd,z0h,RaSnow,appa,uzw,gact,alb_snow,row)
 
       implicit none
-!       include "SNOW.h"
-      include "help/peteb_dv.h"
+      integer i,maxnri
+      real*8 thermc2,heatcap,heatcap2,heatcapold,rs_over,rain
+      real*8 snow,Swq,albd,emiss,thermc,f1par,f3vpd,f4temp
+      real*8 rescan,ravd,rahd,tkd,tkmidd,rnetd,xled,epetd
+      real*8 hd,gd,dshd,tcel,vppa,roa,psychr,xlhv,zdeep
+      real*8 Tdeepstep,zmid,rld,toleb,dt,PackWater,SurfWater,VaporMassFlux
+      real*8 TPack,TSurf,r_MeltEnergy,Outflow,xleact_snow,hact_snow
+      real*8 rn_snow,dens,za,zpd,z0h,RaSnow,appa,uzw,gact,alb_snow,row
+      real*8 zero,one,two,three,four,five,six
+      real*8 dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8,dum9,dum10
+      real*8 dum11,dum12,tsnow,dum,vpsat
 
       if ( (Swq.le.(0.0002d0))) then
 
@@ -1712,8 +1772,18 @@ GLOBAL%iopsmini = iopsmini
        hact_snow,rn_snow,dens,RaSnow,alb_snow,appa,vpsat,gact,row,ipix)
 
       implicit none
-!       include "SNOW.h"
-      include "help/peteb_wv.h"
+      integer maxnri,i,iopstab,iter
+      real*8 thermc2,heatcap,heatcap2,heatcapold,rs_over,rain
+      real*8 snow,Swq,albw,emiss,thermc,ravw,rahw,tkw,tkmidw
+      real*8 rnetw,xlew,epetw,hw,gw,dshw,tcel,vppa,roa,psychr
+      real*8 xlhv,zdeep,Tdeepstep,zmid,rld,toleb,dt
+      real*8 tkact,zww,za,uzw,zpd,z0m,tkel,press,rib
+      real*8 z0h,PackWater,SurfWater,VaporMassFlux,TPack,TSurf,r_MeltEnergy
+      real*8 Outflow,xleact_snow,hact_snow,rn_snow,dens,RaSnow
+      real*8 alb_snow,appa,vpsat,gact,row
+      real*8 zero,one,two,three,four,five,six
+      real*8 dum1,dum2,dum3,dum4,dum5,dum6,dum7,dum8,dum9,dum10
+      real*8 dum11,dum12,tsnow,dum,tktmp
       integer :: ipix
 
       if ( (Swq.le.(0.0002d0))) then
@@ -1828,7 +1898,9 @@ GLOBAL%iopsmini = iopsmini
        dum9,xleact_snow,dum10,hact_snow,dum11,rn_snow,dum12,dens)
 
       implicit none
-      include "help/inidum.h"
+      real*8 dum1,PackWater,dum2,SurfWater,dum3,Swq,dum4,VaporMassFlux
+      real*8 dum5,TPack,dum6,TSurf,dum7,r_MeltEnergy,dum8,Outflow
+      real*8 dum9,xleact_snow,dum10,hact_snow,dum11,rn_snow,dum12,dens
 
       dum1=PackWater
       dum2=SurfWater

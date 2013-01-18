@@ -1,8 +1,8 @@
 <map id="module_land::tz_and_rzbal" name="module_land::tz_and_rzbal">
-<area shape="rect" id="node3" href="$classmodule__land.html#a71c6f92b024216d9c6e45c3894b5efaf" title="module_land::clc_evrz" alt="" coords="219,5,381,32"/>
-<area shape="rect" id="node5" href="$classmodule__land.html#a12d6a691c942e749c43841b81707001e" title="module_land::clcddif" alt="" coords="224,56,376,83"/>
-<area shape="rect" id="node7" href="$classmodule__land.html#af50bcdbff65810abe79450667b002416" title="module_land::clcdg" alt="" coords="227,107,373,133"/>
-<area shape="rect" id="node9" href="$classmodule__land.html#a010c0615b7057d0036056c91d3ce4eee" title="module_land::new_difflx" alt="" coords="213,157,387,184"/>
-<area shape="rect" id="node13" href="$classmodule__land.html#a38881472e183fbcd89f1de980b1f2f14" title="module_land::new_dwnflx" alt="" coords="209,208,391,235"/>
-<area shape="rect" id="node11" href="$classmodule__land.html#ae8033bea08e7ae390060adaca159950a" title="module_land::diffuse" alt="" coords="440,157,595,184"/>
+<area shape="rect" id="node3" href="$classmodule__land.html#a71c6f92b024216d9c6e45c3894b5efaf" title="module_land::clc_evrz" alt="" coords="228,5,399,35"/>
+<area shape="rect" id="node5" href="$classmodule__land.html#a12d6a691c942e749c43841b81707001e" title="module_land::clcddif" alt="" coords="235,59,392,88"/>
+<area shape="rect" id="node7" href="$classmodule__land.html#ad181e8a0a5acd8cef948b7a0a09081a4" title="module_land::clcdg" alt="" coords="239,112,388,141"/>
+<area shape="rect" id="node9" href="$classmodule__land.html#a010c0615b7057d0036056c91d3ce4eee" title="module_land::new_difflx" alt="" coords="223,165,404,195"/>
+<area shape="rect" id="node13" href="$classmodule__land.html#a38881472e183fbcd89f1de980b1f2f14" title="module_land::new_dwnflx" alt="" coords="216,219,411,248"/>
+<area shape="rect" id="node11" href="$classmodule__land.html#af4916bbdd71e3dced862672f136c8ed6" title="module_land::diffuse" alt="" coords="459,165,619,195"/>
 </map>

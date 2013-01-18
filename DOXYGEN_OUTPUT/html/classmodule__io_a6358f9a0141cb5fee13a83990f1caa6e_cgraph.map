@@ -1,4 +1,4 @@
 <map id="module_io::rdsoil" name="module_io::rdsoil">
-<area shape="rect" id="node3" href="$classmodule__io.html#a0a15e78dbc9e050da98d6813be4f3829" title="module_io::factln" alt="" coords="187,5,317,32"/>
-<area shape="rect" id="node5" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="module_io::rdimgi" alt="" coords="184,56,320,83"/>
+<area shape="rect" id="node3" href="$classmodule__io.html#a0a15e78dbc9e050da98d6813be4f3829" title="Returns the natural log of the i factorial." alt="" coords="187,5,325,35"/>
+<area shape="rect" id="node5" href="$classmodule__io.html#aad1400be55a7f7ac7d4d558079cc6452" title="Subroutine to read in an image of integers and return an array of these values indexed by the soils&#45;t..." alt="" coords="187,59,325,88"/>
 </map>
