@@ -35,7 +35,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,tcel,vppa,xlhv,uzw,appa,&
+       GRID_MET,tcel,vppa,xlhv,uzw,&
 
 ! Temperature variables
 
@@ -53,7 +53,7 @@ contains
     integer ipix,i
 
     real*8 tcel,vppa,xlhv
-    real*8 uzw,appa
+    real*8 uzw
     real*8 tkmid
     real*8 epetd,rnetd
     real*8 tkd,tkmidd
@@ -222,7 +222,7 @@ tkmid = GRID_VARS%tkmid
 ! DEW POINT TEMPERATURES !
 ! ====================================================================
 
-      appa=100.d0*GRID_MET%press
+      CELL_VARS%appa=100.d0*GRID_MET%press
       CELL_VARS%vpsat=611.d0*dexp((17.27d0*tcel)/(237.3d0+tcel))
       CELL_VARS%vpsat_ic=611.d0*dexp((17.27d0*CELL_VARS%tcel_ic)/(237.3d0+CELL_VARS%tcel_ic))
 
@@ -241,8 +241,8 @@ tkmid = GRID_VARS%tkmid
 
       endif
 
-      CELL_VARS%qv=0.622d0*(vppa/appa)
-      CELL_VARS%qv_ic=0.622d0*(CELL_VARS%vppa_ic/appa)
+      CELL_VARS%qv=0.622d0*(vppa/CELL_VARS%appa)
+      CELL_VARS%qv_ic=0.622d0*(CELL_VARS%vppa_ic/CELL_VARS%appa)
 
 ! ====================================================================
 ! Calculate wind if two components are input -- check to make sure
@@ -260,14 +260,14 @@ tkmid = GRID_VARS%tkmid
 ! ====================================================================
 
       CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
-      CELL_VARS%roa=appa/(CELL_VARS%ra*CELL_VARS%tkel)
+      CELL_VARS%roa=CELL_VARS%appa/(CELL_VARS%ra*CELL_VARS%tkel)
       xlhv =2.501d6-2370.d0*tcel
-      CELL_VARS%psychr=(GRID_VARS%cp*appa)/(0.622d0*xlhv)
+      CELL_VARS%psychr=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*xlhv)
 
       CELL_VARS%ra_ic=287.d0*(one+0.608d0*CELL_VARS%qv_ic)
-      CELL_VARS%roa_ic=appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
+      CELL_VARS%roa_ic=CELL_VARS%appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
       CELL_VARS%xlhv_ic=2.501d6-2370.d0*CELL_VARS%tcel_ic
-      CELL_VARS%psychr_ic=(GRID_VARS%cp*appa)/(0.622d0*CELL_VARS%xlhv_ic)
+      CELL_VARS%psychr_ic=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*CELL_VARS%xlhv_ic)
 
 
 
@@ -354,7 +354,7 @@ tkmid = GRID_VARS%tkmid
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,vppa,CELL_VARS%psychr,xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
        GRID_VEG%za,uzw,GRID_MET%press,&
-       appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
+       CELL_VARS%appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
        CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
 ! Temperature variables
