@@ -35,7 +35,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,uzw,&
+       GRID_MET,&
 
 ! Temperature variables
 
@@ -51,8 +51,6 @@ contains
    ! include "help/atmos.h" !take this out when variables are fixed
 
     integer ipix,i
-
-    real*8 uzw
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -64,10 +62,6 @@ contains
     type (GRID_SOIL_template) :: GRID_SOIL
     type (GLOBAL_template) :: GLOBAL
     type (CELL_VARS_template) :: CELL_VARS
-
-! Temporarily changing over variables from old to new format
-uzw = GRID_MET%uzw
-
 
 ! ====================================================================
 ! Define the albedo for the snow layer.
@@ -242,7 +236,7 @@ uzw = GRID_MET%uzw
 ! wind is positive number.
 ! ====================================================================
 
-      if (uzw.lt.(0.)) then
+      if (GRID_MET%uzw.lt.(0.)) then
 
          write(*,*) 'uzw is negative - time step ',i,' pixel ',ipix
 
@@ -277,7 +271,7 @@ uzw = GRID_MET%uzw
 
       if (GLOBAL%iopstab.eq.1.and.i.gt.1.and.GLOBAL%ioppet.eq.0) then 
          
-         call stabcor(GRID_VEG%zww,GRID_VEG%za,uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
+         call stabcor(GRID_VEG%zww,GRID_VEG%za,GRID_MET%uzw,GRID_VEG%zpd,GRId_VEG%z0m,&
        CELL_VARS%tkel,GRID_MET%press,&
        GRID_VARS%tkact,CELL_VARS%vppa,GRID_VARS%rib)
          
@@ -296,15 +290,15 @@ uzw = GRID_MET%uzw
 ! Also do this for snow.
 ! ====================================================================
 
-      CELL_VARS%rahd=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,&
+      CELL_VARS%rahd=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,GRID_VEG%z0m,&
       GRID_VEG%z0h,GRID_VARS%rib)
-      CELL_VARS%rahw=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,&
+      CELL_VARS%rahw=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRId_VEG%zpd,GRID_VEG%z0m,&
       GRID_VEG%z0h,GRID_VARS%rib)
 
       CELL_VARS%ravd=CELL_VARS%rahd
       CELL_VARS%ravw=CELL_VARS%rahw
 
-      CELL_VARS%RaSnow=calcra(uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
+      CELL_VARS%RaSnow=calcra(GRID_MET%uzw,GRID_VEG%zww,GRID_VEG%za,GRID_VEG%zpd,0.005d0,0.0005d0,1.d0)
 
 ! ====================================================================
 ! Choose option to calculate potentials with Penman and Penman-Monteith,&
@@ -317,7 +311,6 @@ uzw = GRID_MET%uzw
 ! NONLINEAR ENERGY BALANCE EQUATIONS.  The program has not been set
 ! up for Penman or Penman-Monteith in these cases yet !
 ! ====================================================================
-      GRID_MET%uzw = uzw
 
       if(GLOBAL%ioppet.eq.0)then
 
@@ -347,7 +340,7 @@ uzw = GRID_MET%uzw
 
        GRID_MET,GRID_MET%rsd,GRID_MET%rld,CELL_VARS%tcel,CELL_VARS%vppa,CELL_VARS%psychr,&
        CELL_VARS%xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
-       GRID_VEG%za,uzw,GRID_MET%press,&
+       GRID_VEG%za,GRID_MET%uzw,GRID_MET%press,&
        CELL_VARS%appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
        CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
 
@@ -424,8 +417,6 @@ uzw = GRID_MET%uzw
        GRID_VEG%hw,GRID_VARS%cp,CELL_VARS%roa)
  
       endif
-
-      GRID_MET%uzw = uzw
 
       return
 
