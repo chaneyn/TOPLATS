@@ -142,7 +142,7 @@ GRID_VARS%epwms = 0.d0!epwms
 
 ! Energy fluxes and states
 
-       epetd,rnetd,tkd,tkmidd,GRID_SOIL,&
+       rnetd,tkd,tkmidd,GRID_SOIL,&
 
        GLOBAL)
 
@@ -163,8 +163,6 @@ GRID_VARS%epwms = 0.d0!epwms
 ! The uncouples the radiation balances for both layers from each
 ! other.  This option is also used when under story is not represented.
 ! ....................................................................
-       
-       CELL_VARS%epetd = epetd
 
        call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
 
