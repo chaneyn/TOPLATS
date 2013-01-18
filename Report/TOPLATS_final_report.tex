@@ -146,6 +146,8 @@ We used gprof to examine the run time statistics and determine what portions of 
 	\label{Profiling1}
 \end{figure}
 
+\vspace{1em}
+
 As expected, the model spends a large amount of its time in the Update\_Cell module (~90\%). This result is mainly caused by the need to ensure energy balance closure. Energy balance closure means that the surface energy balance equation for each grid cell at each time step needs to be minimized. Any future improvement in performance (excluding parallelization) will need to address the nreb subroutine and use more efficient algorithms. Although there is room for improvement, we are happy with the performance of the model. The current runtime for 250 time steps over a 60X66 domain is around 5 seconds. In comparison, this runtime is much faster than most other hydrologic models that thoroughly solve the groundwater interactions between cells.
 
 \section{Conclusion}
