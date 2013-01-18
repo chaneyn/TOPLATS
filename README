@@ -1,7 +1,76 @@
-########################################################################################
--The current development of the TOPLATS land surface model model was developed with 
-gfortran 4.46 on a Linux machine. Due to compatibility issues with prior gfortran 
-versions (Fortran 2003),it is highly recommended that you only use that version or higher. 
--There are no assurances that it will run on MAC,PC or with other compilers. Ongoing 
-work is looking to address these problems.
-########################################################################################
+###################################################################
+ Introduction
+###################################################################
+
+
+### Requirements ###
+
+# Operating System #
+The current version of the model was developed on linux machines using Centos and Fedora. There are no assurances that it will compile or pass all the tests on other operating systems. Ongoing development is addressing the portability issue.
+
+# Compilers #
+The development of the model has focused on using gfortran 4.46 and up. Special care is being placed on including the object oriented features of Fortran 2003+. As a result, many features will not compile with previous versions of gfortran. As we continue development, it is recommended to use the most up to date gfortran. "Ready to use" binaries can be downloaded at http://gcc.gnu.org/wiki/GFortranBinaries.
+The model's portability to other compilers is currently unknown. In the near future, we will ensure it can be run on other compilers including ifortran and pgfortran.
+
+################################################################## 
+Instructions
+##################################################################
+
+### Compilation ###
+After cloning the repository, open the Makefile and ensure the path to gfortran on your machine is correct. Furthermore, make sure that your version of gfortran is 4.46+. Afterwards, save and exit the makefile and enter "make". Given that you have met all the requirements and instructions up to now, the code will compile without error. If that is not the case, please let us know what went wrong.
+
+### Running the model ###
+After compilation, the executable TOPLATS_3.0 should be present in the directory where the Makefile is located. To run the model we only need to pass the general parameters file. This file is discussed in detail later in the manual. A sample way of running the model would be: "./TOPLATS_3.0 GENERAL_PARAMETERS.txt"
+
+### Tests ###
+To make sure the code is running properly, we have set up a number of tests to run after compiling. Within the repository, you will find a folder named TESTS. Feel free to enter the directory and run the "Run_Tests.py" script. 
+The first set of tests will run the model over the Little River,Georgia catchment with the test data. It will output the regional sums over the catchment to TESTS/OUTPUT/Regional_Variables.txt. The same script will then compare the output for the modeled time steps to TESTS/OUTPUT_REFERENCE/Regional_Variables.txt at each time step using the [FRUIT](http://sourceforge.net/projects/fortranxunit/) unit testing framework. The second set of tests are individual unit tests on a subset of the subroutines in the model. These current unit tests and future additions will serve to maintain the model as new physics and subroutines are added.
+If any of the tests fail, please verify that you are satisfying the requirements above. If it continues to fail after addressing these concerns, please let us know.
+NOTE: The catchment tests are set up with the default parameters and files in the default GENERAL_PARAMETERS.txt file. If any of these parameters or files are changed, comparing the model output against the reference regional variables will no longer make sense as they are assured to fail.
+
+### Model Input/Output ###
+The model requires a number of inputs to simulate the hydrologic cycle over the region of interest. In the next section, we will try to give a thorough explanation of the input data and parameters to make your life that much easier. We will discuss the model output when discussing the filenames used for the output. Note that all image input/output files have the structure of [GrADS](http://www.iges.org/grads/) binary files used for meteorological studies. This makes the model easily accesible to the hydrologic/meteorological scientific community. 
+
+# General Parameters File #
+This file contains all the parameters and references to other files that the model will need. The program is set up to read each line in whatever order is specified. However, the first and second columns must provide the following information (for an example, please open the default General_Parameters.txt file in the TESTS directory in the repository. In the following points we will discuss each parameter and file and what options the user can choose. 
+
+### Parameters
+* **ndata** (integer) - Number of times steps to model. The input meteorological data must have the same number of time steps. 
+* **dt** (double) - Time step (seconds). The recommended time step is 3600 (1 hour). We further advise not to use a time step over 3 hours.
+* **endstm** (double) - Time (seconds) after a storm period which defines the end of a storm period. A value normally used is 7200 (2 hours).  
+* **iopbf** (integer) - Method of calculating baseflow. Possible values: 0 and 1. Option 0 uses the method described in Sivaplan et al.,1987. Option 1 uses the method described in Troch et al. 1992. Note that the current model only works with option 0. Option 1 is implemented but has not been added to the I/O module yet. 
+* **iopwt0** (integer) - Option for initial condition specification. Possible value: 0 and 1. Option 0 uses the initial water table depth, Option 1 uses the initial baseflow, from which the initial water table depth is derived. 
+Note that the current model only works with option 0. Option 1 is implemented but has not been added to the I/O module yet. 
+* **ncatch** (integer) - Number of catchments that are being modeled. This number should match the number of catchments in the subbasin binary image file. 
+* **nrow** (integer) - Number of rows in prescribed gridded region.
+* **ncol** (integer) - Number of rows in prescribed gridded region.
+* **pixsiz** (double) - Pixel resolution in meters. The pixel size is constant over the region. 
+* **wc0** (double) - Initial canopy water storage in meters.
+* **irestype** (integer) - Type of soil resistance parameterization. Possible values: 2-5. Option 2 uses the formulation in Sun,1982. Option 3 uses the formulation in Kondo,1990. Option 4 uses the formulation in Camillo and Gurney,1986. Option 5 uses the formulation in Passerat,1986.
+* **ikopt** (integer) - Option for specifying the variation of hydraulic conductivity with depth. Possible values: 0-1. Option 0 specifies that it declines exponentially. Option 0 specifies that it is uniform with depth. 
+* **zrzmax** (double) - Maximum root depth in meters. The usual value is 0.1 meters. If the a smaller value is used, the time step should be decreased as well. 
+* **iopsmini** (double) - Method of initializing the soil moisture. Option 1 uses the user's initial root zone and transmission zone values (~0.3-~0.7). Option 2 uses Brooks/Corey and the initial water table depth to determine the soil moisture values. 
+* **smpet0** (double) - Initial soil moisture value used to estimate the thermal parameters (~0.3 - ~0.7).
+* **iopgveg** (integer) - Option on how to calculate ground heat flux under vegetation. Possible values: 0-1. Option 0 assumes that there is no ground heat flux under vegetation. Option 1 assumes that the thermal conductivity of the soil decays exponentially under the vegetation (Choudhury et al.,1987).
+* **iopthermc** (integer) - Method of calculating thermal conductivity. Possible values: 0-1. Option 0 uses the Johanssen method. Option 1 uses the McCumber and Pielke method.
+* **iopthermc_v** (integer) - Multiplier of the exponential decay of thermal conductivity as a function with LAI. Possible values: 0-1. Option 0 multiplies it times 1.0. Option 1 multiplies it times 7.0.
+* **maxnri** (integer) - Maximum number of iterations for energy balance solution. Default value: 100
+* **toleb** (double) - Tolerance for skin temperature in degrees Kelvin. Default value: 0.50 K.
+* **dtveg** (integer) - Number of time steps between updating vegetation parameters.
+* **nthreads** (integer) - Number of OpenMP threads used in the simulation
+
+### Input Files
+* **TI_fname** (string) - Filename specifying the location of the topographic index image of the region. The file is a raw binary image. It's values are single precision floating point values. The image dimensions must match those of ncol and nrow. 
+* **Subbasin_fname** (string) - Filename specifying the catchments in the region. It goes from 1 up the number of catchments in the region. It's values are 4-byte integers. The image dimensions must match those of ncol and nrow.
+* **K_0_fname** (string) - Filename specifying the location of the image of saturated hydraulic conductivities over the region. It's values are single precision floating point values. The image dimensions must match those of ncol and nrow.
+* **CL_Table_fname** (string) - Filename specifying the location of the ascii file with a list of the TOPMODEL parameters for all the catchments in the domain. The number of lines must match the number of catchments in the region.
+* **SOIL_fname** (string) - Filename specifying the location of the layered image file with all the soil properties used by the model. Their values are single precision floating point values. The image dimensions must match those of ncol and nrow. The soil properties must be layered according to the following list: bcbeta,psic,thetas,thetar,xk0,zdeep,tdeep,zmid,tmid0,rocpsoil,quartz,ifcoarse,srespar1,srespar2,srespar3,a_ice,b_ice,bulk_dens,amp,phase,shift,tw,and tc.
+* **VEG_fname** (string) - Filename specifying the location of the layered image file with all the static vegetation properties used by the model. Their values are single precision floating point values. The image dimensions must match those of ncol and nrow. The static vegetation properties must be layered according to the following list: ivgtyp, xlai, xlai_wsc, albd, albw, emiss, za, zww, z0m, z0h, zpd, rsmin, rsmax, Rpl, f3vpdpar, f4temppar, trefk, tcbeta, extinct, and canclos.
+* **DVEG_fname** (string) - Filename specifying the location of the layered image file with all the dynamic vegetation properties used by the model. Their values are single precision floating point values. The image dimensions must match those of ncol and nrow. The dynamic vegetation properties must be layered according to the following list for each time step: xlai and albd.
+* **FORCING_fname** (string) - Filename specifying the location of the layered image file with all the meteorological data used at each time step by the model. Their values are single precision floating point values. The image dimensions must match those of ncol and nrow. The meteorological variables must be layered according to the the following list for each time step: downward longwave radiation (W/m2), pressure (Pa), relative humidity (0-1), downward shortwave radiation (W/m2), air temperature (Kelvin), wind speed (m/s), and precipitation (m/s).
+
+### Output Files
+* **OUTPUT_fname** (string) - Filename specifying the location of the layered image file with all the output image data used at each time step by the model. Their values are single precision floating point values. The image dimensions matches those of ncol and nrow. Currently only the root zone soil moisture (%) variable is output in the file. This data can be directly accessed using the dimensions and the number of time steps through GrADS or MATLAB or PYTHON as a fortran unformatted binary file. 
+* **REGIONAL)fname** (string) - Filename specifying the location of the output ascii file with the regional averages over the entire domain. This file makes it simple for testing the model when run on different machines to ensure portability. Future versions will probably eliminate this file altogether.
+
+

@@ -1,7 +1,7 @@
 <map id="module_canopy::calcepw" name="module_canopy::calcepw">
 <area shape="rect" id="node3" href="$classmodule__unit__tests.html#a367675d83a9e8d312a50a8b9e4de8481" title="module_unit_tests::\lcalcepw_test1" alt="" coords="259,5,416,51"/>
 <area shape="rect" id="node9" href="$classmodule__unit__tests.html#a20c46fc05b2cabc4ff1888ead724555b" title="module_unit_tests::\lcalcepw_test2" alt="" coords="259,74,416,121"/>
-<area shape="rect" id="node12" href="$classmodule__canopy.html#ad8d774baf7b1f7987264997a99b513a2" title="module_canopy::canopy" alt="" coords="247,144,428,173"/>
+<area shape="rect" id="node12" href="$classmodule__canopy.html#ad8d774baf7b1f7987264997a99b513a2" title="Subroutine to calculate interception by vegetation and calculate canopy water balance." alt="" coords="247,144,428,173"/>
 <area shape="rect" id="node5" href="$classmodule__unit__tests.html#a3f4e9bd4cff4b73206b3c6a2d2414d7f" title="module_unit_tests::\lrun_unit_tests" alt="" coords="493,39,651,86"/>
 <area shape="rect" id="node7" href="$TESTS__DRIVER_8f90.html#aff76d0cacdf10182d98bc48b22593f1a" title="tests_driver" alt="" coords="743,48,847,77"/>
 <area shape="rect" id="node14" href="$classmodule__cell.html#a70b7ade0b81899a7b22cef286c3a608b" title="module_cell::update_cell" alt="" coords="477,144,667,173"/>

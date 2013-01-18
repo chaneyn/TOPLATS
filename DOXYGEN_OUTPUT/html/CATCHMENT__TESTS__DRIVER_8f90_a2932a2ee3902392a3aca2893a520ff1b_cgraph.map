@@ -1,5 +1,5 @@
 <map id="catchment_tests_driver" name="catchment_tests_driver">
-<area shape="rect" id="node3" href="$classfruit.html#a9d5a173ff8a6d1d1131eb79a0fccd01a" title="fruit::fruit_summary" alt="" coords="242,5,390,32"/>
-<area shape="rect" id="node5" href="$classfruit.html#a4b35468d178608dd03b474276adcbb7d" title="fruit::init_fruit" alt="" coords="263,56,369,83"/>
-<area shape="rect" id="node7" href="$classmodule__catchment__test.html#a1f9952a875eb5474e58e537f3d7d8962" title="module_catchment_test\l::run_tests" alt="" coords="227,107,405,149"/>
+<area shape="rect" id="node3" href="$classfruit.html#a9d5a173ff8a6d1d1131eb79a0fccd01a" title="fruit::fruit_summary" alt="" coords="257,5,415,35"/>
+<area shape="rect" id="node5" href="$classfruit.html#a4b35468d178608dd03b474276adcbb7d" title="fruit::init_fruit" alt="" coords="279,59,393,88"/>
+<area shape="rect" id="node7" href="$classmodule__catchment__test.html#a1f9952a875eb5474e58e537f3d7d8962" title="module_catchment_test\l::run_tests" alt="" coords="241,111,431,158"/>
 </map>

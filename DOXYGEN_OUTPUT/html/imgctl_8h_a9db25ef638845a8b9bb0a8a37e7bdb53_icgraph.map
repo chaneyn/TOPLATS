@@ -1,9 +1,0 @@
-<map id="xlepet" name="xlepet">
-<area shape="rect" id="node3" href="$classmodule__topmodel.html#a2a060f4fde6ba99d1db42f9709297cfc" title="Calculates the time step totals of evapotranspiration, runoff, surface energy fluxes and vertical soi..." alt="" coords="115,5,303,46"/>
-<area shape="rect" id="node9" href="$classmodule__regional.html#a6a60029f619bf93c2c2d8167597ee77b" title="module_regional::sumflx\l_regional" alt="" coords="120,70,299,111"/>
-<area shape="rect" id="node14" href="$classmodule__cell.html#af74be320c5c376b8dee7e97c8248bb87" title="module_cell::update_cell" alt="" coords="120,139,299,165"/>
-<area shape="rect" id="node5" href="$classmodule__topmodel.html#a994ec9373a1a020e92acab8f9f58d706" title="run TOPMODEL in specified catchments" alt="" coords="353,5,543,46"/>
-<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="592,77,701,104"/>
-<area shape="rect" id="node11" href="$classmodule__regional.html#abf626651ee24fe7f145d36efac79d851" title="module_regional::update\l_regional" alt="" coords="357,70,539,111"/>
-<area shape="rect" id="node16" href="$classmodule__cell.html#ac9479702e38648052df3b94e47fd6e64" title="module_cell::update\l_cells" alt="" coords="373,135,523,177"/>
-</map>

@@ -20,8 +20,8 @@ contains
 !
 ! ====================================================================
 !
-! Subroutine to calculate interception by vegetation and calculate
-! canopy water balance.
+!> Subroutine to calculate interception by vegetation and calculate
+!! canopy water balance.
 !
 ! ====================================================================
 
@@ -97,8 +97,8 @@ contains
 !
 ! ====================================================================
 !
-! Set fraction of wet canopy which is considered 100% if canopy
-! is wet and 0% if canopy is dry.
+!> Set fraction of wet canopy which is considered 100% if canopy
+!! is wet and 0% if canopy is dry.
 !
 ! ====================================================================
 
@@ -158,8 +158,8 @@ contains
 !
 ! ====================================================================
 !
-! If potential evaporation is negative, dew forms over the
-! whole canopy.
+!> If potential evaporation is negative, dew forms over the
+!! whole canopy.
 !
 ! ====================================================================
 
@@ -198,7 +198,7 @@ contains
 !
 ! ====================================================================
 !
-! Calculate evaporation from the wet canopy.
+!> Calculate evaporation from the wet canopy.
 !
 ! ====================================================================
 
@@ -245,7 +245,7 @@ contains
 !
 ! ====================================================================
 !
-! Calculate canopy rainfall and water balance
+!> Calculate canopy rainfall and water balance
 !
 ! ====================================================================
 
@@ -315,8 +315,8 @@ contains
 !
 ! ====================================================================
 !
-! This subroutine checks if the soil under snow is treated as   *
-! interstorm or storm period
+!> This subroutine checks if the soil under snow is treated as   *
+!! interstorm or storm period
 !
 ! ====================================================================
 
@@ -431,7 +431,7 @@ contains
 !
 ! ====================================================================
 !
-! Add up pet terms of the over story to get average values.
+!> Add up pet terms of the over story to get average values.
 !
 ! ====================================================================
   subroutine calcnet(GRID_VARS,GRID_VEG,GLOBAL)

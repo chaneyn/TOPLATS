@@ -1,7 +1,0 @@
-<map id="etpix" name="etpix">
-<area shape="rect" id="node3" href="$classmodule__topmodel.html#a2a060f4fde6ba99d1db42f9709297cfc" title="Calculates the time step totals of evapotranspiration, runoff, surface energy fluxes and vertical soi..." alt="" coords="107,5,295,46"/>
-<area shape="rect" id="node9" href="$classmodule__regional.html#a6a60029f619bf93c2c2d8167597ee77b" title="module_regional::sumflx\l_regional" alt="" coords="112,70,291,111"/>
-<area shape="rect" id="node5" href="$classmodule__topmodel.html#a994ec9373a1a020e92acab8f9f58d706" title="run TOPMODEL in specified catchments" alt="" coords="345,5,535,46"/>
-<area shape="rect" id="node7" href="$TOPLATS__DRIVER_8f90.html#a1172731b68e0187d74326a81c0d80390" title="toplats_driver" alt="" coords="584,45,693,72"/>
-<area shape="rect" id="node11" href="$classmodule__regional.html#abf626651ee24fe7f145d36efac79d851" title="module_regional::update\l_regional" alt="" coords="349,70,531,111"/>
-</map>
