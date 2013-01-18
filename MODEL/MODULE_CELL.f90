@@ -128,7 +128,7 @@ xlamda = CAT%xlamda
 ! solve the water and energy balance for a land area.
 ! ====================================================================
 
-      if (ivgtyp.ge.0) then
+      if (GRID_VEG%ivgtyp.ge.0) then
 
 ! ....................................................................
 ! Calculate the local energy fluxes and set

@@ -19,23 +19,21 @@ iopthermc 0 #Option for thermal conductivity calculation
 iopthermc_v 1 #Adjust soil thermal conductivity based on LAI
 maxnri 100 #Maximum number of iterations for energy balance solution
 toleb 0.50 #Tolerance for skin temperature (K)
-iopflg 0 #Option for the initial input of storm/interstorm event status
-istflg 0 #Initial storm/interstorm event flag
 dtveg 100 #Number of time steps between updating vegetation parameters
 
 #INPUT FILES
-TI_fname 'TEST_DATA/INPUT/TI'
-Subbasin_fname 'TEST_DATA/INPUT/subbasin'
-K_0_fname 'TEST_DATA/INPUT/K_0.img'
-CL_Table_fname 'TEST_DATA/INPUT/CL_Table'
-SOIL_fname 'TEST_DATA/INPUT/soil.bin'
-VEG_fname 'TEST_DATA/INPUT/veg.bin'
-DVEG_fname 'TEST_DATA/INPUT/dveg.bin'
-FORCING_fname 'TEST_DATA/INPUT/FORCING_01202005_10202005.bin'
+TI_fname 'INPUT/TI'
+Subbasin_fname 'INPUT/subbasin'
+K_0_fname 'INPUT/K_0.img'
+CL_Table_fname 'INPUT/CL_Table'
+SOIL_fname 'INPUT/soil.bin'
+VEG_fname 'INPUT/veg.bin'
+DVEG_fname 'INPUT/dveg.bin'
+FORCING_fname 'INPUT/FORCING_01202005_10202005.bin'
 
 #OUTPUT FILES
-OUTPUT_fname 'TEST_DATA/OUTPUT/OUTPUT.bin'
-REGIONAL_fname 'TEST_DATA/OUTPUT/Regional_Variables.txt'
+OUTPUT_fname 'OUTPUT/OUTPUT.bin'
+REGIONAL_fname 'OUTPUT/Regional_Variables.txt'
 
 #PARALLELIZATION
 nthreads 1 #Number of threads per node (OpenMP)

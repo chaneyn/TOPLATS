@@ -38,6 +38,8 @@ subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
 !####################################################################
 
   call Read_General_File(GLOBAL)
+  GLOBAL%iopflg = 0
+  GLOBAL%istflg = 0
 
 !####################################################################
 ! Open all files
@@ -1687,10 +1689,6 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('maxnri',GLOBAL,GLOBAL%maxnri)
   !Tolerance for skin temperature (K) 
   call Extract_Info_General_File('toleb',GLOBAL,GLOBAL%toleb)
-  !Option for the initial input of storm/interstorm event status  
-  call Extract_Info_General_File('iopflg',GLOBAL,GLOBAL%iopflg)
-  !Initial storm/interstorm event flag 
-  call Extract_Info_General_File('istflg',GLOBAL,GLOBAL%istflg)
   !Number of time steps between updating vegetation parameters 
   call Extract_Info_General_File('dtveg',GLOBAL,GLOBAL%dtveg)
   !Topographic index filename
