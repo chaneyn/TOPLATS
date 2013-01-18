@@ -35,7 +35,7 @@ contains
 
 ! Meteorological data
 
-       GRID_MET,tcel,xlhv,uzw,&
+       GRID_MET,tcel,uzw,&
 
 ! Temperature variables
 
@@ -52,7 +52,7 @@ contains
 
     integer ipix,i
 
-    real*8 tcel,xlhv
+    real*8 tcel
     real*8 uzw
     real*8 tkmid
     real*8 epetd,rnetd
@@ -261,8 +261,8 @@ tkmid = GRID_VARS%tkmid
 
       CELL_VARS%ra=287.d0*(one+0.608d0*CELL_VARS%qv)
       CELL_VARS%roa=CELL_VARS%appa/(CELL_VARS%ra*CELL_VARS%tkel)
-      xlhv =2.501d6-2370.d0*tcel
-      CELL_VARS%psychr=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*xlhv)
+      CELL_VARS%xlhv =2.501d6-2370.d0*tcel
+      CELL_VARS%psychr=(GRID_VARS%cp*CELL_VARS%appa)/(0.622d0*CELL_VARS%xlhv)
 
       CELL_VARS%ra_ic=287.d0*(one+0.608d0*CELL_VARS%qv_ic)
       CELL_VARS%roa_ic=CELL_VARS%appa/(CELL_VARS%ra_ic*CELL_VARS%tkel_ic)
@@ -352,7 +352,7 @@ tkmid = GRID_VARS%tkmid
 
 ! Meteorological data
 
-       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,CELL_VARS%vppa,CELL_VARS%psychr,xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
+       GRID_MET,GRID_MET%rsd,GRID_MET%rld,tcel,CELL_VARS%vppa,CELL_VARS%psychr,CELL_VARS%xlhv,CELL_VARS%tkel,GRID_VEG%zww,&
        GRID_VEG%za,uzw,GRID_MET%press,&
        CELL_VARS%appa,CELL_VARS%vpsat,CELL_VARS%tcel_ic,CELL_VARS%vppa_ic,CELL_VARS%psychr_ic,CELL_VARS%xlhv_ic,&
        CELL_VARS%tkel_ic,CELL_VARS%vpsat_ic,&
@@ -424,7 +424,7 @@ tkmid = GRID_VARS%tkmid
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        CELL_VARS%tkel,CELL_VARS%vppa,CELL_VARS%f3vpd,GRID_VEG%f3vpdpar,CELL_VARS%f4temp,GRID_VEG%trefk,&
        GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
-       GRID_VEG%rescan,CELL_VARS%ravd,xlhv,&
+       GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%xlhv,&
        GRID_VARS%row,epetd,GRID_VARS%epetw,CELL_VARS%ravw,CELL_VARS%psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
        GRID_VEG%hw,GRID_VARS%cp,CELL_VARS%roa)
  

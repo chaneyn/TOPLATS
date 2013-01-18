@@ -134,7 +134,7 @@ GRID_VARS%epwms = 0.d0!epwms
        call atmos(ipix,i,GRID_VEG,CELL_VARS,&
 
 ! Meteorological data
-       GRID_MET,tcel,xlhv,uzw,&
+       GRID_MET,tcel,uzw,&
 
 ! Temperature variables
 
@@ -165,7 +165,6 @@ GRID_VARS%epwms = 0.d0!epwms
 ! ....................................................................
        
        CELL_VARS%tcel = tcel 
-       CELL_VARS%xlhv = xlhv
        CELL_VARS%epetd = epetd
 
        call land(ipix,i,CELL_VARS,GRID_MET,GRID_VEG,GRID_VARS,GRID_SOIL,CAT,GLOBAL)
