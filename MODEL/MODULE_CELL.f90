@@ -73,7 +73,6 @@ contains
                GRID_VARS,CAT,GLOBAL)
 
       implicit none
-      include 'help/land_lake.h'
       type (GRID_VEG_template) :: GRID_VEG
       type (GRID_SOIL_template) :: GRID_SOIL
       type (GRID_MET_template) :: GRID_MET
@@ -81,17 +80,19 @@ contains
       type (CATCHMENT_template) :: CAT
       type (GLOBAL_template) :: GLOBAL
       type (CELL_VARS_template) :: CELL_VARS
+      integer ipix,i
+      real*8 snow,rain
+      real*8 sesq,xintst,smpet0,mul_fac,row,roi
+      real*8 appa,epetd,f1par,f3vpd,f4temp
+      real*8 rahd,rahw,rahw_us,RaSnow,ravd
+      real*8 roa,roa_ic,rrr,tcel,vppa,xlhv      
       GLOBAL%mul_fac = 1.0d0
-      !integer ipix,i
-      !real*8 snow,rain
-
+      
 !Removal Causes Failure
 sesq = GRID_VARS%sesq
 xintst = GRID_VARS%xintst
 smpet0 = GLOBAL%smpet0
 mul_fac = GLOBAL%mul_fac
-row = GRID_VARS%row!row
-roi = GRID_VARS%roi!roi
 
 !Point Data Initializations
 !Water Balance
@@ -124,7 +125,7 @@ GRID_VARS%epwms = 0.d0!epwms
 ! solve the water and energy balance for a land area.
 ! ====================================================================
 
-      if (ivgtyp.ge.0) then
+      if (GRID_VEG%ivgtyp.ge.0) then
 
 ! ....................................................................
 ! Calculate the local energy fluxes and set
