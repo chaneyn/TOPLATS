@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  18 JAN 2013 08:51
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (TeX Live 2011) (format=pdflatex 2011.7.3)  18 JAN 2013 09:30
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -161,13 +161,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 32.
 
 [2]
-Overfull \hbox (61.89844pt too wide) in paragraph at lines 58--59
+Overfull \hbox (61.89844pt too wide) in paragraph at lines 59--60
 []\OT1/cmr/m/n/12 The model con-sists of three main parts: MOD-ULE[]CELL, MOD-U
 LE[]CATCHMENT,
  []
 
 
-Overfull \hbox (3.37782pt too wide) in paragraph at lines 58--59
+Overfull \hbox (3.37782pt too wide) in paragraph at lines 59--60
 \OT1/cmr/m/n/12 and MOD-ULE[]REGIONAL. MOD-ULE[]CELL uses MOD-ULE[]LAND, MOD-
  []
 
@@ -175,7 +175,7 @@ Overfull \hbox (3.37782pt too wide) in paragraph at lines 58--59
 File: Figures/Modules1.png Graphic file (type png)
 
 <use Figures/Modules1.png>
-Package pdftex.def Info: Figures/Modules1.png used on input line 62.
+Package pdftex.def Info: Figures/Modules1.png used on input line 63.
 (pdftex.def)             Requested size: 216.81pt x 80.3381pt.
 
 
@@ -185,58 +185,47 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 File: Figures/Modules2.png Graphic file (type png)
 
 <use Figures/Modules2.png>
-Package pdftex.def Info: Figures/Modules2.png used on input line 69.
+Package pdftex.def Info: Figures/Modules2.png used on input line 70.
 (pdftex.def)             Requested size: 216.81pt x 189.19748pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[3] [4 <./Figures/Modules1.png> <./Figures/Modules2.png>]
-Overfull \hbox (36.13019pt too wide) in paragraph at lines 85--86
+[3] [4 <./Figures/Modules1.png> <./Figures/Modules2.png>] [5]
+Overfull \hbox (36.13019pt too wide) in paragraph at lines 88--89
 \OT1/cmr/m/n/12 in-clude two test pro-grams: CATCH-MENT[]TESTS[]DRIVER and TEST
 S[]DRIVER,
  []
 
-<Figures/Tests1.png, id=23, 698.1282pt x 262.581pt>
+<Figures/Tests1.png, id=26, 698.1282pt x 262.581pt>
 File: Figures/Tests1.png Graphic file (type png)
  <use Figures/Tests1.png>
-Package pdftex.def Info: Figures/Tests1.png used on input line 91.
+Package pdftex.def Info: Figures/Tests1.png used on input line 94.
 (pdftex.def)             Requested size: 397.48499pt x 149.50043pt.
 
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 91--93
+Overfull \hbox (7.48499pt too wide) in paragraph at lines 94--96
  [][] 
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[5] <Figures/Tests2.png, id=27, 725.5908pt x 279.444pt>
+<Figures/Tests2.png, id=27, 725.5908pt x 279.444pt>
 File: Figures/Tests2.png Graphic file (type png)
-
-<use Figures/Tests2.png>
-Package pdftex.def Info: Figures/Tests2.png used on input line 100.
+ <use Figures/Tests2.png>
+Package pdftex.def Info: Figures/Tests2.png used on input line 103.
 (pdftex.def)             Requested size: 397.48499pt x 153.08492pt.
 
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 100--102
+Overfull \hbox (7.48499pt too wide) in paragraph at lines 103--104
  [][] 
  []
 
-[6 <./Figures/Tests1.png> <./Figures/Tests2.png>]
-<Figures/CallGraph.png, id=33, 1129.21875pt x 1048.91875pt>
+[6 <./Figures/Tests1.png>] [7 <./Figures/Tests2.png>] [8]
+<Figures/CallGraph.png, id=40, 1129.21875pt x 1048.91875pt>
 File: Figures/CallGraph.png Graphic file (type png)
 
 <use Figures/CallGraph.png>
-Package pdftex.def Info: Figures/CallGraph.png used on input line 116.
-(pdftex.def)             Requested size: 397.48499pt x 369.22374pt.
-
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 116--118
-[][]
- []
-
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[7] [8 <./Figures/CallGraph.png>] (./TOPLATS_final_report.aux)
+Package pdftex.def Info: Figures/CallGraph.png used on input line 127.
+(pdftex.def)             Requested size: 361.34999pt x 335.66086pt.
+ [9 <./Figures/CallGraph.png>] [10]
+(./TOPLATS_final_report.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
@@ -244,7 +233,7 @@ LaTeX Warning: There were multiply-defined labels.
 Here is how much of TeX's memory you used:
  1490 strings out of 493633
  21668 string characters out of 3143378
- 78087 words of memory out of 3000000
+ 77087 words of memory out of 3000000
  4795 multiletter control sequences out of 15000+200000
  8194 words of font info for 29 fonts, out of 3000000 for 9000
  831 hyphenation exceptions out of 8191
@@ -252,10 +241,10 @@ Here is how much of TeX's memory you used:
 </usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2011/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on TOPLATS_final_report.pdf (8 pages, 847107 bytes).
+Output written on TOPLATS_final_report.pdf (10 pages, 850293 bytes).
 PDF statistics:
- 54 PDF objects out of 1000 (max. 8388607)
- 30 compressed objects within 1 object stream
+ 60 PDF objects out of 1000 (max. 8388607)
+ 34 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  26 words of extra memory for PDF output out of 10000 (max. 10000000)
 

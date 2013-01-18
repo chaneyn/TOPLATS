@@ -52,6 +52,7 @@ The following table concludes the programming tools we have used during developm
 {\\ Separate I/O from actual model}
 {\\ Simplified input files}
 
+\newpage
 \section{Modularization}
 One of the main tasks in the project was modularization. To this end, we took the original 100+ files written in F77 and split their functions and subroutines according to their purpose.  We set up 11 modules that are combined and used by the interface (TOPLATS\_DRIVER.f90) to run the model. Each module is written in a separate file, allowing us to reduce the number of files significantly down to 11.  The new TOPLATS model files are shown in Figure \ref{Modules1}. 
 
@@ -73,6 +74,7 @@ The model consists of three main parts: MODULE\_CELL,  MODULE\_CATCHMENT, and MO
 
 Within each module, as shown in Figure \ref{Modules2}, we first list shared variables and structures from other modules, defined structures being shared by subroutines in the module if there are any, and then list the subroutines that are related to the module. 
 
+\newpage
 \section{Variables}
 In the original version of TOPLATS, the variables were stored in one lengthy list. Hundreds of variables were passed into subroutines individually, causing extremely large subroutine calls. For the updated version of TOPLATS developed in this project, these hundreds of variables were organized into derived data types (structures) based upon function or purpose. In this way, structures could be passed into the modules and subroutines in relevant groups, thereby cleaning up the otherwise unmanageable code. In each larger subroutine, such as Atmos, the variables used in the code were replaced with the corresponding member of the structure. For each smaller subroutine, the members of the structures were passed into the subroutine individually to avoid passing in more variables than necessary.
 
@@ -80,6 +82,7 @@ Not only was the original version of TOPLATS crippled by the massive subroutine 
 
 Another limitation of the original version of TOPLATS was the use of static memory allocation. Using this method, the size of all arrays needed to be provided at compile time, meaning that the users needed to alter the source files every time they used the model for a different domain. In order to improve upon this, the dynamic memory allocation features implemented in Fortran 90 were used. By dynamically allocating the arrays, the user is able to specify dimensions at run time, allowing for the model to be used across multiple domains without maintaining and compiling multiple versions of the model code.
 
+\newpage
 \section{Tests}
 
 The FORTRAN Unit Test Framework (FRUIT) is used for testing. We have include two test programs: CATCHMENT\_TESTS\_DRIVER and TESTS\_DRIVER, each serving a different purpose.
@@ -98,33 +101,44 @@ One of the major downfalls of testing the model against old output is the inabil
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=5.5in]{Figures/Tests2.png}
-	\label{Tests1}
 	\caption{Subroutines tests example code (left) and its corresponding assertions output (right)}
+	\label{Tests1}
 \end{figure}
 
+\newpage
 \section{Parallelization}
-Parallelization is currently implemented using OpenMP and uses up to 8 cores on a single node, depending on the preference of the user.  In order to do this, the domain is split up into equal sized blocks and then is distributed among the threads. Calculations are then performed for each cell before the domain is reassembled and the regional processes are calculated. For the domain size that we are using the parallelization does not have a significant impact on the calculation time. It should be noted though that for future work, as the domain size increases, we believe that we will find that parallelization becomes increasingly important. In order to run the model on a global scale, we plan to implement parallelization through MPI in order to maximize the computational power of each node.
 
-\section{Valgrind}
-{(Colby)}
-{\\ Valgrind detects uninitialized variables}
+Parallelization is currently implemented using OpenMP. The user can define at runtime how many cores to use. In order to do this, for each time step, the domain is split up into equal sized blocks and then is distributed among the threads. Calculations are then performed for each cell before the domain is reassembled and the regional processes are calculated. For the domain size that we are using the parallelization does not have a significant impact on the calculation time. It should be noted though that for future work, as the domain size increases, we believe that we will find that parallelization becomes increasingly important. In order to run the model on a global scale, we plan to implement parallelization through MPI in order to maximize the computational power of each node.
 
+\section{Variable Initialization}
+One of the challenges of the original code was the improper initialization of variables. Many times, uninitialized variables were passed into a subroutine. This was not an issue if the variable was reassigned. But many times, the variables were used as sums. If they were not initialized to zero, there was no assurance that it would be zero. This caused errors in the output. 
+
+To deal with this problem, we initially used the -finit-local-zero option available in gfortran. This set all uninitialized values to 0 at runtime and temporarily fixing the problem. However, if we want to port this model to other compilers, we can't rely on that option. Plus it seems like a poor coding practice. 
+
+For these reasons, we spent time towards the end with valgrind. This tool provides information on uninitialized variables. It's not that simple as it only provides the line but doesn't say exactly what variable is causing issues but nonetheless it goes a long way in providing reliable information. It took about 6 hours to find around 100 uninitialized variables in the code. After solving this issue, we were successfully able to remove the -finit-local-zero option.
+
+\newpage
 \section{Profiling}
+
+Another point of interest was determining where the program is spending most of its time when running. To this end, we used gprof to determine the run time statistics. We then used gprof2dot to convert the ascii output into a call graph visualization as shown in Figure \ref{Profiling1}. 
 
 \begin{figure}[h]
 	%\centering
-	\includegraphics[width=5.5in]{Figures/CallGraph.png}
+	\includegraphics[width=5.0in]{Figures/CallGraph.png}
+
+	\caption{Schematic of the call-graph of TOPLATS. We define a threshold of 5\%, below which all subroutines are discarded. This offers a detailed view on where the model is spending most of its time.}
 	\label{Profiling1}
-	\caption{}
 \end{figure}
+
+As expected, the model spends a very large amount of its time in the Update\_Cell module (~90\%). This is mainly due to the need to ensure energy balance closure. This means that the surface energy balance equation for each grid cell at each time step needs to be minimized. Any future improvement in performance (excluding parallelization) will need to address the nreb subroutine and use more efficient algorithms. That being said, ,we are happy with the performance of the model. It's current runtime for 250 time steps over a 60X66 domain is around 5 seconds. For reference, this is much faster than most other hydrologic models that thoroughly solve the groundwater interactions between cells.
 
 \section{Conclusion}
 
-We have accomplished most of our goals. Derived data types are implemented; modules are set up making it possible to swap physics; I/O is separated from other routines and enhanced; parallelization is added; main program is replaced with a clean interface. 
+We have accomplished most of our goals. Derived data types were implemented (although not completely); modules were set up to simplify the code and make it simple to swap physics; the I/O components were separated from other routines and enhanced; parallelization using OpenMP was added; and the main program was replaced with a much cleaner interface. 
 
-Incredible changes were made to TOPLATS, which enable us to put the model from two decades ago to new uses. Nathaniel Chaney will continue to add MPI parallelization and run it on Blue Waters on high resolution global grids. 
+The huge changes, will enable us to use this outdated model for future hydrologic studies. Current work is looking at adding the MPI capability for massive parallelization. Nathaniel Chaney is currently developing a global model run at a 500 meter spatial resolution on the Blue Waters supercomputer in Illinois. This will be groundbreaking work that looks to redefine how the global water balance is modeled.
 
-This project and the course has been beneficial to everyone in the project. We have learned how to effectively collaborate on the same program with great help form github. Testing has become an important part of our programming practices, which was almost absent before taking this course. All the tools we have used, github, Doxygen, Valgrind will continue to serve as our programming companions.
+This project and the course has been beneficial to everyone in the project. We have learned how to effectively collaborate on the same program with great help form github. Testing has become an important part of our programming practices, which was almost absent before taking this course. Learning how to use valgrind has been extremely useful as it also serves as a debugger. In conclusion, all the tools we have used, github, Doxygen, Valgrind , gprof, etc... will continue to serve as our programming companions in the future.
 
 
 \end{document}
