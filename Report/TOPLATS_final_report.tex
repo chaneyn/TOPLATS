@@ -19,9 +19,27 @@
 \section{Introduction}
 Land surface hydrologic models are used to simulate the interaction between the atmosphere and land surface. Their main objective is to model the water and energy balances and also to accurately partition the surface fluxes. Their ability to simulate these fluxes from limited data is key for monitoring the hydrologic cycle at continental and global scales. One of the models used at a regional scale is TOPLATS which was developed at Princeton University during the 1990's. Time has shown that this model is an excellent bridge between coarse scale models and very fine resolution models, making it an excellent candidate to replace coarse scale models to study global hydrology. This is also due, in part, to the large increase in computational power over the past two decades. 
 
-The model was originally written in Fortran 77 and it falls along the lines of "spaghetti code". It was never developed with the intent of making it easy to switch components of the models. Some of the inherent deficiencies are the lack of proper decoupling between the I/O and the model through an appropriate interface and the fact that the parameterizations of physical processes (evaporation, infiltration, and runoff) were not appropriately modularized, making it practically impossible to quickly and efficiently update the model with new research. With a desire to now update this model and run it over much larger spatial scales than what it was originally intended for, we see this as a perfect opportunity to gravitate towards object-oriented programming in Fortran 2003. A description of the project components as well as our timeline for accomplishing these tasks is detailed in the following sections.
+The model was originally written in Fortran 77 and it falls along the lines of "spaghetti code". It was never developed with the intent of making it easy to switch components of the models. Some of the inherent deficiencies are the lack of proper decoupling between the I/O and the model through an appropriate interface and the fact that the parameterizations of physical processes (evaporation, infiltration, and runoff) were not appropriately modularized, making it practically impossible to quickly and efficiently update the model with new research. With a desire to now update this model and run it over much larger spatial scales than what it was originally intended for, we see this as a perfect opportunity to gravitate towards object-oriented programming in Fortran 2003. 
 
 Main goals of this project include: 1) Modularize the code based on the physics so that it will be easy to make changes within compartments; 2) Improve data structures by introduce derived data types; 3) Add parallel computing using OpenMP; 4) Make tests to ensure subroutines as well as the whole model produce same results as the original model. 
+
+The following table concludes the programming tools we have used.
+
+%Table
+\begin{table}[h]
+  \begin{center}
+    \caption{Tools used in the project}
+    \begin{tabular}{ | l | l | l | p{5cm} |}
+    \hline
+    Purpose & Tools \\ \hline
+    Language & Fortran 2003 \\
+    Testing & FRUIT \\ 
+    Version control & github \\ 
+    Profiling & Valgrind \\ 
+    Documentation & Doxygen \\ \hline
+    \end{tabular}
+  \end{center}
+\end{table}
 
 \section{Interface}
 {(Nate)}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  18 JAN 2013 03:35
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  18 JAN 2013 03:52
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -143,6 +143,13 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [1
 
 {/usr/local/texlive/2010/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 32.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 32.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 32.
+
 [2] <Figures/Modules1.png, id=12, 297.7524pt x 110.3322pt>
 File: Figures/Modules1.png Graphic file (type png)
 
@@ -158,47 +165,49 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 <Figures/Tests1.png, id=23, 698.1282pt x 262.581pt>
 File: Figures/Tests1.png Graphic file (type png)
  <use Figures/Tests1.png>
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 66--68
+Overfull \hbox (7.48499pt too wide) in paragraph at lines 84--86
  [][] 
- []
-
-<Figures/Tests2.png, id=24, 725.5908pt x 279.444pt>
-File: Figures/Tests2.png Graphic file (type png)
- <use Figures/Tests2.png>
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 75--77
- [][] 
- []
-
-[5 <./Figures/Tests1.png>]
-<Figures/CallGraph.png, id=29, 1129.21875pt x 1048.91875pt>
-File: Figures/CallGraph.png Graphic file (type png)
-
-<use Figures/CallGraph.png>
-Overfull \hbox (7.48499pt too wide) in paragraph at lines 91--93
-[][]
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[6 <./Figures/Tests2.png>] [7 <./Figures/CallGraph.png>] [8]
-(./TOPLATS_final_report.aux)
+<Figures/Tests2.png, id=24, 725.5908pt x 279.444pt>
+File: Figures/Tests2.png Graphic file (type png)
+ <use Figures/Tests2.png>
+Overfull \hbox (7.48499pt too wide) in paragraph at lines 93--95
+ [][] 
+ []
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[5] [6 <./Figures/Tests1.png> <./Figures/Tests2.png>]
+<Figures/CallGraph.png, id=33, 1129.21875pt x 1048.91875pt>
+File: Figures/CallGraph.png Graphic file (type png)
+
+<use Figures/CallGraph.png>
+Overfull \hbox (7.48499pt too wide) in paragraph at lines 109--111
+[][]
+ []
+
+[7 <./Figures/CallGraph.png>] [8] (./TOPLATS_final_report.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 1313 strings out of 493747
- 18955 string characters out of 3143546
+ 1331 strings out of 493747
+ 19144 string characters out of 3143546
  74104 words of memory out of 3000000
- 4622 multiletter control sequences out of 15000+200000
- 5756 words of font info for 21 fonts, out of 3000000 for 9000
+ 4634 multiletter control sequences out of 15000+200000
+ 8194 words of font info for 29 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 37i,6n,23p,941b,210s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 37i,7n,23p,855b,233s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><
 /usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on TOPLATS_final_report.pdf (8 pages, 845226 bytes).
+Output written on TOPLATS_final_report.pdf (8 pages, 845485 bytes).
 PDF statistics:
  54 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream
