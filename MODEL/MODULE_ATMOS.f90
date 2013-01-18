@@ -54,10 +54,6 @@ contains
 
        roa,&
 
-! Energy balance variables
-
-       rahw_us,&
-
        GLOBAL)
 
     implicit none
@@ -73,7 +69,6 @@ contains
     real*8 f1par
     real*8 f3vpd,f4temp
     real*8 roa
-    real*8 rahw_us
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -424,7 +419,7 @@ tkmid = GRID_VARS%tkmid
 ! Energy balance variables
 
        CELL_VARS%ravd,CELL_VARS%rahd,CELL_VARS%ravd_us,CELL_VARS%rahd_us,CELL_VARS%rav_moss,CELL_VARS%rah_moss,&
-       GRID_VARS%rib,CELL_VARS%RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,CELL_VARS%rahw,rahw_us,&
+       GRID_VARS%rib,CELL_VARS%RaSnow,CELL_VARS%rib_us,CELL_VARS%ravw,CELL_VARS%ravw_us,CELL_VARS%rahw,CELL_VARS%rahw_us,&
 
 ! Water balance variables
 
