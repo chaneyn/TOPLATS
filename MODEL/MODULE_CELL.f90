@@ -81,11 +81,7 @@ contains
       type (GLOBAL_template) :: GLOBAL
       type (CELL_VARS_template) :: CELL_VARS
       integer ipix,i
-      real*8 snow,rain
-      real*8 sesq,xintst,smpet0,mul_fac,row,roi
-      real*8 appa,epetd,f1par,f3vpd,f4temp
-      real*8 rahd,rahw,rahw_us,RaSnow,ravd
-      real*8 roa,roa_ic,rrr,tcel,vppa,xlhv      
+      real*8 snow,rain,rrr      
       GLOBAL%mul_fac = 1.0d0
       
 !Point Data Initializations
