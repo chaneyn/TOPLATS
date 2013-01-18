@@ -4,8 +4,8 @@
 \title{Updating TOPLATS with Fortran 2003}
 \author{\\ \\ Nathaniel Chaney\\ Colby Fisher\\ Amanda Siemann\\ Ruolan Xu\\ Wang Zhan \\ \\ Department of Civil and Environmental Engineering}
 \date{}
-%\date{January 14, 2013}                                           % Activate to display a given date or no date
 
+%Begin Document
 \begin{document}
 
 \maketitle
@@ -15,9 +15,13 @@
 \end{center}
 
 \newpage
+
 \section{Introduction}
-{(Effi)}
-{\\ Introduce TOPLATS, our motivation and goals (adapted from design document)}
+Land surface hydrologic models are used to simulate the interaction between the atmosphere and land surface. Their main objective is to model the water and energy balances and also to accurately partition the surface fluxes. Their ability to simulate these fluxes from limited data is key for monitoring the hydrologic cycle at continental and global scales. One of the models used at a regional scale is TOPLATS which was developed at Princeton University during the 1990's. Time has shown that this model is an excellent bridge between coarse scale models and very fine resolution models, making it an excellent candidate to replace coarse scale models to study global hydrology. This is also due, in part, to the large increase in computational power over the past two decades. 
+
+The model was originally written in Fortran 77 and it falls along the lines of "spaghetti code". It was never developed with the intent of making it easy to switch components of the models. Some of the inherent deficiencies are the lack of proper decoupling between the I/O and the model through an appropriate interface and the fact that the parameterizations of physical processes (evaporation, infiltration, and runoff) were not appropriately modularized, making it practically impossible to quickly and efficiently update the model with new research. With a desire to now update this model and run it over much larger spatial scales than what it was originally intended for, we see this as a perfect opportunity to gravitate towards object-oriented programming in Fortran 2003. A description of the project components as well as our timeline for accomplishing these tasks is detailed in the following sections.
+
+Main goals of this project include: 1) Modularize the code based on the physics so that it will be easy to make changes within compartments; 2) Improve data structures by introduce derived data types; 3) Add parallel computing using OpenMP; 4) Make tests to ensure subroutines as well as the whole model produce same results as the original model. 
 
 \section{Interface}
 {(Nate)}
@@ -52,13 +56,29 @@ Not only was the original version of TOPLATS crippled by the massive subroutine 
 Another limitation of the original version of TOPLATS was the use of static memory allocation. Using this method, the size of all arrays needed to be provided at compile time, meaning that the users needed to alter the source files every time they used the model for a different domain. In order to improve upon this, the dynamic memory allocation features implemented in Fortran 90 were used. By dynamically allocating the arrays, the user is able to specify dimensions at run time, allowing for the model to be used across multiple domains without maintaining and compiling multiple versions of the model code.
 
 \section{Tests}
-{(Effi)}
-{\\ Catchment tests\\ Unit tests on subroutines}
+
+FORTRAN Unit Test Framework (FRUIT) is utilized for testing. We have two test programs - CATCHMENT\_TESTS\_DRIVER and TESTS\_DRIVER, each serving a different purpose.
+
+The CATCHMENT\_TESTS\_DRIVER runs the model and compares all the output variables with the original model. Although written in a messy way, the original model is validated in its physics and results. We have validated output from a sample input dataset, all we need in the catchment tests is to make sure our modified model reproduces the output at every time step. These tests were the first thing we wrote, which we ran every time before we made a commit to ensure we did not change any essential physics or algorithms.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=5.5in]{Figures/Tests1.png}
+	\label{Tests1}
+	\caption{Catchment tests example code(left) and success message (right)}
+\end{figure}
+
+The TESTS\_DRIVER runs tests on various subroutines. Considering the amount of subroutines and functions and that the model was previously validated, we only tested about 50 of them. Random values were given to the subroutine or function being tested, and the result value was compared with the true value. The true value was previously calculated by the original subroutine or function. 
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=5.5in]{Figures/Tests2.png}
+	\label{Tests1}
+	\caption{Subroutines tests example code(left) and success message (right)}
+\end{figure}
 
 \section{Parallelization}
 Parallelization is currently implemented using OpenMP and uses up to 8 cores on a single node, depending on the preference of the user.  In order to do this, the domain is split up into equal sized blocks and then is distributed among the threads. Calculations are then performed for each cell before the domain is reassembled and the regional processes are calculated. For the domain size that we are using the parallelization does not have a significant impact on the calculation time. It should be noted though that for future work, as the domain size increases, we believe that we will find that parallelization becomes increasingly important. In order to run the model on a global scale, we plan to implement parallelization through MPI in order to maximize the computational power of each node.
-
-
 
 \section{Valgrind}
 {(Colby)}
@@ -74,7 +94,12 @@ Parallelization is currently implemented using OpenMP and uses up to 8 cores on 
 \end{figure}
 
 \section{Conclusion}
-{(Effi)}
-{Lessons learned e.g. version control and github helps collaboration}
-{ \\ Future developement}
+
+We have accomplished most of our goals. Derived data types are implemented; modules are set up making it possible to swap physics; I/O is separated from other routines and enhanced; parallelization is added; main program is replaced with a clean interface. 
+
+Incredible changes were made to TOPLATS, which enable us to put the model from two decades ago to new uses. Nathaniel Chaney will continue to add MPI parallelization and run it on Blue Waters on high resolution global grids. 
+
+This project and the course has been beneficial to everyone in the project. We have learned how to effectively collaborate on the same program with great help form github. Testing has become an important part of our programming practices, which was almost absent before taking this course. All the tools we have used, github, Doxygen, Valgrind will continue to serve as our programming companions.
+
+
 \end{document}
