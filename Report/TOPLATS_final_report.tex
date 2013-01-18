@@ -128,6 +128,10 @@ We used gprof to examine the run time statistics and determine what portions of 
 
 As expected, the model spends a large amount of its time in the Update\_Cell module (~90\%). This result is mainly caused by the need to ensure energy balance closure. Energy balance closure means that the surface energy balance equation for each grid cell at each time step needs to be minimized. Any future improvement in performance (excluding parallelization) will need to address the nreb subroutine and use more efficient algorithms. Although there is room for improvement, we are happy with the performance of the model. The current runtime for 250 time steps over a 60X66 domain is around 5 seconds. In comparison, this runtime is much faster than most other hydrologic models that thoroughly solve the groundwater interactions between cells.
 
+\section{Documentation}
+
+For this project, the documentation was done using a comination of Doxygen and a Readme file for the manual. The Doxygen webpage is organized to show the model flow as well as all subroutines, functions, and variables. Relevant comments have been included for each subroutine using Doxygen syntax so that the user can easily identify the major processes and flow of the mdoel. The Doxygen for this project can be found at [insert web address here]. Additionally, the Readme manual describes hwo to run the model with the given data files and how to provide new data inputs. This Readme is viewable either on Github [insert web address here] or as part of the repository 
+
 \section{Conclusion}
 
 As described above, we have accomplished our major goals for this project. The changes to the original model included that derived data types were implemented (although not completely), modules were set up to simplify the code and make it simple to swap physics in the future, the I/O components were separated from other routines and enhanced, parallelization using OpenMP was added, and the main program was replaced with a much cleaner interface. 
