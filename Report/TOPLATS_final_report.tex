@@ -21,21 +21,26 @@ Land surface hydrologic models are used to simulate the interaction between the 
 
 The model was originally written in Fortran 77 and it falls along the lines of "spaghetti code". It was never developed with the intent of making it easy to switch components of the models. Some of the inherent deficiencies are the lack of proper decoupling between the I/O and the model through an appropriate interface and the fact that the parameterizations of physical processes (evaporation, infiltration, and runoff) were not appropriately modularized, making it practically impossible to quickly and efficiently update the model with new research. With a desire to now update this model and run it over much larger spatial scales than what it was originally intended for, we see this as a perfect opportunity to gravitate towards object-oriented programming in Fortran 2003. 
 
-Main goals of this project include: 1) Modularize the code based on the physics so that it will be easy to make changes within compartments; 2) Improve data structures by introduce derived data types; 3) Add parallel computing using OpenMP; 4) Make tests to ensure subroutines as well as the whole model produce same results as the original model. 
+The main goals of this project included: 1) Modularizing the code based on the physics so that it will be easy to swap physics; 2) Improve data structures by introduce derived data types; 3) Add parallel computing using OpenMP; 4) Make tests to ensure subroutines as well as the whole model produce same results as the original model. 
 
-The following table concludes the programming tools we have used.
+The following table concludes the programming tools we have used during development:
 
 %Table
-\begin{table}[h]
+\begin{table}[ht]
   \begin{center}
     \caption{Tools used in the project}
     \begin{tabular}{ | l | l | l | p{5cm} |}
     \hline
     Purpose & Tools \\ \hline
     Language & Fortran 2003 \\
+    Compiler & gfortran 4.46+ \\
+    Parallelizaton & OpenMP \\
     Testing & FRUIT \\ 
-    Version control & github \\ 
-    Profiling & Valgrind \\ 
+    Version control & Git and Github \\ 
+    Memory debugger & Valgrind \\ 
+    Profiler & gprof and gprof2dot\\ 
+    Editor & Vi, Kate, and Gedit \\
+    Operating system & Centos and Fedora \\
     Documentation & Doxygen \\ \hline
     \end{tabular}
   \end{center}
@@ -48,26 +53,28 @@ The following table concludes the programming tools we have used.
 {\\ Simplified input files}
 
 \section{Modularization}
-One of the tasks in the project is modularization. We set up 11 modules for the model and split tests from its own interface. Each module is written in a separate file. By modularization, we are able to reduce the total number of files from more than 50 to 11. The new TOPLATS model files are shown in Figure \ref{Modules1}. The model are consist of two main parts: MODULE\_CELL and MODULE\_CATCHMENT. MODULE\_CELL uses MODULE\_LAND, MODULE\_ATMOS, MODULE\_CANOPY and MODULE\_SNOW. The program IO is separated into MODULE\_IO and variables and data structures defined in MODULE\_VARIABLES. With modularization, swapping physics in the model becomes much easier since we are able to replace the subroutine or module instead of making changes to every related variables and functions throughout the model.
+One of the main tasks in the project was modularization. To this end, we took the original 100+ files written in F77 and split their functions and subroutines according to their purpose.  We set up 11 modules that are combined and used by the interface (TOPLATS\_DRIVER.f90) to run the model. Each module is written in a separate file, allowing us to reduce the number of files significantly down to 11.  The new TOPLATS model files are shown in Figure \ref{Modules1}. 
+
+The model consists of three main parts: MODULE\_CELL,  MODULE\_CATCHMENT, and MODULE\_REGIONAL. MODULE\_CELL uses MODULE\_LAND, MODULE\_ATMOS, MODULE\_CANOPY and MODULE\_SNOW. The program's IO was placed in MODULE\_IO and variables and data structures are defined in MODULE\_VARIABLES. With modularization, swapping physics in the model becomes much easier since we are able to replace the subroutine or module instead of making changes to every related variables and functions throughout the model. It also allows us to take an object-oriented programming approach and choose at runtime what physics we want to use.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=4.5in]{Figures/Modules1.png}
-	\label{Modules1}
+	\includegraphics[width=3.0in]{Figures/Modules1.png}
 	\caption{New TOPLATS model}
+	\label{Modules1}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=4.5in]{Figures/Modules2.png}
-	\label{Modules2}
+	\includegraphics[width=3.0in]{Figures/Modules2.png}
 	\caption{Snapshot of MODULE\_CELL.f90}
+	\label{Modules2}
 \end{figure}
 
-Within each module, as shown in Figure \ref{Modules2}, we first listed shared variables and structures from other modules, defined structures being shared by subroutines in the module if there is any, and then listed the subroutines that are related to the module. Routines are being regrouped by their function. 
+Within each module, as shown in Figure \ref{Modules2}, we first list shared variables and structures from other modules, defined structures being shared by subroutines in the module if there are any, and then list the subroutines that are related to the module. 
 
 \section{Variables}
-In the original version of TOPLATS, the variables were stored in one lengthy list. As previously mentioned, the hundreds of variables were passed into subroutines individually, causing extremely large subroutine calls. For the updated version of TOPLATS developed in this project, these hundreds of variables were organized into derived data types (structures) based upon function or purpose. In this way, structures could be passed into the modules and subroutines in relevant groups, thereby cleaning up the otherwise unmanageable code. In each larger subroutine, such as Atmos, the variables used in the code were replaced with the corresponding member of the structure. For each smaller subroutine, the members of the structures were passed into the subroutine individually to avoid passing in more variables than necessary.
+In the original version of TOPLATS, the variables were stored in one lengthy list. Hundreds of variables were passed into subroutines individually, causing extremely large subroutine calls. For the updated version of TOPLATS developed in this project, these hundreds of variables were organized into derived data types (structures) based upon function or purpose. In this way, structures could be passed into the modules and subroutines in relevant groups, thereby cleaning up the otherwise unmanageable code. In each larger subroutine, such as Atmos, the variables used in the code were replaced with the corresponding member of the structure. For each smaller subroutine, the members of the structures were passed into the subroutine individually to avoid passing in more variables than necessary.
 
 Not only was the original version of TOPLATS crippled by the massive subroutine calls, but it was also impaired by the unreasonable number of help files storing the initialized variables with their corresponding types. Each subroutine was associated with a help file which initialized new variables in each subroutine but which also re-initialized all variables which were passed into the subroutine. This process of re-initializing variables over and over was cumbersome and unnecessary. In the updated version of TOPLATS, the variables in structures are initialized within the structure, and the rest of the variables are only initialized within the larger subroutine in which they are used. In this way, hundreds of files were removed.
 
@@ -75,24 +82,24 @@ Another limitation of the original version of TOPLATS was the use of static memo
 
 \section{Tests}
 
-FORTRAN Unit Test Framework (FRUIT) is utilized for testing. We have two test programs - CATCHMENT\_TESTS\_DRIVER and TESTS\_DRIVER, each serving a different purpose.
+The FORTRAN Unit Test Framework (FRUIT) is used for testing. We have include two test programs: CATCHMENT\_TESTS\_DRIVER and TESTS\_DRIVER, each serving a different purpose.
 
-The CATCHMENT\_TESTS\_DRIVER runs the model and compares all the output variables with the original model. Although written in a messy way, the original model is validated in its physics and results. We have validated output from a sample input dataset, all we need in the catchment tests is to make sure our modified model reproduces the output at every time step. These tests were the first thing we wrote, which we ran every time before we made a commit to ensure we did not change any essential physics or algorithms.
+The CATCHMENT\_TESTS\_DRIVER runs the model and compares all the output variables with the original model over a test catchment. Although written in a messy way, the original model's results have been validated so starting from scratch seemed unnecessary. To this end, by using the validated output from a sample input data set, all we need to ensure in the catchment tests is that our our modified model reproduces the output at every time step. These tests were the first thing we wrote, which we ran every time before we made a commit to ensure we did not change any essential physics or algorithms. 
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=5.5in]{Figures/Tests1.png}
 	\label{Tests1}
-	\caption{Catchment tests example code(left) and success message (right)}
+	\caption{Catchment tests example code (left) and its corresponding assertions output (right)}
 \end{figure}
 
-The TESTS\_DRIVER runs tests on various subroutines. Considering the amount of subroutines and functions and that the model was previously validated, we only tested about 50 of them. Random values were given to the subroutine or function being tested, and the result value was compared with the true value. The true value was previously calculated by the original subroutine or function. 
+One of the major downfalls of testing the model against old output is the inability to then swap physics. To this end, a set of unit tests were devloped in TESTS\_DRIVER.90 to run tests on the individual subroutines by using random inpt values.  Considering the amount of subroutines and functions and that the model was previously validated, we only tested about 50 of them. Random values were given to the subroutine or function being tested, and the result value was compared with the true value. The true value was previously calculated by the original subroutine or function. As we move to the next step and we implement new subroutines, we need to ensure that the unit tests capture the same errors as the CATCHMENT\_TESTS.f90 does. This will allow to eventually completely replace those tests with the subroutine unit tests.
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=5.5in]{Figures/Tests2.png}
 	\label{Tests1}
-	\caption{Subroutines tests example code(left) and success message (right)}
+	\caption{Subroutines tests example code (left) and its corresponding assertions output (right)}
 \end{figure}
 
 \section{Parallelization}
