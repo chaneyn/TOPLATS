@@ -39,7 +39,7 @@ contains
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,&
+       GRID_VARS,&
        
 ! Energy fluxes and states
 
@@ -53,7 +53,6 @@ contains
     integer ipix,i
 
     real*8 uzw
-    real*8 tkmid
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
     data zero,one,two,three,four,five,six/0.d0,1.d0,2.d0,&
@@ -68,9 +67,6 @@ contains
 
 ! Temporarily changing over variables from old to new format
 uzw = GRID_MET%uzw
-tkmid = GRID_VARS%tkmid
-!rnetd, tkmidd, tkd, tcel, vppa, roa, f1par, rahw_us, ravd, rahd, f3vpd, f4temp,
-!appa, epetd, are problems
 
 
 ! ====================================================================
@@ -198,7 +194,7 @@ tkmid = GRID_VARS%tkmid
       if (i.eq.1) then
 
          call inittk(GRID_SOIL,GRID_VEG,GRID_VARS,GRID_SOIL%tdeep,&
-       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,tkmid,&
+       GRID_SOIL%tmid0,GRID_VEG%tmid0_moss,GRID_VARS%tkmid,&
        CELL_VARS%tkmid_us,CELL_VARS%tkmid_moss,CELL_VARS%tkel,&
        GRID_VEG%tk0moss,GRID_VARS%tkact,CELL_VARS%tkact_us,CELL_VARS%tkact_moss,&
        CELL_VARS%tskinact_moss,GRID_VARS%dshact,&
@@ -357,7 +353,8 @@ tkmid = GRID_VARS%tkmid
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,GRID_VARS%tkact,CELL_VARS%tkmid_us,CELL_VARS%tkact_us,CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,&
+       GRID_VARS,GRID_VARS%tkmid,GRID_VARS%tkact,CELL_VARS%tkmid_us,CELL_VARS%tkact_us,&
+       CELL_VARS%tskinact_moss,CELL_VARS%tkact_moss,&
        CELL_VARS%tkmid_moss,GRID_SOIL%Tdeepstep,&
 
 ! Energy fluxes and states
@@ -429,7 +426,6 @@ tkmid = GRID_VARS%tkmid
       endif
 
       GRID_MET%uzw = uzw
-      GRID_VARS%tkmid = tkmid
 
       return
 

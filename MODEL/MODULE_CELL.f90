@@ -138,7 +138,7 @@ GRID_VARS%epwms = 0.d0!epwms
 
 ! Temperature variables
 
-       GRID_VARS,tkmid,&
+       GRID_VARS,&
 
 ! Energy fluxes and states
 
