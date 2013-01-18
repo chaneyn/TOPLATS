@@ -142,7 +142,7 @@ GRID_VARS%epwms = 0.d0!epwms
 
 ! Energy fluxes and states
 
-       rnetd,tkd,tkmidd,GRID_SOIL,&
+       tkd,tkmidd,GRID_SOIL,&
 
        GLOBAL)
 

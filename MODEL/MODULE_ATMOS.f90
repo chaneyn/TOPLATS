@@ -43,7 +43,7 @@ contains
        
 ! Energy fluxes and states
 
-       rnetd,tkd,tkmidd,GRID_SOIL,&
+       tkd,tkmidd,GRID_SOIL,&
 
        GLOBAL)
 
@@ -54,7 +54,6 @@ contains
 
     real*8 uzw
     real*8 tkmid
-    real*8 rnetd
     real*8 tkd,tkmidd
     real*8 zero,one,two,three,four,five,six,rrr,rrrr,vpdef
 
@@ -365,7 +364,7 @@ tkmid = GRID_VARS%tkmid
 ! Energy fluxes and states
 
        GRID_VARS%dshact,CELL_VARS%epetd,GRID_VARS%gact,CELL_VARS%epetd_us,CELL_VARS%dshact_moss,CELL_VARS%xle_act_moss,&
-       rnetd,GRID_VEG%xled,GRID_VEG%hd,&
+       GRID_VEG%rnetd,GRID_VEG%xled,GRID_VEG%hd,&
        GRID_VEG%gd,GRID_VEG%dshd,tkd,tkmidd,GRID_VEG%rnetw,GRID_VEG%xlew,GRID_VEG%hw,GRID_VEG%gw,&
        GRID_VEG%dshw,GRID_VEG%tkw,&
        GRID_VEG%tkmidw,CELL_VARS%tskinactd_moss,CELL_VARS%tkactd_moss,CELL_VARS%tkmidactd_moss,&
@@ -423,7 +422,7 @@ tkmid = GRID_VARS%tkmid
         call petpen(GRID_VEG,GRID_MET,GRID_VARS,CELL_VARS%tcel,CELL_VARS%vpsat,vpdef,CELL_VARS%f1par,GRID_VEG%albd,&
        GRID_VEG%xlai,GRID_MET%rsd,GRID_VEG%rsmin,GRID_VEG%rsmax,GRID_VEG%Rpl,&
        CELL_VARS%tkel,CELL_VARS%vppa,CELL_VARS%f3vpd,GRID_VEG%f3vpdpar,CELL_VARS%f4temp,GRID_VEG%trefk,&
-       GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
+       GRID_VEG%f4temppar,GRID_VARS%rnetpn,GRID_VARS%gbspen,GRID_VEG%rnetd,GRID_VEG%rnetw,GRID_VEG%gd,GRID_VEG%gw,&
        GRID_VEG%rescan,CELL_VARS%ravd,CELL_VARS%xlhv,&
        GRID_VARS%row,CELL_VARS%epetd,GRID_VARS%epetw,CELL_VARS%ravw,CELL_VARS%psychr,GRID_VEG%xled,GRID_VEG%xlew,GRID_VEG%hd,&
        GRID_VEG%hw,GRID_VARS%cp,CELL_VARS%roa)
