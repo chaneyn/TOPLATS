@@ -22,18 +22,18 @@ toleb 0.50 #Tolerance for skin temperature (K)
 dtveg 100 #Number of time steps between updating vegetation parameters
 
 #INPUT FILES
-TI_fname 'INPUT/TI'
-Subbasin_fname 'INPUT/subbasin'
-K_0_fname 'INPUT/K_0.img'
-CL_Table_fname 'INPUT/CL_Table'
-SOIL_fname 'INPUT/soil.bin'
-VEG_fname 'INPUT/veg.bin'
-DVEG_fname 'INPUT/dveg.bin'
-FORCING_fname 'INPUT/FORCING_01202005_10202005.bin'
+TI_fname 'TESTS/INPUT/TI'
+Subbasin_fname 'TESTS/INPUT/subbasin'
+K_0_fname 'TESTS/INPUT/K_0.img'
+CL_Table_fname 'TESTS/INPUT/CL_Table'
+SOIL_fname 'TESTS/INPUT/soil.bin'
+VEG_fname 'TESTS/INPUT/veg.bin'
+DVEG_fname 'TESTS/INPUT/dveg.bin'
+FORCING_fname 'TESTS/INPUT/FORCING_01202005_10202005.bin'
 
 #OUTPUT FILES
-OUTPUT_fname 'OUTPUT/OUTPUT.bin'
-REGIONAL_fname 'OUTPUT/Regional_Variables.txt'
+OUTPUT_fname 'TESTS/OUTPUT/OUTPUT.bin'
+REGIONAL_fname 'TESTS/OUTPUT/Regional_Variables.txt'
 
 #PARALLELIZATION
 nthreads 1 #Number of threads per node (OpenMP)
