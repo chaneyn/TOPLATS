@@ -616,8 +616,8 @@ vegnvars = 20
 noutvars = 1
 dvegnvars = 2
 nforcingvars = 7;
-nrow = 60
-ncol = 66
+nrow = GLOBAL%nrow
+ncol = GLOBAL%ncol
 
 !Define the pointer number of each file
 GLOBAL%TI_FILE%fp = 101
@@ -634,7 +634,7 @@ GLOBAL%REGIONAL_FILE%fp = 110
 !Open the files
 
 !Topographic index file
-open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',access='direct',recl=4)
+open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
 
 !Subbasin distribution file
 open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',access='direct',recl=4)
@@ -1522,69 +1522,51 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-      subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix,fp)
+subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix,fp)
 
-      implicit none
-      integer :: ipixnum(nrow,ncol),ixpix(nrow*ncol),iypix(nrow*ncol)
-      integer :: nrow,ncol,npix
-      integer :: ip,irow,icol,fp
-      real*8 :: atb(nrow*ncol)
-      real*4 :: tempatb
+  implicit none
+  integer :: ipixnum(nrow,ncol),ixpix(nrow*ncol),iypix(nrow*ncol)
+  integer :: nrow,ncol,npix
+  integer :: ip,irow,icol,fp,x,y
+  real*8 :: atb(nrow*ncol),atb_2d(ncol,nrow)
+  real*4 :: temp(ncol,nrow)
+  real*8 :: undef
+  undef = -999.9d0
 
-! ====================================================================
-! Initialize pixel number counter.
-! ====================================================================
+  !Read in the topographic index data
+  read(fp,rec=1) temp
 
-      ip = 1
+  ! Convert from single to double point precision
+  atb_2d = temp
 
-! ====================================================================
-! Loop through image row by row.
-! ====================================================================
+  ! Convert to model format
+  call convert_grads2model(atb,atb_2d,ipixnum,nrow,ncol,undef)
 
-      do 500 irow=1,nrow
+  ! Extract all the positioning information of the original model
+  x = 1
+  y = 0
+  ipixnum = 0
+  ip = 0
+  do irow = 1,nrow
+    do icol =1,ncol
+      if (y.eq.nrow)then
+        y=0
+        x=x+1
+      endif
+      y = y +1
+      if (nint(atb_2d(x,y)).ne.nint(undef))then
+        ip = ip + 1
+        ipixnum(irow,icol) = ip
+        ixpix(ip) = icol
+        iypix(ip) = irow
+      endif
+    enddo
+  enddo
 
-         do 400 icol=1,ncol
+  ! Set the total number of pixels.
+  npix = ip
 
-! --------------------------------------------------------------------
-! Read image value at irow,icol.
-! --------------------------------------------------------------------
-
-
-               read(fp,rec=((irow-1)*ncol) + icol) tempatb
-
-! --------------------------------------------------------------------
-! Check for atb value at current location.  If there is
-! a value then record the value and location.  If not
-! then mark location as outside the area of interest.
-! --------------------------------------------------------------------
-
-            if (tempatb.gt.0.0) then
-
-               atb(ip) = tempatb
-               ipixnum(irow,icol) = ip
-               ixpix(ip) = icol
-               iypix(ip) = irow
-               ip = ip + 1
-
-            else
-
-               ipixnum(irow,icol) = 0
-
-            endif
-
-400      continue
-
-500   continue
-
-! ====================================================================
-! Set the total number of pixels.
-! ====================================================================
-
-      npix = ip - 1
-
-      return
-
-      end subroutine rdatb
+end subroutine rdatb
 
 ! ====================================================================
 !
@@ -1807,5 +1789,65 @@ subroutine Extract_Info_General_File_Double(strid,GLOBAL,read_arg)
   enddo
 
 end subroutine Extract_Info_General_File_Double
+
+!>Subroutine to convert the 1-d format back to 2-d grads format
+subroutine convert_model2grads(array_1d,array_2d,ipixnum,nrow,ncol,undef)
+
+  implicit none
+  integer,intent(in) :: nrow,ncol,ipixnum(nrow,ncol)
+  real*8,intent(in) :: array_1d(nrow*ncol),undef
+  real*8,intent(inout) :: array_2d(ncol,nrow)
+  integer :: x,y,irow,icol
+
+  !Map the kk position ot hte i,j position
+  x = 1
+  y = 0
+  do irow = 1,nrow
+    do icol =1,ncol
+      if (y.eq.nrow)then
+        y=0
+        x=x+1
+      endif
+      y = y +1
+      if (ipixnum(irow,icol).gt.0)then
+        array_2d(x,y) = array_1d(ipixnum(irow,icol))
+      else
+        array_2d(x,y) = undef
+      endif
+    enddo
+  enddo
+
+end subroutine
+
+!>Subroutine to convert the 1-d format back to grads format
+subroutine convert_grads2model(array_1d,array_2d,ipixnum,nrow,ncol,undef)
+
+  implicit none
+  integer,intent(in) :: nrow,ncol
+  integer,intent(inout) :: ipixnum(nrow,ncol)
+  real*8,intent(in) :: array_2d(ncol,nrow),undef
+  real*8,intent(inout) :: array_1d(ncol*nrow)
+  integer :: x,y,irow,icol,kk
+
+  !Map the kk position ot hte i,j position
+  x = 1
+  y = 0
+  kk = 0
+  do irow = 1,nrow
+    do icol =1,ncol
+      if (y.eq.nrow)then
+        y=0
+        x=x+1
+      endif
+      y = y +1
+      if (nint(array_2d(x,y)).ne.nint(undef))then
+        kk = kk + 1
+        ipixnum(irow,icol) = kk
+        array_1d(kk) = array_2d(x,y)
+      endif
+    enddo
+  enddo
+
+end subroutine
 
 END MODULE MODULE_IO

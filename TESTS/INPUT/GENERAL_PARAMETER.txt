@@ -22,7 +22,7 @@ toleb 0.50 #Tolerance for skin temperature (K)
 dtveg 100 #Number of time steps between updating vegetation parameters
 
 #INPUT FILES
-TI_fname 'TESTS/INPUT/TI'
+TI_fname 'TESTS/INPUT/TI.bin'
 Subbasin_fname 'TESTS/INPUT/subbasin'
 K_0_fname 'TESTS/INPUT/K_0.img'
 CL_Table_fname 'TESTS/INPUT/CL_Table'
