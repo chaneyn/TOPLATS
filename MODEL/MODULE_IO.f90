@@ -455,7 +455,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   ! transformation from pixel number to row/column.
   !####################################################################
 
-  call rdatb(atb,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum,IO%ixpix,IO%iypix,GLOBAL%npix,GLOBAL%TI_FILE%fp)
+  call rdatb(atb,GLOBAL,IO)
 
 ! ====================================================================
 ! Read in the catchment look-up table - read different values based
@@ -1522,49 +1522,49 @@ end subroutine Write_Regional
 !
 ! ====================================================================
 
-subroutine rdatb(atb,nrow,ncol,ipixnum,ixpix,iypix,npix,fp)
+subroutine rdatb(atb,GLOBAL,IO)
 
   implicit none
-  integer :: ipixnum(nrow,ncol),ixpix(nrow*ncol),iypix(nrow*ncol)
-  integer :: nrow,ncol,npix
+  type (GLOBAL_template) :: GLOBAL
+  type (IO_template),intent(inout) :: IO
   integer :: ip,irow,icol,fp,x,y
-  real*8 :: atb(nrow*ncol),atb_2d(ncol,nrow)
-  real*4 :: temp(ncol,nrow)
+  real*8 :: atb(GLOBAL%nrow*GLOBAL%ncol),atb_2d(GLOBAL%ncol,GLOBAL%nrow)
+  real*4 :: temp(GLOBAL%ncol,GLOBAL%nrow)
   real*8 :: undef
-  undef = -999.9d0
 
   !Read in the topographic index data
-  read(fp,rec=1) temp
+  read(GLOBAL%TI_FILE%fp,rec=1) temp
 
   ! Convert from single to double point precision
   atb_2d = temp
 
   ! Convert to model format
-  call convert_grads2model(atb,atb_2d,ipixnum,nrow,ncol,undef)
+  call convert_grads2model(atb,atb_2d,IO%ipixnum,GLOBAL%nrow,&
+                           GLOBAL%ncol,GLOBAL%TI_FILE%undef)
 
   ! Extract all the positioning information of the original model
   x = 1
   y = 0
-  ipixnum = 0
+  IO%ipixnum = 0
   ip = 0
-  do irow = 1,nrow
-    do icol =1,ncol
-      if (y.eq.nrow)then
+  do irow = 1,GLOBAL%nrow
+    do icol =1,GLOBAL%ncol
+      if (y.eq.GLOBAL%nrow)then
         y=0
         x=x+1
       endif
       y = y +1
-      if (nint(atb_2d(x,y)).ne.nint(undef))then
+      if (nint(atb_2d(x,y)).ne.nint(GLOBAL%TI_FILE%undef))then
         ip = ip + 1
-        ipixnum(irow,icol) = ip
-        ixpix(ip) = icol
-        iypix(ip) = irow
+        IO%ipixnum(irow,icol) = ip
+        IO%ixpix(ip) = icol
+        IO%iypix(ip) = irow
       endif
     enddo
   enddo
 
   ! Set the total number of pixels.
-  npix = ip
+  GLOBAL%npix = ip
 
 end subroutine rdatb
 
@@ -1674,7 +1674,8 @@ subroutine Read_General_File(GLOBAL)
   !Number of time steps between updating vegetation parameters 
   call Extract_Info_General_File('dtveg',GLOBAL,GLOBAL%dtveg)
   !Topographic index filename
-  call Extract_Info_General_File('TI_fname',GLOBAL,GLOBAL%TI_FILE%fname)
+  call Extract_Info_General_File_File_Info('TI_fname',GLOBAL,GLOBAL%TI_FILE%fname,&
+       GLOBAL%TI_FILE%spatial_res,GLOBAL%TI_FILE%undef)
   !Basin distribution filename
   call Extract_Info_General_File('Subbasin_fname',GLOBAL,GLOBAL%Subbasin_FILE%fname)
   !Saturated Hydraulic Conductivity filename
@@ -1789,6 +1790,37 @@ subroutine Extract_Info_General_File_Double(strid,GLOBAL,read_arg)
   enddo
 
 end subroutine Extract_Info_General_File_Double
+
+!>Subroutine to extract all string variables from the general parameters file
+subroutine Extract_Info_General_File_File_Info(strid,GLOBAL,filename,res,undef)
+
+  implicit none
+  type (GLOBAL_template),intent(inout) :: GLOBAL
+  integer :: flag
+  character(len=*) :: strid
+  character(len=400) :: filename
+  character(len=200) :: string
+  real*8 :: res,undef
+  !Read until we find what we need
+  do
+    read(GLOBAL%GENERAL_FILE%fp,*,iostat=flag)string
+    if (string .eq. strid)then
+      !go back one record
+      backspace(GLOBAL%GENERAL_FILE%fp)
+      !read the desired parameter/file
+      read(GLOBAL%GENERAL_FILE%fp,*)string,filename,res,undef
+      !Go back to the beginning of the file and exit
+      rewind(GLOBAL%GENERAL_FILE%fp)
+      exit
+    endif
+    if (flag .ne. 0)then
+      print*,'Missing the ',trim(strid),' input parameter. Check the',&
+             ' General Parameter file'
+      stop
+    endif
+  enddo
+
+end subroutine Extract_Info_General_File_File_Info
 
 !>Subroutine to convert the 1-d format back to 2-d grads format
 subroutine convert_model2grads(array_1d,array_2d,ipixnum,nrow,ncol,undef)

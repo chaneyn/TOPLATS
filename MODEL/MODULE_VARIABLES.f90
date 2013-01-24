@@ -6,6 +6,10 @@ type FILE_template
         character(len=400) :: fname
         !pointer
         integer :: fp
+        !spatial resolution of data
+        real*8 :: spatial_res
+        !undefined value
+        real*8 :: undef
 end type FILE_template
 
 !GRID DATA
