@@ -21,15 +21,17 @@ maxnri 100 #Maximum number of iterations for energy balance solution
 toleb 0.50 #Tolerance for skin temperature (K)
 dtveg 100 #Number of time steps between updating vegetation parameters
 
-#INPUT FILES
-TI_fname 'TESTS/INPUT/TI.bin' 0.00083333333 -999.90
-Subbasin_fname 'TESTS/INPUT/subbasin'
-K_0_fname 'TESTS/INPUT/K_0.img'
+#GRID INPUT FILES filename resolution(arcsec) undef value minlat(arcsec) minlon(arcsec) nlat nlon
+TI_fname 'TESTS/INPUT/TI.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+Subbasin_fname 'TESTS/INPUT/Subbasin.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+K_0_fname 'TESTS/INPUT/K0.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+SOIL_fname 'TESTS/INPUT/soil.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+VEG_fname 'TESTS/INPUT/veg.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+DVEG_fname 'TESTS/INPUT/dveg.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+FORCING_fname 'TESTS/INPUT/FORCING_01202005_10202005.bin' 15.0 -999.900 -301561.0 113328.0 66 60
+
+#OTHER INPUT FILES
 CL_Table_fname 'TESTS/INPUT/CL_Table'
-SOIL_fname 'TESTS/INPUT/soil.bin'
-VEG_fname 'TESTS/INPUT/veg.bin'
-DVEG_fname 'TESTS/INPUT/dveg.bin'
-FORCING_fname 'TESTS/INPUT/FORCING_01202005_10202005.bin'
 
 #OUTPUT FILES
 OUTPUT_fname 'TESTS/OUTPUT/OUTPUT.bin'

@@ -174,7 +174,7 @@ end subroutine
       type (GRID_MET_template),intent(inout) :: MET(GLOBAL%nrow*GLOBAL%ncol)
       type (IO_template),intent(in) :: IO
       integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
-      integer :: forcingnvars,i
+      integer :: forcingnvars,i,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
       ipixnum = IO%ipixnum
       forcingnvars = 7
@@ -213,6 +213,21 @@ end subroutine
 ! Precipitation
 
       call rdforc(MET%pptms,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,7))
+
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol 
+      ip = ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        MET(ip)%tdry = TempArray(MET(ip)%tdry_MAP%ilon,MET(ip)%tdry_MAP%ilat,5)
+        MET(ip)%rld = TempArray(MET(ip)%rld_MAP%ilon,MET(ip)%rld_MAP%ilat,1)
+        MET(ip)%press = TempArray(MET(ip)%press_MAP%ilon,MET(ip)%press_MAP%ilat,2)
+        MET(ip)%rh = TempArray(MET(ip)%rh_MAP%ilon,MET(ip)%rh_MAP%ilat,3)
+        MET(ip)%rsd = TempArray(MET(ip)%rsd_MAP%ilon,MET(ip)%rsd_MAP%ilat,4)
+        MET(ip)%uzw = TempArray(MET(ip)%uzw_MAP%ilon,MET(ip)%uzw_MAP%ilat,6)
+        MET(ip)%pptms = TempArray(MET(ip)%pptms_MAP%ilon,MET(ip)%pptms_MAP%ilat,7)
+      endif
+    enddo
+  enddo
        
       end subroutine
 
@@ -430,6 +445,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   integer,dimension(:),allocatable :: icount
   real*8,dimension(:),allocatable :: atb,ti,zbar0,sumatb,sumlti,qb0,lte
   real*8,dimension(:),allocatable :: ki
+  real*8,dimension(:,:),allocatable :: array_2d
+  real*8,dimension(:),allocatable :: array_1d
+  real*4,dimension(:,:),allocatable :: temp
 
   !#####################################################################
   ! Allocate memory
@@ -490,26 +508,93 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
       endif
 
+  ! Set the global grid information to the same as the topographic index
+  GLOBAL%minlat = GLOBAL%TI_FILE%minlat
+  GLOBAL%minlon = GLOBAL%TI_FILE%minlon
+  GLOBAL%spatial_res = GLOBAL%TI_FILE%spatial_res
+  GLOBAL%nrow = GLOBAL%TI_FILE%nlat
+  GLOBAL%ncol = GLOBAL%TI_FILE%nlon
+
+  ! Map other variables using nni to the topographic index grid
+  !Air temperature
+  call spatial_mapping(GLOBAL,GRID%MET%tdry_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Precipitation
+  call spatial_mapping(GLOBAL,GRID%MET%pptms_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Downward Longwave Radiation
+  call spatial_mapping(GLOBAL,GRID%MET%rld_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Downward Shortwave Radiation
+  call spatial_mapping(GLOBAL,GRID%MET%rsd_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Pressure
+  call spatial_mapping(GLOBAL,GRID%MET%press_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Mean Wind Speed
+  call spatial_mapping(GLOBAL,GRID%MET%uzw_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Relative Humidity
+  call spatial_mapping(GLOBAL,GRID%MET%rh_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+
 ! ====================================================================
 ! Read the catchment image.
 ! ====================================================================
 
-      GRID%VARS%icatch = 0
-      call rdimgi(GRID%VARS%icatch,GLOBAL%Subbasin_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+  GRID%VARS%icatch = 0
+  allocate(array_2d(GLOBAL%Subbasin_FILE%nlon,GLOBAL%Subbasin_FILE%nlat))
+  allocate(temp(GLOBAL%Subbasin_FILE%nlon,GLOBAL%Subbasin_FILE%nlat))
+  allocate(array_1d(GLOBAL%Subbasin_FILE%nlon*GLOBAL%Subbasin_FILE%nlat))
+
+  read(GLOBAL%Subbasin_FILE%fp,rec=1)temp
+
+  ! Convert from single to double point precision
+  array_2d = temp
+
+  ! Convert to model format
+  call convert_grads2model(array_1d,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Subbasin_FILE%undef)
+  GRID%VARS%icatch = int(array_1d)
+
+  deallocate(array_2d)
+  deallocate(temp)
+  deallocate(array_1d)
+      
+!      call convert_model2grads(dble(GRID%VARS%icatch),array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Subbasin_FILE%undef)
+!      open(10000,file='Subbasin.bin',form='unformatted',access='direct',recl=4*GLOBAL%nrow*GLOBAL%ncol)
+!      temp = array_2d
+!      write(10000,rec=1)temp
+!      close(10000)
 
 ! ====================================================================
 ! Read image of transmissivities for use in calculating the 
 ! soils-topographi! index.
 ! ====================================================================
 
-      call rdimgr(ki,GLOBAL%K0_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
-      do kk=1,GLOBAL%nrow*GLOBAL%ncol
-        if (GRID(kk)%VARS%icatch .gt. 0)then
-          ti(kk) = ki(kk)/CAT(GRID(kk)%VARS%icatch)%ff
-        else
-          ti(kk) = 0.0
-        endif
-      enddo
+  allocate(array_2d(GLOBAL%K0_FILE%nlon,GLOBAL%K0_FILE%nlat))
+  allocate(temp(GLOBAL%K0_FILE%nlon,GLOBAL%K0_FILE%nlat))
+  allocate(array_1d(GLOBAL%K0_FILE%nlon*GLOBAL%K0_FILE%nlat))
+
+      !call rdimgr(ki,GLOBAL%K0_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+      !call convert_model2grads(ki,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%K0_FILE%undef)
+      !open(10000,file='K0.bin',form='unformatted',access='direct',recl=4*GLOBAL%nrow*GLOBAL%ncol)
+      !temp = array_2d
+      !write(10000,rec=1)temp
+      !close(10000)
+  !HERE!!!
+  read(GLOBAL%K0_FILE%fp,rec=1)temp
+
+  ! Convert from single to double point precision
+  array_2d = temp
+
+  ! Convert to model format
+  call convert_grads2model(array_1d,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%K0_FILE%undef)
+  ki = array_1d
+
+  do kk=1,GLOBAL%nrow*GLOBAL%ncol
+    if (GRID(kk)%VARS%icatch .gt. 0)then
+      ti(kk) = ki(kk)/CAT(GRID(kk)%VARS%icatch)%ff
+    else
+      ti(kk) = 0.0
+    endif
+  enddo
+
+  deallocate(array_2d)
+  deallocate(temp)
+  deallocate(array_1d)
 
 ! ====================================================================
 ! Calculate the average topographi! index value, the average of 
@@ -637,10 +722,10 @@ GLOBAL%REGIONAL_FILE%fp = 110
 open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
 
 !Subbasin distribution file
-open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',access='direct',recl=4)
+open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
 
 !Saturated hydraulic conductivity file
-open(unit=GLOBAL%K0_FILE%fp,file=GLOBAL%K0_FILE%fname,form='unformatted',access='direct',recl=4)
+open(unit=GLOBAL%K0_FILE%fp,file=GLOBAL%K0_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
 
 !Catchment table parameters file
 open(unit=GLOBAL%CL_table_FILE%fp,file=GLOBAL%CL_table_FILE%fname)
@@ -1674,22 +1759,21 @@ subroutine Read_General_File(GLOBAL)
   !Number of time steps between updating vegetation parameters 
   call Extract_Info_General_File('dtveg',GLOBAL,GLOBAL%dtveg)
   !Topographic index filename
-  call Extract_Info_General_File_File_Info('TI_fname',GLOBAL,GLOBAL%TI_FILE%fname,&
-       GLOBAL%TI_FILE%spatial_res,GLOBAL%TI_FILE%undef)
+  call Extract_Info_General_File_File_Info('TI_fname',GLOBAL,GLOBAL%TI_FILE)
   !Basin distribution filename
-  call Extract_Info_General_File('Subbasin_fname',GLOBAL,GLOBAL%Subbasin_FILE%fname)
+  call Extract_Info_General_File_File_Info('Subbasin_fname',GLOBAL,GLOBAL%Subbasin_FILE)
   !Saturated Hydraulic Conductivity filename
-  call Extract_Info_General_File('K_0_fname',GLOBAL,GLOBAL%K0_FILE%fname)
+  call Extract_Info_General_File_File_Info('K_0_fname',GLOBAL,GLOBAL%K0_FILE)
   !Catchment parameter table
   call Extract_Info_General_File('CL_Table_fname',GLOBAL,GLOBAL%CL_table_FILE%fname)
   !Soil file
-  call Extract_Info_General_File('SOIL_fname',GLOBAL,GLOBAL%SOIL_FILE%fname)
+  call Extract_Info_General_File_File_Info('SOIL_fname',GLOBAL,GLOBAL%SOIL_FILE)
   !Vegetation file
-  call Extract_Info_General_File('VEG_fname',GLOBAL,GLOBAL%VEG_FILE%fname)
+  call Extract_Info_General_File_File_Info('VEG_fname',GLOBAL,GLOBAL%VEG_FILE)
   !Dynamic vegetation file
-  call Extract_Info_General_File('DVEG_fname',GLOBAL,GLOBAL%DVEG_FILE%fname)
+  call Extract_Info_General_File_File_Info('DVEG_fname',GLOBAL,GLOBAL%DVEG_FILE)
   !Forcing file
-  call Extract_Info_General_File('FORCING_fname',GLOBAL,GLOBAL%FORCING_FILE%fname)
+  call Extract_Info_General_File_File_Info('FORCING_fname',GLOBAL,GLOBAL%FORCING_FILE)
   !Output file
   call Extract_Info_General_File('OUTPUT_fname',GLOBAL,GLOBAL%OUTPUT_FILE%fname)
   !Output file
@@ -1792,15 +1876,15 @@ subroutine Extract_Info_General_File_Double(strid,GLOBAL,read_arg)
 end subroutine Extract_Info_General_File_Double
 
 !>Subroutine to extract all string variables from the general parameters file
-subroutine Extract_Info_General_File_File_Info(strid,GLOBAL,filename,res,undef)
+subroutine Extract_Info_General_File_File_Info(strid,GLOBAL,FILE_INFO)
 
   implicit none
   type (GLOBAL_template),intent(inout) :: GLOBAL
+  type (FILE_template),intent(inout) :: FILE_INFO
   integer :: flag
   character(len=*) :: strid
   character(len=400) :: filename
   character(len=200) :: string
-  real*8 :: res,undef
   !Read until we find what we need
   do
     read(GLOBAL%GENERAL_FILE%fp,*,iostat=flag)string
@@ -1808,7 +1892,8 @@ subroutine Extract_Info_General_File_File_Info(strid,GLOBAL,filename,res,undef)
       !go back one record
       backspace(GLOBAL%GENERAL_FILE%fp)
       !read the desired parameter/file
-      read(GLOBAL%GENERAL_FILE%fp,*)string,filename,res,undef
+      read(GLOBAL%GENERAL_FILE%fp,*)string,FILE_INFO%fname,FILE_INFO%spatial_res,&
+        FILE_INFO%undef,FILE_INFO%minlat,FILE_INFO%minlon,FILE_INFO%nlat,FILE_INFO%nlon
       !Go back to the beginning of the file and exit
       rewind(GLOBAL%GENERAL_FILE%fp)
       exit
@@ -1876,6 +1961,35 @@ subroutine convert_grads2model(array_1d,array_2d,ipixnum,nrow,ncol,undef)
         kk = kk + 1
         ipixnum(irow,icol) = kk
         array_1d(kk) = array_2d(x,y)
+      endif
+    enddo
+  enddo
+
+end subroutine
+
+!>Subroutine to create the mapping between two grids
+subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
+
+  implicit none
+  type(GLOBAL_template),intent(in) :: GLOBAL
+  type(FILE_template),intent(in) :: FILE_INFO
+  type(MAP_template),intent(inout) :: MAP(GLOBAL%nrow*GLOBAL%ncol)
+  integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
+  integer :: irow,icol,irow_alt,icol_alt
+  real*8 :: lat_ref,lon_ref,lat_res,lon_res
+
+  !Find the latitude and longitude of the point of the reference grid
+  do irow = 1,GLOBAL%nrow
+    do icol = 1,GLOBAL%ncol
+      if (ipixnum(irow,icol) .gt. 0)then
+        lat_ref = GLOBAL%minlat + (irow-1)*GLOBAL%spatial_res 
+        lon_ref = GLOBAL%minlon + (icol-1)*GLOBAL%spatial_res
+        ! Find the closest latitude and longitude on the other grid
+        irow_alt = nint((lat_ref - FILE_INFO%minlat)/FILE_INFO%spatial_res) + 1
+        icol_alt = nint((lon_ref - FILE_INFO%minlon)/FILE_INFO%spatial_res) + 1
+        ! Place mapping in array
+        MAP(ipixnum(irow,icol))%ilat = irow_alt
+        MAP(ipixnum(irow,icol))%ilon = icol_alt
       endif
     enddo
   enddo

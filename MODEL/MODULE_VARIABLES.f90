@@ -1,21 +1,30 @@
 MODULE MODULE_VARIABLES
 
+!MAPPING STRUCTURES
+type MAP_template
+  integer :: ilat,ilon
+endtype
+
 !IO STRUCTURES
 type FILE_template
-        !Filename
-        character(len=400) :: fname
-        !pointer
-        integer :: fp
-        !spatial resolution of data
-        real*8 :: spatial_res
-        !undefined value
-        real*8 :: undef
+  !Filename
+  character(len=400) :: fname
+  !pointer
+  integer :: fp
+  !spatial resolution of data
+  real*8 :: spatial_res
+  !undefined value
+  real*8 :: undef
+  !dimensions
+  real*8 :: minlat,minlon
+  integer :: nlat,nlon
 end type FILE_template
 
 !GRID DATA
 
 type GRID_MET_template
         real*8 :: tdry,rh,press,pptms,rld,rsd,uzw
+        type(MAP_template) :: tdry_MAP,rh_MAP,press_MAP,pptms_MAP,rld_MAP,rsd_MAP,uzw_MAP
 end type GRID_MET_template
 
 type GRID_SOIL_template
@@ -209,6 +218,12 @@ type GLOBAL_template
         type(FILE_template) :: FORCING_FILE
         type(FILE_template) :: OUTPUT_FILE
         type(FILE_template) :: REGIONAL_FILE
+  !spatial resolution of data
+  real*8 :: spatial_res
+  !dimensions
+  real*8 :: minlat,minlon
+  integer :: nlat,nlon
+
         
 end type GLOBAL_template
 
