@@ -8,8 +8,6 @@ implicit none
 
 type IO_template
   integer,allocatable,dimension(:,:) :: ipixnum
-  integer,allocatable,dimension(:,:) :: ipixnum_original
-  integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
 interface Extract_Info_General_File
@@ -253,27 +251,6 @@ end subroutine
       end subroutine
 
 ! ####################################################################
-!> Subroutine to convert data to original setup
-! ####################################################################
-
-      subroutine rdforc(pixdat,nrow,ncol,ipixnum,data_in)
-
-      implicit none
-      integer,intent(in) :: nrow,ncol
-      integer :: l,m
-      real,dimension(:,:),intent(in) :: data_in(ncol,nrow)
-      integer,dimension(:,:),intent(in) :: ipixnum
-      real*8,dimension(:),intent(inout) :: pixdat
-
-      do l=1,ncol
-        do m=1,nrow
-          if (ipixnum(m,l) .gt. 0)pixdat(ipixnum(m,l)) = data_in(l,m)
-        enddo
-      enddo
-
-      end subroutine rdforc
-
-! ####################################################################
 !> Subroutine to open input/output files, read and initialize time in-variant data.
 ! ####################################################################
 
@@ -477,8 +454,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   allocate(CAT(GLOBAL%ncatch))
   allocate(GRID(GLOBAL%nrow*GLOBAL%ncol))
   allocate(IO%ipixnum(GLOBAL%nrow,GLOBAL%ncol))
-  allocate(IO%ixpix(GLOBAL%nrow*GLOBAL%ncol))
-  allocate(IO%iypix(GLOBAL%nrow*GLOBAL%ncol))
   allocate(icount(GLOBAL%ncatch))
   allocate(atb(GLOBAL%nrow*GLOBAL%ncol))
   allocate(ti(GLOBAL%nrow*GLOBAL%ncol))
@@ -917,7 +892,7 @@ end subroutine Write_Regional
     do ilon = 1,GLOBAL%ncol
       ip = IO%ipixnum(ilat,ilon)
       if (ip .gt. 0)then
-        GRID(ip)%VEG = GRID_VEG_2D(GRID(ip)%VEG%MAP%ilon,GRID(ip)%VEG%MAP%ilat)
+        GRID(ip)%VEG = GRID_VEG_2D(ilon,ilat)
       endif
     enddo
   enddo
@@ -1583,64 +1558,6 @@ end subroutine Write_Regional
 
 ! ====================================================================
 !
-!			subroutine rdimgr
-!
-! ====================================================================
-!
-!> Subroutine to read in an image of 4 byte reals and return an array
-!>   of these values indexed by the soils-topographic index
-!>   pixel numbers.
-!
-! ====================================================================
-!
-!
-!  Parameter definitions:
-!
-!    a:         values read from the image in an array indexed by 
-!                 pixel number
-!    icol:      loop index for image column
-!    ipixnum:   pixel number of image row/column location
-!    irow:      loop index for image row
-!    iu:        unit number to read data
-!    ncol:      number of columns in the image
-!    nrow:      number of rows in the image
-!    tmpval:    temporary 4 byte real value read from the image
-! ====================================================================
-
-      subroutine rdimgr(a,iu,nrow,ncol,ipixnum)
-
-      integer ipixnum(nrow,ncol)
-      integer nrow,ncol,iu,irow,icol
-      real*8 :: a(nrow*ncol)
-      real*4 :: tmpval
-
-! ====================================================================
-! Loop through the image and read each value.
-! ====================================================================
-      do 200 irow = 1,nrow
-         do 100 icol = 1,ncol
-               read(iu,rec=((irow-1)*ncol) + icol) tmpval
-
-! --------------------------------------------------------------------
-! If the location is within the area of interest then
-! assign to array 'a', otherwise read next value.
-! --------------------------------------------------------------------
-
-            if (ipixnum(irow,icol).gt.0) then
-
-               a(ipixnum(irow,icol)) = tmpval
-            
-            endif
-
-100      continue
-
-200   continue
-
-      return
-      end subroutine rdimgr
-
-! ====================================================================
-!
 !			subroutine rdatb
 !
 ! ====================================================================
@@ -1682,8 +1599,6 @@ subroutine rdatb(atb,GLOBAL,IO)
       if (nint(atb_2d(x,y)).ne.nint(GLOBAL%TI_FILE%undef))then
         ip = ip + 1
         IO%ipixnum(irow,icol) = ip
-        IO%ixpix(ip) = icol
-        IO%iypix(ip) = irow
       endif
     enddo
   enddo
