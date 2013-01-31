@@ -58,6 +58,8 @@ type GRID_VEG_template
         real*8 :: rnetd,xled,hd,gd,dshd,rnetw,xlew,hw,gw,dshw
         !Indices
         integer :: i_und,i_moss,ivgtyp,ilandc
+        !Mapping NNI
+        type(MAP_template) :: MAP
 
 end type GRID_VEG_template
 

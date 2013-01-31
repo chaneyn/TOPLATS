@@ -8,6 +8,7 @@ implicit none
 
 type IO_template
   integer,allocatable,dimension(:,:) :: ipixnum
+  integer,allocatable,dimension(:,:) :: ipixnum_original
   integer,allocatable,dimension(:) :: ixpix,iypix
 end type IO_template
 
@@ -176,9 +177,11 @@ end subroutine
       integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
       integer :: forcingnvars,i,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
+      real*8 :: temp(GLOBAL%ncol,GLOBAL%nrow)
       ipixnum = IO%ipixnum
       forcingnvars = 7
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,forcingnvars))
+     
 
 ! ####################################################################
 ! Read all variables in at once for each time step
@@ -188,46 +191,64 @@ end subroutine
 
 ! Longwave Radiation
 
-      call rdforc(MET%rld,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,1))
+  call convert_grads2model(MET%rld,dble(TempArray(:,:,1)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Air Pressure
-
-      call rdforc(MET%press,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,2))
+  
+  call convert_grads2model(MET%press,dble(TempArray(:,:,2)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Relative Humidity
 
-      call rdforc(MET%rh,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,3))
+  call convert_grads2model(MET%rh,dble(TempArray(:,:,3)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Shortwave Radiation
 
-      call rdforc(MET%rsd,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,4))
+  call convert_grads2model(MET%rsd,dble(TempArray(:,:,4)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Air Temperature
 
-      call rdforc(MET%tdry,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,5))
+  call convert_grads2model(MET%tdry,dble(TempArray(:,:,5)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Wind Speed
 
-      call rdforc(MET%uzw,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,6))
+  call convert_grads2model(MET%uzw,dble(TempArray(:,:,6)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
 
 ! Precipitation
 
-      call rdforc(MET%pptms,GLOBAL%nrow,GLOBAL%ncol,ipixnum,TempArray(:,:,7))
-
+  call convert_grads2model(MET%pptms,dble(TempArray(:,:,7)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
+  
   do ilat = 1,GLOBAL%nrow
     do ilon = 1,GLOBAL%ncol 
       ip = ipixnum(ilat,ilon)
       if (ip .gt. 0)then
-        MET(ip)%tdry = TempArray(MET(ip)%tdry_MAP%ilon,MET(ip)%tdry_MAP%ilat,5)
-        MET(ip)%rld = TempArray(MET(ip)%rld_MAP%ilon,MET(ip)%rld_MAP%ilat,1)
-        MET(ip)%press = TempArray(MET(ip)%press_MAP%ilon,MET(ip)%press_MAP%ilat,2)
-        MET(ip)%rh = TempArray(MET(ip)%rh_MAP%ilon,MET(ip)%rh_MAP%ilat,3)
-        MET(ip)%rsd = TempArray(MET(ip)%rsd_MAP%ilon,MET(ip)%rsd_MAP%ilat,4)
-        MET(ip)%uzw = TempArray(MET(ip)%uzw_MAP%ilon,MET(ip)%uzw_MAP%ilat,6)
-        MET(ip)%pptms = TempArray(MET(ip)%pptms_MAP%ilon,MET(ip)%pptms_MAP%ilat,7)
+!        MET(ip)%tdry = TempArray(MET(ip)%tdry_MAP%ilon,MET(ip)%tdry_MAP%ilat,5)
+!        MET(ip)%rld = TempArray(MET(ip)%rld_MAP%ilon,MET(ip)%rld_MAP%ilat,1)
+!        MET(ip)%press = TempArray(MET(ip)%press_MAP%ilon,MET(ip)%press_MAP%ilat,2)
+!        MET(ip)%rh = TempArray(MET(ip)%rh_MAP%ilon,MET(ip)%rh_MAP%ilat,3)
+!        MET(ip)%rsd = TempArray(MET(ip)%rsd_MAP%ilon,MET(ip)%rsd_MAP%ilat,4)
+!        MET(ip)%uzw = TempArray(MET(ip)%uzw_MAP%ilon,MET(ip)%uzw_MAP%ilat,6)
+!        MET(ip)%pptms = TempArray(MET(ip)%pptms_MAP%ilon,MET(ip)%pptms_MAP%ilat,7)
       endif
     enddo
   enddo
+
+  !Convert data to output data
+!  call convert_model2grads(MET%pptms,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,7) = temp
+!  call convert_model2grads(MET%uzw,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,6) = temp
+!  call convert_model2grads(MET%tdry,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,5) = temp
+!  call convert_model2grads(MET%rsd,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,4) = temp
+!  call convert_model2grads(MET%rh,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,3) = temp
+!  call convert_model2grads(MET%press,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,2) = temp
+!  call convert_model2grads(MET%rld,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
+!  TempArray(:,:,1) = temp
+
+!  write(10101,rec=i)TempArray
        
       end subroutine
 
@@ -530,6 +551,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   call spatial_mapping(GLOBAL,GRID%MET%uzw_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
   !Relative Humidity
   call spatial_mapping(GLOBAL,GRID%MET%rh_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+  !Static Vegetation Properties
+  call spatial_mapping(GLOBAL,GRID%VEG%MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
+
 
 ! ====================================================================
 ! Read the catchment image.
@@ -553,12 +577,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   deallocate(temp)
   deallocate(array_1d)
       
-!      call convert_model2grads(dble(GRID%VARS%icatch),array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Subbasin_FILE%undef)
-!      open(10000,file='Subbasin.bin',form='unformatted',access='direct',recl=4*GLOBAL%nrow*GLOBAL%ncol)
-!      temp = array_2d
-!      write(10000,rec=1)temp
-!      close(10000)
-
 ! ====================================================================
 ! Read image of transmissivities for use in calculating the 
 ! soils-topographi! index.
@@ -568,13 +586,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   allocate(temp(GLOBAL%K0_FILE%nlon,GLOBAL%K0_FILE%nlat))
   allocate(array_1d(GLOBAL%K0_FILE%nlon*GLOBAL%K0_FILE%nlat))
 
-      !call rdimgr(ki,GLOBAL%K0_FILE%fp,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
-      !call convert_model2grads(ki,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%K0_FILE%undef)
-      !open(10000,file='K0.bin',form='unformatted',access='direct',recl=4*GLOBAL%nrow*GLOBAL%ncol)
-      !temp = array_2d
-      !write(10000,rec=1)temp
-      !close(10000)
-  !HERE!!!
   read(GLOBAL%K0_FILE%fp,rec=1)temp
 
   ! Convert from single to double point precision
@@ -746,6 +757,10 @@ open(GLOBAL%DVEG_FILE%fp,file=trim(GLOBAL%DVEG_FILE%fname),status='old',access='
 open(GLOBAL%FORCING_FILE%fp,file=trim(GLOBAL%FORCING_FILE%fname),status='old',access='direct',&
      form='unformatted',recl=ncol*nrow*nforcingvars*4)
 
+!TEMP
+!open(10101,file='forcing_test.bin',status='unknown',access='direct',&
+!     form='unformatted',recl=ncol*nrow*nforcingvars*4)
+
 !Output Data Set
 open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',access='direct',&
      form='unformatted',recl=ncol*nrow*noutvars*4)
@@ -824,19 +839,13 @@ end subroutine Write_Regional
       type (IO_template),intent(inout) :: IO
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
       character(len=200) :: filename
-      integer :: vegnvars,dvegnvars,ipos,jpos
+      integer :: vegnvars,dvegnvars,ipos,jpos,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
       real*8 :: frcov(GLOBAL%nrow*GLOBAL%ncol,GLOBAL%ncatch+1),wc0
       integer :: jj,kk
       vegnvars = 20
       dvegnvars = 2
       allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,vegnvars))
-
-! ====================================================================
-! Read the image with the land cover clasifications.
-! ====================================================================
-
-      call rdimgi(GRID%VEG%ilandc,11,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
 
 ! ====================================================================
 ! Read spatially constant vegetation parameters.
@@ -904,6 +913,54 @@ end subroutine Write_Regional
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol
+      ip = IO%ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        GRID(ip)%VEG = GRID_VEG_2D(GRID(ip)%VEG%MAP%ilon,GRID(ip)%VEG%MAP%ilat)
+      endif
+    enddo
+  enddo
+
+! Define the land type (MUST GO)
+     do ilat=1,GLOBAL%nrow
+       do ilon=1,GLOBAL%ncol
+         if (IO%ipixnum(ilat,ilon) .ne. 0)then
+           GRID(kk)%VEG%ilandc = IO%ipixnum(ilat,ilon)
+         endif
+       enddo
+     enddo
+
+        do kk=1,GLOBAL%nlandc
+                GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
+                GRID(kk)%VEG%xlai_wsc = GRID(kk)%VEG%xlai
+                GRID(kk)%VEG%albw = GRID(kk)%VEG%albd !Move to its own file
+                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
+                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
+                GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
+                GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
+                GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
+                GRID(kk)%VEG%Tint2 = 0.00!VegData%Tint2(ipos,jpos)
+                GRID(kk)%VEG%Twslope1 = 0.00!VegData%Twslope1(ipos,jpos)
+                GRID(kk)%VEG%Twint1 = 0.00!VegData%Twint1(ipos,jpos)
+                GRID(kk)%VEG%Twslope2 = 0.00!VegData%Twslope2(ipos,jpos)
+                GRID(kk)%VEG%Twint2 = 0.00!VegData%Twint2(ipos,jpos)
+                GRID(kk)%VEG%Tsep = 0.00!VegData%Tsep(ipos,jpos)
+                GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
+        enddo
+
+! ====================================================================
+! Read the image with the land cover clasifications.
+! ====================================================================
+
+!print*,GRID(1:20)%VEG%ilandc
+      call rdimgi(GRID%VEG%ilandc,11,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+!print*,GRID(1:20)%VEG%ilandc
+
+! ####################################################################
+! Convert the 2-d arrays to the model's 1-d arrays
+! ####################################################################
+
         do kk=1,GLOBAL%nlandc
 
                 !Map the kk position to the i,j position
@@ -932,19 +989,6 @@ end subroutine Write_Regional
                 GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
                 GRID(kk)%VEG%xlai_wsc = GRID(kk)%VEG%xlai
                 GRID(kk)%VEG%albw = GRID(kk)%VEG%albd !Move to its own file
-                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
-                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
-                GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
-                GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
-                GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
-                GRID(kk)%VEG%Tint2 = 0.00!VegData%Tint2(ipos,jpos)
-                GRID(kk)%VEG%Twslope1 = 0.00!VegData%Twslope1(ipos,jpos)
-                GRID(kk)%VEG%Twint1 = 0.00!VegData%Twint1(ipos,jpos)
-                GRID(kk)%VEG%Twslope2 = 0.00!VegData%Twslope2(ipos,jpos)
-                GRID(kk)%VEG%Twint2 = 0.00!VegData%Twint2(ipos,jpos)
-                GRID(kk)%VEG%Tsep = 0.00!VegData%Tsep(ipos,jpos)
-                GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
-
         enddo
 
 ! ====================================================================
@@ -1623,10 +1667,6 @@ subroutine rdatb(atb,GLOBAL,IO)
   ! Convert from single to double point precision
   atb_2d = temp
 
-  ! Convert to model format
-  call convert_grads2model(atb,atb_2d,IO%ipixnum,GLOBAL%nrow,&
-                           GLOBAL%ncol,GLOBAL%TI_FILE%undef)
-
   ! Extract all the positioning information of the original model
   x = 1
   y = 0
@@ -1647,6 +1687,10 @@ subroutine rdatb(atb,GLOBAL,IO)
       endif
     enddo
   enddo
+
+  ! Convert to model format
+  call convert_grads2model(atb,atb_2d,IO%ipixnum,GLOBAL%nrow,&
+                           GLOBAL%ncol,GLOBAL%TI_FILE%undef)
 
   ! Set the total number of pixels.
   GLOBAL%npix = ip
@@ -1941,15 +1985,14 @@ subroutine convert_grads2model(array_1d,array_2d,ipixnum,nrow,ncol,undef)
 
   implicit none
   integer,intent(in) :: nrow,ncol
-  integer,intent(inout) :: ipixnum(nrow,ncol)
+  integer,intent(in) :: ipixnum(nrow,ncol)
   real*8,intent(in) :: array_2d(ncol,nrow),undef
   real*8,intent(inout) :: array_1d(ncol*nrow)
-  integer :: x,y,irow,icol,kk
+  integer :: x,y,irow,icol
 
   !Map the kk position ot hte i,j position
   x = 1
   y = 0
-  kk = 0
   do irow = 1,nrow
     do icol =1,ncol
       if (y.eq.nrow)then
@@ -1957,10 +2000,8 @@ subroutine convert_grads2model(array_1d,array_2d,ipixnum,nrow,ncol,undef)
         x=x+1
       endif
       y = y +1
-      if (nint(array_2d(x,y)).ne.nint(undef))then
-        kk = kk + 1
-        ipixnum(irow,icol) = kk
-        array_1d(kk) = array_2d(x,y)
+      if (ipixnum(irow,icol).ne.0)then
+        array_1d(ipixnum(irow,icol)) = array_2d(x,y)
       endif
     enddo
   enddo
