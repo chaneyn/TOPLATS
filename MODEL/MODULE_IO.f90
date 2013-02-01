@@ -17,6 +17,12 @@ interface Extract_Info_General_File
   module procedure Extract_Info_General_File_Double
 end interface Extract_Info_General_File
 
+interface Convert_Grads2Model
+  !====== begin of generated interface ======
+  module procedure convert_grads2model_double
+  module procedure convert_grads2model_int
+end interface Convert_Grads2Model
+
 contains
 
 !###################################################################
@@ -101,7 +107,7 @@ subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
 ! Update the vegetation parameters if required.
 !#####################################################################
 
-  if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID)
+  if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID,IO)
 
 !#####################################################################
 ! Update the decimal Julian day.
@@ -230,24 +236,6 @@ end subroutine
     enddo
   enddo
 
-  !Convert data to output data
-!  call convert_model2grads(MET%pptms,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,7) = temp
-!  call convert_model2grads(MET%uzw,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,6) = temp
-!  call convert_model2grads(MET%tdry,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,5) = temp
-!  call convert_model2grads(MET%rsd,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,4) = temp
-!  call convert_model2grads(MET%rh,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,3) = temp
-!  call convert_model2grads(MET%press,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,2) = temp
-!  call convert_model2grads(MET%rld,temp,ipixnum,GLOBAL%nrow,GLOBAL%ncol,-999.0d0)
-!  TempArray(:,:,1) = temp
-
-!  write(10101,rec=i)TempArray
-       
       end subroutine
 
 ! ####################################################################
@@ -341,12 +329,13 @@ end subroutine
 !
 ! ====================================================================
 
-      subroutine rdveg_update (GLOBAL,GRID)
+      subroutine rdveg_update (GLOBAL,GRID,IO)
 
       implicit none
       integer :: kk,jj
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
+      type (IO_template),intent(in) :: IO
       integer :: dvegnvars,ipos,jpos
       real,dimension(:,:,:),allocatable :: TempArray
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
@@ -380,14 +369,18 @@ end subroutine
                         jpos = GLOBAL%nrow
                 endif
 
-                GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai !dveg
-                GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd !dveg
-                GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
-                GRID(kk)%VEG%xlai_wsc = GRID_VEG_2D(ipos,jpos)%xlai
-                GRID(kk)%VEG%albw = GRID_VEG_2D(ipos,jpos)%albd
+                !GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai !dveg
+                !GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd !dveg
+                !GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
+                !GRID(kk)%VEG%xlai_wsc = GRID_VEG_2D(ipos,jpos)%xlai
+                !GRID(kk)%VEG%albw = GRID_VEG_2D(ipos,jpos)%albd
 
         enddo
-
+  call convert_grads2model(GRID%VEG%xlai,GRID_VEG_2D%xlai,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%albd,GRID_VEG_2D%albd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  GRID%VEG%tcbeta = exp(-0.5*GRID%VEG%xlai)
+  GRID%VEG%xlai_wsc = GRID%VEG%xlai
+  GRID%VEG%albw = GRID%VEG%albd
 
 ! ====================================================================
 ! Calculate parameters for each land cover type.
@@ -848,7 +841,7 @@ end subroutine Write_Regional
 
       read(GLOBAL%VEG_FILE%fp,rec=1)TempArray(:,:,:)
 
-      GRID_VEG_2D%ivgtyp = dble(TempArray(:,:,1))
+      GRID_VEG_2D%ivgtyp = TempArray(:,:,1)
       GRID_VEG_2D%xlai = dble(TempArray(:,:,2))
       GRID_VEG_2D%xlai_wsc = dble(TempArray(:,:,3))
       GRID_VEG_2D%albd = dble(TempArray(:,:,4))
@@ -888,42 +881,6 @@ end subroutine Write_Regional
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
-  do ilat = 1,GLOBAL%nrow
-    do ilon = 1,GLOBAL%ncol
-      ip = IO%ipixnum(ilat,ilon)
-      if (ip .gt. 0)then
-        GRID(ip)%VEG = GRID_VEG_2D(ilon,ilat)
-      endif
-    enddo
-  enddo
-
-! Define the land type (MUST GO)
-     do ilat=1,GLOBAL%nrow
-       do ilon=1,GLOBAL%ncol
-         if (IO%ipixnum(ilat,ilon) .ne. 0)then
-           GRID(kk)%VEG%ilandc = IO%ipixnum(ilat,ilon)
-         endif
-       enddo
-     enddo
-
-        do kk=1,GLOBAL%nlandc
-                GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
-                GRID(kk)%VEG%xlai_wsc = GRID(kk)%VEG%xlai
-                GRID(kk)%VEG%albw = GRID(kk)%VEG%albd !Move to its own file
-                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
-                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
-                GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
-                GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
-                GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
-                GRID(kk)%VEG%Tint2 = 0.00!VegData%Tint2(ipos,jpos)
-                GRID(kk)%VEG%Twslope1 = 0.00!VegData%Twslope1(ipos,jpos)
-                GRID(kk)%VEG%Twint1 = 0.00!VegData%Twint1(ipos,jpos)
-                GRID(kk)%VEG%Twslope2 = 0.00!VegData%Twslope2(ipos,jpos)
-                GRID(kk)%VEG%Twint2 = 0.00!VegData%Twint2(ipos,jpos)
-                GRID(kk)%VEG%Tsep = 0.00!VegData%Tsep(ipos,jpos)
-                GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
-        enddo
-
 ! ====================================================================
 ! Read the image with the land cover clasifications.
 ! ====================================================================
@@ -933,7 +890,7 @@ end subroutine Write_Regional
 !print*,GRID(1:20)%VEG%ilandc
 
 ! ####################################################################
-! Convert the 2-d arrays to the model's 1-d arrays
+!! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
         do kk=1,GLOBAL%nlandc
@@ -946,26 +903,44 @@ end subroutine Write_Regional
                         ipos = kk/GLOBAL%nrow
                         jpos = GLOBAL%nrow
                 endif
-                GRID(kk)%VEG%ivgtyp = GRID_VEG_2D(ipos,jpos)%ivgtyp
-                GRID(kk)%VEG%emiss = GRID_VEG_2D(ipos,jpos)%emiss
-                GRID(kk)%VEG%za = GRID_VEG_2D(ipos,jpos)%za
-                GRID(kk)%VEG%zww = GRID_VEG_2D(ipos,jpos)%zww
-                GRID(kk)%VEG%z0m = GRID_VEG_2D(ipos,jpos)%z0m
-                GRID(kk)%VEG%z0h = GRID_VEG_2D(ipos,jpos)%z0h
-                GRID(kk)%VEG%zpd = GRID_VEG_2D(ipos,jpos)%zpd
-                GRID(kk)%VEG%rsmin = GRID_VEG_2D(ipos,jpos)%rsmin
-                GRID(kk)%VEG%rsmax = GRID_VEG_2D(ipos,jpos)%rsmax
-                GRID(kk)%VEG%Rpl = GRID_VEG_2D(ipos,jpos)%Rpl
-                GRID(kk)%VEG%f3vpdpar = GRID_VEG_2D(ipos,jpos)%f3vpdpar
-                GRID(kk)%VEG%f4temppar = GRID_VEG_2D(ipos,jpos)%f4temppar
-                GRID(kk)%VEG%trefk = GRID_VEG_2D(ipos,jpos)%trefk
-                GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai
-                GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd
-                GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
-                GRID(kk)%VEG%xlai_wsc = GRID(kk)%VEG%xlai
-                GRID(kk)%VEG%albw = GRID(kk)%VEG%albd !Move to its own file
-        enddo
+                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
+                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
+                GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
+                GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
+                GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
+                GRID(kk)%VEG%Tint2 = 0.00!VegData%Tint2(ipos,jpos)
+                GRID(kk)%VEG%Twslope1 = 0.00!VegData%Twslope1(ipos,jpos)
+                GRID(kk)%VEG%Twint1 = 0.00!VegData%Twint1(ipos,jpos)
+                GRID(kk)%VEG%Twslope2 = 0.00!VegData%Twslope2(ipos,jpos)
+                GRID(kk)%VEG%Twint2 = 0.00!VegData%Twint2(ipos,jpos)
+                GRID(kk)%VEG%Tsep = 0.00!VegData%Tsep(ipos,jpos)
+                GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
 
+        enddo
+  call convert_grads2model(GRID%VEG%ivgtyp,GRID_VEG_2D%ivgtyp,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%emiss,GRID_VEG_2D%emiss,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%zww,GRID_VEG_2D%zww,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%za,GRID_VEG_2D%za,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%z0m,GRID_VEG_2D%z0m,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%z0h,GRID_VEG_2D%z0h,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%zpd,GRID_VEG_2D%zpd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%rsmin,GRID_VEG_2D%rsmin,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%rsmax,GRID_VEG_2D%rsmax,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%Rpl,GRID_VEG_2D%Rpl,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%f3vpdpar,GRID_VEG_2D%f3vpdpar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%f4temppar,GRID_VEG_2D%f4temppar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%trefk,GRID_VEG_2D%trefk,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%xlai,GRID_VEG_2D%xlai,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%albd,GRID_VEG_2D%albd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%xlai_wsc,GRID_VEG_2D%xlai_wsc,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%albw,GRID_VEG_2D%albw,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%tcbeta,GRID_VEG_2D%tcbeta,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%extinct,GRID_VEG_2D%extinct,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  call convert_grads2model(GRID%VEG%canclos,GRID_VEG_2D%canclos,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  GRID%VEG%tcbeta = exp(-0.5*GRID%VEG%xlai)
+  GRID%VEG%xlai_wsc = GRID%VEG%xlai
+  GRID%VEG%albw = GRID%VEG%albd !Move to its own file
+!
 ! ====================================================================
 ! Calculate parameters for each land cover type.
 ! ====================================================================
@@ -1373,31 +1348,55 @@ end subroutine Write_Regional
                 jpos = GLOBAL%nrow
          endif
 
-         GRID(kk)%SOIL%bcbeta = GRID_SOIL_2D(ipos,jpos)%bcbeta
-         GRID(kk)%SOIL%psic = GRID_SOIL_2D(ipos,jpos)%psic
-         GRID(kk)%SOIL%thetas = GRID_SOIL_2D(ipos,jpos)%thetas
-         GRID(kk)%SOIL%thetar = GRID_SOIL_2D(ipos,jpos)%thetar
-         GRID(kk)%SOIL%xk0 = GRID_SOIL_2D(ipos,jpos)%xk0
-         GRID(kk)%SOIL%zdeep = GRID_SOIL_2D(ipos,jpos)%zdeep
-         GRID(kk)%SOIL%tdeep = GRID_SOIL_2D(ipos,jpos)%tdeep
-         GRID(kk)%SOIL%zmid = GRID_SOIL_2D(ipos,jpos)%zmid
-         GRID(kk)%SOIL%tmid0 = GRID_SOIL_2D(ipos,jpos)%tmid0
-         GRID(kk)%SOIL%rocpsoil = GRID_SOIL_2D(ipos,jpos)%rocpsoil
-         GRID(kk)%SOIL%quartz = GRID_SOIL_2D(ipos,jpos)%quartz
-         GRID(kk)%SOIL%ifcoarse = GRID_SOIL_2D(ipos,jpos)%ifcoarse
-         GRID(kk)%SOIL%srespar1 = GRID_SOIL_2D(ipos,jpos)%srespar1
-         GRID(kk)%SOIL%srespar2 = GRID_SOIL_2D(ipos,jpos)%srespar2
-         GRID(kk)%SOIL%srespar3 = GRID_SOIL_2D(ipos,jpos)%srespar3
-         GRID(kk)%SOIL%a_ice = GRID_SOIL_2D(ipos,jpos)%a_ice
-         GRID(kk)%SOIL%b_ice = GRID_SOIL_2D(ipos,jpos)%b_ice
-         GRID(kk)%SOIL%bulk_dens = GRID_SOIL_2D(ipos,jpos)%bulk_dens
-         GRID(kk)%SOIL%amp = GRID_SOIL_2D(ipos,jpos)%amp
-         GRID(kk)%SOIL%phase = GRID_SOIL_2D(ipos,jpos)%phase
-         GRID(kk)%SOIL%shift = GRID_SOIL_2D(ipos,jpos)%shift
-         GRID(kk)%VEG%tc = GRID_VEG_2D(ipos,jpos)%tc
-         GRID(kk)%VEG%tw = GRID_VEG_2D(ipos,jpos)%tw
+!         GRID(kk)%SOIL%bcbeta = GRID_SOIL_2D(ipos,jpos)%bcbeta
+!         GRID(kk)%SOIL%psic = GRID_SOIL_2D(ipos,jpos)%psic
+!         GRID(kk)%SOIL%thetas = GRID_SOIL_2D(ipos,jpos)%thetas
+!         GRID(kk)%SOIL%thetar = GRID_SOIL_2D(ipos,jpos)%thetar
+!         GRID(kk)%SOIL%xk0 = GRID_SOIL_2D(ipos,jpos)%xk0
+         !GRID(kk)%SOIL%zdeep = GRID_SOIL_2D(ipos,jpos)%zdeep
+         !GRID(kk)%SOIL%tdeep = GRID_SOIL_2D(ipos,jpos)%tdeep
+         !GRID(kk)%SOIL%zmid = GRID_SOIL_2D(ipos,jpos)%zmid
+         !GRID(kk)%SOIL%tmid0 = GRID_SOIL_2D(ipos,jpos)%tmid0
+         !GRID(kk)%SOIL%rocpsoil = GRID_SOIL_2D(ipos,jpos)%rocpsoil
+         !GRID(kk)%SOIL%quartz = GRID_SOIL_2D(ipos,jpos)%quartz
+         !GRID(kk)%SOIL%ifcoarse = GRID_SOIL_2D(ipos,jpos)%ifcoarse
+         !GRID(kk)%SOIL%srespar1 = GRID_SOIL_2D(ipos,jpos)%srespar1
+         !GRID(kk)%SOIL%srespar2 = GRID_SOIL_2D(ipos,jpos)%srespar2
+         !GRID(kk)%SOIL%srespar3 = GRID_SOIL_2D(ipos,jpos)%srespar3
+         !GRID(kk)%SOIL%a_ice = GRID_SOIL_2D(ipos,jpos)%a_ice
+         !GRID(kk)%SOIL%b_ice = GRID_SOIL_2D(ipos,jpos)%b_ice
+         !GRID(kk)%SOIL%bulk_dens = GRID_SOIL_2D(ipos,jpos)%bulk_dens
+         !GRID(kk)%SOIL%amp = GRID_SOIL_2D(ipos,jpos)%amp
+         !GRID(kk)%SOIL%phase = GRID_SOIL_2D(ipos,jpos)%phase
+         !GRID(kk)%SOIL%shift = GRID_SOIL_2D(ipos,jpos)%shift
+!         GRID(kk)%VEG%tc = GRID_VEG_2D(ipos,jpos)%tc
+!         GRID(kk)%VEG%tw = GRID_VEG_2D(ipos,jpos)%tw
 
       enddo
+
+      call convert_grads2model(GRID%SOIL%thetas,GRID_SOIL_2D%thetas,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%thetar,GRID_SOIL_2D%thetar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%bcbeta,GRID_SOIL_2D%bcbeta,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%psic,GRID_SOIL_2D%psic,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%xk0,GRID_SOIL_2D%xk0,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%VEG%tc,GRID_VEG_2D%tc,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%VEG%tw,GRID_VEG_2D%tw,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%zdeep,GRID_SOIL_2D%zdeep,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%tdeep,GRID_SOIL_2D%tdeep,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%zmid,GRID_SOIL_2D%zmid,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%tmid0,GRID_SOIL_2D%tmid0,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%rocpsoil,GRID_SOIL_2D%rocpsoil,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%quartz,GRID_SOIL_2D%quartz,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%ifcoarse,GRID_SOIL_2D%ifcoarse,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%srespar1,GRID_SOIL_2D%srespar1,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%srespar2,GRID_SOIL_2D%srespar2,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%srespar3,GRID_SOIL_2D%srespar3,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%a_ice,GRID_SOIL_2D%a_ice,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%b_ice,GRID_SOIL_2D%b_ice,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%bulk_dens,GRID_SOIL_2D%bulk_dens,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%amp,GRID_SOIL_2D%amp,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%phase,GRID_SOIL_2D%phase,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
+      call convert_grads2model(GRID%SOIL%shift,GRID_SOIL_2D%shift,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
  
       GLOBAL%inc_frozen = 1 !THIS MEANS THAT THE FROZEN ALGORITHM IS ALWAYS RUN
 
@@ -1533,7 +1532,9 @@ end subroutine Write_Regional
          do icol = 1,ncol
                 
              if (iu .eq. 12 .or. iu .eq. 11)then
-                itmpval = (irow-1)*ncol + icol
+!                itmpval = (irow-1)*ncol + icol
+                itmpval = (icol-1)*nrow + irow
+                
              else
                 read(iu,rec=((irow-1)*ncol) + icol) itmpval
              endif
@@ -1544,7 +1545,7 @@ end subroutine Write_Regional
 
             if (ipixnum(irow,icol).gt.0) then
 
-               ia(ipixnum(irow,icol)) = itmpval
+               ia(ipixnum(irow,icol)) = ipixnum(irow,icol)!itmpval
 
             endif
 
@@ -1896,13 +1897,41 @@ subroutine convert_model2grads(array_1d,array_2d,ipixnum,nrow,ncol,undef)
 end subroutine
 
 !>Subroutine to convert the 1-d format back to grads format
-subroutine convert_grads2model(array_1d,array_2d,ipixnum,nrow,ncol,undef)
+subroutine convert_grads2model_double(array_1d,array_2d,ipixnum,nrow,ncol,undef)
 
   implicit none
   integer,intent(in) :: nrow,ncol
   integer,intent(in) :: ipixnum(nrow,ncol)
   real*8,intent(in) :: array_2d(ncol,nrow),undef
-  real*8,intent(inout) :: array_1d(ncol*nrow)
+  real*8,intent(out) :: array_1d(ncol*nrow)
+  integer :: x,y,irow,icol
+
+  !Map the kk position ot hte i,j position
+  x = 1
+  y = 0
+  do irow = 1,nrow
+    do icol =1,ncol
+      if (y.eq.nrow)then
+        y=0
+        x=x+1
+      endif
+      y = y +1
+      if (ipixnum(irow,icol).ne.0)then
+        array_1d(ipixnum(irow,icol)) = array_2d(x,y)
+      endif
+    enddo
+  enddo
+
+end subroutine
+
+subroutine convert_grads2model_int(array_1d,array_2d,ipixnum,nrow,ncol,undef)
+
+  implicit none
+  integer,intent(in) :: nrow,ncol
+  integer,intent(in) :: ipixnum(nrow,ncol)
+  integer,intent(in) :: array_2d(ncol,nrow)
+  real*8,intent(in) :: undef
+  integer,intent(out) :: array_1d(ncol*nrow)
   integer :: x,y,irow,icol
 
   !Map the kk position ot hte i,j position
