@@ -400,7 +400,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),allocatable :: CAT
   type (IO_template),intent(inout) :: IO
-  integer kk,jj
+  integer kk,jj,ilat,ilon,ip
   real*8 hbar0
   integer,dimension(:),allocatable :: icount
   real*8,dimension(:),allocatable :: atb,ti,zbar0,sumatb,sumlti,qb0,lte
@@ -531,9 +531,15 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   ! Convert from single to double point precision
   array_2d = temp
 
-  ! Convert to model format
-  call convert_grads2model(array_1d,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%K0_FILE%undef)
-  ki = array_1d
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol
+      ip = IO%ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        !Static Soil
+        ki(ip)=array_2d(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)
+      endif
+    enddo
+  enddo
 
   do kk=1,GLOBAL%nrow*GLOBAL%ncol
     if (GRID(kk)%VARS%icatch .gt. 0)then
@@ -696,10 +702,6 @@ open(GLOBAL%DVEG_FILE%fp,file=trim(GLOBAL%DVEG_FILE%fname),status='old',access='
 !Forcing Data Set
 open(GLOBAL%FORCING_FILE%fp,file=trim(GLOBAL%FORCING_FILE%fname),status='old',access='direct',&
      form='unformatted',recl=ncol*nrow*nforcingvars*4)
-
-!TEMP
-!open(10101,file='forcing_test.bin',status='unknown',access='direct',&
-!     form='unformatted',recl=ncol*nrow*nforcingvars*4)
 
 !Output Data Set
 open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',access='direct',&
