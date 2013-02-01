@@ -32,6 +32,7 @@ type GRID_SOIL_template
                 zmid,tmid0,rocpsoil,quartz,srespar1,srespar2,srespar3,a_ice,&
                 b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr,Tdeepstep
         integer :: isoil,ifcoarse,idifind
+        type(MAP_template) :: MAP
 end type GRID_SOIL_template
 
 type GRID_VEG_template
@@ -59,7 +60,8 @@ type GRID_VEG_template
         !Indices
         integer :: i_und,i_moss,ivgtyp,ilandc
         !Mapping NNI
-        type(MAP_template) :: MAP
+        type(MAP_template) :: static_MAP
+        type(MAP_template) :: dynamic_MAP
 
 end type GRID_VEG_template
 

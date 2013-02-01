@@ -191,47 +191,26 @@ end subroutine
 ! Read all variables in at once for each time step
 ! ####################################################################
 
-      read(GLOBAL%FORCING_FILE%fp,rec=i) TempArray(:,:,:)
+  read(GLOBAL%FORCING_FILE%fp,rec=i) TempArray(:,:,:)
 
-! Longwave Radiation
-
-  call convert_grads2model(MET%rld,dble(TempArray(:,:,1)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Air Pressure
-  
-  call convert_grads2model(MET%press,dble(TempArray(:,:,2)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Relative Humidity
-
-  call convert_grads2model(MET%rh,dble(TempArray(:,:,3)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Shortwave Radiation
-
-  call convert_grads2model(MET%rsd,dble(TempArray(:,:,4)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Air Temperature
-
-  call convert_grads2model(MET%tdry,dble(TempArray(:,:,5)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Wind Speed
-
-  call convert_grads2model(MET%uzw,dble(TempArray(:,:,6)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-
-! Precipitation
-
-  call convert_grads2model(MET%pptms,dble(TempArray(:,:,7)),ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Forcing_FILE%undef)
-  
   do ilat = 1,GLOBAL%nrow
     do ilon = 1,GLOBAL%ncol 
       ip = ipixnum(ilat,ilon)
       if (ip .gt. 0)then
-!        MET(ip)%tdry = TempArray(MET(ip)%tdry_MAP%ilon,MET(ip)%tdry_MAP%ilat,5)
-!        MET(ip)%rld = TempArray(MET(ip)%rld_MAP%ilon,MET(ip)%rld_MAP%ilat,1)
-!        MET(ip)%press = TempArray(MET(ip)%press_MAP%ilon,MET(ip)%press_MAP%ilat,2)
-!        MET(ip)%rh = TempArray(MET(ip)%rh_MAP%ilon,MET(ip)%rh_MAP%ilat,3)
-!        MET(ip)%rsd = TempArray(MET(ip)%rsd_MAP%ilon,MET(ip)%rsd_MAP%ilat,4)
-!        MET(ip)%uzw = TempArray(MET(ip)%uzw_MAP%ilon,MET(ip)%uzw_MAP%ilat,6)
-!        MET(ip)%pptms = TempArray(MET(ip)%pptms_MAP%ilon,MET(ip)%pptms_MAP%ilat,7)
+        !Air temperature
+        MET(ip)%tdry = TempArray(MET(ip)%tdry_MAP%ilon,MET(ip)%tdry_MAP%ilat,5)
+        !Longwave radiation
+        MET(ip)%rld = TempArray(MET(ip)%rld_MAP%ilon,MET(ip)%rld_MAP%ilat,1)
+        !Air pressure
+        MET(ip)%press = TempArray(MET(ip)%press_MAP%ilon,MET(ip)%press_MAP%ilat,2)
+        !Relative humidity
+        MET(ip)%rh = TempArray(MET(ip)%rh_MAP%ilon,MET(ip)%rh_MAP%ilat,3)
+        !Downward shortwave radiation
+        MET(ip)%rsd = TempArray(MET(ip)%rsd_MAP%ilon,MET(ip)%rsd_MAP%ilat,4)
+        !Wind speed
+        MET(ip)%uzw = TempArray(MET(ip)%uzw_MAP%ilon,MET(ip)%uzw_MAP%ilat,6)
+        !Precipitation
+        MET(ip)%pptms = TempArray(MET(ip)%pptms_MAP%ilon,MET(ip)%pptms_MAP%ilat,7)
       endif
     enddo
   enddo
@@ -336,7 +315,7 @@ end subroutine
       type (GLOBAL_template),intent(inout) :: GLOBAL
       type (GRID_template),dimension(:),intent(inout) :: GRID
       type (IO_template),intent(in) :: IO
-      integer :: dvegnvars,ipos,jpos
+      integer :: dvegnvars,ipos,jpos,ip,ilat,ilon
       real,dimension(:,:,:),allocatable :: TempArray
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
       dvegnvars = 2
@@ -358,26 +337,16 @@ end subroutine
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
 
-        do kk=1,GLOBAL%nlandc
-
-                !Map the kk position to the i,j position
-                if(mod(kk,GLOBAL%nrow) .ne. 0)then
-                        ipos = kk/GLOBAL%nrow+1
-                        jpos = mod(kk,GLOBAL%nrow)
-                else
-                        ipos = kk/GLOBAL%nrow
-                        jpos = GLOBAL%nrow
-                endif
-
-                !GRID(kk)%VEG%xlai = GRID_VEG_2D(ipos,jpos)%xlai !dveg
-                !GRID(kk)%VEG%albd = GRID_VEG_2D(ipos,jpos)%albd !dveg
-                !GRID(kk)%VEG%tcbeta = exp(-0.5*GRID(kk)%VEG%xlai)
-                !GRID(kk)%VEG%xlai_wsc = GRID_VEG_2D(ipos,jpos)%xlai
-                !GRID(kk)%VEG%albw = GRID_VEG_2D(ipos,jpos)%albd
-
-        enddo
-  call convert_grads2model(GRID%VEG%xlai,GRID_VEG_2D%xlai,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%albd,GRID_VEG_2D%albd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol
+      ip = IO%ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        !Dynamic Vegetation
+        GRID(ip)%VEG%xlai = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%xlai
+        GRID(ip)%VEG%albd = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%albd
+      endif
+    enddo
+  enddo
   GRID%VEG%tcbeta = exp(-0.5*GRID%VEG%xlai)
   GRID%VEG%xlai_wsc = GRID%VEG%xlai
   GRID%VEG%albw = GRID%VEG%albd
@@ -520,8 +489,11 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   !Relative Humidity
   call spatial_mapping(GLOBAL,GRID%MET%rh_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
   !Static Vegetation Properties
-  call spatial_mapping(GLOBAL,GRID%VEG%MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
-
+  call spatial_mapping(GLOBAL,GRID%VEG%static_MAP,GLOBAL%VEG_FILE,IO%ipixnum)
+  !Dynamic Vegetation Properties
+  call spatial_mapping(GLOBAL,GRID%VEG%dynamic_MAP,GLOBAL%DVEG_FILE,IO%ipixnum)
+  !Soil Properties
+  call spatial_mapping(GLOBAL,GRID%SOIL%MAP,GLOBAL%SOIL_FILE,IO%ipixnum)
 
 ! ====================================================================
 ! Read the catchment image.
@@ -841,7 +813,7 @@ end subroutine Write_Regional
 
       read(GLOBAL%VEG_FILE%fp,rec=1)TempArray(:,:,:)
 
-      GRID_VEG_2D%ivgtyp = TempArray(:,:,1)
+      GRID_VEG_2D%ivgtyp = int(TempArray(:,:,1))
       GRID_VEG_2D%xlai = dble(TempArray(:,:,2))
       GRID_VEG_2D%xlai_wsc = dble(TempArray(:,:,3))
       GRID_VEG_2D%albd = dble(TempArray(:,:,4))
@@ -876,14 +848,39 @@ end subroutine Write_Regional
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
+  GRID%VEG%ivgtyp = 0
+  GRID%VEG%ilandc = 0
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol
+      ip = IO%ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        !Static Vegetation
+        GRID(ip)%VEG%ivgtyp = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%ivgtyp
+        GRID(ip)%VEG%emiss = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%emiss
+        GRID(ip)%VEG%za = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%za
+        GRID(ip)%VEG%zww = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%zww
+        GRID(ip)%VEG%z0m = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%z0m
+        GRID(ip)%VEG%z0h = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%z0h
+        GRID(ip)%VEG%zpd = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%zpd
+        GRID(ip)%VEG%rsmin = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%rsmin
+        GRID(ip)%VEG%rsmax = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%rsmax
+        GRID(ip)%VEG%Rpl = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%Rpl
+        GRID(ip)%VEG%f3vpdpar = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%f3vpdpar
+        GRID(ip)%VEG%f4temppar = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%f4temppar
+        GRID(ip)%VEG%trefk = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%trefk
+        GRID(ip)%VEG%tcbeta = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%tcbeta
+        GRID(ip)%VEG%extinct = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%extinct
+        GRID(ip)%VEG%canclos = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%canclos
+        !Dynamic Vegetation
+        GRID(ip)%VEG%xlai = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%xlai
+        GRID(ip)%VEG%albd = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%albd
+      endif
+    enddo
+  enddo
 
 ! ####################################################################
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
-
-! ====================================================================
-! Read the image with the land cover clasifications.
-! ====================================================================
 
   do kk=1,maxval(IO%ipixnum)
     GRID(kk)%VEG%ilandc = kk
@@ -895,8 +892,6 @@ end subroutine Write_Regional
 
         do kk=1,GLOBAL%nlandc
 
-                GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
-                GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
                 GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
                 GRID(kk)%VEG%Tint1 = 0.00!VegData%Tint1(ipos,jpos)
                 GRID(kk)%VEG%Tslope2 = 0.00!VegData%Tslope2(ipos,jpos)
@@ -909,26 +904,6 @@ end subroutine Write_Regional
                 GRID(kk)%VEG%Twsep = 0.00!VegData%Twsep(ipos,jpos)
 
         enddo
-  call convert_grads2model(GRID%VEG%ivgtyp,GRID_VEG_2D%ivgtyp,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%emiss,GRID_VEG_2D%emiss,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%zww,GRID_VEG_2D%zww,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%za,GRID_VEG_2D%za,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%z0m,GRID_VEG_2D%z0m,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%z0h,GRID_VEG_2D%z0h,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%zpd,GRID_VEG_2D%zpd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%rsmin,GRID_VEG_2D%rsmin,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%rsmax,GRID_VEG_2D%rsmax,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%Rpl,GRID_VEG_2D%Rpl,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%f3vpdpar,GRID_VEG_2D%f3vpdpar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%f4temppar,GRID_VEG_2D%f4temppar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%trefk,GRID_VEG_2D%trefk,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%xlai,GRID_VEG_2D%xlai,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%albd,GRID_VEG_2D%albd,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%xlai_wsc,GRID_VEG_2D%xlai_wsc,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%albw,GRID_VEG_2D%albw,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%tcbeta,GRID_VEG_2D%tcbeta,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%extinct,GRID_VEG_2D%extinct,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
-  call convert_grads2model(GRID%VEG%canclos,GRID_VEG_2D%canclos,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%VEG_FILE%undef)
   GRID%VEG%tcbeta = exp(-0.5*GRID%VEG%xlai)
   GRID%VEG%xlai_wsc = GRID%VEG%xlai
   GRID%VEG%albw = GRID%VEG%albd !Move to its own file
@@ -1265,7 +1240,7 @@ end subroutine Write_Regional
       type (IO_template),intent(inout) :: IO
       type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%ncol,GLOBAL%nrow)
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
-      integer :: soilnvars,ipos,jpos,jj,kk,nn
+      integer :: soilnvars,ipos,jpos,jj,kk,nn,ip,ilat,ilon
       integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       real,dimension(:,:,:),allocatable :: TempArray
       real*8 :: psic(GLOBAL%ncol*GLOBAL%nrow),tempsum,dtaken
@@ -1317,38 +1292,46 @@ end subroutine Write_Regional
       GRID_VEG_2D%tc = dble(TempArray(:,:,23))
 
 ! ====================================================================
-! Read the soil classification image.
+! Read the soil properties
 ! ====================================================================
 
   do kk=1,maxval(IO%ipixnum)
     GRID(kk)%SOIL%isoil = kk
   enddo
 
-      print*,"rdsoil:  Read soil texture image"
+  do ilat = 1,GLOBAL%nrow
+    do ilon = 1,GLOBAL%ncol
+      ip = IO%ipixnum(ilat,ilon)
+      if (ip .gt. 0)then
+        !Static Soil
+        GRID(ip)%SOIL%thetas =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%thetas
+        GRID(ip)%SOIL%thetar =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%thetar
+        GRID(ip)%SOIL%bcbeta =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%bcbeta
+        GRID(ip)%SOIL%psic =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%psic
+        GRID(ip)%SOIL%xk0 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%xk0
+        GRID(ip)%SOIL%zdeep =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%zdeep
+        GRID(ip)%SOIL%tdeep =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%tdeep
+        GRID(ip)%SOIL%zmid =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%zmid
+        GRID(ip)%SOIL%tmid0 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%tmid0
+        GRID(ip)%SOIL%rocpsoil =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%rocpsoil
+        GRID(ip)%SOIL%quartz =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%quartz
+        GRID(ip)%SOIL%ifcoarse =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%ifcoarse
+        GRID(ip)%SOIL%srespar1 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar1
+        GRID(ip)%SOIL%srespar2 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar2
+        GRID(ip)%SOIL%srespar3 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar3
+        GRID(ip)%SOIL%a_ice =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%a_ice
+        GRID(ip)%SOIL%b_ice =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%b_ice
+        GRID(ip)%SOIL%bulk_dens =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%bulk_dens
+        GRID(ip)%SOIL%amp =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%amp
+        GRID(ip)%SOIL%phase =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%phase
+        GRID(ip)%SOIL%shift =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%shift
+        !Static Vegetation
+        GRID(ip)%VEG%tc=GRID_VEG_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%tc
+        GRID(ip)%VEG%tw=GRID_VEG_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%tw
+      endif
+    enddo
+  enddo
 
-      call convert_grads2model(GRID%SOIL%thetas,GRID_SOIL_2D%thetas,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%thetar,GRID_SOIL_2D%thetar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%bcbeta,GRID_SOIL_2D%bcbeta,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%psic,GRID_SOIL_2D%psic,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%xk0,GRID_SOIL_2D%xk0,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%VEG%tc,GRID_VEG_2D%tc,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%VEG%tw,GRID_VEG_2D%tw,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%zdeep,GRID_SOIL_2D%zdeep,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%tdeep,GRID_SOIL_2D%tdeep,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%zmid,GRID_SOIL_2D%zmid,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%tmid0,GRID_SOIL_2D%tmid0,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%rocpsoil,GRID_SOIL_2D%rocpsoil,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%quartz,GRID_SOIL_2D%quartz,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%ifcoarse,GRID_SOIL_2D%ifcoarse,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%srespar1,GRID_SOIL_2D%srespar1,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%srespar2,GRID_SOIL_2D%srespar2,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%srespar3,GRID_SOIL_2D%srespar3,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%a_ice,GRID_SOIL_2D%a_ice,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%b_ice,GRID_SOIL_2D%b_ice,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%bulk_dens,GRID_SOIL_2D%bulk_dens,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%amp,GRID_SOIL_2D%amp,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%phase,GRID_SOIL_2D%phase,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
-      call convert_grads2model(GRID%SOIL%shift,GRID_SOIL_2D%shift,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
  
       GLOBAL%inc_frozen = 1 !THIS MEANS THAT THE FROZEN ALGORITHM IS ALWAYS RUN
 
@@ -1809,6 +1792,7 @@ subroutine convert_grads2model_double(array_1d,array_2d,ipixnum,nrow,ncol,undef)
   !Map the kk position ot hte i,j position
   x = 1
   y = 0
+  array_1d = 0
   do irow = 1,nrow
     do icol =1,ncol
       if (y.eq.nrow)then
@@ -1860,15 +1844,24 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
   type(FILE_template),intent(in) :: FILE_INFO
   type(MAP_template),intent(inout) :: MAP(GLOBAL%nrow*GLOBAL%ncol)
   integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
-  integer :: irow,icol,irow_alt,icol_alt
+  integer :: irow,icol,irow_alt,icol_alt,x,y
   real*8 :: lat_ref,lon_ref,lat_res,lon_res
 
   !Find the latitude and longitude of the point of the reference grid
+  x = 1
+  y = 0
+  MAP%ilat = 0
+  MAP%ilon = 0
   do irow = 1,GLOBAL%nrow
     do icol = 1,GLOBAL%ncol
+      if (y.eq.GLOBAL%nrow)then
+        y=0
+        x=x+1
+      endif
+      y = y +1
       if (ipixnum(irow,icol) .gt. 0)then
-        lat_ref = GLOBAL%minlat + (irow-1)*GLOBAL%spatial_res 
-        lon_ref = GLOBAL%minlon + (icol-1)*GLOBAL%spatial_res
+        lat_ref = GLOBAL%minlat + (y-1)*GLOBAL%spatial_res 
+        lon_ref = GLOBAL%minlon + (x-1)*GLOBAL%spatial_res
         ! Find the closest latitude and longitude on the other grid
         irow_alt = nint((lat_ref - FILE_INFO%minlat)/FILE_INFO%spatial_res) + 1
         icol_alt = nint((lon_ref - FILE_INFO%minlon)/FILE_INFO%spatial_res) + 1
