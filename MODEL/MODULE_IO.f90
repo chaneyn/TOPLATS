@@ -885,9 +885,9 @@ end subroutine Write_Regional
 ! Read the image with the land cover clasifications.
 ! ====================================================================
 
-!print*,GRID(1:20)%VEG%ilandc
-      call rdimgi(GRID%VEG%ilandc,11,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
-!print*,GRID(1:20)%VEG%ilandc
+  do kk=1,maxval(IO%ipixnum)
+    GRID(kk)%VEG%ilandc = kk
+  enddo
 
 ! ####################################################################
 !! Convert the 2-d arrays to the model's 1-d arrays
@@ -895,14 +895,6 @@ end subroutine Write_Regional
 
         do kk=1,GLOBAL%nlandc
 
-                !Map the kk position to the i,j position
-                if(mod(kk,GLOBAL%nrow) .ne. 0)then
-                        ipos = kk/GLOBAL%nrow+1
-                        jpos = mod(kk,GLOBAL%nrow)
-                else
-                        ipos = kk/GLOBAL%nrow
-                        jpos = GLOBAL%nrow
-                endif
                 GRID(kk)%VEG%extinct = 0.00!VegData%extinct(ipos,jpos)
                 GRID(kk)%VEG%canclos = 1.00!VegData%canclos(ipos,jpos)
                 GRID(kk)%VEG%Tslope1 = 0.00!VegData%Tslope1(ipos,jpos)
@@ -1022,11 +1014,9 @@ end subroutine Write_Regional
 
       do 570 jj=1,GLOBAL%ncatch+1
 
-         !fbs(jj)  = zero
-
          do 560 kk=1,GLOBAL%nlandc
 
-            if (GRID(kk)%VEG%ivgtyp.eq.0) then
+            if (GRID(kk)%VEG%ivgtyp.eq.0 .and. GRID(kk)%VEG%ilandc .gt. 0) then
                
                if (jj .eq. GLOBAL%ncatch+1) then
                
@@ -1330,49 +1320,11 @@ end subroutine Write_Regional
 ! Read the soil classification image.
 ! ====================================================================
 
-      call rdimgi(GRID%SOIL%isoil,12,GLOBAL%nrow,GLOBAL%ncol,IO%ipixnum)
+  do kk=1,maxval(IO%ipixnum)
+    GRID(kk)%SOIL%isoil = kk
+  enddo
 
       print*,"rdsoil:  Read soil texture image"
-
-! ====================================================================
-! Pass the soil properties from the original i,j pos. to the kk pos.
-!  ====================================================================
-      do kk=1,GLOBAL%nsoil
-
-         !Map the kk position to the i,j position
-         if(mod(kk,GLOBAL%nrow) .ne. 0)then
-                ipos = kk/GLOBAL%nrow+1
-                jpos = mod(kk,GLOBAL%nrow)
-         else
-                ipos = kk/GLOBAL%nrow
-                jpos = GLOBAL%nrow
-         endif
-
-!         GRID(kk)%SOIL%bcbeta = GRID_SOIL_2D(ipos,jpos)%bcbeta
-!         GRID(kk)%SOIL%psic = GRID_SOIL_2D(ipos,jpos)%psic
-!         GRID(kk)%SOIL%thetas = GRID_SOIL_2D(ipos,jpos)%thetas
-!         GRID(kk)%SOIL%thetar = GRID_SOIL_2D(ipos,jpos)%thetar
-!         GRID(kk)%SOIL%xk0 = GRID_SOIL_2D(ipos,jpos)%xk0
-         !GRID(kk)%SOIL%zdeep = GRID_SOIL_2D(ipos,jpos)%zdeep
-         !GRID(kk)%SOIL%tdeep = GRID_SOIL_2D(ipos,jpos)%tdeep
-         !GRID(kk)%SOIL%zmid = GRID_SOIL_2D(ipos,jpos)%zmid
-         !GRID(kk)%SOIL%tmid0 = GRID_SOIL_2D(ipos,jpos)%tmid0
-         !GRID(kk)%SOIL%rocpsoil = GRID_SOIL_2D(ipos,jpos)%rocpsoil
-         !GRID(kk)%SOIL%quartz = GRID_SOIL_2D(ipos,jpos)%quartz
-         !GRID(kk)%SOIL%ifcoarse = GRID_SOIL_2D(ipos,jpos)%ifcoarse
-         !GRID(kk)%SOIL%srespar1 = GRID_SOIL_2D(ipos,jpos)%srespar1
-         !GRID(kk)%SOIL%srespar2 = GRID_SOIL_2D(ipos,jpos)%srespar2
-         !GRID(kk)%SOIL%srespar3 = GRID_SOIL_2D(ipos,jpos)%srespar3
-         !GRID(kk)%SOIL%a_ice = GRID_SOIL_2D(ipos,jpos)%a_ice
-         !GRID(kk)%SOIL%b_ice = GRID_SOIL_2D(ipos,jpos)%b_ice
-         !GRID(kk)%SOIL%bulk_dens = GRID_SOIL_2D(ipos,jpos)%bulk_dens
-         !GRID(kk)%SOIL%amp = GRID_SOIL_2D(ipos,jpos)%amp
-         !GRID(kk)%SOIL%phase = GRID_SOIL_2D(ipos,jpos)%phase
-         !GRID(kk)%SOIL%shift = GRID_SOIL_2D(ipos,jpos)%shift
-!         GRID(kk)%VEG%tc = GRID_VEG_2D(ipos,jpos)%tc
-!         GRID(kk)%VEG%tw = GRID_VEG_2D(ipos,jpos)%tw
-
-      enddo
 
       call convert_grads2model(GRID%SOIL%thetas,GRID_SOIL_2D%thetas,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
       call convert_grads2model(GRID%SOIL%thetar,GRID_SOIL_2D%thetar,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%SOIL_FILE%undef)
@@ -1504,58 +1456,6 @@ end subroutine Write_Regional
       return
 
       end subroutine rdsoil
-
-! ====================================================================
-!
-!			subroutine rdimgi
-!
-! ====================================================================
-!
-!>Subroutine to read in an image of integers and return an array
-!>of these values indexed by the soils-topographi! index
-!>pixel numbers.
-!
-! ====================================================================
-
-      subroutine rdimgi(ia,iu,nrow,ncol,ipixnum)
-
-      implicit none
-      integer :: ia(nrow*ncol),ipixnum(nrow,ncol)
-      integer :: nrow,ncol,iu,irow,icol,itmpval
-
-! ====================================================================
-! Loop through the image and read each value.
-! ====================================================================
-
-      do irow = 1,nrow
-
-         do icol = 1,ncol
-                
-             if (iu .eq. 12 .or. iu .eq. 11)then
-!                itmpval = (irow-1)*ncol + icol
-                itmpval = (icol-1)*nrow + irow
-                
-             else
-                read(iu,rec=((irow-1)*ncol) + icol) itmpval
-             endif
-! --------------------------------------------------------------------
-! If the location is within the area of interest then
-! assign to array 'ia', otherwise read next value.
-! --------------------------------------------------------------------
-
-            if (ipixnum(irow,icol).gt.0) then
-
-               ia(ipixnum(irow,icol)) = ipixnum(irow,icol)!itmpval
-
-            endif
-
-          enddo
-        
-      enddo
-
-      return
-
-      end subroutine rdimgi
 
 ! ====================================================================
 !
