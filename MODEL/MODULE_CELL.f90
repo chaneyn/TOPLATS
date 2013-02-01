@@ -44,8 +44,7 @@ contains
 
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
-      icatch = GRID(ipix)%VARS%icatch
-
+      icatch = GRID(ipix)%VARS%icatch  
       call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
          GRID(ilandc)%VEG,GRID(ipix)%VARS,&
          CAT(icatch),GLOBAL)

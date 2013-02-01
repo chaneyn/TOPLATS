@@ -181,10 +181,9 @@ end subroutine
       integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
       integer :: forcingnvars,i,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
-      real*8 :: temp(GLOBAL%ncol,GLOBAL%nrow)
       ipixnum = IO%ipixnum
       forcingnvars = 7
-      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,forcingnvars))
+      allocate(TempArray(GLOBAL%FORCING_FILE%nlon,GLOBAL%FORCING_FILE%nlat,forcingnvars))
      
 
 ! ####################################################################
@@ -192,6 +191,10 @@ end subroutine
 ! ####################################################################
 
   read(GLOBAL%FORCING_FILE%fp,rec=i) TempArray(:,:,:)
+
+  !Set all missing values to the areal average
+  call Replace_Undefined(TempArray,GLOBAL%Forcing_File%undef,GLOBAL%Forcing_File%nlon,&
+                   GLOBAL%Forcing_File%nlat,forcingnvars)
 
   do ilat = 1,GLOBAL%nrow
     do ilon = 1,GLOBAL%ncol 
@@ -216,6 +219,39 @@ end subroutine
   enddo
 
       end subroutine
+
+!>Subroutine to replace all undefined values with the areal average for an array
+subroutine Replace_Undefined(array,undef,nlon,nlat,nvars)
+
+  implicit none
+  integer,intent(in) :: nlat,nlon,nvars
+  real*4,intent(inout) :: array(nlon,nlat,nvars)
+  real*8,intent(in) :: undef
+  integer :: ivar,val_count,ilon,ilat
+  real*8 :: val
+
+  !Replace undefined values with the areal average for every variable
+  do ivar = 1,nvars
+    !Find average
+    val = 0.0d0
+    val_count = 0
+    do ilon=1,nlon
+      do ilat=1,nlat
+        if (int(array(ilon,ilat,ivar)) .ne. int(undef))then
+          val = val + array(ilon,ilat,ivar)
+          val_count = val_count + 1
+        endif
+      enddo
+    enddo
+    val = val/val_count
+    !Replace all missing values with the average value
+    where (int(array(:,:,ivar)) .eq. int(undef))
+      array(:,:,ivar) = val
+    endwhere
+  enddo
+
+end subroutine Replace_Undefined
+
 
 ! ####################################################################
 !> Subroutine to open input/output files, read and initialize time in-variant data.
@@ -317,7 +353,7 @@ end subroutine
       type (IO_template),intent(in) :: IO
       integer :: dvegnvars,ipos,jpos,ip,ilat,ilon
       real,dimension(:,:,:),allocatable :: TempArray
-      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat)
       dvegnvars = 2
 
 ! ====================================================================
@@ -328,8 +364,12 @@ end subroutine
 ! ====================================================================
 
       GLOBAL%ntdveg = GLOBAL%ntdveg + 1
-      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
+      allocate(TempArray(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat,dvegnvars))
       read(GLOBAL%DVEG_FILE%fp,rec=GLOBAL%ntdveg)TempArray
+  !Set all missing values to the areal average
+  call Replace_Undefined(TempArray,GLOBAL%DVEG_File%undef,GLOBAL%DVEG_File%nlon,&
+                   GLOBAL%DVEG_File%nlat,dvegnvars)
+
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
@@ -409,6 +449,13 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   real*8,dimension(:),allocatable :: array_1d
   real*4,dimension(:,:),allocatable :: temp
 
+  ! Set the global grid information to the same as the topographic index
+  GLOBAL%minlat = GLOBAL%TI_FILE%minlat
+  GLOBAL%minlon = GLOBAL%TI_FILE%minlon
+  GLOBAL%spatial_res = GLOBAL%TI_FILE%spatial_res
+  GLOBAL%nrow = GLOBAL%TI_FILE%nlat
+  GLOBAL%ncol = GLOBAL%TI_FILE%nlon
+
   !#####################################################################
   ! Allocate memory
   !#####################################################################
@@ -466,13 +513,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
       endif
 
-  ! Set the global grid information to the same as the topographic index
-  GLOBAL%minlat = GLOBAL%TI_FILE%minlat
-  GLOBAL%minlon = GLOBAL%TI_FILE%minlon
-  GLOBAL%spatial_res = GLOBAL%TI_FILE%spatial_res
-  GLOBAL%nrow = GLOBAL%TI_FILE%nlat
-  GLOBAL%ncol = GLOBAL%TI_FILE%nlon
-
   ! Map other variables using nni to the topographic index grid
   !Air temperature
   call spatial_mapping(GLOBAL,GRID%MET%tdry_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
@@ -527,9 +567,13 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   allocate(array_1d(GLOBAL%K0_FILE%nlon*GLOBAL%K0_FILE%nlat))
 
   read(GLOBAL%K0_FILE%fp,rec=1)temp
+  !Set all missing values to the areal average
+  call Replace_Undefined(temp,GLOBAL%K0_File%undef,GLOBAL%K0_File%nlon,&
+                   GLOBAL%K0_File%nlat,1)
 
   ! Convert from single to double point precision
   array_2d = temp
+  ki = 0.d0
 
   do ilat = 1,GLOBAL%nrow
     do ilon = 1,GLOBAL%ncol
@@ -547,7 +591,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
     else
       ti(kk) = 0.0
     endif
-  enddo
+  enddo 
+!  where(ti .lt. 1)ti = 100
+!  where(ti .gt. 100000000)ti = 100
 
   deallocate(array_2d)
   deallocate(temp)
@@ -676,36 +722,39 @@ GLOBAL%REGIONAL_FILE%fp = 110
 !Open the files
 
 !Topographic index file
-open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
+open(unit=GLOBAL%TI_FILE%fp,file=GLOBAL%TI_FILE%fname,form='unformatted',&
+     access='direct',recl=4*GLOBAL%TI_FILE%nlat*GLOBAL%TI_FILE%nlon)
 
 !Subbasin distribution file
-open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
+open(unit=GLOBAL%Subbasin_FILE%fp,file=GLOBAL%Subbasin_FILE%fname,form='unformatted',&
+     access='direct',recl=4*GLOBAL%Subbasin_FILE%nlat*GLOBAL%Subbasin_FILE%nlon)
 
 !Saturated hydraulic conductivity file
-open(unit=GLOBAL%K0_FILE%fp,file=GLOBAL%K0_FILE%fname,form='unformatted',access='direct',recl=4*nrow*ncol)
+open(unit=GLOBAL%K0_FILE%fp,file=GLOBAL%K0_FILE%fname,form='unformatted',&
+     access='direct',recl=4*GLOBAL%K0_FILE%nlat*GLOBAL%K0_FILE%nlon)
 
 !Catchment table parameters file
 open(unit=GLOBAL%CL_table_FILE%fp,file=GLOBAL%CL_table_FILE%fname)
 
 !Soil Parameter File
 open(GLOBAL%SOIL_FILE%fp,file=trim(GLOBAL%SOIL_FILE%fname),status='old',access='direct',form='unformatted',&
-     recl=ncol*nrow*soilnvars*4)
+     recl=GLOBAL%SOIL_FILE%nlon*GLOBAL%SOIL_FILE%nlat*soilnvars*4)
 
 !Vegetation Static Parameter File
 open(GLOBAL%VEG_FILE%fp,file=trim(GLOBAL%VEG_FILE%fname),status='old',access='direct',form='unformatted',&
-     recl=ncol*nrow*vegnvars*4)
+     recl=GLOBAL%VEG_FILE%nlon*GLOBAL%VEG_FILE%nlat*vegnvars*4)
 
 !Vegetation Dynamic Parameter File
 open(GLOBAL%DVEG_FILE%fp,file=trim(GLOBAL%DVEG_FILE%fname),status='old',access='direct',form='unformatted',&
-     recl=ncol*nrow*dvegnvars*4)
+     recl=GLOBAL%DVEG_FILE%nlon*GLOBAL%DVEG_FILE%nlat*dvegnvars*4)
 
 !Forcing Data Set
 open(GLOBAL%FORCING_FILE%fp,file=trim(GLOBAL%FORCING_FILE%fname),status='old',access='direct',&
-     form='unformatted',recl=ncol*nrow*nforcingvars*4)
+     form='unformatted',recl=GLOBAL%FORCING_FILE%nlon*GLOBAL%FORCING_FILE%nlat*nforcingvars*4)
 
 !Output Data Set
 open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',access='direct',&
-     form='unformatted',recl=ncol*nrow*noutvars*4)
+     form='unformatted',recl=GLOBAL%TI_FILE%nlon*GLOBAL%TI_FILE%nlat*noutvars*4)
 
 !Regional Variables Output
 open(GLOBAL%REGIONAL_FILE%fp,file=trim(GLOBAL%REGIONAL_FILE%fname))
@@ -779,7 +828,7 @@ end subroutine Write_Regional
       type (REGIONAL_template),intent(inout) :: REG
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
       type (IO_template),intent(inout) :: IO
-      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
@@ -787,7 +836,7 @@ end subroutine Write_Regional
       integer :: jj,kk
       vegnvars = 20
       dvegnvars = 2
-      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,vegnvars))
+      allocate(TempArray(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat,vegnvars))
 
 ! ====================================================================
 ! Read spatially constant vegetation parameters.
@@ -814,6 +863,10 @@ end subroutine Write_Regional
       print*,"rdveg:  Reading in all the vegetation properties at once"
 
       read(GLOBAL%VEG_FILE%fp,rec=1)TempArray(:,:,:)
+  !Set all missing values to the areal average
+  call Replace_Undefined(TempArray,GLOBAL%Veg_File%undef,GLOBAL%Veg_File%nlon,&
+                   GLOBAL%Veg_File%nlat,vegnvars)
+
 
       GRID_VEG_2D%ivgtyp = int(TempArray(:,:,1))
       GRID_VEG_2D%xlai = dble(TempArray(:,:,2))
@@ -841,11 +894,14 @@ end subroutine Write_Regional
 ! ####################################################################
 
       deallocate(TempArray)
-      allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,dvegnvars))
+      allocate(TempArray(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat,dvegnvars))
 
       print*,"rdveg:  Reading in the dynamic vegetation properties"
 
       read(GLOBAL%DVEG_FILE%fp,rec=1)TempArray(:,:,:)
+  !Set all missing values to the areal average
+  call Replace_Undefined(TempArray,GLOBAL%DVEG_File%undef,GLOBAL%DVEG_File%nlon,&
+                   GLOBAL%DVEG_File%nlat,dvegnvars)
 
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
@@ -1240,8 +1296,8 @@ end subroutine Write_Regional
       type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
       type (IO_template),intent(inout) :: IO
-      type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%ncol,GLOBAL%nrow)
-      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%ncol,GLOBAL%nrow)
+      type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat)
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
       integer :: soilnvars,ipos,jpos,jj,kk,nn,ip,ilat,ilon
       integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       real,dimension(:,:,:),allocatable :: TempArray
@@ -1249,7 +1305,7 @@ end subroutine Write_Regional
       real*8 :: frsoil(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       soilnvars = 23
 
- allocate(TempArray(GLOBAL%ncol,GLOBAL%nrow,soilnvars))
+ allocate(TempArray(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat,soilnvars))
 
 ! ====================================================================
 ! Read spatially constant bare soil parameters and GLOBAL.
@@ -1269,6 +1325,10 @@ end subroutine Write_Regional
 
       print*,"rdsoil:  Reading in all soil properties at once"
       read(GLOBAL%SOIL_FILE%fp,rec=1)TempArray(:,:,:)
+  !Set all missing values to the areal average
+  call Replace_Undefined(TempArray,GLOBAL%Soil_File%undef,GLOBAL%Soil_File%nlon,&
+                   GLOBAL%Soil_File%nlat,soilnvars)
+
       GRID_SOIL_2D%bcbeta = dble(TempArray(:,:,1))
       GRID_SOIL_2D%psic = dble(TempArray(:,:,2))
       GRID_SOIL_2D%thetas = dble(TempArray(:,:,3))
@@ -1333,7 +1393,6 @@ end subroutine Write_Regional
       endif
     enddo
   enddo
-
  
       GLOBAL%inc_frozen = 1 !THIS MEANS THAT THE FROZEN ALGORITHM IS ALWAYS RUN
 
@@ -1852,6 +1911,8 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
   !Find the latitude and longitude of the point of the reference grid
   x = 1
   y = 0
+  irow = 0
+  icol = 0
   MAP%ilat = 0
   MAP%ilon = 0
   do irow = 1,GLOBAL%nrow
@@ -1867,6 +1928,11 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
         ! Find the closest latitude and longitude on the other grid
         irow_alt = nint((lat_ref - FILE_INFO%minlat)/FILE_INFO%spatial_res) + 1
         icol_alt = nint((lon_ref - FILE_INFO%minlon)/FILE_INFO%spatial_res) + 1
+        ! Ensure it is within the bounds
+        if (irow_alt .gt. FILE_INFO%nlat)irow_alt = FILE_INFO%nlat
+        if (irow_alt .lt. 1)irow_alt = 1
+        if (icol_alt .gt. FILE_INFO%nlon)icol_alt = FILE_INFO%nlon
+        if (icol_alt .lt. 1)icol_alt = 1
         ! Place mapping in array
         MAP(ipixnum(irow,icol))%ilat = irow_alt
         MAP(ipixnum(irow,icol))%ilon = icol_alt
