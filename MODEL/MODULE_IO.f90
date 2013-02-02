@@ -592,8 +592,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       ti(kk) = 0.0
     endif
   enddo 
-!  where(ti .lt. 1)ti = 100
-!  where(ti .gt. 100000000)ti = 100
 
   deallocate(array_2d)
   deallocate(temp)
