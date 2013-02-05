@@ -195,7 +195,6 @@ type GLOBAL_template
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
         integer :: ioppet,iopwv,iopstab,iopgveg,iopthermc,iopthermc_v
         integer :: iopsmini
-        integer :: dtveg
         integer :: iopflg,istflg,iophd
         real*8 :: frcbeta
         !STORM PARAM
@@ -204,8 +203,10 @@ type GLOBAL_template
         !Vegetation
         integer :: ntdveg
         real*8 :: wc0
+        integer :: dtveg
+        integer :: dynamic_vegetation
         !Time
-        real*8 :: djday = 0.d0
+        integer :: time,itime,old_date(9),new_date(9)
         !Misc
         real*8 :: mul_fac
         !OpenMP parameters

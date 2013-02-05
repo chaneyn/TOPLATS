@@ -96,6 +96,8 @@ subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
   type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
   type (IO_template),intent(inout) :: IO
   integer,intent(in) :: i
+  integer :: date(9)
+  integer :: itime,time
 
 !#####################################################################
 ! Define the new water table
@@ -104,16 +106,32 @@ subroutine Read_Data(GLOBAL,GRID,CAT,IO,i)
   CAT%zbar = CAT%zbar1
 
 !#####################################################################
-! Update the vegetation parameters if required.
+! Find the date information for the current time step
 !#####################################################################
 
-  if (mod(i,GLOBAL%dtveg).eq.0) call rdveg_update(GLOBAL,GRID,IO)
+  GLOBAL%time = GLOBAL%itime + GLOBAL%dt*(i-1)
+  GLOBAL%old_date = GLOBAL%new_date
+  call gmtime(GLOBAL%time,GLOBAL%new_date)
 
 !#####################################################################
-! Update the decimal Julian day.
+! Update the vegetation parameters when required.
 !#####################################################################
 
-  GLOBAL%djday = GLOBAL%djday + 0.0416666667d0*2.777777777d-4*GLOBAL%dt
+  if (GLOBAL%dynamic_vegetation .eq. 0)then
+    !Monthly Climatology
+    if (GLOBAL%new_date(5) .ne. GLOBAL%old_date(5))then
+      GLOBAL%ntdveg = GLOBAL%ntdveg + 1
+      if (GLOBAL%ntdveg .gt. 12)GLOBAL%ntdveg = 1
+      call rdveg_update(GLOBAL,GRID,IO)
+    endif
+
+  elseif (GLOBAL%dynamic_vegetation .eq. 1)then
+    !Dynamic update
+    if (mod(i,GLOBAL%dtveg).eq.0)then
+      GLOBAL%ntdveg = GLOBAL%ntdveg + 1
+      call rdveg_update(GLOBAL,GRID,IO)
+    endif
+  endif
 
 !#####################################################################
 ! Read meteorological data.
@@ -363,7 +381,6 @@ end subroutine Replace_Undefined
 ! transpiration option.
 ! ====================================================================
 
-      GLOBAL%ntdveg = GLOBAL%ntdveg + 1
       allocate(TempArray(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat,dvegnvars))
       read(GLOBAL%DVEG_FILE%fp,rec=GLOBAL%ntdveg)TempArray
   !Set all missing values to the areal average
@@ -1682,6 +1699,10 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('REGIONAL_fname',GLOBAL,GLOBAL%REGIONAL_FILE%fname)
   !Number of threads used in openmp
   call Extract_Info_General_File('nthreads',GLOBAL,GLOBAL%nthreads)
+  !Initial time stamp in epoch time
+  call Extract_Info_General_File('itime',GLOBAL,GLOBAL%itime)
+  !Flag defining how to read in the vegetation
+  call Extract_Info_General_File('dynamic_vegetation',GLOBAL,GLOBAL%dynamic_vegetation)
   
   !Close the file
   close(GLOBAL%GENERAL_FILE%fp)
