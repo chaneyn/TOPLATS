@@ -223,6 +223,7 @@ type GLOBAL_template
         type(FILE_template) :: FORCING_FILE
         type(FILE_template) :: OUTPUT_FILE
         type(FILE_template) :: REGIONAL_FILE
+        type(FILE_template) :: CATCHMENT_FILE
   !spatial resolution of data
   real*8 :: spatial_res
   !dimensions

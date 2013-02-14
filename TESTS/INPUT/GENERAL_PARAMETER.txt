@@ -38,6 +38,7 @@ CL_Table_fname 'TESTS/INPUT/CL_Table'
 #OUTPUT FILES
 OUTPUT_fname 'TESTS/OUTPUT/OUTPUT.bin'
 REGIONAL_fname 'TESTS/OUTPUT/Regional_Variables.txt'
+CATCHMENT_fname 'TESTS/OUTPUT/Catchment_Variables.txt'
 
 #PARALLELIZATION
-nthreads 1 #Number of threads per node (OpenMP)
+nthreads 8 #Number of threads per node (OpenMP)

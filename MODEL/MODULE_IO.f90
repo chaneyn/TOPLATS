@@ -145,12 +145,13 @@ end subroutine Read_Data
 !> Subroutine to output data to file
 !#####################################################################
 
-subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
+subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 
   implicit none
   type (GLOBAL_template),intent(inout) :: GLOBAL
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (REGIONAL_template),intent(inout) :: REG
+  type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
   type (IO_template),intent(inout) :: IO
   integer,intent(in) :: i
 
@@ -161,11 +162,17 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i)
   call Write_Regional(i,REG,GLOBAL)
 
 !#####################################################################
+! Output catchment variables
+!#####################################################################
+
+  call Write_Catchment(i,CAT,GLOBAL)
+
+!#####################################################################
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-                    IO%ipixnum,i,GLOBAL)
+  !call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  !                  IO%ipixnum,i,GLOBAL)
 
 end subroutine Write_Data
 
@@ -774,6 +781,9 @@ open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',
 !Regional Variables Output
 open(GLOBAL%REGIONAL_FILE%fp,file=trim(GLOBAL%REGIONAL_FILE%fname))
 
+!Catchment Variables Output
+open(GLOBAL%CATCHMENT_FILE%fp,file=trim(GLOBAL%CATCHMENT_FILE%fname))
+
 end subroutine FILE_OPEN
 
 !>Subroutine to close all open files
@@ -824,6 +834,17 @@ subroutine Write_Regional(i,REG,GLOBAL)
   write(GLOBAL%REGIONAL_FILE%fp,*)i,REG
 
 end subroutine Write_Regional
+
+!>subroutine to write catchment variables to file
+subroutine Write_Catchment(i,CAT,GLOBAL)
+
+  type(CATCHMENT_template),dimension(:),intent(in) :: CAT
+  type(GLOBAL_template),intent(in) :: GLOBAL
+  integer,intent(in) :: i
+
+  write(GLOBAL%CATCHMENT_FILE%fp,*)i,CAT%qb,CAT%qsurf*CAT%area
+
+end subroutine Write_Catchment
 
 ! ====================================================================
 !
@@ -1697,6 +1718,8 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('OUTPUT_fname',GLOBAL,GLOBAL%OUTPUT_FILE%fname)
   !Output file
   call Extract_Info_General_File('REGIONAL_fname',GLOBAL,GLOBAL%REGIONAL_FILE%fname)
+  !Output Catchment file
+  call Extract_Info_General_File('CATCHMENT_fname',GLOBAL,GLOBAL%CATCHMENT_FILE%fname)
   !Number of threads used in openmp
   call Extract_Info_General_File('nthreads',GLOBAL,GLOBAL%nthreads)
   !Initial time stamp in epoch time

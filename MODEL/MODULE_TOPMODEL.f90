@@ -31,23 +31,32 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   call instep_catchment(GLOBAL%ncatch,CAT)
 
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
+!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+
   do ipix = 1,GLOBAL%npix
 
     isoil = GRID(ipix)%SOIL%isoil
     ilandc = GRID(ipix)%VEG%ilandc
     icatch = GRID(ipix)%VARS%icatch
 
+!!$OMP CRITICAL 
     call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
        GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
        ilandc)
+!!$OMP END CRITICAL 
+
   enddo
+
+!$OMP END DO
+!$OMP END PARALLEL
  
   do icatch = 1,GLOBAL%ncatch
 
     call catflx(GLOBAL%pixsiz,CAT(icatch))
 
     call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
-  
+ 
   enddo 
 
 end subroutine Update_Catchments

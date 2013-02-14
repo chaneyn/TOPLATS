@@ -37,7 +37,7 @@ contains
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ipix,isoil,ilandc,icatch) 
+!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
 !$OMP DO SCHEDULE(DYNAMIC) ORDERED
 
     do ipix=1,GLOBAL%npix

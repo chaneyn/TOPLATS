@@ -78,7 +78,7 @@ do i=1,GLOBAL%ndata
 ! Write out the data for this time step
 !#####################################################################
 
-  call Write_Data(GLOBAL,GRID,IO,REG,i)
+  call Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 
 enddo
 
