@@ -37,8 +37,7 @@ contains
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
-!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
 
     do ipix=1,GLOBAL%npix
 
@@ -51,8 +50,7 @@ contains
 
     enddo
 
-!$OMP END DO
-!$OMP END PARALLEL
+!$OMP END PARALLEL DO
 
   end subroutine Update_Cells
 

@@ -31,8 +31,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   call instep_catchment(GLOBAL%ncatch,CAT)
 
-!$OMP PARALLEL DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
-!$OMP DO SCHEDULE(DYNAMIC) ORDERED
+!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
 
   do ipix = 1,GLOBAL%npix
 
@@ -48,8 +47,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   enddo
 
-!$OMP END DO
-!$OMP END PARALLEL
+!$OMP END PARALLEL DO
  
   do icatch = 1,GLOBAL%ncatch
 
