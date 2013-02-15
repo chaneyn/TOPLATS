@@ -35,7 +35,7 @@ contains
 ! Sum the local water and energy balance fluxes.
 !#####################################################################
 
-!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(ipix,isoil,ilandc,icatch)
+!!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(ipix,isoil,ilandc,icatch)
 
     do ipix = 1,GLOBAL%npix
 
@@ -51,7 +51,7 @@ contains
 
     enddo
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 
     call Compute_Regional(REG,GLOBAL,GRID,CAT)
 
@@ -875,7 +875,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
 ! Calculate the percent of land surface in various surface states.
 ! ====================================================================
 
-!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil) 
+!!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil) 
 
       do ipix = 1,npix
         isoil = GRID(ipix)%SOIL%isoil
@@ -887,7 +887,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
           REG%persac,REG%peruac,REG%perusc,i,ipix)
       enddo
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 
       pr1sat = REG%pr1sat
       pr3sat = REG%pr3sat

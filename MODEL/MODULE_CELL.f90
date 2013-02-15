@@ -30,6 +30,11 @@ contains
     type (GLOBAL_template),intent(in) :: GLOBAL
     integer,intent(in) :: i
     integer :: ipix,isoil,icatch,ilandc
+    type (GRID_VEG_template) :: GRID_VEG
+    type (GRID_SOIL_template) :: GRID_SOIL
+    type (GRID_MET_template) :: GRID_MET
+    type (GRID_VARS_template) :: GRID_VARS
+    type (CATCHMENT_template) :: CAT_INFO
 
 !#####################################################################
 ! Update each grid cell
@@ -37,16 +42,31 @@ contains
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
 
-!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
+!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch,GRID_VEG,&
+!$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO) 
 
     do ipix=1,GLOBAL%npix
 
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
       icatch = GRID(ipix)%VARS%icatch  
-      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
-         CAT(icatch),GLOBAL)
+      GRID_MET = GRID(ipix)%MET
+      GRID_SOIL = GRID(isoil)%SOIL
+      GRID_VEG = GRID(ilandc)%VEG
+      GRID_VARS = GRID(ipix)%VARS
+      CAT_INFO = CAT(icatch)
+!      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
+!         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
+!         CAT(icatch),GLOBAL)
+      call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
+         GRID_VEG,GRID_VARS,&
+         CAT_INFO,GLOBAL)
+
+      GRID(ipix)%MET = GRID_MET
+      GRID(isoil)%SOIL = GRID_SOIL
+      GRID(ilandc)%VEG = GRID_VEG
+      GRID(ipix)%VARS = GRID_VARS
+      CAT(icatch) = CAT_INFO
 
     enddo
 
