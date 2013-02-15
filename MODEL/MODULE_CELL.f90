@@ -27,7 +27,7 @@ contains
     implicit none
     type (GRID_template),dimension(:),intent(inout) :: GRID
     type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
-    type (GLOBAL_template),intent(in) :: GLOBAL
+    type (GLOBAL_template),intent(inout) :: GLOBAL
     integer,intent(in) :: i
     integer :: ipix,isoil,icatch,ilandc
     real*8 :: omp_get_wtime,start_time,end_time
@@ -43,14 +43,15 @@ contains
 !#####################################################################
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
-!    start_time = omp_get_wtime()
+    GLOBAL%mul_fac = 1.0d0
+    start_time = omp_get_wtime()
 
 !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch,GRID_VEG,&
 !$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
     do ipix=1,GLOBAL%npix
 
-!      !$OMP CRITICAL
+      !Extract data
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
       icatch = GRID(ipix)%VARS%icatch  
@@ -60,25 +61,18 @@ contains
       GRID_VARS = GRID(ipix)%VARS
       CAT_INFO = CAT(icatch)
       GLOBAL_INFO = GLOBAL
-!      !$OMP END CRITICAL
-!      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
-!         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
-!         CAT(icatch),GLOBAL)
+      !Update the cell
       call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
          GRID_VEG,GRID_VARS,&
          CAT_INFO,GLOBAL_INFO)
-!      !$OMP CRITICAL
-      GRID(ipix)%MET = GRID_MET
+      !Write back
       GRID(isoil)%SOIL = GRID_SOIL
-      GRID(ilandc)%VEG = GRID_VEG
       GRID(ipix)%VARS = GRID_VARS
-      CAT(icatch) = CAT_INFO 
-!      !$OMP END CRITICAL
 
     enddo
 
 !$OMP END PARALLEL DO
-!    end_time = omp_get_wtime()
+    end_time = omp_get_wtime()
 !    print*,end_time - start_time
 
   end subroutine Update_Cells
@@ -108,7 +102,6 @@ contains
       type (CELL_VARS_template) :: CELL_VARS
       integer ipix,i
       real*8 snow,rain,rrr      
-      GLOBAL%mul_fac = 1.0d0
       
 !Point Data Initializations
 !Water Balance
