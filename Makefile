@@ -1,5 +1,5 @@
-GFC = /home/ice/nchaney/UTILS/gcc-4.8/bin/gfortran
-#GFC = gfortran
+#GFC = /home/ice/nchaney/UTILS/gcc-4.8/bin/gfortran
+GFC = gfortran
 IFC = /opt/intel/bin/ifort
 FFLAGS = -g -O0
 LIBS = -fopenmp

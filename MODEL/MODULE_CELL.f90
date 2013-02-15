@@ -30,23 +30,27 @@ contains
     type (GLOBAL_template),intent(in) :: GLOBAL
     integer,intent(in) :: i
     integer :: ipix,isoil,icatch,ilandc
+    real*8 :: omp_get_wtime,start_time,end_time
     type (GRID_VEG_template) :: GRID_VEG
     type (GRID_SOIL_template) :: GRID_SOIL
     type (GRID_MET_template) :: GRID_MET
     type (GRID_VARS_template) :: GRID_VARS
     type (CATCHMENT_template) :: CAT_INFO
+    type (GLOBAL_template) :: GLOBAL_INFO
 
 !#####################################################################
 ! Update each grid cell
 !#####################################################################
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+!    start_time = omp_get_wtime()
 
 !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch,GRID_VEG,&
-!$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO) 
+!$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
     do ipix=1,GLOBAL%npix
 
+!      !$OMP CRITICAL
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
       icatch = GRID(ipix)%VARS%icatch  
@@ -55,22 +59,27 @@ contains
       GRID_VEG = GRID(ilandc)%VEG
       GRID_VARS = GRID(ipix)%VARS
       CAT_INFO = CAT(icatch)
+      GLOBAL_INFO = GLOBAL
+!      !$OMP END CRITICAL
 !      call Update_Cell(ipix,i,GRID(ipix)%MET,GRID(isoil)%SOIL,&
 !         GRID(ilandc)%VEG,GRID(ipix)%VARS,&
 !         CAT(icatch),GLOBAL)
       call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
          GRID_VEG,GRID_VARS,&
-         CAT_INFO,GLOBAL)
-
+         CAT_INFO,GLOBAL_INFO)
+!      !$OMP CRITICAL
       GRID(ipix)%MET = GRID_MET
       GRID(isoil)%SOIL = GRID_SOIL
       GRID(ilandc)%VEG = GRID_VEG
       GRID(ipix)%VARS = GRID_VARS
-      CAT(icatch) = CAT_INFO
+      CAT(icatch) = CAT_INFO 
+!      !$OMP END CRITICAL
 
     enddo
 
 !$OMP END PARALLEL DO
+!    end_time = omp_get_wtime()
+!    print*,end_time - start_time
 
   end subroutine Update_Cells
 
