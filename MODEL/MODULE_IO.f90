@@ -2,6 +2,8 @@ MODULE MODULE_IO
 
 USE MODULE_VARIABLES
 
+USE MODULE_TOPMODEL
+
 !Add the variables that are reused throughout the subroutines
 
 implicit none
@@ -503,6 +505,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   !####################################################################
 
   call rdatb(atb,GLOBAL,IO)
+  GRID%VARS%TI = atb
 
 ! ====================================================================
 ! Read in the catchment look-up table - read different values based
@@ -618,10 +621,18 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       ti(kk) = 0.0
     endif
   enddo 
+  GRID%VARS%T0 = ti
 
   deallocate(array_2d)
   deallocate(temp)
   deallocate(array_1d)
+
+
+! ====================================================================
+! Calculate the generalized soils-topographic index for each catchment
+! ====================================================================
+
+  call Calculate_GSTI(GLOBAL,CAT,GRID)
 
 ! ====================================================================
 ! Calculate the average topographi! index value, the average of 
@@ -633,6 +644,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
          sumatb(kk) = 0.0
          sumlti(kk) = 0.0
          icount(kk) = 0
+         CAT(GRID(kk)%VARS%icatch)%lambda = zero
 
 400   continue
 
@@ -640,6 +652,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          sumatb(GRID(kk)%VARS%icatch) = sumatb(GRID(kk)%VARS%icatch) + atb(kk)
          sumlti(GRID(kk)%VARS%icatch) = sumlti(GRID(kk)%VARS%icatch) + dlog(ti(kk))
+         CAT(GRID(kk)%VARS%icatch)%lambda = CAT(GRID(kk)%VARS%icatch)%lambda + GRID(kk)%VARS%GSTI
          icount(GRID(kk)%VARS%icatch) = icount(GRID(kk)%VARS%icatch) + 1
 
 500   continue
@@ -650,11 +663,13 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
             CAT(kk)%xlamda = 0
             lte(kk) = 0
+            CAT(kk)%lambda = zero
 
          else
 
             CAT(kk)%xlamda = sumatb(kk)/icount(kk)
             lte(kk) = sumlti(kk)/icount(kk)
+            CAT(kk)%lambda = CAT(kk)%lambda/icount(kk)
 
          endif
 
@@ -665,6 +680,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       print*,'Area',CAT(1)%area
       print*,'ln Te',lte(1)
       print*,'Lambda',CAT(1)%xlamda
+      print*,'Lambda',CAT(1)%lambda
 
 ! ====================================================================
 ! Calculate soils-topographi! index for each pixel.
@@ -675,17 +691,6 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
          GRID(kk)%VARS%atanb = atb(kk) + lte(GRID(kk)%VARS%icatch) - dlog(ti(kk))
 
 50    continue
-
-! ====================================================================
-! Calculate the generalized soils-topographic index for each catchment
-! ====================================================================
-print*,CAT%n
-
-!  do kk = 1,GLOBAL%npix
-
-!    GRID(kk)%VARS%GSTI = 
-
-!  enddo
 
 ! ====================================================================
 ! Calculate the initial water table depth for each catchment.
@@ -1739,6 +1744,8 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('itime',GLOBAL,GLOBAL%itime)
   !Flag defining how to read in the vegetation
   call Extract_Info_General_File('dynamic_vegetation',GLOBAL,GLOBAL%dynamic_vegetation)
+  !Flag defining the saturate hydraulic conductivity profile (0-Sivapalan,1987,1-Chaney,2013)
+  call Extract_Info_General_File('KS_PROFILE_TYPE',GLOBAL,GLOBAL%KS_TYPE)
   
   !Close the file
   close(GLOBAL%GENERAL_FILE%fp)

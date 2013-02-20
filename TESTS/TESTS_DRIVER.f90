@@ -8,6 +8,8 @@ USE MODULE_LAND
 
 USE MODULE_CANOPY
 
+USE MODULE_TOPMODEL
+
 implicit none
 
 contains
@@ -1156,9 +1158,84 @@ contains
     calcnet_true = 0.0000000
     call set_unit_name ('calcnet_test2')
     call assert_equals (calcnet_result,calcnet_true)
-
   end subroutine
- 
+
+  subroutine Calculate_GSTI_test1()
+
+  implicit none
+  type (GLOBAL_template) :: GLOBAL
+  type (GRID_template) :: GRID(1)
+  type (CATCHMENT_template) :: CAT(1)
+  real*8 :: GSTI_result,GSTI_true
+  CAT(1)%n = 1000.0
+  GLOBAL%npix = 1
+  GRID(1)%VARS%TI = 10.0
+  GRID(1)%VARS%T0 = 5.0
+  GRID(1)%VARS%icatch = 1
+  GSTI_true = 1.0084184156474694d0
+  call Calculate_GSTI(GLOBAL,CAT,GRID)
+  GSTI_result = GRID(1)%VARS%GSTI
+  call set_unit_name ('Calculate_GSTI_test1')
+  call assert_equals (GSTI_result,GSTI_true)
+  
+  end subroutine Calculate_GSTI_test1
+
+  subroutine Calculate_GSTI_test2()
+
+  implicit none
+  type (GLOBAL_template) :: GLOBAL
+  type (GRID_template) :: GRID(1)
+  type (CATCHMENT_template) :: CAT(1)
+  real*8 :: GSTI_result,GSTI_true
+  CAT(1)%n = 10.0
+  GLOBAL%npix = 1
+  GRID(1)%VARS%TI = 2.0
+  GRID(1)%VARS%T0 = 30.0
+  GRID(1)%VARS%icatch = 1
+  GSTI_true = 0.8880590696282229d0
+  call Calculate_GSTI(GLOBAL,CAT,GRID)
+  GSTI_result = GRID(1)%VARS%GSTI
+  call set_unit_name ('Calculate_GSTI_test2')
+  call assert_equals (GSTI_result,GSTI_true)
+
+  end subroutine Calculate_GSTI_test2
+
+  subroutine Redistribute_Zbar_test1()
+
+  implicit none
+  real*8 :: n,ff,lambda,GSTI,zbar,zw
+  real*8 :: zw_true,zw_result
+  n = 1000.0
+  ff = 1.0d0
+  lambda = 1.0024028832083813d0
+  GSTI = 1.0020009998333332d0
+  zbar = 3.d0
+  call Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
+  zw_true = 3.3997172510522753d0
+  zw_result = zw
+  call set_unit_name ('Redistribute_Zbar_test1')
+  call assert_equals (zw_result,zw_true)
+
+  end subroutine Redistribute_Zbar_test1
+
+  subroutine Redistribute_Zbar_test2()
+
+  implicit none
+  real*8 :: n,ff,lambda,GSTI,zbar,zw
+  real*8 :: zw_true,zw_result
+  n = 100.0
+  ff = 2.0d0
+  lambda = 1.0241620536627736d0
+  GSTI = 1.0508543170383544d0
+  zbar = 3.d0
+  call Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
+  zw_true = 1.7750606711451313d0
+  zw_result = zw
+  call set_unit_name ('Redistribute_Zbar_test2')
+  call assert_equals (zw_result,zw_true)
+
+  end subroutine Redistribute_Zbar_test2
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -1220,6 +1297,10 @@ contains
     call calcwt_test2()
     call calcnet_test1()
     call calcnet_test2()
+    call Calculate_GSTI_test1()
+    call Calculate_GSTI_test2()
+    call Redistribute_Zbar_test1()
+    call Redistribute_Zbar_test2()
 
     !Summarize and finalize the unit tests
     call fruit_summary

@@ -8,6 +8,8 @@ MODULE MODULE_LAND
 
   USE MODULE_SNOW
 
+  USE MODULE_TOPMODEL
+
   implicit none
 
   contains
@@ -155,7 +157,8 @@ MODULE MODULE_LAND
        GRID_VARS%row,GRID_VARS%rzsmold,GRID_VARS%tzsmold,CELL_VARS%r_mossmold,GRID_VARS%rzsm,GRID_VARS%tzsm,&
        GRID_VARS%r_mossm1,GRID_VARS%zmoss,GRID_VEG%r_moss_depth,&
        GRID_VEG%thetas_moss,CELL_VARS%rzsm_u,GRID_VARS%rzsm_f,CELL_VARS%tzsm_u,GRID_VARS%tzsm_f,GRID_VARS%r_mossm1_u,&
-       GRID_VARS%r_mossm1_f,i,GRID_VEG%a_ice_moss,GRID_VEG%b_ice_moss,GRID_VEG%bulk_dens_moss)
+       GRID_VARS%r_mossm1_f,i,GRID_VEG%a_ice_moss,GRID_VEG%b_ice_moss,GRID_VEG%bulk_dens_moss,&
+       GRID_VARS%GSTI,CAT%LAMBDA,CAT%N,GLOBAL%KS_TYPE)
 
 ! ====================================================================
 ! Calculate the infiltration.
@@ -449,7 +452,7 @@ MODULE MODULE_LAND
        tzsm1_u,rzsm1_f,tzsm1_f,tsoilold,bulk_dens,a_ice,b_ice,&
        row,rzsmold,tzsmold,r_mossmold,rzsm,tzsm,r_mossm1,zmoss,r_moss_depth,&
        thetas_moss,rzsm_u,rzsm_f,tzsm_u,tzsm_f,r_mossm1_u,&
-       r_mossm1_f,i,a_ice_moss,b_ice_moss,bulk_dens_moss)
+       r_mossm1_f,i,a_ice_moss,b_ice_moss,bulk_dens_moss,GSTI,LAMBDA,N,KS_TYPE)
 
       implicit none
       integer inc_frozen,i_moss,i,iopsmini
@@ -460,14 +463,23 @@ MODULE MODULE_LAND
       real*8 rzsm,tzsm,r_mossm1,zmoss,r_moss_depth,thetas_moss,rzsm_u,rzsm_f
       real*8 tzsm_u,tzsm_f,r_mossm1_u,r_mossm1_f
       real*8 a_ice_moss,b_ice_moss,bulk_dens_moss
-      real*8 zw0
+      real*8 zw0,GSTI,N,LAMBDA,NMAX
+      integer :: KS_TYPE
     
 ! ====================================================================
 ! Update local water table depth.
 ! ====================================================================
 
       zw0 = zw - psic
-      zw = zbar-(one/ff)*(atanb-xlamda)
+
+      !Choose between the exponential (Sivapalan,1987) and the generalized
+      !(Chaney,2013) profile of saturated hydraulic conductivity
+
+      if (KS_TYPE .eq. 0)then
+        zw = zbar-(one/ff)*(atanb-xlamda)
+      elseif (KS_TYPE .eq. 1)then
+        call Redistribute_Zbar(N,ff,LAMBDA,GSTI,zbar,zw)
+      endif
       
 !cw! minimum size for root zone and transmission zone is 1 cm
 

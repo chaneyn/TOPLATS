@@ -112,7 +112,7 @@ type GRID_VARS_template
         integer :: istorm,intstm,istmst,intstp
         integer :: istorm_moss,intstm_moss,istmst_moss,intstp_moss
         !TOPMODEL PARAM
-        real*8 :: atanb
+        real*8 :: atanb,GSTI,TI,T0
         !INFILTRATION PARAM
         real*8 :: xintst,cuminf,sorp,cc,sesq,qb0,xintst_moss
         !Vegetation
@@ -148,6 +148,8 @@ type CATCHMENT_template
         !TOPMODEL PARAM
         real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
         real*8 :: zbar0
+        !GENERALIZED TOPMODEL PARAMETERS
+        real*8 :: lambda
         !Runoff
         real*8 :: qb
         !Generalized TOPMODEL paramters
@@ -212,6 +214,8 @@ type GLOBAL_template
         integer :: time,itime,old_date(9),new_date(9)
         !Misc
         real*8 :: mul_fac
+        !TOPMODEL
+        integer :: KS_TYPE
         !OpenMP parameters
         integer :: nthreads
         !Files

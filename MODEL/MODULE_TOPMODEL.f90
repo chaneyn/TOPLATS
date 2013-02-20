@@ -260,7 +260,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! Chose option for calculating baseflow.
 ! ====================================================================
 
-  if (GLOBAL%iopbf.eq.0) then
+  if (GLOBAL%KS_TYPE.eq.0)then
 
 ! --------------------------------------------------------------------&
 ! Calculate baseflow according to Sivapalan et al.(1987).
@@ -268,13 +268,13 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
     CAT%qb = CAT%q0 * dexp(-CAT%ff*CAT%zbar)
 
-  else
+  else if (GLOBAL%KS_TYPE.eq.1)then
+
 ! --------------------------------------------------------------------&
-! Calculate baseflow according to Troch et al.(1992).
+! Calculate baseflow according to Chaney et al.(2013).
 ! --------------------------------------------------------------------&
 
-    hbar = CAT%dtil - CAT%zbar
-    CAT%qb = 5.772*CAT%basink*hbar*hbar*CAT%dd*CAT%xlength
+    CAT%qb = CAT%q0 * (1 - CAT%ff*CAT%zbar/CAT%n)**(CAT%n+1)
 
   endif
 
@@ -732,5 +732,35 @@ endif
   CAT%rzpsum = CAT%rzpsum + rzpsum
 
 end subroutine sumflx_catchment
+
+!>Subroutine to redistribute the catchment mean water table to a given grid cell as defined in Chaney et al.,2013
+subroutine Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
+
+  implicit none
+  real*8,intent(in) :: n,ff,lambda,GSTI,zbar
+  real*8,intent(inout) :: zw
+
+  zw = n/ff - n/ff*GSTI/lambda + zbar*GSTI/lambda
+
+end subroutine Redistribute_Zbar
+
+!>Subroutine to create the generalized soils topographix index as defined in Chaney et al.,2013
+subroutine Calculate_GSTI(GLOBAL,CAT,GRID)
+
+  implicit none
+  type (GLOBAL_template),intent(in) :: GLOBAL
+  type (GRID_template),dimension(:),intent(inout) :: GRID
+  type (CATCHMENT_template),dimension(:),intent(in) :: CAT
+  integer :: ipix
+  real*8 :: n,T0,TI
+
+  do ipix=1,GLOBAL%npix
+    n = CAT(GRID(ipix)%VARS%icatch)%n
+    T0 = GRID(ipix)%VARS%T0
+    TI = GRID(ipix)%VARS%TI
+    GRID(ipix)%VARS%GSTI = ((n+one)/n*dexp(TI)/T0)**(one/(n+one))
+  enddo
+
+end subroutine Calculate_GSTI
 
 END MODULE MODULE_TOPMODEL
