@@ -274,7 +274,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! Calculate baseflow according to Chaney et al.(2013).
 ! --------------------------------------------------------------------&
 
-    CAT%qb = CAT%q0 * (1 - CAT%ff*CAT%zbar/CAT%n)**(CAT%n+1)
+    call Calculate_Qb(CAT%n,CAT%ff,CAT%zbar,CAT%q0,CAT%qb)
 
   endif
 
@@ -762,5 +762,18 @@ subroutine Calculate_GSTI(GLOBAL,CAT,GRID)
   enddo
 
 end subroutine Calculate_GSTI
+
+!>Subroutine to calculate the baseflow using the generalized topmodel defined in
+!Chaney et al.,2013
+
+subroutine Calculate_Qb(n,ff,zbar,q0,qb)
+
+  implicit none
+  real*8,intent(in) :: q0,ff,zbar,n
+  real*8,intent(inout) :: qb
+
+  qb = q0 * (1 - ff*zbar/n)**(n+1)
+
+end subroutine Calculate_Qb
 
 END MODULE MODULE_TOPMODEL
