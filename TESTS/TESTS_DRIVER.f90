@@ -1270,6 +1270,40 @@ contains
 
   end subroutine Calculate_Qb_test2
 
+  subroutine Calculate_Ks_z_test1()
+
+  implicit none
+  real*8 :: n,ff,z,k0,ks
+  real*8 :: ks_true,ks_result
+  n = 10.0d0
+  ff = 3.0d0
+  k0 = 10.0d0
+  z = 0.1001001001001001d0
+  call Calculate_Ks_z(n,ff,z,k0,ks)
+  ks_true = 7.3719586108227571d0
+  ks_result = ks
+  call set_unit_name ('Calculate_ks_z_test1')
+  call assert_equals (ks_result,ks_true)
+
+  end subroutine Calculate_Ks_z_test1
+
+  subroutine Calculate_Ks_z_test2()
+
+  implicit none
+  real*8 :: n,ff,z,k0,ks
+  real*8 :: ks_true,ks_result
+  n = 100.0d0
+  ff = 1.0d0
+  k0 = 5.0d0
+  z = 0.0100100100100100d0
+  call Calculate_Ks_z(n,ff,z,k0,ks)
+  ks_true = 4.9501971367277857d0
+  ks_result = ks
+  call set_unit_name ('Calculate_ks_z_test2')
+  call assert_equals (ks_result,ks_true)
+
+  end subroutine Calculate_Ks_z_test2
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -1337,6 +1371,8 @@ contains
     call Redistribute_Zbar_test2()
     call Calculate_Qb_test1()
     call Calculate_Qb_test2()
+    call Calculate_Ks_z_test1()
+    call Calculate_Ks_z_test2()
 
     !Summarize and finalize the unit tests
     call fruit_summary

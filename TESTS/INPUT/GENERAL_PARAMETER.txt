@@ -10,7 +10,6 @@ ncol 60 #Number of columns in soils-TI image
 pixsiz 429 #Pixel resolution for soils-TI imagex (m)
 wc0 0 #Initial canopy water storage (m)
 irestype 5 #Type of soil resistance parameterization
-ikopt 0 #Option for vertical Ks change with depth
 zrzmax 0.10 #Maximum root depth
 iopsmini 0 #Initial conditions (yes/no)
 smpet0 0.30 #Soil moisture used to calculate the thermal cond for t1

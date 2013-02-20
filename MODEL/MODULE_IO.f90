@@ -1696,8 +1696,6 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('wc0',GLOBAL,GLOBAL%wc0)
   !Type of soil resistance parameterization 
   call Extract_Info_General_File('irestype',GLOBAL,GLOBAL%irestype)
-  !Option for vertical Ks change with depth 
-  call Extract_Info_General_File('ikopt',GLOBAL,GLOBAL%ikopt)
   !Maximum root depth 
   call Extract_Info_General_File('zrzmax',GLOBAL,GLOBAL%zrzmax)
   !Initial conditions (yes/no)
@@ -1746,6 +1744,8 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('dynamic_vegetation',GLOBAL,GLOBAL%dynamic_vegetation)
   !Flag defining the saturate hydraulic conductivity profile (0-Sivapalan,1987,1-Chaney,2013)
   call Extract_Info_General_File('KS_PROFILE_TYPE',GLOBAL,GLOBAL%KS_TYPE)
+  !Option for vertical Ks change with depth 
+  GLOBAL%ikopt = GLOBAL%KS_TYPE
   
   !Close the file
   close(GLOBAL%GENERAL_FILE%fp)

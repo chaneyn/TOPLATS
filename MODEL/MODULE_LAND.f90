@@ -266,7 +266,7 @@ MODULE MODULE_LAND
        GRID_SOIL%psic,GRID_SOIL%bcbeta,GLOBAL%ikopt,xksrz,GRID_SOIL%xk0,CAT%ff,ressoi,GRID_VEG%rtact,&
        GRID_VEG%rtdens,GRID_VEG%psicri,&
        GRID_VEG%respla,xkrz,GRID_VARS%ztz,stzrel,xkstz,xktz,GRID_VARS%Swq,GRID_VARS%evtact,&
-       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,CELL_VARS%bsdew,i,ipix)
+       GRID_VARS%ievcon,GRID_VARS%Swq_us,CELL_VARS%evtact_us,CELL_VARS%ievcon_us,CELL_VARS%bsdew,i,ipix,CAT%n)
 
       endif
 
@@ -304,7 +304,7 @@ MODULE MODULE_LAND
        GRID_VARS%Swq,GRID_VARS%Swq_us,&
        GRID_VARS%dc,GRID_VEG%i_und,GRID_VEG%i_moss,GRID_VARS%fw,CELL_VARS%dc_us,CELL_VARS%fw_us,&
        evrz_moss,GRID_VEG%f_und,GRID_VARS%dstz,GRID_VARS%dsrz,&
-       GRID_VARS%tzrhs,GRID_VARS%rzrhs)
+       GRID_VARS%tzrhs,GRID_VARS%rzrhs,CAT%n)
 
       if (GLOBAL%inc_frozen.eq.1) then
 
@@ -1423,7 +1423,7 @@ MODULE MODULE_LAND
        vegcap,ravd,vegcap_us,ravd_us,zrz,srzrel,thetas,thetar,psisoi,&
        psic,bcbeta,ikopt,xksrz,xk0,ff,ressoi,rtact,rtdens,psicri,&
        respla,xkrz,ztz,stzrel,xkstz,xktz,Swq,evtact,ievcon,Swq_us,evtact_us,&
-       ievcon_us,bsdew,i,ipix)
+       ievcon_us,bsdew,i,ipix,n)
 
       implicit none
       integer i_und,iopveg,inc_frozen,ivgtyp,ikopt,ievcon,ievcon_us
@@ -1433,7 +1433,7 @@ MODULE MODULE_LAND
       real*8 ravd_us,zrz,srzrel,thetas,thetar,psisoi,psic,bcbeta,xksrz
       real*8 xk0,ff,ressoi,rtact,rtdens,psicri,respla,xkrz,ztz,stzrel
       real*8 xkstz,xktz,Swq,evtact,Swq_us,evtact_us,bsdew
-      real*8 resist,resist_us
+      real*8 resist,resist_us,n
       integer :: i,ipix
 
 ! ====================================================================
@@ -1605,7 +1605,7 @@ MODULE MODULE_LAND
 
             call maxplevap(zrz,0.d0,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap_us,psicri,respla)
+       two,three,ressoi,rtact,rtdens,vegcap_us,psicri,respla,n)
 
          endif
 
@@ -1618,7 +1618,7 @@ MODULE MODULE_LAND
 
             call maxplevap(zrz,0.d0,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla,n)
 
 ! ====================================================================
 ! Calculate the maximum plant evaporation for the over story for
@@ -1629,7 +1629,7 @@ MODULE MODULE_LAND
 
             call maxplevap(ztz,zrz,epetd,inc_frozen,stzrel,tzsm,thetas,&
        thetar,tzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xkstz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla,n)
 
          endif
 
@@ -1671,12 +1671,12 @@ MODULE MODULE_LAND
 !> Calculate the maximum plant evaporation.
       subroutine maxplevap(zrz,ztz,epetd,inc_frozen,srzrel,rzsm,thetas,&
        thetar,rzsm_u,zero,one,psisoi,psic,bcbeta,ikopt,xksrz,xk0,ff,&
-       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla)
+       two,three,ressoi,rtact,rtdens,vegcap,psicri,respla,n)
 
       implicit none
       integer inc_frozen,ikopt
       real*8 zrz,ztz,epetd,srzrel,rzsm,thetas,thetar,rzsm_u
-      real*8 psisoi,psic,bcbeta,xksrz,xk0,ff,ressoi,rtact
+      real*8 psisoi,psic,bcbeta,xksrz,xk0,ff,ressoi,rtact,n
       real*8 rtdens,vegcap,psicri,respla,xkrz,zero,one,two,three
 
 ! --------------------------------------------------------------------
@@ -1732,15 +1732,16 @@ MODULE MODULE_LAND
          if (ikopt.eq.1) then
 
 ! ....................................................................
-! Option 1 : No decline with depth.
+! Option 1 : Power law decline with depth (Chaney,2013)
 ! ....................................................................
 
-            xksrz = xk0
+            !xksrz = xk0
+            call Calculate_Ks_z(n,ff,(zrz+ztz),xk0,xksrz)
 
          else
 
 ! ....................................................................
-! Option 2 : Exponential decline with depth.
+! Option 0 : Exponential decline with depth. (Sivapalan,1987)
 ! ....................................................................
 
             xksrz = xk0*dexp(-ff*((zrz+ztz)/two))
@@ -1825,7 +1826,7 @@ MODULE MODULE_LAND
 
 ! Summations of fluxes
 
-       tzrhs,rzrhs)
+       tzrhs,rzrhs,n)
 
       implicit none
       integer i,newstorm,inc_frozen,ikopt,ivgtyp,num
@@ -1846,7 +1847,7 @@ MODULE MODULE_LAND
       real*8 grz_sum,difrz_sum,gtz_sum,diftz_sum
       real*8 dummy,d2rzsmdt2,d2tzsmdt2
       real*8 dtsrzflx,dtstzflx,case_flag,xksrz,xkstz
-      real*8 dstz,dsrz,rzrhs,tzrhs
+      real*8 dstz,dsrz,rzrhs,tzrhs,n
       integer :: test_flag
  
       rzsm0 = rzsm
@@ -1878,10 +1879,19 @@ MODULE MODULE_LAND
 
       if(ikopt.eq.1)then
 
-        xksrz=xk0
-        xkstz=xk0
+! ....................................................................
+! Option 1 : Power law decline with depth (Chaney,2013)
+! ....................................................................
+
+!        xksrz=xk0
+        call Calculate_Ks_z(n,ff,(zrz/two),xk0,xksrz)
+!        xkstz=xk0
+        call Calculate_Ks_z(n,ff,(zrz+ztz/two),xk0,xkstz)
 
       else
+! ....................................................................
+! Option 0 : Exponential decline with depth. (Sivapalan,1987)
+! ....................................................................
 
         xksrz=xk0*dexp(-ff*(zrz/two))
         xkstz=xk0*dexp(-ff*(zrz+(ztz/two)))
@@ -3844,5 +3854,17 @@ MODULE MODULE_LAND
       return
 
       end function clcdg
+
+!>Subroutine to calculate the saturated hydraulic conductivity where the
+!decrease in depth follows a power law as defined in Chaney et al.,2013
+subroutine Calculate_Ks_z(n,ff,z,k0,ks)
+
+  implicit none
+  real*8,intent(in) :: n,ff,z,k0
+  real*8,intent(inout) :: ks
+
+  ks = k0*(1-ff*z/n)**n
+
+end subroutine Calculate_Ks_z
 
 END MODULE MODULE_LAND
