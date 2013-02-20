@@ -33,6 +33,7 @@ type GRID_SOIL_template
                 b_ice,bulk_dens,amp,phase,shift,bcgamm,par,corr,Tdeepstep
         integer :: isoil,ifcoarse,idifind
         type(MAP_template) :: MAP
+        type(MAP_template) :: K0_MAP
 end type GRID_SOIL_template
 
 type GRID_VEG_template
@@ -149,6 +150,8 @@ type CATCHMENT_template
         real*8 :: zbar0
         !Runoff
         real*8 :: qb
+        !Generalized TOPMODEL paramters
+        real*8 :: n
 end type
 
 !REGIONAL DATA

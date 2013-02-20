@@ -171,8 +171,8 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  !call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-  !                  IO%ipixnum,i,GLOBAL)
+  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+                    IO%ipixnum,i,GLOBAL)
 
 end subroutine Write_Data
 
@@ -531,7 +531,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 300 kk=1,GLOBAL%ncatch
 
-            read(GLOBAL%CL_table_FILE%fp,*) jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk)
+            read(GLOBAL%CL_table_FILE%fp,*)jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%n
 
 300      continue
 
@@ -558,6 +558,8 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   call spatial_mapping(GLOBAL,GRID%VEG%dynamic_MAP,GLOBAL%DVEG_FILE,IO%ipixnum)
   !Soil Properties
   call spatial_mapping(GLOBAL,GRID%SOIL%MAP,GLOBAL%SOIL_FILE,IO%ipixnum)
+  !Saturated Hydraulic Conductivity
+  call spatial_mapping(GLOBAL,GRID%SOIL%K0_MAP,GLOBAL%K0_FILE,IO%ipixnum)
 
 ! ====================================================================
 ! Read the catchment image.
@@ -604,7 +606,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       ip = IO%ipixnum(ilat,ilon)
       if (ip .gt. 0)then
         !Static Soil
-        ki(ip)=array_2d(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)
+        ki(ip)=array_2d(GRID(ip)%SOIL%K0_MAP%ilon,GRID(ip)%SOIL%K0_MAP%ilat)
       endif
     enddo
   enddo
@@ -673,6 +675,17 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
          GRID(kk)%VARS%atanb = atb(kk) + lte(GRID(kk)%VARS%icatch) - dlog(ti(kk))
 
 50    continue
+
+! ====================================================================
+! Calculate the generalized soils-topographic index for each catchment
+! ====================================================================
+print*,CAT%n
+
+!  do kk = 1,GLOBAL%npix
+
+!    GRID(kk)%VARS%GSTI = 
+
+!  enddo
 
 ! ====================================================================
 ! Calculate the initial water table depth for each catchment.
@@ -1334,7 +1347,7 @@ end subroutine Write_Catchment
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
       type (IO_template),intent(inout) :: IO
       type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat)
-      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
+      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat)
       integer :: soilnvars,ipos,jpos,jj,kk,nn,ip,ilat,ilon
       integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       real,dimension(:,:,:),allocatable :: TempArray
@@ -1365,7 +1378,6 @@ end subroutine Write_Catchment
   !Set all missing values to the areal average
   call Replace_Undefined(TempArray,GLOBAL%Soil_File%undef,GLOBAL%Soil_File%nlon,&
                    GLOBAL%Soil_File%nlat,soilnvars)
-
       GRID_SOIL_2D%bcbeta = dble(TempArray(:,:,1))
       GRID_SOIL_2D%psic = dble(TempArray(:,:,2))
       GRID_SOIL_2D%thetas = dble(TempArray(:,:,3))
