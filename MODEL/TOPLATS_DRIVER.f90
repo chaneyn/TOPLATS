@@ -50,6 +50,7 @@ GRID%VARS%rzsm1_f = GRID%VARS%sm1_f(1)
 GRID%VARS%tzsm1_f = GRID%VARS%sm1_f(2)
 GRID%VARS%rzdthetaidt = GRID%VARS%smdthetaidt(1)
 GRID%VARS%tzdthetaidt = GRID%VARS%smdthetaidt(2)
+GLOBAL%zmax_layer(1) = GLOBAL%zrzmax
 GLOBAL%nlayer = 2
 
 
@@ -81,7 +82,15 @@ do i=1,GLOBAL%ndata
   GRID%VARS%z_layer(2) = GRID%VARS%ztz
   GRID%VARS%sm(1) = GRID%VARS%rzsm
   GRID%VARS%sm(2) = GRID%VARS%tzsm
+  GRID%VARS%sm1(1) = GRID%VARS%rzsm1
+  GRID%VARS%sm1(2) = GRID%VARS%tzsm1
+
   call Update_Catchments(GLOBAL,CAT,GRID)
+
+  GRID%VARS%rzsm1_u=GRID%VARS%sm1_u(1)
+  GRID%VARS%tzsm1_u=GRID%VARS%sm1_u(2)
+
+
 
 !#####################################################################
 ! Update regional variables

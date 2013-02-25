@@ -242,6 +242,8 @@ type GLOBAL_template
   !dimensions
   real*8 :: minlat,minlon
   integer :: nlat,nlon
+  !Water balance
+  real*8 :: zmax_layer(2)
 
         
 end type GLOBAL_template

@@ -254,7 +254,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
   type (GLOBAL_template),intent(in) :: GLOBAL
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (CATCHMENT_template),intent(inout) :: CAT
-  integer :: ic,mm,ilandc,isoil,icatch
+  integer :: ic,mm,ilandc,isoil,icatch,kk
   real*8 :: hbar,qzbar,zbrflx,zbrpor
 
 ! ====================================================================
@@ -323,11 +323,23 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
           if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
 
-            CAT%smpsum(2) = CAT%smpsum(2)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%tzsm1)
+            CAT%smpsum(GLOBAL%nlayer) = CAT%smpsum(GLOBAL%nlayer)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(GLOBAL%nlayer))
 
-          else if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero)) then
+          else 
+  
+            if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero))then
 
-            CAT%smpsum(1) = CAT%smpsum(1)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%rzsm1)
+              do kk=GLOBAL%nlayer-1,1,-1
+          
+                 if (GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.le.GLOBAL%zmax_layer(kk)) then
+  
+                   CAT%smpsum(kk) = CAT%smpsum(kk)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(kk))
+
+                 endif
+               
+              enddo
+           
+            endif
 
           endif
 
@@ -393,7 +405,7 @@ subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
   real*8 :: sxrtot,xixtot,conrun,ranrun,gwt,gwtsum
   real*8 :: capsum,tzpsum,etpixloc,conpix,difwt
   real*8 :: xlhv,dummy,svarhs
-  integer :: i
+  integer :: i,kk
   real*8 :: smpsum(GLOBAL%nlayer)
 
 
@@ -468,7 +480,7 @@ endif
 
       endif
 
-    else 
+    else
 
 ! --------------------------------------------------------------------&
 ! Add the evapotranspiration values up from pixels where the water
@@ -678,8 +690,6 @@ endif
 ! liquid water content is the total water content.
 ! --------------------------------------------------------------------&
 
-      GRID_VARS%rzsm1_u=GRID_VARS%rzsm1
-      GRID_VARS%tzsm1_u=GRID_VARS%tzsm1
       do i=1,GLOBAL%nlayer
         GRID_VARS%sm1_u(i) = GRID_VARS%sm1(i)
       enddo
