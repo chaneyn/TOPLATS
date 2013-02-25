@@ -54,6 +54,9 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
     call catflx(GLOBAL%pixsiz,CAT(icatch))
 
     call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
+
+    CAT%tzpsum = CAT(icatch)%smpsum(2)
+    CAT%rzpsum = CAT(icatch)%smpsum(1)
  
   enddo 
 
@@ -114,8 +117,7 @@ subroutine instep_catchment(ncatch,CAT)
 
     CAT(kk)%capsum = zero
     CAT(kk)%gwtsum = zero
-    CAT(kk)%rzpsum = zero
-    CAT(kk)%tzpsum = zero
+    CAT(kk)%smpsum = zero
 
 ! --------------------------------------------------------------------
 ! State variables.
@@ -225,8 +227,7 @@ subroutine catflx(pixsiz,CAT)
 ! Compute average available porosity above the water table.
 ! ====================================================================
 
-  CAT%tzpsum = CAT%tzpsum / catvegpix 
-  CAT%rzpsum = CAT%rzpsum / catvegpix 
+  CAT%smpsum = CAT%smpsum / catvegpix
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.
@@ -284,7 +285,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! ====================================================================
 
   zbrflx = (CAT%gwtsum - CAT%capsum - CAT%etwtsum - (CAT%qb/ CAT%area)) * GLOBAL%dt
-  zbrpor = (CAT%rzpsum + CAT%tzpsum) * (CAT%zbar-CAT%psicav)
+  zbrpor = sum(CAT%smpsum) * (CAT%zbar-CAT%psicav)
  
   if (zbrflx.gt.zbrpor) then
 
@@ -308,8 +309,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! Recalculate rzpsum and tzpsum with new soil moistures.
 ! --------------------------------------------------------------------&
 
-    CAT%rzpsum = zero
-    CAT%tzpsum = zero
+    CAT%smpsum = zero
 
     do mm=1,GLOBAL%npix
 
@@ -323,11 +323,11 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
           if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
 
-            CAT%tzpsum = CAT%tzpsum+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%tzsm1)
+            CAT%smpsum(2) = CAT%smpsum(2)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%tzsm1)
 
           else if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero)) then
 
-            CAT%rzpsum = CAT%rzpsum+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%rzsm1)
+            CAT%smpsum(1) = CAT%smpsum(1)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%rzsm1)
 
           endif
 
@@ -348,13 +348,13 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! If the available porosity is nonzero divide the flux by its value.
 ! --------------------------------------------------------------------&
 
-  if ( (CAT%rzpsum+CAT%tzpsum).gt.(0.001d0)) then
+  if ( sum(CAT%smpsum).gt.(0.001d0)) then
 
-    CAT%zbar1 = CAT%zbar - zbrflx/(CAT%rzpsum+CAT%tzpsum)
+    CAT%zbar1 = CAT%zbar - zbrflx/sum(CAT%smpsum)
 
   endif
 
-  if ( (CAT%rzpsum+CAT%tzpsum).le.(0.001d0)) then
+  if ( sum(CAT%smpsum).le.(0.001d0)) then
 
     CAT%zbar1=CAT%zbar
 
@@ -391,8 +391,10 @@ subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
   real*8 :: ettot,etstore,etstsum,etwt,etbssum,etdcsum,etwtsum
   real*8 :: etwcsum,bsdew,contot,pptsum,pnetsum,qsurf
   real*8 :: sxrtot,xixtot,conrun,ranrun,gwt,gwtsum
-  real*8 :: capsum,tzpsum,rzpsum,etpixloc,conpix,difwt
+  real*8 :: capsum,tzpsum,etpixloc,conpix,difwt
   real*8 :: xlhv,dummy,svarhs
+  integer :: i
+  real*8 :: smpsum(GLOBAL%nlayer)
 
 
 ! ====================================================================
@@ -678,6 +680,9 @@ endif
 
       GRID_VARS%rzsm1_u=GRID_VARS%rzsm1
       GRID_VARS%tzsm1_u=GRID_VARS%tzsm1
+      do i=1,GLOBAL%nlayer
+        GRID_VARS%sm1_u(i) = GRID_VARS%sm1(i)
+      enddo
 
     endif
 
@@ -687,28 +692,19 @@ endif
 ! the porosity for the zone above the water table.
 ! ====================================================================
 
-    rzpsum = zero  
-    tzpsum = zero
+    smpsum = zero
 
-    if (GRID_VARS%ztz.gt.zero) then
+    do i = GLOBAL%nlayer,1,-1
 
-! --------------------------------------------------------------------&
-! If the root and transmission zone are both unsaturated than
-! the region of interest is the transmission zone.
-! --------------------------------------------------------------------&
+      if (GRID_VARS%z_layer(i).gt.zero) then
 
-      tzpsum = (GRID_SOIL%thetas-GRID_VARS%tzsm)
+        !This is the region of interest
+        smpsum(i) = (GRID_SOIL%thetas-GRID_VARS%sm(i))
+        exit
 
-    else if (GRID_VARS%zrz.gt.zero) then
+      endif
 
-! --------------------------------------------------------------------&
-! If the root zone is unsaturated and the transmission zone
-! unsaturated than the region of interest is the root zone.
-! --------------------------------------------------------------------&
-
-      rzpsum = (GRID_SOIL%thetas-GRID_VARS%rzsm)
-
-    endif
+    enddo
 
   endif
 
@@ -726,8 +722,7 @@ endif
   CAT%xixtot = CAT%xixtot + xixtot
   CAT%gwtsum = CAT%gwtsum + gwtsum
   CAT%capsum = CAT%capsum + capsum
-  CAT%tzpsum = CAT%tzpsum + tzpsum
-  CAT%rzpsum = CAT%rzpsum + rzpsum
+  CAT%smpsum = CAT%smpsum + smpsum
 
 end subroutine sumflx_catchment
 

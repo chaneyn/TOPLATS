@@ -41,4 +41,4 @@ REGIONAL_fname 'TESTS/OUTPUT/Regional_Variables.txt'
 CATCHMENT_fname 'TESTS/OUTPUT/Catchment_Variables.txt'
 
 #PARALLELIZATION
-nthreads 8 #Number of threads per node (OpenMP)
+nthreads 1 #Number of threads per node (OpenMP)

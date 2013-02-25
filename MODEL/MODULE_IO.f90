@@ -39,6 +39,7 @@ subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
   type (REGIONAL_template),intent(inout) :: REG
   type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
   type (IO_template),intent(inout) :: IO
+  integer :: i
 
 !####################################################################
 ! Read the general filename
@@ -65,12 +66,11 @@ subroutine Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
 ! Initialize necessary grid values to 0
 !####################################################################
 
-  GRID%VARS%rzsm_f = 0.d0
-  GRID%VARS%rzsm1_f = 0.d0
-  GRID%VARS%tzsm_f = 0.d0
-  GRID%VARS%tzsm1_f = 0.d0
-  GRID%VARS%rzsm1 = zero
-  GRID%VARS%tzsm1 = zero
+  do i = 1,GLOBAL%npix
+    GRID(i)%VARS%sm_f = zero
+    GRID(i)%VARS%sm1_f = zero
+    GRID(i)%VARS%sm1 = zero
+  enddo
   GRID%VARS%zw = 0.0d0
   GRID%VARS%Sdepth_us = 0.0d0
   GRID%VARS%Swq_us = 0.d0
@@ -173,7 +173,7 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%rzsm_zrzmax,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  call Write_Binary(GRID%VARS%sm(1),1.0,GLOBAL%nrow,GLOBAL%ncol,&
                     IO%ipixnum,i,GLOBAL)
 
 end subroutine Write_Data
@@ -293,6 +293,7 @@ end subroutine Replace_Undefined
       type (CATCHMENT_template),dimension(:),allocatable :: CAT
       type (IO_template),intent(inout) :: IO
       character(len=200) :: filename
+      integer :: i
 
 ! ====================================================================
 ! Read and initialize topmodel parameters, atb distribution and
@@ -354,7 +355,6 @@ end subroutine Replace_Undefined
   GRID%VARS%cph2o = 4186.d0
   GRID%VARS%cp = 1005.d0
   GRID%VARS%roi = 850.d0
-  GRID%VARS%rzsmold = 0.d0
 
       return
 
@@ -1182,14 +1182,10 @@ end subroutine Write_Catchment
 
          do 50 kk=1,GLOBAL%npix
 
-            GRID(kk)%VARS%rzsm1 = GLOBAL%smpet0
-            GRID(kk)%VARS%tzsm1 = GLOBAL%smpet0
-            GRID(kk)%VARS%rzsm1_u = GLOBAL%smpet0
-            GRID(kk)%VARS%tzsm1_u = GLOBAL%smpet0
-            GRID(kk)%VARS%rzsm1_f = 0.d0
-            GRID(kk)%VARS%tzsm1_f = 0.d0
-            GRID(kk)%VARS%rzdthetaidt=0.d0
-            GRID(kk)%VARS%tzdthetaidt=0.d0
+            GRID(kk)%VARS%sm1 = GLOBAL%smpet0
+            GRID(kk)%VARS%sm1_u = GLOBAL%smpet0
+            GRID(kk)%VARS%sm1_f = zero
+            GRID(kk)%VARS%smdthetaidt = zero
 
 50       continue
 

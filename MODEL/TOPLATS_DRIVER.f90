@@ -42,6 +42,17 @@ type (IO_template) :: IO
 
 call Initialize_Model(GLOBAL,GRID,REG,CAT,IO)
 
+GRID%VARS%rzsm1 = GRID%VARS%sm1(1)
+GRID%VARS%tzsm1 = GRID%VARS%sm1(2)
+GRID%VARS%rzsm1_u = GRID%VARS%sm1_u(1)
+GRID%VARS%tzsm1_u = GRID%VARS%sm1_u(2)
+GRID%VARS%rzsm1_f = GRID%VARS%sm1_f(1)
+GRID%VARS%tzsm1_f = GRID%VARS%sm1_f(2)
+GRID%VARS%rzdthetaidt = GRID%VARS%smdthetaidt(1)
+GRID%VARS%tzdthetaidt = GRID%VARS%smdthetaidt(2)
+GLOBAL%nlayer = 2
+
+
 !####################################################################
 ! Loop through the simulation time.
 !####################################################################
@@ -66,6 +77,10 @@ do i=1,GLOBAL%ndata
 ! Update the catchments
 !#####################################################################
 
+  GRID%VARS%z_layer(1) = GRID%VARS%zrz
+  GRID%VARS%z_layer(2) = GRID%VARS%ztz
+  GRID%VARS%sm(1) = GRID%VARS%rzsm
+  GRID%VARS%sm(2) = GRID%VARS%tzsm
   call Update_Catchments(GLOBAL,CAT,GRID)
 
 !#####################################################################
@@ -77,7 +92,8 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 ! Write out the data for this time step
 !#####################################################################
-
+  
+  GRID%VARS%sm(1) = GRID%VARS%rzsm
   call Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 
 enddo

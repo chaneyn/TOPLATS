@@ -120,7 +120,8 @@ type GRID_VARS_template
         !NEW
         !Water balance
         real*8 :: rzsm_zrzmax !Volumetric soil water content up to zrzmax (zrz*zrzmax + thetas*(zrzmax-zrz))/zrzmax
-        real*8,allocatable,dimension(:) :: theta
+        real*8 :: sm(2),sm1(2),sm_f(2),sm1_f(2),sm1_u(2),smdthetaidt(2),sm_old(2)
+        real*8 :: z_layer(2)
 
 end type GRID_VARS_template
 
@@ -146,7 +147,7 @@ type CATCHMENT_template
                 qsurf,ranrun,conrun
         !Vertical soil moisture fluxes and water table updating
         real*8 :: zbar,zbar1,capsum,gwtsum,&
-                rzpsum,tzpsum
+                rzpsum,tzpsum,smpsum(2)
         !State variables
         real*8 :: fwcat
         !TOPMODEL PARAM
@@ -199,6 +200,7 @@ type GLOBAL_template
         real*8 :: zrzmax
         !Soil
         real*8 :: smpet0
+        integer :: nlayer
         !OPTIONS template
         integer :: ndata,nlandc,iopveg,inc_frozen,maxnri,iopbf,iopwt0
         integer :: ncatch,nrow,ncol,npix,i_2l,nsoil,irestype,ikopt
