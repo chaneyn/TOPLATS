@@ -21,7 +21,7 @@ toleb 0.50 #Tolerance for skin temperature (K)
 dtveg 100 #Number of time steps between updating vegetation parameters
 itime 1104541200 #Initial time step in epoch time
 dynamic_vegetation 1 #Dynamic vegetation flag (0 -> monthly climatology, 1 -> dynamic following dtveg)
-KS_PROFILE_TYPE 1 #Saturated hydraulic conductivity profile flag (0 -> Sivapalan,1987, 1 -> Chaney,2013)
+KS_PROFILE_TYPE 0 #Saturated hydraulic conductivity profile flag (0 -> Sivapalan,1987, 1 -> Chaney,2013)
 
 #GRID INPUT FILES filename resolution(arcsec) undef value minlat(arcsec) minlon(arcsec) nlat nlon
 TI_fname 'TESTS/INPUT/TI.bin' 15.0 -999.900 -301561.0 113328.0 66 60

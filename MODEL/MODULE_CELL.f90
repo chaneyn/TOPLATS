@@ -65,6 +65,16 @@ contains
       call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
          GRID_VEG,GRID_VARS,&
          CAT_INFO,GLOBAL_INFO)
+      !Output the soil moisture in zrzmax
+      GRID_VARS%rzsm_zrzmax = (GRID_VARS%rzsm*GRID_VARS%zrz + &
+        GRID_SOIL%thetas*(GLOBAL_INFO%zrzmax-GRID_VARS%zrz))/GLOBAL_INFO%zrzmax
+      if (GRID_VARS%zrz .ge. 0.05)then
+        GRID_VARS%rzsm_zrzmax = GRID_VARS%rzsm
+      else
+        GRID_VARS%rzsm_zrzmax = GRID_SOIL%thetas
+      endif
+      !GRID_VARS%rzsm_zrzmax = GRID_VARS%rzsm
+
       !Write back
       GRID(isoil)%SOIL = GRID_SOIL
       GRID(ipix)%VARS = GRID_VARS

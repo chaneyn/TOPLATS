@@ -173,7 +173,7 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%rzsm,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  call Write_Binary(GRID%VARS%rzsm_zrzmax,1.0,GLOBAL%nrow,GLOBAL%ncol,&
                     IO%ipixnum,i,GLOBAL)
 
 end subroutine Write_Data
@@ -512,6 +512,8 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 ! on what is necessary for baseflow and initial condition calculations.
 ! ====================================================================
 
+    if (GLOBAL%KS_TYPE.eq.0)then
+
       if (GLOBAL%iopwt0.eq.1) then
 
          do 100 kk=1,GLOBAL%ncatch
@@ -534,12 +536,21 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
          do 300 kk=1,GLOBAL%ncatch
 
-            read(GLOBAL%CL_table_FILE%fp,*)jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%n
+            read(GLOBAL%CL_table_FILE%fp,*)jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk)
 
 300      continue
 
       endif
+  
+    else if (GLOBAL%KS_TYPE.eq.1)then
 
+      do kk=1,GLOBAL%ncatch
+   
+        read(GLOBAL%CL_table_FILE%fp,*)jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%n
+
+      enddo
+ 
+    endif
   ! Map other variables using nni to the topographic index grid
   !Air temperature
   call spatial_mapping(GLOBAL,GRID%MET%tdry_MAP,GLOBAL%FORCING_FILE,IO%ipixnum)
@@ -677,10 +688,26 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
 600   continue
 
-      print*,'Area',CAT(1)%area
-      print*,'ln Te',lte(1)
-      print*,'Lambda',CAT(1)%xlamda
-      print*,'Lambda',CAT(1)%lambda
+  !if (GLOBAL%KS_TYPE .eq. 1)then
+
+!###################################################################################
+! Calculate the initial baseflow using the generalized topmodel (Chaney et al.,2013)
+!###################################################################################
+
+   ! do kk = 1,GLOBAL%ncatch
+
+   !   CAT(kk)%q0 = CAT(kk)%area/(CAT(kk)%lambda**CAT(kk)%n)
+
+   ! enddo
+
+    print*,'Area',CAT%area
+    print*,'Lambda',CAT%lambda
+    print*,'Q0',CAT%q0
+    print*,'te',exp(lte)
+    print*,'xlamda',CAT%xlamda
+    print*,'Q0old',CAT%area*dexp(lte)*dexp(-CAT%xlamda)
+
+  !endif
 
 ! ====================================================================
 ! Calculate soils-topographi! index for each pixel.

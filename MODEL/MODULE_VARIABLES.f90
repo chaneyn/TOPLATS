@@ -117,6 +117,10 @@ type GRID_VARS_template
         real*8 :: xintst,cuminf,sorp,cc,sesq,qb0,xintst_moss
         !Vegetation
         real*8 :: wcip1
+        !NEW
+        !Water balance
+        real*8 :: rzsm_zrzmax !Volumetric soil water content up to zrzmax (zrz*zrzmax + thetas*(zrzmax-zrz))/zrzmax
+        real*8,allocatable,dimension(:) :: theta
 
 end type GRID_VARS_template
 

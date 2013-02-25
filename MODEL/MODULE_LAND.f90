@@ -3863,7 +3863,7 @@ subroutine Calculate_Ks_z(n,ff,z,k0,ks)
   real*8,intent(in) :: n,ff,z,k0
   real*8,intent(inout) :: ks
 
-  ks = k0*(1-ff*z/n)**n
+  ks = k0*(1-ff*z)**(n-1)
 
 end subroutine Calculate_Ks_z
 

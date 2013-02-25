@@ -1167,12 +1167,12 @@ contains
   type (GRID_template) :: GRID(1)
   type (CATCHMENT_template) :: CAT(1)
   real*8 :: GSTI_result,GSTI_true
-  CAT(1)%n = 1000.0
+  CAT(1)%n = 10.0
   GLOBAL%npix = 1
   GRID(1)%VARS%TI = 10.0
-  GRID(1)%VARS%T0 = 5.0
+  GRID(1)%VARS%T0 = 30.0*CAT(1)%n
   GRID(1)%VARS%icatch = 1
-  GSTI_true = 1.0084184156474694d0
+  GSTI_true = 1.9345606797851287d0
   call Calculate_GSTI(GLOBAL,CAT,GRID)
   GSTI_result = GRID(1)%VARS%GSTI
   call set_unit_name ('Calculate_GSTI_test1')
@@ -1192,7 +1192,7 @@ contains
   GRID(1)%VARS%TI = 2.0
   GRID(1)%VARS%T0 = 30.0
   GRID(1)%VARS%icatch = 1
-  GSTI_true = 0.8880590696282229d0
+  GSTI_true = 1.0943261340464447d0
   call Calculate_GSTI(GLOBAL,CAT,GRID)
   GSTI_result = GRID(1)%VARS%GSTI
   call set_unit_name ('Calculate_GSTI_test2')
@@ -1206,7 +1206,7 @@ contains
   real*8 :: n,ff,lambda,GSTI,zbar,zw
   real*8 :: zw_true,zw_result
   n = 1000.0
-  ff = 1.0d0
+  ff = 1.0d0/n
   lambda = 1.0024028832083813d0
   GSTI = 1.0020009998333332d0
   zbar = 3.d0
@@ -1221,15 +1221,15 @@ contains
   subroutine Redistribute_Zbar_test2()
 
   implicit none
-  real*8 :: n,ff,lambda,GSTI,zbar,zw
+  real*8 :: n,ff,GSTI_bar,GSTI,zbar,zw
   real*8 :: zw_true,zw_result
-  n = 100.0
-  ff = 2.0d0
-  lambda = 1.0241620536627736d0
-  GSTI = 1.0508543170383544d0
+  n = 3.0d0
+  ff = 1.0d0
+  GSTI_bar = 2.2265807967443840d0
+  GSTI = 2.0106071207782175d0
   zbar = 3.d0
-  call Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
-  zw_true = 1.7750606711451313d0
+  call Redistribute_Zbar(n,ff,GSTI_bar,GSTI,zbar,zw)
+  zw_true = 2.8060041869740773d0
   zw_result = zw
   call set_unit_name ('Redistribute_Zbar_test2')
   call assert_equals (zw_result,zw_true)
@@ -1242,11 +1242,11 @@ contains
   real*8 :: n,ff,zbar,q0,qb
   real*8 :: qb_true,qb_result
   n = 100.0d0
-  ff = 2.0d0
-  zbar = 0.0100100100100100d0
-  q0 = 3.6423707046677660d0
+  ff = 2.0d0/n
+  zbar = 0.1001001001001001d0
+  q0 = 3.6787944117144624d0
   call Calculate_Qb(n,ff,zbar,q0,qb)
-  qb_true = 3.5694535526975812d0
+  qb_true = 3.0107349678568101d0
   qb_result = qb
   call set_unit_name ('Calculate_Qb_test1')
   call assert_equals (qb_result,qb_true)
@@ -1260,10 +1260,10 @@ contains
   real*8 :: qb_true,qb_result
   n = 10.0d0
   ff = 3.0d0
-  zbar = 0.0010010010010010d0
-  q0 = 3.3443585561040239d0
+  zbar = 0.0100100100100100d0
+  q0 = 1282918.1282262641470879d0
   call Calculate_Qb(n,ff,zbar,q0,qb)
-  qb_true = 3.3333276982370159d0
+  qb_true = 945761.9342358222929761d0
   qb_result = qb
   call set_unit_name ('Calculate_Qb_test2')
   call assert_equals (qb_result,qb_true)
@@ -1276,11 +1276,11 @@ contains
   real*8 :: n,ff,z,k0,ks
   real*8 :: ks_true,ks_result
   n = 10.0d0
-  ff = 3.0d0
+  ff = 3.0d0/n
   k0 = 10.0d0
-  z = 0.1001001001001001d0
+  z = 0.0100100100100100d0
   call Calculate_Ks_z(n,ff,z,k0,ks)
-  ks_true = 7.3719586108227571d0
+  ks_true = 9.7329535734485582d0
   ks_result = ks
   call set_unit_name ('Calculate_ks_z_test1')
   call assert_equals (ks_result,ks_true)
@@ -1292,12 +1292,12 @@ contains
   implicit none
   real*8 :: n,ff,z,k0,ks
   real*8 :: ks_true,ks_result
-  n = 100.0d0
+  n = 3.0d0
   ff = 1.0d0
   k0 = 5.0d0
   z = 0.0100100100100100d0
   call Calculate_Ks_z(n,ff,z,k0,ks)
-  ks_true = 4.9501971367277857d0
+  ks_true = 4.9004009014019019d0
   ks_result = ks
   call set_unit_name ('Calculate_ks_z_test2')
   call assert_equals (ks_result,ks_true)

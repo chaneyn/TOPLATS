@@ -724,8 +724,6 @@ endif
   CAT%qsurf = CAT%qsurf + qsurf
   CAT%sxrtot = CAT%sxrtot + sxrtot
   CAT%xixtot = CAT%xixtot + xixtot
-  CAT%ranrun = CAT%ranrun + ranrun
-  CAT%conrun = CAT%conrun + conrun
   CAT%gwtsum = CAT%gwtsum + gwtsum
   CAT%capsum = CAT%capsum + capsum
   CAT%tzpsum = CAT%tzpsum + tzpsum
@@ -740,7 +738,7 @@ subroutine Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
   real*8,intent(in) :: n,ff,lambda,GSTI,zbar
   real*8,intent(inout) :: zw
 
-  zw = n/ff - n/ff*GSTI/lambda + zbar*GSTI/lambda
+  zw = 1/ff - 1/ff*GSTI/lambda + zbar*GSTI/lambda
 
 end subroutine Redistribute_Zbar
 
@@ -752,13 +750,13 @@ subroutine Calculate_GSTI(GLOBAL,CAT,GRID)
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),intent(in) :: CAT
   integer :: ipix
-  real*8 :: n,T0,TI
+  real*8 :: n,T0star,TI
 
   do ipix=1,GLOBAL%npix
     n = CAT(GRID(ipix)%VARS%icatch)%n
-    T0 = GRID(ipix)%VARS%T0
+    T0star = GRID(ipix)%VARS%T0/n
     TI = GRID(ipix)%VARS%TI
-    GRID(ipix)%VARS%GSTI = ((n+one)/n*dexp(TI)/T0)**(one/(n+one))
+    GRID(ipix)%VARS%GSTI = (dexp(TI)/T0star)**(one/n)
   enddo
 
 end subroutine Calculate_GSTI
@@ -772,7 +770,7 @@ subroutine Calculate_Qb(n,ff,zbar,q0,qb)
   real*8,intent(in) :: q0,ff,zbar,n
   real*8,intent(inout) :: qb
 
-  qb = q0 * (1 - ff*zbar/n)**(n+1)
+  qb = q0 * (1 - ff*zbar)**n
 
 end subroutine Calculate_Qb
 
