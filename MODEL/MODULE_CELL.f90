@@ -77,7 +77,7 @@ contains
 
 !$OMP END PARALLEL DO
     end_time = omp_get_wtime()
-!    print*,end_time - start_time
+    print*,end_time - start_time
 
   end subroutine Update_Cells
 

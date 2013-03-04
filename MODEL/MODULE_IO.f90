@@ -545,7 +545,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
     else if (GLOBAL%KS_TYPE.eq.1)then
 
       do kk=1,GLOBAL%ncatch
-   
+
         read(GLOBAL%CL_table_FILE%fp,*)jj,CAT(kk)%q0,CAT(kk)%ff,zbar0(kk),CAT(kk)%n
 
       enddo
