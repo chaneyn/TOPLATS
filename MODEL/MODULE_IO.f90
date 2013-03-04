@@ -173,7 +173,7 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%sm(1),1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  call Write_Binary(GRID%VARS%rzsm_zrzmax,1.0,GLOBAL%nrow,GLOBAL%ncol,&
                     IO%ipixnum,i,GLOBAL)
 
 end subroutine Write_Data
@@ -887,8 +887,7 @@ subroutine Write_Catchment(i,CAT,GLOBAL)
   type(CATCHMENT_template),dimension(:),intent(in) :: CAT
   type(GLOBAL_template),intent(in) :: GLOBAL
   integer,intent(in) :: i
-
-  write(GLOBAL%CATCHMENT_FILE%fp,*)i,CAT%qb,CAT%qsurf*CAT%area
+  write(GLOBAL%CATCHMENT_FILE%fp,*)i,CAT%qb,CAT%qsurf*CAT%area,CAT%qsurf,CAT%ettot,CAT%pptsum,CAT%zbar,CAT%qb/CAT%area
 
 end subroutine Write_Catchment
 
@@ -1759,6 +1758,8 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('REGIONAL_fname',GLOBAL,GLOBAL%REGIONAL_FILE%fname)
   !Output Catchment file
   call Extract_Info_General_File('CATCHMENT_fname',GLOBAL,GLOBAL%CATCHMENT_FILE%fname)
+  !Output Catchment file
+  call Extract_Info_General_File('GSTI_fname',GLOBAL,GLOBAL%GSTI_FILE%fname)
   !Number of threads used in openmp
   call Extract_Info_General_File('nthreads',GLOBAL,GLOBAL%nthreads)
   !Initial time stamp in epoch time

@@ -733,6 +733,7 @@ endif
   CAT%gwtsum = CAT%gwtsum + gwtsum
   CAT%capsum = CAT%capsum + capsum
   CAT%smpsum = CAT%smpsum + smpsum
+  CAT%ettot = CAT%ettot + ettot
 
 end subroutine sumflx_catchment
 

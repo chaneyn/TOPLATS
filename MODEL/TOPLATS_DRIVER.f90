@@ -18,7 +18,7 @@ PROGRAM TOPLATS_DRIVER
 USE MODULE_VARIABLES
 
 !Module containing all the I/O for the interface
-USE MODULE_IO,ONLY: IO_template,Read_Data,Finalize_Model,Write_Data,Initialize_Model
+USE MODULE_IO,ONLY: IO_template,Read_Data,Finalize_Model,Write_Data,Initialize_Model,Write_Binary
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: Update_Catchments
@@ -106,6 +106,13 @@ do i=1,GLOBAL%ndata
   call Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 
 enddo
+
+!#####################################################################
+! Output the GSTI
+!#####################################################################
+ 
+!  call Write_Binary(GRID%VARS%GSTI,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+!                    IO%ipixnum,i,GLOBAL)
 
 !#####################################################################
 ! Finalize model and close files
