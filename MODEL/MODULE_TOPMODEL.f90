@@ -118,6 +118,7 @@ subroutine instep_catchment(ncatch,CAT)
     CAT(kk)%capsum = zero
     CAT(kk)%gwtsum = zero
     CAT(kk)%smpsum = zero
+    CAT(kk)%zbrpor = zero
 
 ! --------------------------------------------------------------------
 ! State variables.
@@ -129,7 +130,7 @@ subroutine instep_catchment(ncatch,CAT)
 ! Others.
 ! --------------------------------------------------------------------
 
-    CAT(kk)%psicav = zero
+    !CAT(kk)%psicav = zero
 
   enddo
 
@@ -228,6 +229,7 @@ subroutine catflx(pixsiz,CAT)
 ! ====================================================================
 
   CAT%smpsum = CAT%smpsum / catvegpix
+  CAT%zbrpor = CAT%zbrpor / catvegpix
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.
@@ -255,7 +257,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (CATCHMENT_template),intent(inout) :: CAT
   integer :: ic,mm,ilandc,isoil,icatch,kk
-  real*8 :: hbar,qzbar,zbrflx,zbrpor
+  real*8 :: hbar,qzbar,zbrflx,zbrpor,zbrpor_limit,catvegpix
 
 ! ====================================================================
 ! Chose option for calculating baseflow.
@@ -285,7 +287,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! ====================================================================
 
   zbrflx = (CAT%gwtsum - CAT%capsum - CAT%etwtsum - (CAT%qb/ CAT%area)) * GLOBAL%dt
-  zbrpor = sum(CAT%smpsum) * (CAT%zbar-CAT%psicav)
+  zbrpor = CAT%zbrpor !sum(CAT%smpsum) * (CAT%zbar-CAT%psicav)
  
   if (zbrflx.gt.zbrpor) then
 
@@ -302,14 +304,14 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! blow up. use rzsm1 and tzsm1 (vs rzsm and tzsm) to
 ! calculate storage so that it is > zero.
 ! --------------------------------------------------------------------&
-
-  else if ((zbrflx.le.zero).and.(zbrpor.le.zero)) then
+  else if (zbrflx .gt. 10000000)then!(zbrflx.le.zero).and.(zbrpor.le.zero)) then
 
 ! --------------------------------------------------------------------&
 ! Recalculate rzpsum and tzpsum with new soil moistures.
 ! --------------------------------------------------------------------&
 
     CAT%smpsum = zero
+    catvegpix = CAT%area/GLOBAL%pixsiz/GLOBAL%pixsiz
 
     do mm=1,GLOBAL%npix
 
@@ -321,27 +323,41 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
         if (icatch.eq.ic) then
 
-          if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
+         do kk = GLOBAL%nlayer,1,-1
 
-            CAT%smpsum(GLOBAL%nlayer) = CAT%smpsum(GLOBAL%nlayer)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(GLOBAL%nlayer))
+           if (GRID(mm)%VARS%z_layer(kk).gt.zero) then
 
-          else 
+             !This is the region of interest
+              CAT%smpsum(kk) = CAT%smpsum(kk) + (GRID(mm)%SOIL%thetas-GRID(mm)%VARS%sm(kk))
+              exit
+
+           endif
+
+         enddo
+
+     CAT%smpsum = CAT%smpsum / catvegpix
+
+         ! if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
+
+          !  CAT%smpsum(GLOBAL%nlayer) = CAT%smpsum(GLOBAL%nlayer)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(GLOBAL%nlayer))
+
+          !else 
   
-            if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero))then
+          !  if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero))then
 
-              do kk=GLOBAL%nlayer-1,1,-1
+           !   do kk=GLOBAL%nlayer-1,1,-1
           
-                 if (GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.le.GLOBAL%zmax_layer(kk)) then
+          !       if (GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.le.GLOBAL%zmax_layer(kk)) then
   
-                   CAT%smpsum(kk) = CAT%smpsum(kk)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(kk))
+           !        CAT%smpsum(kk) = CAT%smpsum(kk)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(kk))
 
-                 endif
+           !      endif
                
-              enddo
+           !   enddo
            
-            endif
+            !endif
 
-          endif
+          !endif
 
         endif
 
@@ -360,13 +376,13 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 ! If the available porosity is nonzero divide the flux by its value.
 ! --------------------------------------------------------------------&
 
-  if ( sum(CAT%smpsum).gt.(0.001d0)) then
+  if ( sum(CAT%smpsum).gt.(0.000d0)) then
 
     CAT%zbar1 = CAT%zbar - zbrflx/sum(CAT%smpsum)
 
   endif
 
-  if ( sum(CAT%smpsum).le.(0.001d0)) then
+  if ( sum(CAT%smpsum).le.(0.000d0)) then
 
     CAT%zbar1=CAT%zbar
 
@@ -406,7 +422,7 @@ subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
   real*8 :: capsum,tzpsum,etpixloc,conpix,difwt
   real*8 :: xlhv,dummy,svarhs
   integer :: i,kk
-  real*8 :: smpsum(GLOBAL%nlayer)
+  real*8 :: smpsum(GLOBAL%nlayer),zbrpor
 
 
 ! ====================================================================
@@ -715,6 +731,8 @@ endif
       endif
 
     enddo
+    
+    zbrpor = sum(smpsum)*(GRID_VARS%zw-GRID_SOIL%psic)
 
   endif
 
@@ -734,6 +752,7 @@ endif
   CAT%capsum = CAT%capsum + capsum
   CAT%smpsum = CAT%smpsum + smpsum
   CAT%ettot = CAT%ettot + ettot
+  CAT%zbrpor = CAT%zbrpor + zbrpor
 
 end subroutine sumflx_catchment
 
@@ -743,7 +762,7 @@ subroutine Redistribute_Zbar(n,ff,lambda,GSTI,zbar,zw)
   implicit none
   real*8,intent(in) :: n,ff,lambda,GSTI,zbar
   real*8,intent(inout) :: zw
-
+  
   zw = 1/ff - 1/ff*GSTI/lambda + zbar*GSTI/lambda
 
 end subroutine Redistribute_Zbar

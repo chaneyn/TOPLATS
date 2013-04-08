@@ -174,7 +174,11 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 !#####################################################################
 
   call Write_Binary(GRID%VARS%rzsm_zrzmax,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-                    IO%ipixnum,i,GLOBAL)
+                    IO%ipixnum,i,GLOBAL,GLOBAL%OUTPUT_file%fp)
+  !call Write_Binary(GRID%VARS%etpix,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  !                  IO%ipixnum,i,GLOBAL,GLOBAL%ET_file%fp)
+  !call Write_Binary(GRID%VARS%runtot,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  !                  IO%ipixnum,i,GLOBAL,GLOBAL%QS_file%fp)
 
 end subroutine Write_Data
 
@@ -786,6 +790,7 @@ GLOBAL%OUTPUT_FILE%fp = 108
 GLOBAL%SOIL_FILE%fp = 109
 GLOBAL%REGIONAL_FILE%fp = 110
 GLOBAL%CATCHMENT_FILE%fp = 111
+GLOBAL%GSTI_FILE%fp = 112
 
 !Open the files
 
@@ -824,11 +829,23 @@ open(GLOBAL%FORCING_FILE%fp,file=trim(GLOBAL%FORCING_FILE%fname),status='old',ac
 open(GLOBAL%OUTPUT_FILE%fp,file=trim(GLOBAL%OUTPUT_FILE%fname),status='unknown',access='direct',&
      form='unformatted',recl=GLOBAL%TI_FILE%nlon*GLOBAL%TI_FILE%nlat*noutvars*4)
 
+!Output Data Set
+open(GLOBAL%ET_FILE%fp,file=trim(GLOBAL%ET_FILE%fname),status='unknown',access='direct',&
+     form='unformatted',recl=GLOBAL%TI_FILE%nlon*GLOBAL%TI_FILE%nlat*noutvars*4)
+
+!Output Data Set
+open(GLOBAL%QS_FILE%fp,file=trim(GLOBAL%QS_FILE%fname),status='unknown',access='direct',&
+     form='unformatted',recl=GLOBAL%TI_FILE%nlon*GLOBAL%TI_FILE%nlat*noutvars*4)
+
 !Regional Variables Output
 open(GLOBAL%REGIONAL_FILE%fp,file=trim(GLOBAL%REGIONAL_FILE%fname))
 
 !Catchment Variables Output
 open(GLOBAL%CATCHMENT_FILE%fp,file=trim(GLOBAL%CATCHMENT_FILE%fname))
+
+!GSTI Output
+open(GLOBAL%GSTI_FILE%fp,file=trim(GLOBAL%GSTI_FILE%fname),status='unknown',form='unformatted',&
+     access='direct',recl=4*GLOBAL%TI_FILE%nlat*GLOBAL%TI_FILE%nlon)
 
 end subroutine FILE_OPEN
 
@@ -910,6 +927,7 @@ end subroutine Write_Catchment
       type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
       type (IO_template),intent(inout) :: IO
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
+      type (GRID_VEG_template) :: GRID_DVEG_2D(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat)
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
@@ -984,8 +1002,8 @@ end subroutine Write_Catchment
   call Replace_Undefined(TempArray,GLOBAL%DVEG_File%undef,GLOBAL%DVEG_File%nlon,&
                    GLOBAL%DVEG_File%nlat,dvegnvars)
 
-      GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
-      GRID_VEG_2D%albd = dble(TempArray(:,:,2))
+      GRID_DVEG_2D%xlai = dble(TempArray(:,:,1))
+      GRID_DVEG_2D%albd = dble(TempArray(:,:,2))
 
   GRID%VEG%ivgtyp = 0
   GRID%VEG%ilandc = 0
@@ -1011,8 +1029,8 @@ end subroutine Write_Catchment
         GRID(ip)%VEG%extinct = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%extinct
         GRID(ip)%VEG%canclos = GRID_VEG_2D(GRID(ip)%VEG%static_MAP%ilon,GRID(ip)%VEG%static_MAP%ilat)%canclos
         !Dynamic Vegetation
-        GRID(ip)%VEG%xlai = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%xlai
-        GRID(ip)%VEG%albd = GRID_VEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%albd
+        GRID(ip)%VEG%xlai = GRID_DVEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%xlai
+        GRID(ip)%VEG%albd = GRID_DVEG_2D(GRID(ip)%VEG%dynamic_MAP%ilon,GRID(ip)%VEG%dynamic_MAP%ilat)%albd
       endif
     enddo
   enddo
@@ -1300,7 +1318,7 @@ end subroutine Write_Catchment
 !> Subroutine to write raw binary data to the output file
 ! ====================================================================
 
-      subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i,GLOBAL)
+      subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i,GLOBAL,fp)
 
       implicit none
       type(GLOBAL_template),intent(in) :: GLOBAL
@@ -1309,7 +1327,7 @@ end subroutine Write_Catchment
       real*8 :: datain(nrow*ncol)
       real :: dataout(ncol,nrow)
       integer :: ipixnum(nrow,ncol)
-      integer :: irow,icol,nrow,ncol,i,x,y
+      integer :: irow,icol,nrow,ncol,i,x,y,fp
 
 ! ====================================================================
 ! Loop through the image and write each value in proper location.
@@ -1349,7 +1367,7 @@ end subroutine Write_Catchment
 
       enddo
 
-      write(GLOBAL%OUTPUT_FILE%fp,rec=i) dataout
+      write(fp,rec=i) dataout
 
       return
 
@@ -1454,9 +1472,9 @@ end subroutine Write_Catchment
         GRID(ip)%SOIL%rocpsoil =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%rocpsoil
         GRID(ip)%SOIL%quartz =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%quartz
         GRID(ip)%SOIL%ifcoarse =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%ifcoarse
-        GRID(ip)%SOIL%srespar1 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar1
-        GRID(ip)%SOIL%srespar2 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar2
-        GRID(ip)%SOIL%srespar3 =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar3
+        GRID(ip)%SOIL%srespar1 = GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar1
+        GRID(ip)%SOIL%srespar2 = GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar2
+        GRID(ip)%SOIL%srespar3 = GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%srespar3
         GRID(ip)%SOIL%a_ice =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%a_ice
         GRID(ip)%SOIL%b_ice =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%b_ice
         GRID(ip)%SOIL%bulk_dens =GRID_SOIL_2D(GRID(ip)%SOIL%MAP%ilon,GRID(ip)%SOIL%MAP%ilat)%bulk_dens
@@ -1565,7 +1583,7 @@ end subroutine Write_Catchment
 
          do 560 kk=1,GLOBAL%nsoil
 
-            CAT(jj)%psicav = CAT(jj)%psicav + frsoil(kk,jj)*psic(kk)
+            CAT(jj)%psicav = CAT(jj)%psicav + frsoil(kk,jj)*GRID(kk)%SOIL%psic
 
 560      continue
 
@@ -1754,6 +1772,10 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File_File_Info('FORCING_fname',GLOBAL,GLOBAL%FORCING_FILE)
   !Output file
   call Extract_Info_General_File('OUTPUT_fname',GLOBAL,GLOBAL%OUTPUT_FILE%fname)
+  !ET Output file
+  call Extract_Info_General_File('ET_fname',GLOBAL,GLOBAL%ET_FILE%fname)
+  !QSURF Output file
+  call Extract_Info_General_File('QS_fname',GLOBAL,GLOBAL%QS_FILE%fname)
   !Output file
   call Extract_Info_General_File('REGIONAL_fname',GLOBAL,GLOBAL%REGIONAL_FILE%fname)
   !Output Catchment file

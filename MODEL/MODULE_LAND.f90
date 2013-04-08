@@ -480,7 +480,7 @@ MODULE MODULE_LAND
       elseif (KS_TYPE .eq. 1)then
         call Redistribute_Zbar(N,ff,LAMBDA,GSTI,zbar,zw)
       endif
-      
+
 !cw! minimum size for root zone and transmission zone is 1 cm
 
       if (zw-psic.lt.(zrzmax+0.01).and.zw-psic.gt.zrzmax) then

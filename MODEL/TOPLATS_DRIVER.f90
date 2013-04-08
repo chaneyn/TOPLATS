@@ -67,18 +67,13 @@ do i=1,GLOBAL%ndata
 ! Read in the input data for this time step
 !#####################################################################
 
-  call cpu_time(start_time)
   call Read_Data(GLOBAL,GRID,CAT,IO,i)
-  call cpu_time(end_time)
-  print*,end_time-start_time
 
 !#####################################################################
 ! Update each grid cell
 !#####################################################################
 
   call Update_Cells(GRID,CAT,GLOBAL,i)
-  call cpu_time(end_time)
-  print*,end_time-start_time
 
 !#####################################################################
 ! Update the catchments
@@ -92,8 +87,6 @@ do i=1,GLOBAL%ndata
   GRID%VARS%sm1(2) = GRID%VARS%tzsm1
 
   call Update_Catchments(GLOBAL,CAT,GRID)
-  call cpu_time(end_time)
-  print*,end_time-start_time
 
   GRID%VARS%rzsm1_u=GRID%VARS%sm1_u(1)
   GRID%VARS%tzsm1_u=GRID%VARS%sm1_u(2)
@@ -105,8 +98,6 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 
   call Update_Regional(REG,GRID,GLOBAL,CAT)
-  call cpu_time(end_time)
-  print*,end_time-start_time
 
 !#####################################################################
 ! Write out the data for this time step
@@ -114,17 +105,15 @@ do i=1,GLOBAL%ndata
   
   GRID%VARS%sm(1) = GRID%VARS%rzsm
   call Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
-  call cpu_time(end_time)
-  print*,end_time-start_time
 
 enddo
 
 !#####################################################################
 ! Output the GSTI
 !#####################################################################
- 
+
   call Write_Binary(GRID%VARS%GSTI,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-                    IO%ipixnum,i,GLOBAL)
+                    IO%ipixnum,1,GLOBAL,GLOBAL%GSTI_file%fp)
 
 !#####################################################################
 ! Finalize model and close files

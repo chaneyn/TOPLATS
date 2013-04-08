@@ -152,7 +152,7 @@ type CATCHMENT_template
         real*8 :: fwcat
         !TOPMODEL PARAM
         real*8 :: q0,ff,dd,area,dtil,xlength,basink,xlamda,qb0
-        real*8 :: zbar0
+        real*8 :: zbar0,zbrpor
         !GENERALIZED TOPMODEL PARAMETERS
         real*8 :: lambda
         !Runoff
@@ -238,6 +238,8 @@ type GLOBAL_template
         type(FILE_template) :: REGIONAL_FILE
         type(FILE_template) :: CATCHMENT_FILE
         type(FILE_template) :: GSTI_FILE
+        type(FILE_template) :: ET_FILE
+        type(FILE_template) :: QS_FILE
   !spatial resolution of data
   real*8 :: spatial_res
   !dimensions

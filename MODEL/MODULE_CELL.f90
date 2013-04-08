@@ -77,7 +77,7 @@ contains
 
 !$OMP END PARALLEL DO
     end_time = omp_get_wtime()
-    print*,end_time - start_time
+    !print*,end_time - start_time
 
   end subroutine Update_Cells
 
@@ -129,6 +129,7 @@ GRID_VARS%dstz = 0.d0!dstz
 GRID_VARS%tzrhs = 0.d0!tzrhs
 GRID_VARS%dswc = 0.d0!dswc
 GRID_VARS%wcrhs = 0.d0!wcrhs
+GRID_VARS%etpix = zero
 !Energy Fluxes
 GRID_VARS%epwms = 0.d0!epwms
 
