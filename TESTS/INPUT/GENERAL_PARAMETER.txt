@@ -42,6 +42,7 @@ QS_fname 'TESTS/OUTPUT/QS.bin'
 REGIONAL_fname 'TESTS/OUTPUT/Regional_Variables.txt'
 CATCHMENT_fname 'TESTS/OUTPUT/Catchment_Variables.txt'
 GSTI_fname 'TESTS/OUTPUT/GSTI.bin'
+NETCDF_OUTPUT_fname 'TESTS/OUTPUT/OUTPUT.nc' 15.0 -999.900 -301561.0 113328.0 66 60
 
 #PARALLELIZATION
-nthreads 1 #Number of threads per node (OpenMP)
+nthreads 2 #Number of threads per node (OpenMP)

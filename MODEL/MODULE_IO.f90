@@ -4,6 +4,8 @@ USE MODULE_VARIABLES
 
 USE MODULE_TOPMODEL
 
+USE NETCDF
+
 !Add the variables that are reused throughout the subroutines
 
 implicit none
@@ -791,6 +793,7 @@ GLOBAL%SOIL_FILE%fp = 109
 GLOBAL%REGIONAL_FILE%fp = 110
 GLOBAL%CATCHMENT_FILE%fp = 111
 GLOBAL%GSTI_FILE%fp = 112
+GLOBAL%NETCDF_OUTPUT_FILE%fp = 113
 
 !Open the files
 
@@ -847,6 +850,10 @@ open(GLOBAL%CATCHMENT_FILE%fp,file=trim(GLOBAL%CATCHMENT_FILE%fname))
 open(GLOBAL%GSTI_FILE%fp,file=trim(GLOBAL%GSTI_FILE%fname),status='unknown',form='unformatted',&
      access='direct',recl=4*GLOBAL%TI_FILE%nlat*GLOBAL%TI_FILE%nlon)
 
+!NETCDF Output
+call Create_Netcdf_Output(GLOBAL%NETCDF_OUTPUT_FILE,GLOBAL)
+
+
 end subroutine FILE_OPEN
 
 !>Subroutine to close all open files
@@ -854,6 +861,7 @@ subroutine FILE_CLOSE(GLOBAL)
 
 implicit none
 type(GLOBAL_template),intent(in) :: GLOBAL
+integer :: status
 
 !Soil Parameter File
 close(GLOBAL%SOIL_FILE%fp)
@@ -884,6 +892,9 @@ close(GLOBAL%K0_FILE%fp)
 
 !Catchment table parameters file
 close(GLOBAL%CL_table_FILE%fp)
+
+!Netcdf OUTPUT
+status = nf90_close(GLOBAL%NETCDF_OUTPUT_FILE%fp)
 
 end subroutine FILE_CLOSE
 
@@ -1328,6 +1339,7 @@ end subroutine Write_Catchment
       real :: dataout(ncol,nrow)
       integer :: ipixnum(nrow,ncol)
       integer :: irow,icol,nrow,ncol,i,x,y,fp
+ integer :: start(3),count(3),status
 
 ! ====================================================================
 ! Loop through the image and write each value in proper location.
@@ -1359,7 +1371,7 @@ end subroutine Write_Catchment
 
                else
                   
-                  dataout(x,y) = -999
+                  dataout(x,y) = GLOBAL%NETCDF_OUTPUT_FILE%undef
 
                endif
 
@@ -1368,6 +1380,11 @@ end subroutine Write_Catchment
       enddo
 
       write(fp,rec=i) dataout
+
+ !Write the netcdf data
+ count = [GLOBAL%NETCDF_OUTPUT_FILE%nlon,GLOBAL%NETCDF_OUTPUT_FILE%nlat,1]
+ start = [1,1,i]
+ status = nf90_put_var(GLOBAL%NETCDF_OUTPUT_FILE%fp,GLOBAL%NETCDF_OUTPUT_FILE%varid,dataout,start,count)
 
       return
 
@@ -1790,6 +1807,8 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('dynamic_vegetation',GLOBAL,GLOBAL%dynamic_vegetation)
   !Flag defining the saturate hydraulic conductivity profile (0-Sivapalan,1987,1-Chaney,2013)
   call Extract_Info_General_File('KS_PROFILE_TYPE',GLOBAL,GLOBAL%KS_TYPE)
+  !Output file
+  call Extract_Info_General_File_File_Info('NETCDF_OUTPUT_fname',GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE)
   !Option for vertical Ks change with depth 
   GLOBAL%ikopt = GLOBAL%KS_TYPE
   
@@ -2049,5 +2068,70 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
   enddo
 
 end subroutine
+
+!>Subroutine to create output netcdf file
+subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL)
+
+  implicit none
+  type(FILE_template),intent(inout) :: FILE_INFO
+  type(GLOBAL_template),intent(in) :: GLOBAL 
+  integer :: status,i
+  integer :: LonDimId,LatDimId,TimeDimId,lon_varid,lat_varid,time_varid
+  real*8 :: time(GLOBAL%ndata),lats(FILE_INFO%nlat),lons(FILE_INFO%nlon)
+
+  !Create and open the new file
+  status = nf90_create(FILE_INFO%fname,nf90_clobber,FILE_INFO%fp)
+
+  !Define the dimensions of the new file
+  status = nf90_def_dim(FILE_INFO%fp,'lon',FILE_INFO%nlon, LonDimId)
+  status = nf90_def_dim(FILE_INFO%fp,'lat',FILE_INFO%nlat, LatDimId)
+  status = nf90_def_dim(FILE_INFO%fp,'t',GLOBAL%ndata, TimeDimId)
+
+  !Define the coordinate variables
+  status = nf90_def_var(FILE_INFO%fp,'lon',NF90_DOUBLE,LonDimId,lon_varid)
+  status = nf90_def_var(FILE_INFO%fp,'lat',NF90_DOUBLE,LatDimId,lat_varid)
+  status = nf90_def_var(FILE_INFO%fp,'t',NF90_DOUBLE,TimeDimId,time_varid)
+
+  !Define the netCDF variables (New File)
+  status = nf90_def_var(FILE_INFO%fp,'rzsm',NF90_REAL,[LonDimId,LatDimId,TimeDimId],FILE_INFO%varid)
+
+  !Assign units attributes to coordinate var data.
+  status = nf90_put_att(FILE_INFO%fp,lat_varid,'units','degrees_north')
+  status = nf90_put_att(FILE_INFO%fp,lon_varid,'units','degrees_east')
+  status = nf90_put_att(FILE_INFO%fp,time_varid,'units','hours')
+  status = nf90_put_att(FILE_INFO%fp,lat_varid,'long_name','Latitude')
+  status = nf90_put_att(FILE_INFO%fp,lon_varid,'long_name','Longitude')
+  status = nf90_put_att(FILE_INFO%fp,time_varid,'long_name','Time')
+
+  !Set the data attributes
+  status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid,'long_name','Root Zone Soil Moisture')
+  status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid,'_FillValue',real(FILE_INFO%undef))
+
+  !End define mode
+  status = nf90_enddef(FILE_INFO%fp)
+
+  !Create the coordainte variable data
+  print*,FILE_INFO%minlat,FILE_INFO%minlon,FILE_INFO%spatial_res
+  do i=1,FILE_INFO%nlat
+   lats(i) = FILE_INFO%minlat + (i-1)*FILE_INFO%spatial_res
+  enddo
+  do i=1,FILE_INFO%nlon
+   lons(i) = FILE_INFO%minlon + (i-1)*FILE_INFO%spatial_res
+  enddo
+  do i=1,GLOBAL%ndata
+   time(i) = GLOBAL%itime + (i-1)*GLOBAL%dt
+  enddo
+  lats = lats/3600.0d0
+  lons = lons/3600.0d0
+
+  !Write the coordinate variable data
+  status = nf90_put_var(FILE_INFO%fp,lat_varid,lats/3600.0)
+  status = nf90_put_var(FILE_INFO%fp,lon_varid,lons/3600.0)
+  status = nf90_put_var(FILE_INFO%fp,time_varid,time)
+!  print*,FILE_INFO,lat_varid,lon_varid,time_varid
+!  stop
+
+end subroutine Create_Netcdf_Output
+
 
 END MODULE MODULE_IO

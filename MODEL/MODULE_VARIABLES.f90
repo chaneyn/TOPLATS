@@ -18,6 +18,8 @@ type FILE_template
   !dimensions
   real*8 :: minlat,minlon
   integer :: nlat,nlon
+  !netcdf itmes
+  integer :: varid
 end type FILE_template
 
 !GRID DATA
@@ -159,6 +161,8 @@ type CATCHMENT_template
         real*8 :: qb
         !Generalized TOPMODEL paramters
         real*8 :: n
+        !Spatial variability
+        real*8 :: rzsm_std
 end type
 
 !REGIONAL DATA
@@ -240,6 +244,7 @@ type GLOBAL_template
         type(FILE_template) :: GSTI_FILE
         type(FILE_template) :: ET_FILE
         type(FILE_template) :: QS_FILE
+        type(FILE_template) :: NETCDF_OUTPUT_FILE
   !spatial resolution of data
   real*8 :: spatial_res
   !dimensions

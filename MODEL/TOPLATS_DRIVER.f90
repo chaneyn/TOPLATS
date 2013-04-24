@@ -112,8 +112,8 @@ enddo
 ! Output the GSTI
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%GSTI,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-                    IO%ipixnum,1,GLOBAL,GLOBAL%GSTI_file%fp)
+  !call Write_Binary(GRID%VARS%GSTI,1.0,GLOBAL%nrow,GLOBAL%ncol,&
+  !                  IO%ipixnum,1,GLOBAL,GLOBAL%GSTI_file%fp)
 
 !#####################################################################
 ! Finalize model and close files

@@ -10,6 +10,8 @@ USE MODULE_CANOPY
 
 USE MODULE_TOPMODEL
 
+USE MODULE_IO
+
 implicit none
 
 contains
@@ -1304,6 +1306,32 @@ contains
 
   end subroutine Calculate_Ks_z_test2
 
+  subroutine Calculate_Mean_test1()
+
+  implicit none
+  real*8 :: n,array(5),mean,mean_result,mean_true
+  array = [1,2,3,4,5]
+  call Calculate_mean(array,size(array),mean)
+  mean_true = 3.0
+  mean_result = mean
+  call set_unit_name ('Calculate_Mean_test1')
+  call assert_equals (mean_result,mean_true)
+
+  end subroutine Calculate_Mean_test1
+
+  subroutine Calculate_Std_test1()
+
+  implicit none
+  real*8 :: n,array(5),std,std_result,std_true
+  array = [1,2,3,4,5]
+  call Calculate_std(array,size(array),std)
+  std_true = 1.5811388300841898d0
+  std_result = std
+  call set_unit_name ('Calculate_Std_test1')
+  call assert_equals (std_true,std_result)
+
+  end subroutine Calculate_Std_test1
+
   subroutine run_unit_tests()
   
     !Driver to run all the unit tests of the key subroutine in TOPLATS
@@ -1373,6 +1401,8 @@ contains
     call Calculate_Qb_test2()
     call Calculate_Ks_z_test1()
     call Calculate_Ks_z_test2()
+    call Calculate_Mean_test1()
+    call Calculate_Std_test1()
 
     !Summarize and finalize the unit tests
     call fruit_summary

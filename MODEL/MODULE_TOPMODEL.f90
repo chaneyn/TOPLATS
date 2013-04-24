@@ -24,6 +24,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
   integer :: icatch,isoil,ilandc
+  real*8 :: tmp(GLOBAL%npix)
 
 !#####################################################################
 ! Initialize water balance variables for the time step.
@@ -720,5 +721,31 @@ subroutine Calculate_Qb(n,ff,zbar,q0,qb)
   qb = q0 * (1 - ff*zbar)**n
 
 end subroutine Calculate_Qb
+
+subroutine Calculate_Mean(array,n,mean)
+
+ implicit none
+ integer,intent(in) :: n
+ real*8,intent(in) :: array(n)
+ real*8,intent(inout) :: mean
+ !Compute the mean
+ mean = sum(array)/n
+
+end subroutine
+
+subroutine Calculate_Std(array,n,std)
+
+ implicit none
+ integer,intent(in) :: n
+ real*8,intent(in) :: array(n)
+ real*8,intent(inout) :: std
+ real*8 :: mean
+ !Compute the mean
+ call Calculate_Mean(array,n,mean)
+ print*,mean
+ !Compute the standard deviation
+ std = (sum((array - mean)**2)/(n-1))**0.5
+
+end subroutine
 
 END MODULE MODULE_TOPMODEL

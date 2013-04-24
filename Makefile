@@ -2,7 +2,8 @@
 GFC = gfortran
 IFC = /opt/intel/bin/ifort
 FFLAGS = -g -O3
-LIBS = -fopenmp
+LIBS = -fopenmp /usr/lib64/libnetcdff.so
+INC = -I/usr/lib64/gfortran/modules
 TOPLATS = TOPLATS_3.0
 TESTS = TESTS/TESTS_DRIVER
 CATCHMENT_TESTS = TESTS/CATCHMENT_TESTS_DRIVER
@@ -13,13 +14,13 @@ CATCHMENT_TEST_OBJS = TESTS/fruit/fruit_util.f90 TESTS/fruit/fruit.f90 MODEL/MOD
 all: $(TOPLATS) $(TESTS) $(CATCHMENT_TESTS)
 
 $(TOPLATS) : $(TOPLATS_OBJS)
-	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS) $(INC)
 
 $(TESTS) : $(TEST_OBJS)
-	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -o $@ $^ $(LIBS) $(INC)
 
 $(CATCHMENT_TESTS) : $(CATCHMENT_TEST_OBJS)
-	$(GFC) $(FFLAGS) -Wall -o $@ $^ $(LIBS)
+	$(GFC) $(FFLAGS) -Wall -o $@ $^ $(LIBS) $(INC)
 
 clean:
 	rm $(TOPLATS) $(TESTS) $(CATCHMENT_TESTS) *.mod
