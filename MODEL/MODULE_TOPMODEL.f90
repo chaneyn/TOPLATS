@@ -230,6 +230,7 @@ subroutine catflx(pixsiz,CAT)
 
   CAT%smpsum = CAT%smpsum / catvegpix
   CAT%zbrpor = CAT%zbrpor / catvegpix
+  CAT%thetas = CAT%thetas / catvegpix
 
 ! ====================================================================
 ! Calculate catchment fractions of wet canopy.
@@ -288,6 +289,7 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
 
   zbrflx = (CAT%gwtsum - CAT%capsum - CAT%etwtsum - (CAT%qb/ CAT%area)) * GLOBAL%dt
   zbrpor = CAT%zbrpor !sum(CAT%smpsum) * (CAT%zbar-CAT%psicav)
+  !print*,zbrpor,zbrflx,CAT%zbar,CAT%qb,CAT%capsum,CAT%etwtsum,CAT%gwtsum,CAT%qb/ CAT%area
  
   if (zbrflx.gt.zbrpor) then
 
@@ -299,95 +301,14 @@ subroutine upzbar(ic,CAT,GLOBAL,GRID)
     zbrflx = zbrpor
     CAT%qb = CAT%qb + qzbar*CAT%area
 
-! --------------------------------------------------------------------&
-! If water table is falling but storage is full zbar1 will
-! blow up. use rzsm1 and tzsm1 (vs rzsm and tzsm) to
-! calculate storage so that it is > zero.
-! --------------------------------------------------------------------&
-  else if (zbrflx .gt. 10000000)then!(zbrflx.le.zero).and.(zbrpor.le.zero)) then
-
-! --------------------------------------------------------------------&
-! Recalculate rzpsum and tzpsum with new soil moistures.
-! --------------------------------------------------------------------&
-
-    CAT%smpsum = zero
-    catvegpix = CAT%area/GLOBAL%pixsiz/GLOBAL%pixsiz
-
-    do mm=1,GLOBAL%npix
-
-      isoil = GRID(mm)%SOIL%isoil
-      ilandc = GRID(mm)%VEG%ilandc
-      icatch = GRID(mm)%VARS%icatch
-
-      if (GRID(ilandc)%VEG%ivgtyp.ge.0) then
-
-        if (icatch.eq.ic) then
-
-         do kk = GLOBAL%nlayer,1,-1
-
-           if (GRID(mm)%VARS%z_layer(kk).gt.zero) then
-
-             !This is the region of interest
-              CAT%smpsum(kk) = CAT%smpsum(kk) + (GRID(mm)%SOIL%thetas-GRID(mm)%VARS%sm(kk))
-              exit
-
-           endif
-
-         enddo
-
-     CAT%smpsum = CAT%smpsum / catvegpix
-
-         ! if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic).gt.GLOBAL%zrzmax) then
-
-          !  CAT%smpsum(GLOBAL%nlayer) = CAT%smpsum(GLOBAL%nlayer)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(GLOBAL%nlayer))
-
-          !else 
-  
-          !  if ((GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.gt.zero))then
-
-           !   do kk=GLOBAL%nlayer-1,1,-1
-          
-          !       if (GRID(mm)%VARS%zw-GRID(isoil)%SOIL%psic.le.GLOBAL%zmax_layer(kk)) then
-  
-           !        CAT%smpsum(kk) = CAT%smpsum(kk)+(GRID(isoil)%SOIL%thetas-GRID(mm)%VARS%sm1(kk))
-
-           !      endif
-               
-           !   enddo
-           
-            !endif
-
-          !endif
-
-        endif
-
-      endif
-
-    enddo
-
   endif
 
 ! ====================================================================
 ! Update zbar by taking the total flux and dividing by
-! the average porosity just above the water table.
+! the average porosity.
 ! ====================================================================
 
-! --------------------------------------------------------------------&
-! If the available porosity is nonzero divide the flux by its value.
-! --------------------------------------------------------------------&
-
-  if ( sum(CAT%smpsum).gt.(0.000d0)) then
-
-    CAT%zbar1 = CAT%zbar - zbrflx/sum(CAT%smpsum)
-
-  endif
-
-  if ( sum(CAT%smpsum).le.(0.000d0)) then
-
-    CAT%zbar1=CAT%zbar
-
-  endif
-
+  CAT%zbar1 = CAT%zbar - zbrflx/CAT%thetas!sum(CAT%smpsum)
 
 end subroutine upzbar
 
@@ -753,6 +674,7 @@ endif
   CAT%smpsum = CAT%smpsum + smpsum
   CAT%ettot = CAT%ettot + ettot
   CAT%zbrpor = CAT%zbrpor + zbrpor
+  CAT%thetas = CAT%thetas + GRID_SOIL%thetas
 
 end subroutine sumflx_catchment
 

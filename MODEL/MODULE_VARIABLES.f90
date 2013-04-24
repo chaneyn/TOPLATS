@@ -138,7 +138,7 @@ type CATCHMENT_template
         !Vegetation
         real*8 :: fbs
         !Soil
-        real*8 :: psicav
+        real*8 :: psicav,thetas
         !Evaporation and condensation
         real*8 :: ettot,etstsum,etwtsum,etbssum,&
                 etdcsum,etwcsum,etlakesum,contot
