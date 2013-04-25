@@ -1939,7 +1939,7 @@ subroutine Extract_Info_General_File_File_Info(strid,GLOBAL,FILE_INFO)
       backspace(GLOBAL%GENERAL_FILE%fp)
       !read the desired parameter/file
       read(GLOBAL%GENERAL_FILE%fp,*)string,FILE_INFO%fname,FILE_INFO%spatial_res,&
-        FILE_INFO%undef,FILE_INFO%minlat,FILE_INFO%minlon,FILE_INFO%nlat,FILE_INFO%nlon
+        FILE_INFO%undef,FILE_INFO%minlon,FILE_INFO%minlat,FILE_INFO%nlat,FILE_INFO%nlon
       !Go back to the beginning of the file and exit
       rewind(GLOBAL%GENERAL_FILE%fp)
       exit
