@@ -19,7 +19,8 @@ type FILE_template
   real*8 :: minlat,minlon
   integer :: nlat,nlon
   !netcdf itmes
-  integer,allocatable,dimension(:) :: varid
+  integer :: varid(100)
+  character(len=10) :: var_name(100)
 end type FILE_template
 
 !GRID DATA

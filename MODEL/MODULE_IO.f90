@@ -175,12 +175,12 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  call Write_Binary(GRID%VARS%rzsm_zrzmax,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-                    IO%ipixnum,i,GLOBAL,GLOBAL%OUTPUT_file%fp)
-  !call Write_Binary(GRID%VARS%etpix,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-  !                  IO%ipixnum,i,GLOBAL,GLOBAL%ET_file%fp)
-  !call Write_Binary(GRID%VARS%runtot,1.0,GLOBAL%nrow,GLOBAL%ncol,&
-  !                  IO%ipixnum,i,GLOBAL,GLOBAL%QS_file%fp)
+  !Root Zone Soil Moisture
+  call WRITE_NETCDF(GRID%VARS%rzsm_zrzmax,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(1))
+  !Evaportranspiration
+  call WRITE_NETCDF(GRID%VARS%etpix,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(2))
+  !Surface Runoff
+  call WRITE_NETCDF(GRID%VARS%runtot,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(3))
 
 end subroutine Write_Data
 
@@ -852,8 +852,10 @@ open(GLOBAL%GSTI_FILE%fp,file=trim(GLOBAL%GSTI_FILE%fname),status='unknown',form
      access='direct',recl=4*GLOBAL%TI_FILE%nlat*GLOBAL%TI_FILE%nlon)
 
 !NETCDF Output
-allocate(GLOBAL%NETCDF_OUTPUT_FILE%varid(1))
-call Create_Netcdf_Output(GLOBAL%NETCDF_OUTPUT_FILE,GLOBAL,1,['RZSM'])
+GLOBAL%NETCDF_OUTPUT_FILE%var_name(1) = 'RZSM'
+GLOBAL%NETCDF_OUTPUT_FILE%var_name(2) = 'ET'
+GLOBAL%NETCDF_OUTPUT_FILE%var_name(3) = 'QSURF'
+call Create_Netcdf_Output(GLOBAL%NETCDF_OUTPUT_FILE,GLOBAL,3)
 
 
 end subroutine FILE_OPEN
@@ -1331,66 +1333,25 @@ end subroutine Write_Catchment
 !> Subroutine to write raw binary data to the output file
 ! ====================================================================
 
-      subroutine WRITE_BINARY(datain,rmult,nrow,ncol,ipixnum,i,GLOBAL,fp)
+subroutine WRITE_NETCDF(datain,ipixnum,i,GLOBAL,varid)
 
-      implicit none
-      type(GLOBAL_template),intent(in) :: GLOBAL
-      real :: dummy 
-      real :: rmult
-      real*8 :: datain(nrow*ncol)
-      real :: dataout(ncol,nrow)
-      integer :: ipixnum(nrow,ncol)
-      integer :: irow,icol,nrow,ncol,i,x,y,fp
- integer :: start(3),count(3),status
+  implicit none
+  type(GLOBAL_template),intent(in) :: GLOBAL
+  real*8,intent(in) :: datain(GLOBAL%nrow*GLOBAL%ncol)
+  integer,intent(in) :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
+  integer,intent(in) :: varid
+  real :: dataout(GLOBAL%ncol,GLOBAL%nrow)
+  integer :: i
+  integer :: start(3),count(3),status
 
-! ====================================================================
-! Loop through the image and write each value in proper location.
-! ====================================================================
+  call MODEL2GRID(datain,GLOBAL%nrow,GLOBAL%ncol,ipixnum,GLOBAL%NETCDF_OUTPUT_FILE%undef,dataout)
 
-      dummy = -999.0
-       x = 1
-       y = 0
-       do irow = 1,nrow
+  !Write the netcdf data
+  count = [GLOBAL%ncol,GLOBAL%nrow,1]
+  start = [1,1,i]
+  status = nf90_put_var(GLOBAL%NETCDF_OUTPUT_FILE%fp,varid,dataout,start,count)
 
-         do icol = 1,ncol
-
-! --------------------------------------------------------------------&
-! If the location is within the area of interest then
-! write the correct value to the image, otherwise 
-! write the dummy value.
-! --------------------------------------------------------------------&
-
-               if (y .eq. nrow)then
-                        y = 0
-                        x = x + 1
-               endif
-
-               y = y + 1
-
-               if (ipixnum(irow,icol).gt.0) then
-
-                  dataout(x,y) = rmult*datain(ipixnum(irow,icol))
-
-               else
-                  
-                  dataout(x,y) = GLOBAL%NETCDF_OUTPUT_FILE%undef
-
-               endif
-
-        enddo
-
-      enddo
-
-      write(fp,rec=i) dataout
-
- !Write the netcdf data
- count = [GLOBAL%NETCDF_OUTPUT_FILE%nlon,GLOBAL%NETCDF_OUTPUT_FILE%nlat,1]
- start = [1,1,i]
- status = nf90_put_var(GLOBAL%NETCDF_OUTPUT_FILE%fp,GLOBAL%NETCDF_OUTPUT_FILE%varid(1),dataout,start,count)
-
-      return
-
-      end subroutine WRITE_BINARY
+end subroutine WRITE_NETCDF
 
 ! ====================================================================
 !> Subroutine to convert from model array to grid
@@ -1399,11 +1360,12 @@ end subroutine Write_Catchment
 subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 
   implicit none
+  integer,intent(in) :: nrow,ncol
   real*8,intent(in) :: datain(nrow*ncol)
-  real,intent(inout) :: dataout(nrow,ncol)
-  real,intent(in) :: undef
+  real,intent(inout) :: dataout(ncol,nrow)
+  real*8,intent(in) :: undef
   integer,intent(in) :: ipixnum(nrow,ncol)
-  integer :: irow,icol,nrow,ncol,x,y
+  integer :: irow,icol,x,y
 
   ! ====================================================================
   ! Loop through the image and write each value in proper location.
@@ -1433,7 +1395,7 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 
         else
 
-          dataout(x,y) = undef
+          dataout(x,y) = real(undef)
 
         endif
 
@@ -2123,19 +2085,18 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
 end subroutine
 
 !>Subroutine to create output netcdf file
-subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars,var_name)
+subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
 
   implicit none
   type(FILE_template),intent(inout) :: FILE_INFO
   type(GLOBAL_template),intent(in) :: GLOBAL 
   integer,intent(in) :: nvars
-  character(len=50),intent(in) :: var_name(nvars)
   integer :: status,i
   integer :: LonDimId,LatDimId,TimeDimId,lon_varid,lat_varid,time_varid
   real*8 :: time(GLOBAL%ndata),lats(FILE_INFO%nlat),lons(FILE_INFO%nlon)
 
   !Create and open the new file
-  status = nf90_create(FILE_INFO%fname,nf90_clobber,FILE_INFO%fp)
+  status = nf90_create(FILE_INFO%fname,nf90_hdf5,FILE_INFO%fp)
 
   !Define the dimensions of the new file
   status = nf90_def_dim(FILE_INFO%fp,'lon',FILE_INFO%nlon, LonDimId)
@@ -2158,8 +2119,10 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars,var_name)
 
   !Set the data attributes
   do i=1,nvars
-   status = nf90_def_var(FILE_INFO%fp,var_name(i),NF90_REAL,[LonDimId,LatDimId,TimeDimId],FILE_INFO%varid(i))
-   status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid(i),'long_name',var_name(i))
+   FILE_INFO%varid(i) = 0
+   status = nf90_def_var(FILE_INFO%fp,FILE_INFO%var_name(i),NF90_REAL,&
+            [LonDimId,LatDimId,TimeDimId],FILE_INFO%varid(i))
+   status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid(i),'long_name',FILE_INFO%var_name(i))
    status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid(i),'_FillValue',real(FILE_INFO%undef))
   enddo
 

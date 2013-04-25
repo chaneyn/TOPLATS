@@ -16,12 +16,12 @@ my $CATCHMENT_TESTS = "./TESTS/CATCHMENT_TESTS_DRIVER";
 
 chdir("../");
 
-#print "Running the unit tests\n";
+print "Running the unit tests\n";
 #print $UNIT_TESTS."\n";
-#system("$UNIT_TESTS");
+system("$UNIT_TESTS");
 
 print "Running the model\n";
 system("$TOPLATS_NEW $GENERAL_FILE");
 
-#print "Running the catchment tests\n";
-#system("$CATCHMENT_TESTS $NEW_REGIONAL_FILE $OLD_REGIONAL_FILE");
+print "Running the catchment tests\n";
+system("$CATCHMENT_TESTS $NEW_REGIONAL_FILE $OLD_REGIONAL_FILE");

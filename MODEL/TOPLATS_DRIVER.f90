@@ -18,7 +18,7 @@ PROGRAM TOPLATS_DRIVER
 USE MODULE_VARIABLES
 
 !Module containing all the I/O for the interface
-USE MODULE_IO,ONLY: IO_template,Read_Data,Finalize_Model,Write_Data,Initialize_Model,Write_Binary
+USE MODULE_IO,ONLY: IO_template,Read_Data,Finalize_Model,Write_Data,Initialize_Model
 
 !Module containing topmodel
 USE MODULE_TOPMODEL,ONLY: Update_Catchments
