@@ -175,12 +175,30 @@ subroutine Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 ! Output spatial field
 !#####################################################################
 
-  !Root Zone Soil Moisture
-  call WRITE_NETCDF(GRID%VARS%rzsm_zrzmax,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(1))
-  !Evaportranspiration
-  call WRITE_NETCDF(GRID%VARS%etpix,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(2))
-  !Surface Runoff
-  call WRITE_NETCDF(GRID%VARS%runtot,IO%ipixnum,i,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(3))
+  GRID%VARS%rzsm_ave = GRID%VARS%rzsm_ave + GRID%VARS%rzsm_zrzmax
+  GRID%VARS%etpix_ave = GRID%VARS%etpix_ave + GRID%VARS%etpix
+  GRID%VARS%runtot_ave = GRID%VARS%runtot_ave + GRID%VARS%runtot
+
+  if (mod(i,GLOBAL%nt_out) .eq. 0) then
+
+    !Calculate average of the output data
+    GRID%VARS%rzsm_ave = GRID%VARS%rzsm_ave/GLOBAL%nt_out
+    GRID%VARS%etpix_ave = GRID%VARS%etpix_ave/GLOBAL%nt_out
+    GRID%VARS%runtot_ave = GRID%VARS%runtot_ave/GLOBAL%nt_out
+   
+    !Root Zone Soil Moisture
+    call WRITE_NETCDF(GRID%VARS%rzsm_ave,IO%ipixnum,i/GLOBAL%nt_out,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(1))
+    !Evaportranspiration
+    call WRITE_NETCDF(GRID%VARS%etpix_ave,IO%ipixnum,i/GLOBAL%nt_out,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(2))
+    !Surface Runoff
+    call WRITE_NETCDF(GRID%VARS%runtot_ave,IO%ipixnum,i/GLOBAL%nt_out,GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE%varid(3))
+
+    !Set averages to zero
+    GRID%VARS%rzsm_ave = zero
+    GRID%VARS%etpix_ave = zero
+    GRID%VARS%runtot_ave = zero
+
+  endif
 
 end subroutine Write_Data
 
@@ -1824,8 +1842,12 @@ subroutine Read_General_File(GLOBAL)
   call Extract_Info_General_File('KS_PROFILE_TYPE',GLOBAL,GLOBAL%KS_TYPE)
   !Output file
   call Extract_Info_General_File_File_Info('NETCDF_OUTPUT_fname',GLOBAL,GLOBAL%NETCDF_OUTPUT_FILE)
+  !Output time step (hours) TOTAL TIME MUST BE MULTIPLE
+  call Extract_Info_General_File('dt_out',GLOBAL,GLOBAL%dt_out)
   !Option for vertical Ks change with depth 
   GLOBAL%ikopt = GLOBAL%KS_TYPE
+  !Number of time steps to average for output
+  GLOBAL%nt_out = GLOBAL%dt_out/GLOBAL%dt
   
   !Close the file
   close(GLOBAL%GENERAL_FILE%fp)
@@ -2093,7 +2115,7 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
   integer,intent(in) :: nvars
   integer :: status,i
   integer :: LonDimId,LatDimId,TimeDimId,lon_varid,lat_varid,time_varid
-  real*8 :: time(GLOBAL%ndata),lats(FILE_INFO%nlat),lons(FILE_INFO%nlon)
+  real*8 :: time(GLOBAL%ndata/GLOBAL%nt_out),lats(FILE_INFO%nlat),lons(FILE_INFO%nlon)
 
   !Create and open the new file
   status = nf90_create(FILE_INFO%fname,nf90_hdf5,FILE_INFO%fp)
@@ -2101,7 +2123,7 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
   !Define the dimensions of the new file
   status = nf90_def_dim(FILE_INFO%fp,'lon',FILE_INFO%nlon, LonDimId)
   status = nf90_def_dim(FILE_INFO%fp,'lat',FILE_INFO%nlat, LatDimId)
-  status = nf90_def_dim(FILE_INFO%fp,'t',GLOBAL%ndata, TimeDimId)
+  status = nf90_def_dim(FILE_INFO%fp,'t',GLOBAL%ndata/GLOBAL%nt_out, TimeDimId)
 
   !Define the coordinate variables
   status = nf90_def_var(FILE_INFO%fp,'lon',NF90_DOUBLE,LonDimId,lon_varid)
@@ -2137,8 +2159,8 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
   do i=1,FILE_INFO%nlon
    lons(i) = FILE_INFO%minlon + (i-1)*FILE_INFO%spatial_res
   enddo
-  do i=1,GLOBAL%ndata
-   time(i) = GLOBAL%itime + (i-1)*GLOBAL%dt
+  do i=1,GLOBAL%ndata/GLOBAL%nt_out
+   time(i) = GLOBAL%itime + (i-1)*GLOBAL%dt_out
   enddo
   lats = lats/3600.0d0 !degrees
   lons = lons/3600.0d0 !degrees

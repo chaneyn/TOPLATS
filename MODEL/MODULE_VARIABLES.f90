@@ -125,6 +125,8 @@ type GRID_VARS_template
         real*8 :: rzsm_zrzmax !Volumetric soil water content up to zrzmax (zrz*zrzmax + thetas*(zrzmax-zrz))/zrzmax
         real*8 :: sm(2),sm1(2),sm_f(2),sm1_f(2),sm1_u(2),smdthetaidt(2),sm_old(2)
         real*8 :: z_layer(2)
+        !Temporal Averages
+        real*8 :: rzsm_ave,etpix_ave,runtot_ave
 
 end type GRID_VARS_template
 
@@ -214,7 +216,7 @@ type GLOBAL_template
         integer :: iopflg,istflg,iophd
         real*8 :: frcbeta
         !STORM PARAM
-        real*8 :: endstm,toleb,pixsiz,dt
+        real*8 :: endstm,toleb,pixsiz
         integer :: newstorm
         !Vegetation
         integer :: ntdveg
@@ -222,7 +224,8 @@ type GLOBAL_template
         integer :: dtveg
         integer :: dynamic_vegetation
         !Time
-        integer :: time,itime,old_date(9),new_date(9)
+        integer :: time,itime,old_date(9),new_date(9),nt_out
+        real*8 :: dt,dt_out
         !Misc
         real*8 :: mul_fac
         !TOPMODEL
