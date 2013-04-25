@@ -2130,6 +2130,7 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
   status = nf90_enddef(FILE_INFO%fp)
 
   !Create the coordainte variable data
+  print*,FILE_INFO%minlat
   do i=1,FILE_INFO%nlat
    lats(i) = FILE_INFO%minlat + (i-1)*FILE_INFO%spatial_res
   enddo
@@ -2139,17 +2140,14 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
   do i=1,GLOBAL%ndata
    time(i) = GLOBAL%itime + (i-1)*GLOBAL%dt
   enddo
-  lats = lats/3600.0d0
-  lons = lons/3600.0d0
-  print*,lats
-  time = time/3600.0d0
+  lats = lats/3600.0d0 !degrees
+  lons = lons/3600.0d0 !degrees
+  time = time/3600.0d0 !hours
 
   !Write the coordinate variable data
-  status = nf90_put_var(FILE_INFO%fp,lat_varid,lats/3600.0)
-  status = nf90_put_var(FILE_INFO%fp,lon_varid,lons/3600.0)
+  status = nf90_put_var(FILE_INFO%fp,lat_varid,lats)
+  status = nf90_put_var(FILE_INFO%fp,lon_varid,lons)
   status = nf90_put_var(FILE_INFO%fp,time_varid,time)
-!  print*,FILE_INFO,lat_varid,lon_varid,time_varid
-!  stop
 
 end subroutine Create_Netcdf_Output
 
