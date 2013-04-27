@@ -2144,6 +2144,7 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
    FILE_INFO%varid(i) = 0
    status = nf90_def_var(FILE_INFO%fp,FILE_INFO%var_name(i),NF90_REAL,&
             [LonDimId,LatDimId,TimeDimId],FILE_INFO%varid(i))
+   status = nf90_def_var_deflate(FILE_INFO%fp,FILE_INFO%varid(i),0,1,1)
    status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid(i),'long_name',FILE_INFO%var_name(i))
    status = nf90_put_att(FILE_INFO%fp,FILE_INFO%varid(i),'_FillValue',real(FILE_INFO%undef))
   enddo
