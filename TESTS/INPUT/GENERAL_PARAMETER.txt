@@ -46,4 +46,4 @@ GSTI_fname 'TESTS/OUTPUT/GSTI.bin'
 NETCDF_OUTPUT_fname 'TESTS/OUTPUT/OUTPUT.nc' 15.0 -999.900 -301561.0 113328.0 66 60
 
 #PARALLELIZATION
-nthreads 2 #Number of threads per node (OpenMP)
+nthreads 8 #Number of threads per node (OpenMP)

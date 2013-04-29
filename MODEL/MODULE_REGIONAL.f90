@@ -23,6 +23,12 @@ contains
     type (GRID_template),dimension(:),intent(in) :: GRID
     type (REGIONAL_template),intent(inout) :: REG
     type (CATCHMENT_template),dimension(:),intent(in) :: CAT
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GRID_SOIL_template) :: GRID_SOIL
+  type (GRID_MET_template) :: GRID_MET
+  type (GRID_VARS_template) :: GRID_VARS
+  type (CATCHMENT_template) :: CAT_INFO
+  type (GLOBAL_template) :: GLOBAL_INFO
     integer :: icatch,isoil,ilandc
 
 !#####################################################################
@@ -35,18 +41,22 @@ contains
 ! Sum the local water and energy balance fluxes.
 !#####################################################################
 
-!!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(ipix,isoil,ilandc,icatch)
+!!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(GRID_MET,GRID_SOIL,GRID_VEG,&
+!!$OMP GRID_VARS,GLOBAL_INFO)
 
     do ipix = 1,GLOBAL%npix
 
-      isoil = GRID(ipix)%SOIL%isoil
-      ilandc = GRID(ipix)%VEG%ilandc
-      icatch = GRID(ipix)%VARS%icatch
+      GRID_MET = GRID(ipix)%MET
+      GRID_SOIL = GRID(ipix)%SOIL
+      GRID_VEG = GRID(ipix)%VEG
+      GRID_VARS = GRID(ipix)%VARS
+      GLOBAL_INFO = GLOBAL
+
 
 !!$OMP CRITICAL 
-      call sumflx_regional(REG,GRID(ipix)%VARS,GLOBAL,&
-         GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-         ilandc)
+      call sumflx_regional(REG,GRID_VARS,GLOBAL_INFO,&
+         GRID_VEG,GRID_SOIL,GRID_MET,&
+         ipix)
 !!$OMP END CRITICAL 
 
     enddo

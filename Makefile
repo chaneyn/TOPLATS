@@ -1,7 +1,7 @@
 #GFC = /home/ice/nchaney/UTILS/gcc-4.8/bin/gfortran
 GFC = gfortran
 IFC = /opt/intel/bin/ifort
-FFLAGS = -g -O3
+FFLAGS = -g -O3 
 LIBS = -fopenmp /usr/lib64/libnetcdff.so
 INC = -I/usr/lib64/gfortran/modules
 TOPLATS = TOPLATS_3.0

@@ -23,8 +23,14 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
   type (GLOBAL_template),intent(in) :: GLOBAL
   type (GRID_template),dimension(:),intent(inout) :: GRID
   type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
+  type (GRID_VEG_template) :: GRID_VEG
+  type (GRID_SOIL_template) :: GRID_SOIL
+  type (GRID_MET_template) :: GRID_MET
+  type (GRID_VARS_template) :: GRID_VARS
+  type (CATCHMENT_template) :: CAT_INFO
+  type (GLOBAL_template) :: GLOBAL_INFO
   integer :: icatch,isoil,ilandc
-  real*8 :: tmp(GLOBAL%npix)
+  real*8 :: tmp(GLOBAL%npix),start_time,end_time,omp_get_wtime
 
 !#####################################################################
 ! Initialize water balance variables for the time step.
@@ -32,34 +38,63 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   call instep_catchment(GLOBAL%ncatch,CAT)
 
-!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch) 
+  call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+  start_time = omp_get_wtime()
+!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(AUTO) PRIVATE(isoil,ilandc,icatch,&
+!!$OMP GRID_VEG,GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
   do ipix = 1,GLOBAL%npix
 
-    isoil = GRID(ipix)%SOIL%isoil
-    ilandc = GRID(ipix)%VEG%ilandc
+    !isoil = GRID(ipix)%SOIL%isoil
+    !ilandc = GRID(ipix)%VEG%ilandc
     icatch = GRID(ipix)%VARS%icatch
+    GRID_MET = GRID(ipix)%MET
+    GRID_SOIL = GRID(ipix)%SOIL
+    GRID_VEG = GRID(ipix)%VEG
+    GRID_VARS = GRID(ipix)%VARS
+    CAT_INFO = CAT(icatch)
+    GLOBAL_INFO = GLOBAL
 
-!!$OMP CRITICAL 
-    call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
-       GRID(ilandc)%VEG,GRID(isoil)%SOIL,GRID(ipix)%MET,&
-       ilandc)
-!!$OMP END CRITICAL 
+    call sumflx_catchment(CAT_INFO,GRID_VARS,GLOBAL,&
+       GRID_VEG,GRID_SOIL,GRID_MET,ilandc)
+
+    !Write back
+    GRID(ipix)%SOIL = GRID_SOIL
+    GRID(ipix)%VARS = GRID_VARS
+    GRID(ipix)%MET = GRID_MET
+    GRID(ipix)%VEG = GRID_VEG
+    GRID(ipix)%VARS = GRID_VARS
+    CAT(icatch) = CAT_INFO
 
   enddo
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
+  end_time = omp_get_wtime()
+  print*,end_time - start_time
+
+  start_time = omp_get_wtime()
+
+!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC)
  
   do icatch = 1,GLOBAL%ncatch
 
-    call catflx(GLOBAL%pixsiz,CAT(icatch))
+    CAT_INFO = CAT(icatch)
 
-    call upzbar(icatch,CAT(icatch),GLOBAL,GRID)
+    call catflx(GLOBAL%pixsiz,CAT_INFO)
 
-    CAT%tzpsum = CAT(icatch)%smpsum(2)
-    CAT%rzpsum = CAT(icatch)%smpsum(1)
+    call upzbar(icatch,CAT_INFO,GLOBAL,GRID)
+
+    CAT_INFO%tzpsum = CAT_INFO%smpsum(2)
+    CAT_INFO%rzpsum = CAT_INFO%smpsum(1)
+
+    CAT(icatch) = CAT_INFO
  
   enddo 
+
+!!$OMP END PARALLEL DO
+
+  end_time = omp_get_wtime()
+  print*,end_time - start_time
 
 end subroutine Update_Catchments
 

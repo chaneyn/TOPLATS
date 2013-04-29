@@ -25,11 +25,11 @@ contains
   subroutine Update_Cells(GRID,CAT,GLOBAL,i)
   
     implicit none
-    type (GRID_template),dimension(:),intent(inout) :: GRID
-    type (CATCHMENT_template),dimension(:),intent(inout) :: CAT
     type (GLOBAL_template),intent(inout) :: GLOBAL
+    type (GRID_template),intent(inout) :: GRID(GLOBAL%npix)
+    type (CATCHMENT_template),intent(inout) :: CAT(GLOBAL%ncatch)
     integer,intent(in) :: i
-    integer :: ipix,isoil,icatch,ilandc
+    integer :: ipix,isoil,icatch,ilandc,chunksize
     real*8 :: omp_get_wtime,start_time,end_time
     type (GRID_VEG_template) :: GRID_VEG
     type (GRID_SOIL_template) :: GRID_SOIL
@@ -42,11 +42,13 @@ contains
 ! Update each grid cell
 !#####################################################################
 
+    print*,GLOBAL%nthreads
+    chunksize = GLOBAL%npix/GLOBAL%nthreads + 1
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
     GLOBAL%mul_fac = 1.0d0
     start_time = omp_get_wtime()
 
-!$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(isoil,ilandc,icatch,GRID_VEG,&
+!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC) PRIVATE(isoil,ilandc,icatch,GRID_VEG,&
 !$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
     do ipix=1,GLOBAL%npix
@@ -57,17 +59,11 @@ contains
       ilandc = GRID(ipix)%VEG%ilandc
       icatch = GRID(ipix)%VARS%icatch  
       GRID_MET = GRID(ipix)%MET
-      !print*,GRID_MET
       GRID_SOIL = GRID(isoil)%SOIL
-      !print*,GRID_SOIL
       GRID_VEG = GRID(ilandc)%VEG
-      !print*,GRID_VEG
       GRID_VARS = GRID(ipix)%VARS
-      !print*,GRID_VARS
       CAT_INFO = CAT(icatch)
-      !print*,CAT_INFO
       GLOBAL_INFO = GLOBAL
-      !print*,GLOBAL_INFO
       !Update the cell
       call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
          GRID_VEG,GRID_VARS,&
@@ -84,7 +80,7 @@ contains
 
 !$OMP END PARALLEL DO
     end_time = omp_get_wtime()
-    !print*,end_time - start_time
+    print*,end_time - start_time
 
   end subroutine Update_Cells
 
