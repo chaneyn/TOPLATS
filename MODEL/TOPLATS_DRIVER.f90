@@ -72,7 +72,8 @@ do i=1,GLOBAL%ndata
 !#####################################################################
 ! Update each grid cell
 !#####################################################################
-
+ 
+  print*,'Updating the cells'
   call Update_Cells(GRID,CAT,GLOBAL,i)
 
 !#####################################################################
@@ -86,6 +87,7 @@ do i=1,GLOBAL%ndata
   GRID%VARS%sm1(1) = GRID%VARS%rzsm1
   GRID%VARS%sm1(2) = GRID%VARS%tzsm1
 
+  print*,'Updating the catchments'
   call Update_Catchments(GLOBAL,CAT,GRID)
 
   GRID%VARS%rzsm1_u=GRID%VARS%sm1_u(1)
@@ -97,6 +99,7 @@ do i=1,GLOBAL%ndata
 ! Update regional variables
 !#####################################################################
 
+  print*,'Updating the regional variables'
   call Update_Regional(REG,GRID,GLOBAL,CAT)
 
 !#####################################################################
@@ -104,6 +107,7 @@ do i=1,GLOBAL%ndata
 !#####################################################################
   
   GRID%VARS%sm(1) = GRID%VARS%rzsm
+  print*,'Writing the data'
   call Write_Data(GLOBAL,GRID,IO,REG,i,CAT)
 
 enddo

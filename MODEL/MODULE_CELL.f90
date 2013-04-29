@@ -50,17 +50,24 @@ contains
 !$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
     do ipix=1,GLOBAL%npix
+      !print*,ipix
 
       !Extract data
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
       icatch = GRID(ipix)%VARS%icatch  
       GRID_MET = GRID(ipix)%MET
+      !print*,GRID_MET
       GRID_SOIL = GRID(isoil)%SOIL
+      !print*,GRID_SOIL
       GRID_VEG = GRID(ilandc)%VEG
+      !print*,GRID_VEG
       GRID_VARS = GRID(ipix)%VARS
+      !print*,GRID_VARS
       CAT_INFO = CAT(icatch)
+      !print*,CAT_INFO
       GLOBAL_INFO = GLOBAL
+      !print*,GLOBAL_INFO
       !Update the cell
       call Update_Cell(ipix,i,GRID_MET,GRID_SOIL,&
          GRID_VEG,GRID_VARS,&

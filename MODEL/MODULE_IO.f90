@@ -423,6 +423,11 @@ end subroutine Replace_Undefined
       GRID_VEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_VEG_2D%albd = dble(TempArray(:,:,2))
 
+  !Ensure that lai is not 0 anywhere (Disconnect between land cover and lai)
+  where (GRID_VEG_2D%xlai .eq. 0)
+    GRID_VEG_2D%xlai = 0.1
+  endwhere
+
 ! ####################################################################
 ! Convert the 2-d arrays to the model's 1-d arrays
 ! ####################################################################
@@ -510,8 +515,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   ! Allocate memory
   !#####################################################################
 
+  print*,'Allocating memory'
   allocate(CAT(GLOBAL%ncatch))
-  allocate(GRID(GLOBAL%nrow*GLOBAL%ncol))
+  !allocate(GRID(GLOBAL%nrow*GLOBAL%ncol))
   allocate(IO%ipixnum(GLOBAL%nrow,GLOBAL%ncol))
   allocate(icount(GLOBAL%ncatch))
   allocate(atb(GLOBAL%nrow*GLOBAL%ncol))
@@ -529,13 +535,16 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   !####################################################################
 
   call rdatb(atb,GLOBAL,IO)
-  GRID%VARS%TI = atb
+  print*,'Allocating the grid'
+  allocate(GRID(GLOBAL%npix))
+  GRID%VARS%TI = atb(1:GLOBAL%npix)
 
 ! ====================================================================
 ! Read in the catchment look-up table - read different values based
 ! on what is necessary for baseflow and initial condition calculations.
 ! ====================================================================
 
+  print*,'Reading in the catchment information'
     if (GLOBAL%KS_TYPE.eq.0)then
 
       if (GLOBAL%iopwt0.eq.1) then
@@ -615,7 +624,7 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
   ! Convert to model format
   call convert_grads2model(array_1d,array_2d,IO%ipixnum,GLOBAL%nrow,GLOBAL%ncol,GLOBAL%Subbasin_FILE%undef)
-  GRID%VARS%icatch = int(array_1d)
+  GRID%VARS%icatch = int(array_1d(1:GLOBAL%npix))
 
   deallocate(array_2d)
   deallocate(temp)
@@ -630,15 +639,18 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   allocate(temp(GLOBAL%K0_FILE%nlon,GLOBAL%K0_FILE%nlat))
   allocate(array_1d(GLOBAL%K0_FILE%nlon*GLOBAL%K0_FILE%nlat))
 
+  print*,'Reading in K0'
   read(GLOBAL%K0_FILE%fp,rec=1)temp
   !Set all missing values to the areal average
+  print*,'Replacing all undefined values with the mean'
   call Replace_Undefined(temp,GLOBAL%K0_File%undef,GLOBAL%K0_File%nlon,&
                    GLOBAL%K0_File%nlat,1)
 
   ! Convert from single to double point precision
   array_2d = temp
   ki = 0.d0
-
+  
+  print*,'Mapping the hydraulic conductivity'
   do ilat = 1,GLOBAL%nrow
     do ilon = 1,GLOBAL%ncol
       ip = IO%ipixnum(ilat,ilon)
@@ -648,15 +660,16 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
       endif
     enddo
   enddo
-
-  do kk=1,GLOBAL%nrow*GLOBAL%ncol
+ 
+  print*,'Calculating the transmissivity'
+  do kk=1,GLOBAL%npix
     if (GRID(kk)%VARS%icatch .gt. 0)then
       ti(kk) = ki(kk)/CAT(GRID(kk)%VARS%icatch)%ff
     else
       ti(kk) = 0.0
     endif
   enddo 
-  GRID%VARS%T0 = ti
+  GRID%VARS%T0 = ti(1:GLOBAL%npix)
 
   deallocate(array_2d)
   deallocate(temp)
@@ -666,7 +679,8 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 ! ====================================================================
 ! Calculate the generalized soils-topographic index for each catchment
 ! ====================================================================
-
+ 
+  print*,'Calculating the generalized soils-topographix index'
   call Calculate_GSTI(GLOBAL,CAT,GRID)
 
 ! ====================================================================
@@ -724,12 +738,12 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
 
    ! enddo
 
-    print*,'Area',CAT%area
-    print*,'Lambda',CAT%lambda
-    print*,'Q0',CAT%q0
-    print*,'te',exp(lte)
-    print*,'xlamda',CAT%xlamda
-    print*,'Q0old',CAT%area*dexp(lte)*dexp(-CAT%xlamda)
+    print*,'Area',sum(CAT%area)
+    !print*,'Lambda',CAT%lambda
+    !print*,'Q0',CAT%q0
+    !print*,'te',exp(lte)
+    !print*,'xlamda',CAT%xlamda
+    !print*,'Q0old',CAT%area*dexp(lte)*dexp(-CAT%xlamda)
 
   !endif
 
@@ -955,38 +969,32 @@ end subroutine Write_Catchment
 
       implicit none
       type (GLOBAL_template),intent(inout) :: GLOBAL
-      type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
+      type (GRID_template),intent(inout) :: GRID(GLOBAL%npix)
       type (REGIONAL_template),intent(inout) :: REG
-      type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (CATCHMENT_template),intent(inout) :: CAT(GLOBAL%ncatch)
       type (IO_template),intent(inout) :: IO
-      type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
-      type (GRID_VEG_template) :: GRID_DVEG_2D(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat)
+      type (GRID_VEG_template),dimension(:,:),allocatable :: GRID_VEG_2D!(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat)
+      type (GRID_VEG_template),dimension(:,:),allocatable :: GRID_DVEG_2D!(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat)
       character(len=200) :: filename
       integer :: vegnvars,dvegnvars,ipos,jpos,ilat,ilon,ip
       real,dimension(:,:,:),allocatable :: TempArray
-      real*8 :: frcov(GLOBAL%nrow*GLOBAL%ncol,GLOBAL%ncatch+1),wc0
+      !real*8 :: frcov(GLOBAL%nrow*GLOBAL%ncol,GLOBAL%ncatch+1),wc0
       integer :: jj,kk
       vegnvars = 20
       dvegnvars = 2
+      print*,'Allocating memory for the vegetation data'
+      allocate(GRID_VEG_2D(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat))
+      allocate(GRID_DVEG_2D(GLOBAL%DVEG_FILE%nlon,GLOBAL%DVEG_FILE%nlat))
       allocate(TempArray(GLOBAL%VEG_FILE%nlon,GLOBAL%VEG_FILE%nlat,vegnvars))
 
 ! ====================================================================
 ! Read spatially constant vegetation parameters.
 ! ====================================================================
 
-      GLOBAL%nlandc = GLOBAL%nrow*GLOBAL%ncol
+      GLOBAL%nlandc = GLOBAL%npix!GLOBAL%nrow*GLOBAL%ncol
       GLOBAL%iopveg = 0
 
       print*,"rdveg:  Read spatially constant veg pars"
-
-! ====================================================================
-! Read lookup table with parameters for vegetation/land cover.
-! Read either critical and wilting soil moistures or
-! plant/root resistance parameter depending on actual
-! transpiration option.
-! ====================================================================
-
-      print*,"rdveg:  Read lookup table"
 
 ! ====================================================================
 ! Read the binary vegetation binary file
@@ -1037,6 +1045,11 @@ end subroutine Write_Catchment
 
       GRID_DVEG_2D%xlai = dble(TempArray(:,:,1))
       GRID_DVEG_2D%albd = dble(TempArray(:,:,2))
+
+  !Ensure that lai is not 0 anywhere (Disconnect between land cover and lai)
+  where (GRID_DVEG_2D%xlai .eq. 0)
+    GRID_DVEG_2D%xlai = 0.1
+  endwhere
 
   GRID%VEG%ivgtyp = 0
   GRID%VEG%ilandc = 0
@@ -1145,28 +1158,6 @@ end subroutine Write_Catchment
 
   print*,"rdveg:  Read initial wet canopy storages"
 
-
-! ====================================================================
-! Calculate the fraction of different cover types in each catchment
-! and in total area.  First array index for icount and frcov is
-! the land cover type, second array index is the catchment number.
-! Catchment ncatch+1 is total area.
-! ====================================================================
-
-      do 550 kk=1,GLOBAL%nlandc
-
-         do 540 jj=1,GLOBAL%ncatch
-
-            frcov(kk,jj) = GLOBAL%pixsiz**2/CAT(jj)%area
-
-540      continue
-
-         frcov(kk,GLOBAL%ncatch+1) = 1/real(GLOBAL%npix)
-
-550   continue
-
-      print*,"rdveg:  Calculated fractional covers for vegetation"
-
 ! ====================================================================
 ! Find fraction of bare soil in each catchment.
 ! ====================================================================
@@ -1177,27 +1168,19 @@ end subroutine Write_Catchment
         CAT(jj)%fbs = zero
       enddo
 
-      do 570 jj=1,GLOBAL%ncatch+1
+      !do 570 jj=1,GLOBAL%ncatch+1
 
-         do 560 kk=1,GLOBAL%nlandc
+      do kk=1,GLOBAL%npix
 
-            if (GRID(kk)%VEG%ivgtyp.eq.0 .and. GRID(kk)%VEG%ilandc .gt. 0) then
+         if (GRID(kk)%VEG%ivgtyp.eq.0 .and. GRID(kk)%VEG%ilandc .gt. 0) then
                
-               if (jj .eq. GLOBAL%ncatch+1) then
-               
-                  REG%fbsrg = REG%fbsrg + frcov(kk,jj)
-        
-               else
+           REG%fbsrg = REG%fbsrg + 1/real(GLOBAL%npix)!frcov(kk,jj)
+           CAT(GRID(kk)%VARS%icatch)%fbs = CAT(GRID(kk)%VARS%icatch)%fbs + &
+                GLOBAL%pixsiz**2/CAT(GRID(kk)%VARS%icatch)%area!frcov(kk,jj)
 
-                  CAT(jj)%fbs = CAT(jj)%fbs + frcov(kk,jj)
+         endif
 
-               endif
-
-            endif
-
-560      continue
-
-570   continue
+      enddo
 
       print*,"rdveg:  Calculated fractional covers for bare soil"        
 
@@ -1438,16 +1421,16 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
       implicit none
 
       type (GLOBAL_template),intent(inout) :: GLOBAL
-      type (GRID_template),dimension(:),allocatable,intent(inout) :: GRID
-      type (CATCHMENT_template),dimension(:),allocatable,intent(inout) :: CAT
+      type (GRID_template),intent(inout) :: GRID(GLOBAL%npix)
+      type (CATCHMENT_template),intent(inout) :: CAT(GLOBAL%npix)
       type (IO_template),intent(inout) :: IO
       type (GRID_SOIL_template) :: GRID_SOIL_2D(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat)
       type (GRID_VEG_template) :: GRID_VEG_2D(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat)
       integer :: soilnvars,ipos,jpos,jj,kk,nn,ip,ilat,ilon
-      integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
+      !integer :: icount(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       real,dimension(:,:,:),allocatable :: TempArray
       real*8 :: psic(GLOBAL%ncol*GLOBAL%nrow),tempsum,dtaken
-      real*8 :: frsoil(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
+      !real*8 :: frsoil(GLOBAL%ncol*GLOBAL%nrow,GLOBAL%ncatch+1)
       soilnvars = 23
 
  allocate(TempArray(GLOBAL%SOIL_FILE%nlon,GLOBAL%SOIL_FILE%nlat,soilnvars))
@@ -1457,7 +1440,7 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 ! Then read root and transmission zone data.
 ! ====================================================================
 
-      GLOBAL%nsoil = GLOBAL%nrow*GLOBAL%ncol
+      GLOBAL%nsoil = GLOBAL%npix
 
       print*,"rdsoil:  Read spatially constant soil pars"
 
@@ -1484,7 +1467,7 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
       GRID_SOIL_2D%tmid0 = dble(TempArray(:,:,9))
       GRID_SOIL_2D%rocpsoil = dble(TempArray(:,:,10))
       GRID_SOIL_2D%quartz = dble(TempArray(:,:,11))
-      GRID_SOIL_2D%ifcoarse = TempArray(:,:,12)
+      GRID_SOIL_2D%ifcoarse = 0!TempArray(:,:,12)
       GRID_SOIL_2D%srespar1 = dble(TempArray(:,:,13))
       GRID_SOIL_2D%srespar2 = dble(TempArray(:,:,14))
       GRID_SOIL_2D%srespar3 = dble(TempArray(:,:,15))
@@ -1493,7 +1476,7 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
       GRID_SOIL_2D%bulk_dens = dble(TempArray(:,:,18))
       GRID_SOIL_2D%amp = dble(TempArray(:,:,19))
       GRID_SOIL_2D%phase = dble(TempArray(:,:,20))
-      GRID_SOIL_2D%shift = dble(TempArray(:,:,21))
+      GRID_SOIL_2D%shift = 0!dble(TempArray(:,:,21))
       GRID_VEG_2D%tw = dble(TempArray(:,:,22))
       GRID_VEG_2D%tc = dble(TempArray(:,:,23))
 
@@ -1501,6 +1484,7 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 ! Read the soil properties
 ! ====================================================================
 
+  print*,'rdsoil: placing the soil properties on the grid'
   do kk=1,maxval(IO%ipixnum)
     GRID(kk)%SOIL%isoil = kk
   enddo
@@ -1544,6 +1528,8 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 ! Calculate time in-variant soil parameters for each soil class.
 ! ====================================================================
 
+  print*,'Calculate the missing soil parameters'
+
       do 400 kk=1,GLOBAL%nsoil
 
 ! --------------------------------------------------------------------&
@@ -1582,62 +1568,22 @@ subroutine MODEL2GRID(datain,nrow,ncol,ipixnum,undef,dataout)
 
 400   continue
 
-      print*,"rdsoil:  Calculated time-invariant soil pars"
-
-! ====================================================================
-! Calculate the fraction of different soil types in each catchment
-! and in total area.  First array index for icount and frcov is
-! the soil type, second array index is the catchment number.
-! Catchment ncatch+1 is total area.
-! ====================================================================
-
-      do 450 kk=1,GLOBAL%nsoil
-
-         do 440 jj=1,GLOBAL%ncatch+1
-
-            icount(kk,jj) = 0
-
-440      continue
-
-450   continue
-
-      do 500 kk=1,GLOBAL%npix
-
-        icount(GRID(kk)%SOIL%isoil,GRID(kk)%VARS%icatch)=icount(GRID(kk)%SOIL%isoil,GRID(kk)%VARS%icatch)+1
-        icount(GRID(kk)%SOIL%isoil,GLOBAL%ncatch+1) = icount(GRID(kk)%SOIL%isoil,GLOBAL%ncatch+1) + 1
-
-500   continue
-
-      do 550 kk=1,GLOBAL%nsoil
-
-         do 540 jj=1,GLOBAL%ncatch
-
-            frsoil(kk,jj) = icount(kk,jj)*GLOBAL%pixsiz*GLOBAL%pixsiz/CAT(jj)%area
-
-540      continue
-
-         frsoil(kk,GLOBAL%ncatch+1) = icount(kk,GLOBAL%ncatch+1)/real(GLOBAL%npix)
-
-550   continue
-
-      print*,"rdsoil:  Calculated fractional coverage for soil types"
 
 ! ====================================================================
 ! Calculate average bubbling pressure in each catchment (used
 ! in updating average water table depths.
 ! ====================================================================
 
-      do 570 jj=1,GLOBAL%ncatch
+  print*,"rdsoil:  Calculating the each catchment's averge bubbling pressure"
 
-         CAT(jj)%psicav = zero
+  do jj=1,GLOBAL%ncatch
+    CAT(jj)%psicav = zero
+  enddo
 
-         do 560 kk=1,GLOBAL%nsoil
-
-            CAT(jj)%psicav = CAT(jj)%psicav + frsoil(kk,jj)*GRID(kk)%SOIL%psic
-
-560      continue
-
-570   continue
+  do kk=1,GLOBAL%npix
+    CAT(GRID(kk)%VARS%icatch)%psicav = CAT(GRID(kk)%VARS%icatch)%psicav + &
+    GLOBAL%pixsiz*GLOBAL%pixsiz/CAT(GRID(kk)%VARS%icatch)%area*GRID(kk)%SOIL%psic
+  enddo
 
       print*,"rdsoil:  Calculated average psi! for each catchment"
 
@@ -2067,7 +2013,7 @@ subroutine spatial_mapping(GLOBAL,MAP,FILE_INFO,ipixnum)
   implicit none
   type(GLOBAL_template),intent(in) :: GLOBAL
   type(FILE_template),intent(in) :: FILE_INFO
-  type(MAP_template),intent(inout) :: MAP(GLOBAL%nrow*GLOBAL%ncol)
+  type(MAP_template),intent(inout) :: MAP(GLOBAL%npix)
   integer :: ipixnum(GLOBAL%nrow,GLOBAL%ncol)
   integer :: irow,icol,irow_alt,icol_alt,x,y
   real*8 :: lat_ref,lon_ref,lat_res,lon_res
