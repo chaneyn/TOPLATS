@@ -29,7 +29,7 @@ contains
     type (GRID_template),intent(inout) :: GRID(GLOBAL%npix)
     type (CATCHMENT_template),intent(inout) :: CAT(GLOBAL%ncatch)
     integer,intent(in) :: i
-    integer :: ipix,isoil,icatch,ilandc,chunksize
+    integer :: ipix,isoil,icatch,ilandc
     real*8 :: omp_get_wtime,start_time,end_time
     type (GRID_VEG_template) :: GRID_VEG
     type (GRID_SOIL_template) :: GRID_SOIL
@@ -42,8 +42,6 @@ contains
 ! Update each grid cell
 !#####################################################################
 
-    print*,GLOBAL%nthreads
-    chunksize = GLOBAL%npix/GLOBAL%nthreads + 1
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
     GLOBAL%mul_fac = 1.0d0
     start_time = omp_get_wtime()
@@ -52,8 +50,15 @@ contains
 !$OMP GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
     do ipix=1,GLOBAL%npix
-      !print*,ipix
-
+      !if ((i .eq. 3))then
+      !  print*,ipix
+      !  print*,GRID(ipix)%MET
+      !  print*,GRID(ipix)%SOIL
+      !  print*,GRID(ipix)%VEG
+      !  print*,GRID(ipix)%VARS
+      !  print*,CAT(icatch)
+      !  print*,GLOBAL
+      ! endif
       !Extract data
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc

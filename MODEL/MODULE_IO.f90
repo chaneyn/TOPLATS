@@ -329,6 +329,12 @@ end subroutine Replace_Undefined
       print*,'rddata:  Done reading TOPMODEL parameters'
 
 ! ====================================================================
+! Calculate the cell's lat/lon and area
+! ====================================================================
+
+  !call Calculate_Coordinates_Area(GRID,IO,GLOBAL)
+
+! ====================================================================
 ! Read in and initialize vegatation parameters.
 ! ====================================================================
 
@@ -537,6 +543,10 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   call rdatb(atb,GLOBAL,IO)
   print*,'Allocating the grid'
   allocate(GRID(GLOBAL%npix))
+
+  ! Initialize the grid
+  call Initialize_Grid_Variables(GRID,GLOBAL)
+
   GRID%VARS%TI = atb(1:GLOBAL%npix)
 
 ! ====================================================================
@@ -2120,5 +2130,293 @@ subroutine Create_Netcdf_Output(FILE_INFO,GLOBAL,nvars)
 
 end subroutine Create_Netcdf_Output
 
+subroutine Initialize_Grid_Variables(GRID,GLOBAL)
+
+  implicit none
+  type(GLOBAL_template),intent(in) :: GLOBAL
+  type(GRID_template),intent(inout) :: GRID(GLOBAL%npix) 
+  integer :: i
+  
+  !Meteorology
+  GRID%MET%tdry = zero
+  GRID%MET%rh = zero
+  GRID%MET%press = zero
+  GRID%MET%pptms = zero
+  GRID%MET%rld = zero
+  GRID%MET%rsd = zero
+  GRID%MET%uzw = zero
+
+  !Soil
+  GRID%SOIL%bcbeta = zero
+  GRID%SOIL%psic = zero
+  GRID%SOIL%thetas = zero 
+  GRID%SOIL%thetar = zero
+  GRID%SOIL%xk0 = zero
+  GRID%SOIL%zdeep = zero
+  GRID%SOIL%tdeep = zero
+  GRID%SOIL%zmid = zero
+  GRID%SOIL%tmid0 = zero
+  GRID%SOIL%rocpsoil = zero
+  GRID%SOIL%quartz = zero
+  GRID%SOIL%srespar1 = zero
+  GRID%SOIL%srespar2 = zero
+  GRID%SOIL%srespar3 = zero
+  GRID%SOIL%a_ice = zero
+  GRID%SOIL%b_ice = zero
+  GRID%SOIL%bulk_dens = zero
+  GRID%SOIL%amp = zero
+  GRID%SOIL%phase = zero
+  GRID%SOIL%shift = zero
+  GRID%SOIL%bcgamm = zero
+  GRID%SOIL%par = zero
+  GRID%SOIL%corr = zero
+  GRID%SOIL%Tdeepstep = zero
+  GRID%SOIL%isoil = zero
+  GRID%SOIL%ifcoarse = zero
+  GRID%SOIL%idifind = zero
+
+  !Veg
+  GRID%VEG%xlai = zero
+  GRID%VEG%xlai_wsc = zero
+  GRID%VEG%albd = zero
+  GRID%VEG%albw = zero
+  GRID%VEG%emiss = zero
+  GRID%VEG%za = zero
+  GRID%VEG%zww = zero
+  GRID%VEG%z0m = zero
+  GRID%VEG%z0h = zero
+  GRID%VEG%zpd = zero
+  GRID%VEG%rsmin = zero
+  GRID%VEG%rsmax = zero
+  GRID%VEG%Rpl = zero
+  GRID%VEG%f3vpdpar = zero
+  GRID%VEG%f4temppar = zero
+  GRID%VEG%trefk = zero
+  GRID%VEG%tcbeta = zero
+  GRID%VEG%tc = zero
+  GRID%VEG%tw = zero
+  GRID%VEG%extinct = zero
+  GRID%VEG%canclos = zero
+  GRID%VEG%Tslope1 = zero
+  GRID%VEG%Tslope2 = zero
+  GRID%VEG%Tint2 = zero
+  GRID%VEG%Twslope1 = zero
+  GRID%VEG%Twint1 = zero
+  GRID%VEG%Twslope2 = zero
+  GRID%VEG%Twint2 = zero
+  GRID%VEG%Tsep = zero
+  GRID%VEG%Twsep = zero
+  GRID%VEG%f_und = zero
+  GRID%VEG%rtact= zero
+  GRID%VEG%rtdens = zero
+  GRID%VEG%rtres = zero
+  GRID%VEG%psicri = zero
+  GRID%VEG%respla = zero
+  GRID%VEG%rescan = zero
+  GRID%VEG%wsc = zero
+  GRID%VEG%xlai_us = zero
+  GRID%VEG%xlai_wsc_us = zero
+  GRID%VEG%albd_us = zero
+  GRID%VEG%albw_us = zero
+  GRID%VEG%emiss_us = zero
+  GRID%VEG%z0m_us = zero
+  GRID%VEG%z0h_us = zero
+  GRID%VEG%zpd_us = zero
+  GRID%VEG%f3vpdpar_us = zero
+  GRID%VEG%f4temppar_us = zero
+  GRID%VEG%trefk_us = zero
+  GRID%VEG%rsmin_us = zero
+  GRID%VEG%rsmax_us = zero
+  GRID%VEG%Rpl_us = zero
+  GRID%VEG%tcbeta_us = zero
+  GRID%VEG%tc_us = zero
+  GRID%VEG%tw_us = zero
+  GRID%VEG%rtact_us = zero
+  GRID%VEG%respla_us = zero
+  GRID%VEG%rtdens_us = zero
+  GRID%VEG%rtres_us = zero
+  GRID%VEG%rescan_us = zero
+  GRID%VEG%wsc_us = zero
+  GRID%VEG%psicri_us = zero
+  GRID%VEG%wcip1_us = zero
+  GRID%VEG%zpd_moss = zero
+  GRID%VEG%z0m_moss = zero
+  GRID%VEG%z0h_moss = zero
+  GRID%VEG%emiss_moss = zero
+  GRID%VEG%f_moss = zero
+  GRID%VEG%srespar1_moss = zero
+  GRID%VEG%srespar2_moss = zero
+  GRID%VEG%alb_moss = zero
+  GRID%VEG%r_moss_depth = zero
+  GRID%VEG%eps = zero
+  GRID%VEG%srespar3_moss = zero
+  GRID%VEG%thetas_moss = zero
+  GRID%VEG%tk0moss = zero
+  GRID%VEG%tmid0_moss = zero
+  GRID%VEG%r_mossmpet0 = zero
+  GRID%VEG%a_ice_moss= zero
+  GRID%VEG%b_ice_moss = zero
+  GRID%VEG%bulk_dens_moss = zero
+  GRID%VEG%tkd = zero
+  GRID%VEG%tkmidd = zero
+  GRID%VEG%tkw = zero
+  GRID%VEG%tkmidw = zero
+  GRID%VEG%rnetd = zero
+  GRID%VEG%xled = zero
+  GRID%VEG%hd = zero
+  GRID%VEG%gd = zero
+  GRID%VEG%dshd = zero
+  GRID%VEG%rnetw = zero
+  GRID%VEG%xlew = zero
+  GRID%VEG%hw = zero
+  GRID%VEG%gw = zero
+  GRID%VEG%dshw = zero
+  GRID%VEG%i_und = zero
+  GRID%VEG%i_moss = zero
+  GRID%VEG%ivgtyp = zero
+  GRID%VEG%ilandc = zero
+
+  !VARS
+  GRID%VARS%rzsm = zero
+  GRID%VARS%tzsm = zero
+  GRID%VARS%rzsm1 = zero
+  GRID%VARS%tzsm1 = zero
+  GRID%VARS%rzsm_f = zero
+  GRID%VARS%tzsm_f = zero
+  GRID%VARS%rzsm1_f = zero
+  GRID%VARS%tzsm1_f = zero
+  GRID%VARS%rzdthetaudtemp = zero
+  GRID%VARS%rzdthetaidt = zero
+  GRID%VARS%tzdthetaidt = zero
+  GRID%VARS%zw = zero
+  GRID%VARS%pnet = zero
+  GRID%VARS%xinact = zero
+  GRID%VARS%runtot = zero
+  GRID%VARS%tzsm1_u = zero
+  GRID%VARS%rzsm1_u = zero
+  GRID%VARS%zmoss = zero
+  GRID%VARS%r_mossm1 = zero
+  GRID%VARS%r_mossm = zero
+  GRID%VARS%r_mossm1_u = zero
+  GRID%VARS%r_mossm_u = zero
+  GRID%VARS%r_mossm1_f = zero
+  GRID%VARS%r_mossm_f = zero
+  GRID%VARS%Tincan = zero
+  GRID%VARS%rh_ic = zero
+  GRID%VARS%precip_o = zero
+  GRID%VARS%precip_u = zero
+  GRID%VARS%tkmid = zero
+  GRID%VARS%tkact = zero
+  GRID%VARS%tkmidpet = zero
+  GRID%VARS%tkpet = zero
+  GRID%VARS%dshact = zero
+  GRID%VARS%rnetpn = zero
+  GRID%VARS%gbspen = zero
+  GRID%VARS%evtact = zero
+  GRID%VARS%gact = zero
+  GRID%VARS%rnact = zero
+  GRID%VARS%xleact = zero
+  GRID%VARS%hact = zero
+  GRID%VARS%ebspot = zero
+  GRID%VARS%dspet = zero
+  GRID%VARS%rnpet = zero
+  GRID%VARS%xlepet= zero
+  GRID%VARS%hpet = zero
+  GRID%VARS%gpet = zero
+  GRID%VARS%ievcon = zero
+  GRID%VARS%irntyp = zero
+  GRID%VARS%rib = zero
+  GRID%VARS%etpix = zero
+  GRID%VARS%epetw = zero
+  GRID%VARS%PackWater_us = zero
+  GRID%VARS%SurfWater_us = zero
+  GRID%VARS%Swq_us = zero
+  GRID%VARS%VaporMassFlux_us = zero
+  GRID%VARS%r_MeltEnergy_us = zero
+  GRID%VARS%Outflow_us = zero
+  GRID%VARS%alb_snow = zero
+  GRID%VARS%TPack = zero
+  GRID%VARS%Tsurf = zero
+  GRID%VARS%xleact_snow = zero
+  GRID%VARS%hact_snow = zero
+  GRID%VARS%rn_snow = zero
+  GRID%VARS%TPack_us = zero
+  GRID%VARS%TSurf_us = zero
+  GRID%VARS%xleact_snow_us = zero
+  GRID%VARS%hact_snow_us = zero
+  GRID%VARS%rn_snow_us = zero
+  GRID%VARS%dens = zero
+  GRID%VARS%dens_us = zero
+  GRID%VARS%dsty = zero
+  GRID%VARS%dsty_us = zero
+  GRID%VARS%Sdepth = zero
+  GRID%VARS%Sdepth_us = zero
+  GRID%VARS%PackWater = zero
+  GRID%VARS%Swq = zero
+  GRID%VARS%VaporMassFlux = zero
+  GRID%VARS%r_MeltEnergy = zero
+  GRID%VARS%Outflow = zero
+  GRID%VARS%zrz = zero
+  GRID%VARS%ztz = zero
+  GRID%VARS%smold = zero
+  GRID%VARS%rzsmold = zero
+  GRID%VARS%tzsmold = zero
+  GRID%VARS%capflx = zero
+  GRID%VARS%difrz = zero
+  GRID%VARS%diftz = zero
+  GRID%VARS%grz = zero
+  GRID%VARS%gtz = zero
+  GRID%VARS%satxr = zero
+  GRID%VARS%xinfxr = zero
+  GRID%VARS%dc = zero
+  GRID%VARS%fw = zero
+  GRID%VARS%dsrz = zero
+  GRID%VARS%rzrhs = zero
+  GRID%VARS%dstz = zero
+  GRID%VARS%tzrhs = zero
+  GRID%VARS%dswc = zero
+  GRID%VARS%wcrhs = zero
+  GRID%VARS%epwms = zero
+  GRID%VARS%row = zero
+  GRID%VARS%cph2o = zero
+  GRID%VARS%cp = zero
+  GRID%VARS%roi = zero
+  GRID%VARS%icatch = zero
+  GRID%VARS%istorm = zero
+  GRID%VARS%intstm = zero
+  GRID%VARS%istmst = zero
+  GRID%VARS%intstp = zero
+  GRID%VARS%istorm_moss = zero
+  GRID%VARS%intstm_moss = zero
+  GRID%VARS%istmst_moss = zero
+  GRID%VARS%intstp_moss = zero
+  GRID%VARS%atanb = zero
+  GRID%VARS%gsti = zero
+  GRID%VARS%ti = zero
+  GRID%VARS%t0 = zero
+  GRID%VARS%xintst = zero
+  GRID%VARS%cuminf = zero
+  GRID%VARS%sorp = zero
+  GRID%VARS%cc = zero
+  GRID%VARS%sesq = zero
+  GRID%VARS%qb0 = zero
+  GRID%VARS%xintst_moss = zero
+  GRID%VARS%wcip1 = zero
+  GRID%VARS%rzsm_zrzmax = zero
+  do i = 1,GLOBAL%npix
+   GRID(i)%VARS%sm = zero
+   GRID(i)%VARS%sm1 = zero
+   GRID(i)%VARS%sm_f = zero
+   GRID(i)%VARS%sm1_f = zero
+   GRID(i)%VARS%sm1_u = zero
+   GRID(i)%VARS%smdthetaidt = zero
+   GRID(i)%VARS%sm_old = zero
+   GRID(i)%VARS%z_layer = zero
+   GRID(i)%VARS%rzsm_ave = zero
+   GRID(i)%VARS%etpix_ave = zero
+   GRID(i)%VARS%runtot_ave = zero
+  enddo
+
+end subroutine Initialize_Grid_Variables
 
 END MODULE MODULE_IO

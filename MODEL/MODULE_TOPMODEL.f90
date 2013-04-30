@@ -40,8 +40,9 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
   start_time = omp_get_wtime()
-!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(AUTO) PRIVATE(isoil,ilandc,icatch,&
-!!$OMP GRID_VEG,GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
+
+!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(AUTO) PRIVATE(isoil,ilandc,icatch,&
+!$OMP GRID_VEG,GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
 
   do ipix = 1,GLOBAL%npix
 
@@ -68,13 +69,13 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 
   enddo
 
-!!$OMP END PARALLEL DO
+!$OMP END PARALLEL DO
   end_time = omp_get_wtime()
   print*,end_time - start_time
 
   start_time = omp_get_wtime()
 
-!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC)
+!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC)
  
   do icatch = 1,GLOBAL%ncatch
 
@@ -91,7 +92,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
  
   enddo 
 
-!!$OMP END PARALLEL DO
+!$OMP END PARALLEL DO
 
   end_time = omp_get_wtime()
   print*,end_time - start_time

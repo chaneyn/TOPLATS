@@ -30,6 +30,7 @@ contains
   type (CATCHMENT_template) :: CAT_INFO
   type (GLOBAL_template) :: GLOBAL_INFO
     integer :: icatch,isoil,ilandc
+  real*8 :: end_time,start_time,omp_get_wtime
 
 !#####################################################################
 ! Initialize regional variables
@@ -40,9 +41,11 @@ contains
 !#####################################################################
 ! Sum the local water and energy balance fluxes.
 !#####################################################################
+  
+  start_time = omp_get_wtime()
 
-!!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(GRID_MET,GRID_SOIL,GRID_VEG,&
-!!$OMP GRID_VARS,GLOBAL_INFO)
+!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(GRID_MET,GRID_SOIL,GRID_VEG,&
+!$OMP GRID_VARS,GLOBAL_INFO)
 
     do ipix = 1,GLOBAL%npix
 
@@ -52,18 +55,22 @@ contains
       GRID_VARS = GRID(ipix)%VARS
       GLOBAL_INFO = GLOBAL
 
-
-!!$OMP CRITICAL 
       call sumflx_regional(REG,GRID_VARS,GLOBAL_INFO,&
          GRID_VEG,GRID_SOIL,GRID_MET,&
          ipix)
-!!$OMP END CRITICAL 
 
     enddo
 
-!!$OMP END PARALLEL DO
+!$OMP END PARALLEL DO
+
+  end_time = omp_get_wtime()
+  print*,end_time - start_time
+  start_time = omp_get_wtime()
 
     call Compute_Regional(REG,GLOBAL,GRID,CAT)
+
+  end_time = omp_get_wtime()
+  print*,end_time - start_time
 
   end subroutine Update_Regional
 
