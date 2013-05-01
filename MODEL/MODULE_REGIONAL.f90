@@ -44,8 +44,8 @@ contains
   
   start_time = omp_get_wtime()
 
-!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(GRID_MET,GRID_SOIL,GRID_VEG,&
-!$OMP GRID_VARS,GLOBAL_INFO)
+!!$OMP PARALLEL DO SCHEDULE(DYNAMIC) PRIVATE(GRID_MET,GRID_SOIL,GRID_VEG,&
+!!$OMP GRID_VARS,GLOBAL_INFO)
 
     do ipix = 1,GLOBAL%npix
 
@@ -61,7 +61,7 @@ contains
 
     enddo
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 
   end_time = omp_get_wtime()
   print*,end_time - start_time
@@ -780,7 +780,7 @@ REG%tkmidsum = REG%tkmidsum + tkmidsum
       real*8 :: tmp
       integer :: isoil,icatch
       integer ncatch,npix,ic
-      integer ipix,landc,nlcs,ivgtyp(GLOBAL%nrow*GLOBAL%ncol)
+      integer ipix,landc,nlcs,ivgtyp(GLOBAL%npix)
       integer count24
       real*8 nlakpix,nvegpix
       real*8 qb24sum

@@ -43,6 +43,9 @@ contains
 !#####################################################################
 
     call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
+    !if (i.eq.3)then
+    ! call OMP_SET_NUM_THREADS(1)
+    !endif
     GLOBAL%mul_fac = 1.0d0
     start_time = omp_get_wtime()
 
@@ -51,14 +54,14 @@ contains
 
     do ipix=1,GLOBAL%npix
       !if ((i .eq. 3))then
-      !  print*,ipix
-      !  print*,GRID(ipix)%MET
-      !  print*,GRID(ipix)%SOIL
-      !  print*,GRID(ipix)%VEG
+      !  print*,ipix,GRID(ipix)%VARS%lat/3600.0,GRID(ipix)%VARS%lon/3600.0
+        !print*,GRID(ipix)%MET
+        !print*,GRID(ipix)%SOIL
+        !print*,GRID(ipix)%VEG
       !  print*,GRID(ipix)%VARS
-      !  print*,CAT(icatch)
+        !print*,CAT(icatch)
       !  print*,GLOBAL
-      ! endif
+      !  endif
       !Extract data
       isoil = GRID(ipix)%SOIL%isoil
       ilandc = GRID(ipix)%VEG%ilandc
@@ -78,6 +81,13 @@ contains
         GRID_SOIL%thetas*(GLOBAL_INFO%zrzmax-GRID_VARS%zrz))/GLOBAL_INFO%zrzmax
 
       !Write back
+      GRID_VARS%z_layer(1) = GRID_VARS%zrz
+      GRID_VARS%z_layer(2) = GRID_VARS%ztz
+      GRID_VARS%sm(1) = GRID_VARS%rzsm
+      GRID_VARS%sm(2) = GRID_VARS%tzsm
+      GRID_VARS%sm1(1) = GRID_VARS%rzsm1
+      GRID_VARS%sm1(2) = GRID_VARS%tzsm1
+
       GRID(isoil)%SOIL = GRID_SOIL
       GRID(ipix)%VARS = GRID_VARS
 

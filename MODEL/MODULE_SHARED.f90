@@ -614,6 +614,7 @@ contains
 
          write (*,*) 'Soil moisture out of bounds in CALCTC_J'
          write (*,*) theta,thetar,thetas,quartz,iffrozen,ifcoarse
+         theta = thetar
          stop
 
       endif

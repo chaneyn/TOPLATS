@@ -547,6 +547,9 @@ subroutine rdtpmd(GRID,CAT,IO,GLOBAL)
   ! Initialize the grid
   call Initialize_Grid_Variables(GRID,GLOBAL)
 
+  ! Calculate each cell's coordinates and area
+  call Calculate_Coordinates(GRID,GLOBAL,IO%ipixnum)
+
   GRID%VARS%TI = atb(1:GLOBAL%npix)
 
 ! ====================================================================
@@ -2403,6 +2406,10 @@ subroutine Initialize_Grid_Variables(GRID,GLOBAL)
   GRID%VARS%xintst_moss = zero
   GRID%VARS%wcip1 = zero
   GRID%VARS%rzsm_zrzmax = zero
+  GRID%VARS%lat = zero
+  GRID%VARS%lon = zero
+  GRID%VARS%ilat = zero
+  GRID%VARS%ilon = zero
   do i = 1,GLOBAL%npix
    GRID(i)%VARS%sm = zero
    GRID(i)%VARS%sm1 = zero
@@ -2418,5 +2425,33 @@ subroutine Initialize_Grid_Variables(GRID,GLOBAL)
   enddo
 
 end subroutine Initialize_Grid_Variables
+
+subroutine Calculate_Coordinates(GRID,GLOBAL,ipixnum)
+
+  implicit none
+  type(GLOBAL_template),intent(in) :: GLOBAL
+  type(GRID_template),intent(inout) :: GRID(GLOBAL%npix)
+  integer :: i,ilat,ilon,irow,icol,ipixnum(GLOBAL%nrow,GLOBAL%ncol)
+
+    ilon = 1
+    ilat = 0
+    do irow = 1,GLOBAL%nrow
+      do icol = 1,GLOBAL%ncol
+        if (ilat .eq. GLOBAL%nrow)then
+          ilat = 0
+          ilon = ilon + 1
+        endif
+        ilat = ilat + 1
+        if (ipixnum(irow,icol).gt.0) then
+          !Assign coordinates
+          GRID(ipixnum(irow,icol))%VARS%ilat = ilat 
+          GRID(ipixnum(irow,icol))%VARS%ilon = ilon
+          GRID(ipixnum(irow,icol))%VARS%lat = GLOBAL%minlat + (ilat-1)*GLOBAL%spatial_res 
+          GRID(ipixnum(irow,icol))%VARS%lon = GLOBAL%minlon + (ilon-1)*GLOBAL%spatial_res 
+        endif
+      enddo
+    enddo
+
+end subroutine Calculate_Coordinates
 
 END MODULE MODULE_IO

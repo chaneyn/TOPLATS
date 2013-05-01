@@ -127,6 +127,9 @@ type GRID_VARS_template
         real*8 :: z_layer(2)
         !Temporal Averages
         real*8 :: rzsm_ave,etpix_ave,runtot_ave
+        !Spatial parameters
+        integer :: ilat,ilon
+        real*8 :: lat,lon
 
 end type GRID_VARS_template
 

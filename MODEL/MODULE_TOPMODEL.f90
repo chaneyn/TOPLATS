@@ -36,46 +36,47 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
 ! Initialize water balance variables for the time step.
 !#####################################################################
 
+  start_time = omp_get_wtime()
   call instep_catchment(GLOBAL%ncatch,CAT)
+  end_time = omp_get_wtime()
+  print*,end_time-start_time
 
   call OMP_SET_NUM_THREADS(GLOBAL%nthreads)
   start_time = omp_get_wtime()
 
-!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(AUTO) PRIVATE(isoil,ilandc,icatch,&
-!$OMP GRID_VEG,GRID_SOIL,GRID_MET,GRID_VARS,CAT_INFO,GLOBAL_INFO) 
+!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC) PRIVATE(icatch,&
+!!$OMP GRID_VEG,GRID_SOIL,GRID_MET,GRID_VARS) 
 
   do ipix = 1,GLOBAL%npix
 
-    !isoil = GRID(ipix)%SOIL%isoil
-    !ilandc = GRID(ipix)%VEG%ilandc
     icatch = GRID(ipix)%VARS%icatch
-    GRID_MET = GRID(ipix)%MET
-    GRID_SOIL = GRID(ipix)%SOIL
-    GRID_VEG = GRID(ipix)%VEG
+    !GRID_MET = GRID(ipix)%MET
+    !GRID_SOIL = GRID(ipix)%SOIL
+    !GRID_VEG = GRID(ipix)%VEG
     GRID_VARS = GRID(ipix)%VARS
-    CAT_INFO = CAT(icatch)
-    GLOBAL_INFO = GLOBAL
+    !CAT_INFO = CAT(icatch)
+    !GLOBAL_INFO = GLOBAL
 
-    call sumflx_catchment(CAT_INFO,GRID_VARS,GLOBAL,&
-       GRID_VEG,GRID_SOIL,GRID_MET,ilandc)
+    call sumflx_catchment(CAT(icatch),GRID(ipix)%VARS,GLOBAL,&
+       GRID(ipix)%VEG,GRID(ipix)%SOIL,GRID(ipix)%MET,ipix)
 
-    !Write back
-    GRID(ipix)%SOIL = GRID_SOIL
+ !   !Write back
+    !GRID(ipix)%SOIL = GRID_SOIL
     GRID(ipix)%VARS = GRID_VARS
-    GRID(ipix)%MET = GRID_MET
-    GRID(ipix)%VEG = GRID_VEG
-    GRID(ipix)%VARS = GRID_VARS
-    CAT(icatch) = CAT_INFO
+    !GRID(ipix)%MET = GRID_MET
+    !GRID(ipix)%VEG = GRID_VEG
+    !GRID(ipix)%VARS = GRID_VARS
+    !CAT(icatch) = CAT_INFO
 
   enddo
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
   end_time = omp_get_wtime()
   print*,end_time - start_time
 
   start_time = omp_get_wtime()
 
-!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC)
+!!$OMP PARALLEL DO DEFAULT(SHARED) SCHEDULE(DYNAMIC)
  
   do icatch = 1,GLOBAL%ncatch
 
@@ -92,7 +93,7 @@ subroutine Update_Catchments(GLOBAL,CAT,GRID)
  
   enddo 
 
-!$OMP END PARALLEL DO
+!!$OMP END PARALLEL DO
 
   end_time = omp_get_wtime()
   print*,end_time - start_time
@@ -167,6 +168,7 @@ subroutine instep_catchment(ncatch,CAT)
 ! Others.
 ! --------------------------------------------------------------------
 
+    CAT(kk)%thetas = zero
     !CAT(kk)%psicav = zero
 
   enddo
@@ -405,7 +407,7 @@ subroutine sumflx_catchment(CAT,GRID_VARS,GLOBAL,&
 
   if ( (GRID_VEG%i_und.eq.0)) then
 
-! ....................................................................
+! ............(ipix)%.......................................................
 ! If understory/moss is not represented.
 ! ....................................................................
 
@@ -667,6 +669,10 @@ endif
       do i=1,GLOBAL%nlayer
         GRID_VARS%sm1_u(i) = GRID_VARS%sm1(i)
       enddo
+      !REMOVE FOR n-layer
+      GRID_VARS%rzsm1_u = GRID_VARS%sm1_u(1)
+      GRID_VARS%tzsm1_u = GRID_VARS%sm1_u(2)
+
 
     endif
 
@@ -694,7 +700,8 @@ endif
 
   endif
 
-!Update Catchment Sums
+!Update Catchment Sums 
+!!$OMP CRITICAL
   CAT%etstsum = CAT%etstsum + etstsum
   CAT%etwtsum = CAT%etwtsum + etwtsum
   CAT%etbssum = CAT%etbssum + etbssum
@@ -712,6 +719,7 @@ endif
   CAT%ettot = CAT%ettot + ettot
   CAT%zbrpor = CAT%zbrpor + zbrpor
   CAT%thetas = CAT%thetas + GRID_SOIL%thetas
+!!$OMP END CRITICAL
 
 end subroutine sumflx_catchment
 

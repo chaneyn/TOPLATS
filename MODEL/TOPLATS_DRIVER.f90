@@ -35,7 +35,7 @@ type (GRID_template),dimension(:),allocatable :: GRID
 type (REGIONAL_template) :: REG
 type (CATCHMENT_template),dimension(:),allocatable :: CAT
 type (IO_template) :: IO
-real :: start_time,end_time
+real*8 :: start_time,end_time,omp_get_wtime
 
 !####################################################################
 ! Read the general filename
@@ -67,31 +67,35 @@ do i=1,GLOBAL%ndata
 ! Read in the input data for this time step
 !#####################################################################
 
+  start_time = omp_get_wtime()
   call Read_Data(GLOBAL,GRID,CAT,IO,i)
+  end_time = omp_get_wtime()
+  print*,end_time-start_time
 
 !#####################################################################
 ! Update each grid cell
 !#####################################################################
  
   print*,'Updating the cells'
+
   call Update_Cells(GRID,CAT,GLOBAL,i)
 
 !#####################################################################
 ! Update the catchments
 !#####################################################################
 
-  GRID%VARS%z_layer(1) = GRID%VARS%zrz
-  GRID%VARS%z_layer(2) = GRID%VARS%ztz
-  GRID%VARS%sm(1) = GRID%VARS%rzsm
-  GRID%VARS%sm(2) = GRID%VARS%tzsm
-  GRID%VARS%sm1(1) = GRID%VARS%rzsm1
-  GRID%VARS%sm1(2) = GRID%VARS%tzsm1
+  !GRID%VARS%z_layer(1) = GRID%VARS%zrz
+  !GRID%VARS%z_layer(2) = GRID%VARS%ztz
+  !GRID%VARS%sm(1) = GRID%VARS%rzsm
+  !GRID%VARS%sm(2) = GRID%VARS%tzsm
+  !GRID%VARS%sm1(1) = GRID%VARS%rzsm1
+  !GRID%VARS%sm1(2) = GRID%VARS%tzsm1
 
   print*,'Updating the catchments'
   call Update_Catchments(GLOBAL,CAT,GRID)
 
-  GRID%VARS%rzsm1_u=GRID%VARS%sm1_u(1)
-  GRID%VARS%tzsm1_u=GRID%VARS%sm1_u(2)
+  !GRID%VARS%rzsm1_u=GRID%VARS%sm1_u(1)
+  !GRID%VARS%tzsm1_u=GRID%VARS%sm1_u(2)
 
 
 
@@ -99,8 +103,8 @@ do i=1,GLOBAL%ndata
 ! Update regional variables
 !#####################################################################
 
-  print*,'Updating the regional variables'
-  call Update_Regional(REG,GRID,GLOBAL,CAT)
+  !print*,'Updating the regional variables'
+  !call Update_Regional(REG,GRID,GLOBAL,CAT)
 
 !#####################################################################
 ! Write out the data for this time step
